@@ -1,0 +1,48 @@
+{
+  "code": 200,
+  "msg": "success",
+  "data": [
+    {
+      "id": "890",
+      "projectId": "664166708432244736",
+      "projectName": "ffffff",
+      "offcialSite": "fffff",
+      "initialProjectValuation": 100,
+      "initialTokenCirculation": 30000,
+      "totalSupply": 1000000000000000,
+      "igoToken": {
+        "symbol": "yUSDT",
+        "symbolName": "fdfdf",
+        "decimals": 6,
+        "address": "0x3d0d6da507e53704aade6067a83d12ffe940c432",
+        "totalSupply": "1000000000000000.000000000000000000",
+        "icon": "https://gameplus-static.qa.davionlabs.com/20220110_dfa172f609f84e71a9f47fa715d8378a.jpeg"
+      },
+      "list": [
+        {
+          "url": "/dev/api/system/Image/temporary/20220106_3fa33b632d9d4f78abf583df7ac6aa85.mp4",
+          "sortCode": 0,
+          "type": 1
+        },
+        {
+          "url": "https://gameplus-static.qa.davionlabs.com/20220110_46f970ed80b04bcdb8290320b5d697a1.mp4",
+          "sortCode": 0,
+          "type": 1
+        }
+      ],
+      "cover": {
+        "url": "https://gameplus-static.qa.davionlabs.com/20220110_46f970ed80b04bcdb8290320b5d697a1.mp4",
+        "sortCode": 0,
+        "type": 1
+      },
+      "introduction": "reredederer",
+      "network": {
+        "chainId": 24,
+        "symbolName": "ropsten",
+        "nodeUrl": "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+        "webUrl": "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+      }
+    }
+  ],
+  "timestamp": "2022-01-10 11:22:31 802"
+}
