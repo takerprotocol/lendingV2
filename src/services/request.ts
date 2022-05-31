@@ -88,7 +88,7 @@ export class Request {
         })
         const token = localStorage.getItem('token')
         if (token) {
-          Object.assign(config.headers, { 'game-plus-token': `${token}` })
+          // Object.assign(config.headers, { 'game-plus-token': `${token}` })
         }
         this.requestLog(config)
         return config

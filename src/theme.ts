@@ -64,7 +64,7 @@ const theme = createTheme({
     },
     background: {
       paper: '#1c1a32',
-      default: '#E5E5E5',
+      default: '#F7F7FC',
     },
     grey: {
       50: 'rgba(255, 255, 255, 0.8)',
@@ -201,6 +201,13 @@ const theme = createTheme({
           }
         `,
       },
+    },
+    MuiCssBaseline: {
+      styleOverrides: `
+        .header-padding {
+          padding-top: 70px;
+        }
+      `,
     },
   },
 })
