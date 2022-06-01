@@ -1,5 +1,6 @@
 import { Box, Button, styled, Typography } from '@mui/material'
 import LogoIcon from 'assets/images/svg/logo.svg'
+import { Link } from 'react-router-dom'
 import { FlexBox } from 'styleds'
 
 const HeaderBox = styled(Box)`
@@ -32,18 +33,26 @@ export const Header = () => {
     <HeaderBox>
       <img alt="" src={LogoIcon} />
       <FlexBox>
-        <Typography component="span" variant="button" marginRight="49px">
-          Home
-        </Typography>
-        <Typography component="span" variant="button" marginRight="49px">
-          Dashboard
-        </Typography>
-        <Typography component="span" variant="button" marginRight="49px">
-          Liquidation
-        </Typography>
-        <Typography component="span" variant="button" marginRight="49px">
-          FAQs
-        </Typography>
+        <Link to="/">
+          <Typography component="span" variant="button" marginRight="49px">
+            Home
+          </Typography>
+        </Link>
+        <Link to="/dashboard">
+          <Typography component="span" variant="button" marginRight="49px">
+            Dashboard
+          </Typography>
+        </Link>
+        <Link to="/liquidation">
+          <Typography component="span" variant="button" marginRight="49px">
+            Liquidation
+          </Typography>
+        </Link>
+        <Link to="/faqs">
+          <Typography component="span" variant="button" marginRight="49px">
+            FAQs
+          </Typography>
+        </Link>
         <WalletButton variant="contained" color="inherit">
           <Typography>Connect Wallet</Typography>
         </WalletButton>
