@@ -207,6 +207,10 @@ const theme = createTheme({
         .header-padding {
           padding-top: 70px;
         }
+        a {
+          text-decoration: none;
+          color: unset;
+        }
       `,
     },
   },
