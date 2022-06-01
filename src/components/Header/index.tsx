@@ -13,6 +13,7 @@ const HeaderBox = styled(Box)`
   width: 100vw;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(50px);
+  z-index: 10;
 `
 
 const WalletButton = styled(Button)`
