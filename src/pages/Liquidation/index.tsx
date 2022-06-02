@@ -4,7 +4,8 @@ import Header from 'assets/images/png/liquidation/header.png'
 import Header2 from 'assets/images/png/liquidation/header2.png'
 import Header3 from 'assets/images/png/liquidation/header3.png'
 import { Typography } from '@mui/material'
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
+import CustomizedSelect from 'components/Select'
 
 const Body = styled(Box)`
   background: #e5e5e5;
@@ -140,9 +141,26 @@ const SearchIcon = styled('svg')`
   left: 16px;
 `
 
+const FilterContainer = styled('div')`
+  display: flex;
+  width: 100%;
+  margin-top: 40px;
+`
+
 export default function Liquidation() {
   const [search, setSearch] = useState('')
   const handleSearch = (e: any) => setSearch(String(e.target.value))
+  const [collateralFilter, setCollateralFilter] = useState(0)
+  const handleCollateralFilterChange = useCallback((value: any) => setCollateralFilter(value), [])
+  const collateralOptions = useMemo(() => {
+    return [
+      {
+        value: 0,
+        label: 'All Collaterals',
+      },
+    ]
+  }, [])
+
   return (
     <Body className="header-padding">
       <div>
@@ -165,6 +183,13 @@ export default function Liquidation() {
             </SearchIcon>
           </InputContainer>
         </CollateralsFilterHeader>
+        <FilterContainer>
+          <CustomizedSelect
+            value={collateralFilter}
+            options={collateralOptions}
+            onChange={handleCollateralFilterChange}
+          />
+        </FilterContainer>
       </CollateralsContainer>
     </Body>
   )
