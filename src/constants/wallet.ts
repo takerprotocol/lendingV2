@@ -4,7 +4,6 @@ import INJECTED_ICON_URL from 'assets/images/svg/arrow-right.svg'
 import WALLETCONNECT_ICON_URL from 'assets/images/svg/walletConnectIcon.svg'
 import METAMASK_ICON_URL from 'assets/images/png/metamask.png'
 import TORUS_ICON_URL from 'assets/images/png/torus.png'
-import BSC_ICON_URL from 'assets/images/png/bsc.jpg'
 import { injected, WalletConnect, Torus } from '../connectors'
 
 interface WalletInfo {
