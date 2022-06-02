@@ -4,7 +4,7 @@ import Header from 'assets/images/png/liquidation/header.png'
 import Header2 from 'assets/images/png/liquidation/header2.png'
 import Header3 from 'assets/images/png/liquidation/header3.png'
 import { Typography } from '@mui/material'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import CustomizedSelect from 'components/Select'
 
 const Body = styled(Box)`
@@ -147,6 +147,10 @@ const FilterContainer = styled('div')`
   margin-top: 40px;
 `
 
+const DebtFilterSelect = styled(CustomizedSelect)`
+  margin-left: 10px;
+`
+
 export default function Liquidation() {
   const [search, setSearch] = useState('')
   const handleSearch = (e: any) => setSearch(String(e.target.value))
@@ -160,6 +164,18 @@ export default function Liquidation() {
       },
     ]
   }, [])
+  const [debtFilter, setDebtFilter] = useState(0)
+  const handleDebtFilterChange = useCallback((value: any) => setDebtFilter(value), [])
+  const debtFilters = useMemo(() => {
+    return [
+      {
+        value: 0,
+        label: 'All Debts',
+      },
+    ]
+  }, [])
+
+  const debtfilterRef = useRef<any>(null)
 
   return (
     <Body className="header-padding">
@@ -188,6 +204,39 @@ export default function Liquidation() {
             value={collateralFilter}
             options={collateralOptions}
             onChange={handleCollateralFilterChange}
+            startAdornment={
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ marginRight: 6 }}
+              >
+                <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
+                <path d="M7 8H17" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M8 5H16" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            }
+          />
+          <DebtFilterSelect
+            ref={debtfilterRef}
+            value={debtFilter}
+            options={debtFilters}
+            onChange={handleDebtFilterChange}
+            startAdornment={
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ marginRight: 6 }}
+              >
+                <path d="M6 11.7576L11.5 3L17 11.7576L11.5 20L6 11.7576Z" stroke="#6E7191" strokeLinejoin="round" />
+                <path d="M6 11.5L11.5 15L17 11.5" stroke="#6E7191" strokeLinejoin="round" />
+              </svg>
+            }
           />
         </FilterContainer>
       </CollateralsContainer>
