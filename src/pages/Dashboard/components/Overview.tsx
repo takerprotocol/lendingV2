@@ -33,7 +33,6 @@ const OverviewTypography = styled(Typography)`
   font-size: 0.875rem;
   line-height: 1.375rem;
   color: #14142a;
-  component: 'span';
 `
 const NetAPY = styled(Box)`
   padding: 1.5rem;
@@ -47,6 +46,18 @@ const RiskLevel = styled(Box)`
   height: 5.25rem;
   background: #f7f7fc;
   border-radius: 0.375rem;
+  position: relative;
+  margin-bottom: 15px;
+  ::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 72px;
+    top: 84px;
+    border-width: 11.5px 7.5px;
+    border-style: dashed solid dashed dashed;
+    border-color: #f7f7fc transparent transparent transparent;
+  }
 `
 export default function Overview() {
   return (

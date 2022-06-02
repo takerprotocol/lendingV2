@@ -15,6 +15,12 @@ const NFTpoolFlexBox = styled(Box)`
   display: flex;
   justify-content: flex-start;
 `
+const ImgBox = styled(Box)`
+  :hover {
+    transform: translateY(-4px);
+    transition: all 0.25s ease-in;
+  }
+`
 export default function Pool() {
   return (
     <Box mt="48px">
@@ -28,18 +34,18 @@ export default function Pool() {
           <NFTpoolFlexBox>
             <Box width="50%" padding="24px">
               <NFTpoolFlexBox height="24px">
-                <Box mr="4px">
+                <ImgBox mr="4px">
                   <img width="24px" height="24px" src={NFT1} alt="" />
-                </Box>
-                <Box mr="4px">
+                </ImgBox>
+                <ImgBox mr="4px">
                   <img width="24px" height="24px" src={NFT2} alt="" />
-                </Box>
-                <Box mr="4px">
+                </ImgBox>
+                <ImgBox mr="4px">
                   <img width="24px" height="24px" src={NFT3} alt="" />
-                </Box>
-                <Box>
+                </ImgBox>
+                <ImgBox>
                   <img width="24px" height="24px" src={NFT4} alt="" />
-                </Box>
+                </ImgBox>
               </NFTpoolFlexBox>
               <Box>
                 <Typography component="p" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66" mt="12px">
@@ -76,18 +82,18 @@ export default function Pool() {
           <NFTpoolFlexBox>
             <Box padding="24px" width="50%">
               <NFTpoolFlexBox height="24px">
-                <Box mr="4px">
+                <ImgBox mr="4px">
                   <img width="24px" height="24px" src={NFT1} alt="" />
-                </Box>
-                <Box mr="4px">
+                </ImgBox>
+                <ImgBox mr="4px">
                   <img width="24px" height="24px" src={NFT2} alt="" />
-                </Box>
-                <Box mr="4px">
+                </ImgBox>
+                <ImgBox mr="4px">
                   <img width="24px" height="24px" src={NFT3} alt="" />
-                </Box>
-                <Box>
+                </ImgBox>
+                <ImgBox>
                   <img width="24px" height="24px" src={NFT4} alt="" />
-                </Box>
+                </ImgBox>
               </NFTpoolFlexBox>
               <Box>
                 <Typography component="p" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66" mt="12px">

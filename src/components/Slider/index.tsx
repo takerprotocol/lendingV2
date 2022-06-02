@@ -12,16 +12,20 @@ interface Props {
 }
 
 const PrettoSlider = styled(Slider)({
-  color: '#52af77',
+  color: '#5fdac4',
   height: 8,
+  padding: 0,
   '& .MuiSlider-track': {
     border: 'none',
   },
+  '& .MuiSlider-rail': {
+    background: '#eff0f6',
+  },
   '& .MuiSlider-thumb': {
-    height: 24,
-    width: 24,
-    backgroundColor: '#fff',
-    border: '2px solid currentColor',
+    height: '12px',
+    width: '12px',
+    background: 'linear-gradient(213.69deg, #66DEC8 14%, #4BC8B1 92%)',
+    border: '2px solid #FFFFFF',
     '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
       boxShadow: 'inherit',
     },
@@ -34,12 +38,13 @@ const PrettoSlider = styled(Slider)({
     fontSize: 12,
     background: 'unset',
     padding: 0,
-    width: 32,
-    height: 32,
+    width: '12px',
+    height: '12px',
     borderRadius: '50% 50% 50% 0',
-    backgroundColor: '#52af77',
+    backgroundColor: '#5fdac4',
     transformOrigin: 'bottom left',
     transform: 'translate(50%, -100%) rotate(-45deg) scale(0)',
+    '&:after': { display: 'none' },
     '&:before': { display: 'none' },
     '&.MuiSlider-valueLabelOpen': {
       transform: 'translate(50%, -100%) rotate(-45deg) scale(1)',
@@ -67,8 +72,8 @@ function AirbnbThumbComponent(props: AirbnbThumbComponentProps) {
 export default function CustomizedSlider() {
   return (
     <Box sx={{ width: 470 }}>
-      <PrettoSlider valueLabelDisplay="auto" aria-label="pretto slider" defaultValue={20} />
-      <Box mt="12px" display="flex" alignItems="center" justifyContent="space-between">
+      <PrettoSlider valueLabelDisplay="off" aria-label="pretto slider" defaultValue={20} />
+      <Box mt="10px" display="flex" alignItems="center" justifyContent="space-between">
         <Typography variant="body1" component="h1" color="#4E4B66">
           My Debt 3.09 ETH
         </Typography>
