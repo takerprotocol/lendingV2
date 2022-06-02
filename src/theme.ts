@@ -207,9 +207,19 @@ const theme = createTheme({
         .header-padding {
           padding-top: 70px;
         }
+
         a {
           text-decoration: none;
           color: unset;
+        }
+
+        .MuiMenu-paper {
+          box-shadow: 0px 0px 32px rgb(0 0 0 / 10%) !important;
+          border-radius: 16px !important;
+          width: 240px !important;
+          background: white !important;
+          margin-top: 15px !important;
+          left: 190px !important;
         }
       `,
     },
