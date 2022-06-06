@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { MenuItem, Select, SelectProps } from '@mui/material'
 
@@ -59,24 +59,10 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
   const [open, setOpen] = useState(false)
 
   return (
-    <StyledSelect
-      {...props}
-      IconComponent={Arrow}
-      variant="standard"
-      MenuProps={{
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'left',
-        },
-        transformOrigin: {
-          vertical: 'top',
-          horizontal: 'left',
-        },
-      }}
-      open={open}
-      onClick={() => setOpen(!open)}
-    >
-      {Options}
-    </StyledSelect>
+    <div>
+      <StyledSelect {...props} IconComponent={Arrow} variant="standard" open={open} onClick={() => setOpen(!open)}>
+        {Options}
+      </StyledSelect>
+    </div>
   )
 }
