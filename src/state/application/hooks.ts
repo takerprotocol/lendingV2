@@ -1,15 +1,7 @@
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from '../index'
-import { ApplicationModal, setOpenModal } from './reducer'
-
-import { useActiveWeb3React } from '../../hooks/web3'
-
-export function useBlockNumber(): number | undefined {
-  const { chainId } = useActiveWeb3React()
-
-  return useAppSelector((state: AppState) => state.application.blockNumber[chainId ?? -1])
-}
+import { ApplicationModal, setAddress, setOpenModal } from './reducer'
 
 export function useModalOpen(modal: ApplicationModal): boolean {
   const openModal = useAppSelector((state: AppState) => state.application.openModal)
@@ -24,4 +16,13 @@ export function useToggleModal(modal: ApplicationModal): () => void {
 
 export function useWalletModalToggle(): () => void {
   return useToggleModal(ApplicationModal.WALLET)
+}
+
+export function useAddress(): string {
+  return useAppSelector((state: AppState) => state.application.address)
+}
+
+export function useUpdateAddress(address: string): () => void {
+  const dispatch = useAppDispatch()
+  return useCallback(() => dispatch(setAddress(address)), [dispatch, address])
 }

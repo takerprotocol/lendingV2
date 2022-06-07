@@ -1,19 +1,27 @@
 import React from 'react'
 import { styled } from '@mui/material/styles'
-import { Box, Typography, Button, Divider } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import theme from 'theme'
 
 const OptionWrapper = styled(Box)`
-  padding: 0 56px;
+  width: 330px;
+  padding-left: 64px;
+  cursor: pointer;
+  margin-bottom: 24px;
+  :hover {
+    background: #f7f7fc;
+    border-radius: 6px;
+  }
 `
 const OptionCard = styled(Box)`
   color: ${theme.palette.common.white};
-  height: 152px;
+  height: 64px;
   align-items: center;
   img {
-    width: 52px;
-    height: 52px;
+    width: 40px;
+    height: 40px;
     margin-right: 16px;
+    border-radius: 6px;
   }
 `
 
@@ -33,13 +41,11 @@ export default function Option({
       <OptionCard display={'flex'} justifyContent={'space-between'}>
         <Box display={'flex'} alignItems={'center'}>
           <img src={icon} alt={'Icon'} />
-          <Typography flex="1" variant="h4">
+          <Typography ml="16px" variant="subtitle2" fontWeight="600" color="#4E4B66" component="span">
             {header}
           </Typography>
         </Box>
-        <Button size="medium">Connect</Button>
       </OptionCard>
-      {header !== 'WalletConnect' && <Divider />}
     </OptionWrapper>
   )
   if (link) {

@@ -4,7 +4,7 @@ import DepositHeader from 'pages/Deposit/components/DepositHeader'
 import AvailableNFTs from './components/AvailableNFTs'
 import BgImg from 'assets/images/svg/deposit/Bg.svg'
 const Body = styled(Box)`
-  padding-top: 163px;
+  padding-top: 233px;
   background: linear-gradient(0deg, rgba(99, 133, 150, 0.4), rgba(99, 133, 150, 0.4)), url(${BgImg});
   background-image: url(${BgImg});
   background-repeat: no-repeat;

@@ -80,9 +80,9 @@ export function numFormat(value?: string | number, thousandSeparated = true): st
 export function fixedFormat(value?: string | number): string {
   if (value) {
     if (value.toString().split('.')[1] && value.toString().split('.')[1].length > 8) {
-      return new BigNumber(value).dp(8).toFormat()
+      return new BigNumber(value).dp(8).toFormat(2, 1)
     } else {
-      return new BigNumber(value).toFormat()
+      return new BigNumber(value).toFormat(2, 1)
     }
   }
   return ''
@@ -91,9 +91,9 @@ export function fixedFormat(value?: string | number): string {
 export function decimalFormat(value?: number | string, decimal = 18, thousandSeparated = true, precision = 2) {
   if (value) {
     if (thousandSeparated) {
-      return new BigNumber(value).div(new BigNumber(10).pow(decimal)).dp(precision, 1).toFormat()
+      return new BigNumber(value).div(new BigNumber(10).pow(decimal)).toFormat(precision, 1)
     } else {
-      return new BigNumber(value).div(new BigNumber(10).pow(decimal)).dp(precision, 1).toString()
+      return new BigNumber(value).div(new BigNumber(10).pow(decimal)).toFixed(precision, 1).toString()
     }
   } else {
     return '0'
@@ -124,7 +124,8 @@ export function timestampFormat(diff: number): [number, number, number, number] 
   }
 }
 
-export function desensitization(str: string, beginLen = 4, endLen = -4, fillingLen = 4) {
+export function desensitization(str: string | undefined, beginLen = 4, endLen = -4, fillingLen = 4) {
+  if (!str) return ''
   let tempStr = ''
   const len = str.length
   const firstStr = str.substring(0, beginLen)
@@ -133,6 +134,7 @@ export function desensitization(str: string, beginLen = 4, endLen = -4, fillingL
   tempStr = firstStr + middleStr + lastStr
   return tempStr
 }
+
 export const isValidEmail = (email: string) => {
   const res = email.match(/^[/+_a-z0-9-'&=]+(\.[/+_a-z0-9-']+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i)
   return res !== null

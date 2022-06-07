@@ -28,7 +28,7 @@ const CollectionFlexBox = styled(Box)`
   }
 `
 const CollectionUpBox = styled(Box)``
-export default function Collection() {
+export default function Collection(props: any) {
   const [check, setCheck] = useState<number | null>(1)
   const [list] = useState([1, 2])
   return (
@@ -194,7 +194,13 @@ export default function Collection() {
                     </Typography>
                   </Box>
                   <Box>
-                    <Button variant="contained">Borrow</Button>
+                    {props.type === 1 ? (
+                      <Button variant="contained">Deposit</Button>
+                    ) : (
+                      <Button variant="contained" color="success">
+                        Deposit
+                      </Button>
+                    )}
                   </Box>
                 </CollectionFlexBox>
               </CollectionUpBox>

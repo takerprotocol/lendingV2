@@ -1,16 +1,13 @@
 import * as React from 'react'
 import Slider, { SliderThumb } from '@mui/material/Slider'
 import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
 // import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box'
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Props {
   children: React.ReactElement
   value: number
 }
-
 const PrettoSlider = styled(Slider)({
   color: '#5fdac4',
   height: 8,
@@ -73,14 +70,6 @@ export default function CustomizedSlider() {
   return (
     <Box sx={{ width: 470 }}>
       <PrettoSlider valueLabelDisplay="off" aria-label="pretto slider" defaultValue={20} />
-      <Box mt="10px" display="flex" alignItems="center" justifyContent="space-between">
-        <Typography variant="body1" component="h1" color="#4E4B66">
-          My Debt 3.09 ETH
-        </Typography>
-        <Typography variant="body1" component="h1" fontWeight="600" color="#4E4B66">
-          Borrow Limit 18.09 ETH
-        </Typography>
-      </Box>
     </Box>
   )
 }

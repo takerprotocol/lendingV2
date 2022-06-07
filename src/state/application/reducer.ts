@@ -8,18 +8,11 @@ export type PopupContent = {
 
 export enum ApplicationModal {
   WALLET,
-  STAKE_CONFIRMATION,
-  CONFIRM_ORDER,
-  CONFIRM,
-  TIPS_ALERT,
-  WALLET_NEW_CRYPTO,
-  WITHDRAWAL_APPLICATION,
-  WALLET_RECHARGE,
-  NFT_FRAGMENT_COMPOUND,
 }
 
 export interface ApplicationState {
   readonly openModal: ApplicationModal | null
+  readonly address: string
 }
 
 export interface TokenDecimals {
@@ -29,6 +22,7 @@ export interface TokenDecimals {
 
 const initialState: ApplicationState = {
   openModal: null,
+  address: localStorage.getItem('address') || '',
 }
 
 const applicationSlice = createSlice({
@@ -38,8 +32,11 @@ const applicationSlice = createSlice({
     setOpenModal(state, action) {
       state.openModal = action.payload
     },
+    setAddress(state, action) {
+      state.address = action.payload
+    },
   },
 })
 
-export const { setOpenModal } = applicationSlice.actions
+export const { setOpenModal, setAddress } = applicationSlice.actions
 export default applicationSlice.reducer

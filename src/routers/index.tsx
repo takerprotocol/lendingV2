@@ -8,7 +8,9 @@ export default function CustomizeRoutes() {
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/deposit" element={<Deposit />} />
+      <Route path="/2" element={<Deposit />} />
       <Route path="/liquidation" element={<Liquidation />} />
+      <Route path="/3" element={<Liquidation />} />
       <Route path="*" element={<Dashboard />} />
     </Routes>
   )

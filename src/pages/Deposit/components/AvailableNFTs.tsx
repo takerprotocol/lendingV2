@@ -19,6 +19,13 @@ const AvailableNFTsBox = styled(Box)`
     padding: 0px;
     top: 0px;
   }
+  .css-gc2rr8-MuiInputBase-root-MuiOutlinedInput-root {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 160%;
+    color: #4e4b66;
+  }
   .css-9xuzcv-MuiButtonBase-root-MuiCheckbox-root {
     color: #4e4b66;
   }

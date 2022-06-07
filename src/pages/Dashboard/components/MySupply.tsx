@@ -1,5 +1,8 @@
 import { Typography, Button, Box, styled } from '@mui/material'
 import CustomizedSwitches from 'components/Switch'
+import mySupplyIcon from 'assets/images/svg/dashboard/MySupply.svg'
+import MySupplyModal from './MySupplyModal'
+import { useState } from 'react'
 const MySupplyBox = styled(Box)`
   width: 494px;
   height: 285px;
@@ -25,6 +28,8 @@ const MyETHBox = styled(Box)`
 `
 
 export default function MySupply() {
+  const [open, handle] = useState<boolean>(false)
+  const [type, setType] = useState<number>(1)
   return (
     <MySupplyBox>
       <MySupplyFlexBox>
@@ -33,18 +38,13 @@ export default function MySupply() {
             My Supply
           </Typography>
         </Box>
-        <MySupplyFlexBox>
-          <Typography
-            component="span"
-            variant="h1"
-            fontWeight="600"
-            fontSize=" 14px"
-            lineHeight="22px"
-            color="#FFFFFF"
-            mr="16px"
-          >
+        <MySupplyFlexBox sx={{ justifyContent: 'flex-start' }}>
+          <Typography component="span" variant="h1" fontWeight="600" fontSize=" 14px" lineHeight="22px" color="#FFFFFF">
             Used as Collateral
           </Typography>
+          <Box ml="6px" width="14px" mb="5px" height="14px" mr="12px">
+            <img src={mySupplyIcon} alt="" />
+          </Box>
           <CustomizedSwitches></CustomizedSwitches>
         </MySupplyFlexBox>
       </MySupplyFlexBox>
@@ -84,34 +84,29 @@ export default function MySupply() {
         </Box>
         <Box>
           <Button
-            disableRipple={true}
-            sx={{
-              width: '118px',
-              height: '48px',
-              mr: '12px',
-              background: 'rgba(255, 255, 255, 0.3)',
-              borderRadius: '6px',
-              color: '#FFFFFF',
+            variant="contained"
+            color="warning"
+            onClick={() => {
+              setType(2)
+              handle(true)
             }}
           >
-            Repay
+            Withdraw
           </Button>
           <Button
-            disableRipple={true}
-            sx={{
-              width: '118px',
-              height: '48px',
-              color: '#7646FF',
-              background: 'linear-gradient(180deg, #F9F8FF 0%, #F8F7FF 100%)',
-              boxShadow:
-                '0px 4px 4px rgba(124, 115, 226, 0.3), inset 0px -2px 2px rgba(182, 168, 240, 0.3), inset 0px 2px 2px #FFFFFF',
-              borderRadius: '6px',
+            sx={{ ml: '12px' }}
+            variant="contained"
+            color="info"
+            onClick={() => {
+              setType(1)
+              handle(true)
             }}
           >
-            Borrow
+            Supply
           </Button>
         </Box>
       </MySupplyFlexBox>
+      <MySupplyModal open={open} type={type} handle={handle}></MySupplyModal>
     </MySupplyBox>
   )
 }

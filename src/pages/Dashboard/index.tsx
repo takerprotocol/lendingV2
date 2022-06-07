@@ -8,7 +8,7 @@ import PoolMySupply from './components/PoolMySupply'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
 import NFTPool from './components/NFTPool'
-import OperateModal from 'components/Modal/operate'
+import { useState } from 'react'
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
   background-image: url(${BgIcon});
@@ -19,16 +19,19 @@ const Main = styled(Box)`
   margin: 0 auto;
 `
 export default function Dashboard() {
+  const [type, setType] = useState<number>(1)
+  const changeCheck = (a: number) => {
+    setType(a)
+  }
   return (
     <Body className="header-padding">
-      <OperateModal isOpen>111</OperateModal>
-      <BlueChipNFTs></BlueChipNFTs>
+      <BlueChipNFTs changeCheck={changeCheck}></BlueChipNFTs>
       <Main>
-        <DashboardTotal></DashboardTotal>
-        <Overview></Overview>
+        <DashboardTotal type={type}></DashboardTotal>
+        <Overview type={type}></Overview>
         <PoolMySupply></PoolMySupply>
         <NFTPool></NFTPool>
-        <Collection></Collection>
+        <Collection type={type}></Collection>
       </Main>
     </Body>
   )

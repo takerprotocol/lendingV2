@@ -4,7 +4,7 @@ import theme from 'theme'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { useModalOpen, useWalletModalToggle } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
+import { ApplicationModal, setAddress } from 'state/application/reducer'
 import usePrevious from 'hooks/usePrevious'
 
 import { injected } from 'connectors'
@@ -13,8 +13,9 @@ import { isMobile } from 'utils/userAgent'
 
 import MetamaskIcon from 'assets/images/png/metamask.png'
 
-import Modal from '../Modal'
 import Option from './Option'
+import Modal from 'components/Modal'
+import { useAppDispatch } from 'state/hooks'
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -28,11 +29,9 @@ export default function WalletModal() {
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
   const previousAccount = usePrevious(account)
-
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
-
   const previousWalletView = usePrevious(walletView)
-
+  const dispatch = useAppDispatch()
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
       toggleWalletModal()
@@ -51,8 +50,10 @@ export default function WalletModal() {
       activate(connector, undefined, true)
         .then(async () => {
           const walletAddress = await connector.getAccount()
-          console.log(walletAddress)
-          // logMonitoringEvent({ walletAddress })
+          if (walletAddress) {
+            localStorage.setItem('address', walletAddress)
+            dispatch(setAddress(walletAddress))
+          }
         })
         .catch((error) => {
           console.log(error, '-----------')
@@ -173,11 +174,11 @@ export default function WalletModal() {
         </Box>
       )
     }
-    return <Box width="640px">{getOptions()}</Box>
+    return <Box>{getOptions()}</Box>
   }
   return (
-    <Modal isOpen={walletModalOpen} onClose={toggleWalletModal} isTitle={!error} title="CONNECT WALLET">
-      <Box>{getModalContent()}</Box>
+    <Modal isOpen={walletModalOpen} onClose={toggleWalletModal} isTitle={!error} title="Select a wallet">
+      <Box padding={'16px'}>{getModalContent()}</Box>
     </Modal>
   )
 }

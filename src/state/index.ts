@@ -1,9 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
+import application from './application/reducer'
 
 const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
-  reducer: {},
+  reducer: {
+    application,
+  },
 })
 
 /**

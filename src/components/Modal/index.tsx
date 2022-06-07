@@ -2,11 +2,17 @@ import React from 'react'
 import { Dialog, DialogTitle } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { isMobile } from '../../utils/userAgent'
-import ClosePic from 'assets/images/svg/close.svg'
+import ClosePic from 'assets/images/svg/common/shutOff.svg'
 
 const DialogWrapper = styled(Dialog)`
   .MuiPaper-root {
     border-radius: 12px;
+  }
+  .MuiDialogTitle-root {
+    color: #a0a3bd;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 26px;
   }
 `
 
@@ -14,13 +20,12 @@ const CloseIcon = styled('span')`
   display: block;
   background-image: url(${ClosePic});
   background-repeat: no-repeat;
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
-  opacity: 0.5;
   position: absolute;
-  top: 30px;
-  right: 30px;
+  top: 24px;
+  right: 24px;
 `
 interface ModalProps {
   width?: string

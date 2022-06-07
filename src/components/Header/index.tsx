@@ -1,7 +1,12 @@
 import { Box, Button, styled, Typography } from '@mui/material'
 import LogoIcon from 'assets/images/svg/logo.svg'
+import AddressIcon from 'assets/images/svg/wallet/address.svg'
+import WalletModal from 'components/WalletModal'
 import { Link } from 'react-router-dom'
+import { useAddress, useToggleModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
 import { FlexBox } from 'styleds'
+import { desensitization } from 'utils'
 
 const HeaderBox = styled(Box)`
   display: flex;
@@ -14,6 +19,22 @@ const HeaderBox = styled(Box)`
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(50px);
   z-index: 10;
+`
+
+const AddressBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 15px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: #6e7191;
+  background: rgba(160, 163, 189, 0.1);
+  border-radius: 4px;
+  img {
+    margin-right: 12px;
+  }
 `
 
 const WalletButton = styled(Button)`
@@ -30,6 +51,8 @@ const WalletButton = styled(Button)`
   }
 `
 export const Header = () => {
+  const toggleModal = useToggleModal(ApplicationModal.WALLET)
+  const address = useAddress()
   return (
     <HeaderBox>
       <img alt="" src={LogoIcon} />
@@ -54,10 +77,24 @@ export const Header = () => {
             FAQs
           </Typography>
         </Link>
-        <WalletButton variant="contained" color="inherit">
-          <Typography>Connect Wallet</Typography>
-        </WalletButton>
+        {!address ? (
+          <WalletButton
+            variant="contained"
+            color="inherit"
+            onClick={() => {
+              toggleModal()
+            }}
+          >
+            <Typography>Connect Wallet</Typography>
+          </WalletButton>
+        ) : (
+          <AddressBox>
+            <img alt="" src={AddressIcon}></img>
+            {desensitization(address)}
+          </AddressBox>
+        )}
       </FlexBox>
+      <WalletModal></WalletModal>
     </HeaderBox>
   )
 }

@@ -63,7 +63,7 @@ const theme = createTheme({
       main: red.A400,
     },
     background: {
-      paper: '#1c1a32',
+      paper: '#FFFFFF',
       default: '#F7F7FC',
     },
     grey: {
@@ -138,6 +138,24 @@ const theme = createTheme({
     },
   },
   components: {
+    MuiBackdrop: {
+      styleOverrides: {
+        root: `
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        `,
+      },
+    },
+    MuiModal: {
+      styleOverrides: {
+        root: `
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        `,
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: `
@@ -199,6 +217,14 @@ const theme = createTheme({
           &.MuiButton-containedInfo.Mui-disabled {
             opacity: 0.6;
           }
+          &.MuiButton-containedSuccess {
+            background: linear-gradient(82.51deg, #A476FF 0%, #7E7BFF 42.39%, #6096FF 74.2%, #53CBFF 100%);
+            color: #fff;
+          }
+          &.MuiButton-containedSuccess.Mui-disabled {
+            background: linear-gradient(0deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), linear-gradient(82.67deg, #C3A5FF -12.69%, #A8A6FF 31.8%, #A8C5FF 80.81%, #BAE3F4 113.32%);
+            color: rgba(255, 255, 255, 0.7);
+          }
         `,
       },
     },
@@ -207,12 +233,10 @@ const theme = createTheme({
         .header-padding {
           padding-top: 70px;
         }
-
         a {
           text-decoration: none;
           color: unset;
         }
-
         .MuiMenu-paper {
           box-shadow: 0px 0px 32px rgb(0 0 0 / 10%) !important;
           border-radius: 16px !important;
