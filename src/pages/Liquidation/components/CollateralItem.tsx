@@ -1,6 +1,6 @@
 import { Button, styled, Typography } from '@mui/material'
 import Copy from 'components/Copy'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { abbrevAddress } from 'utils/abbrevAddres'
 
 const Card = styled('div')`
@@ -58,8 +58,9 @@ const StyledCollectionPlaceholder = styled('div')(({ theme }) => ({
 }))
 
 const CollectionImage = (props: any) => {
-  if (props.src) {
-    return <StyledCollectionImage {...props} />
+  const [error, setError] = useState(false)
+  if (props.src || error) {
+    return <StyledCollectionImage onLoad={() => setError(false)} onError={() => setError(true)} {...props} />
   } else {
     return <StyledCollectionPlaceholder />
   }
