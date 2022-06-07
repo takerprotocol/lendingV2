@@ -4,6 +4,7 @@ import { Typography } from '@mui/material'
 import CustomizedSelect from 'components/Select'
 import { useCallback, useMemo, useState } from 'react'
 import CollateralItem from './CollateralItem'
+import EmptyState from './EmptyState'
 
 const CollateralsContainer = styled(Box)`
   width: calc(100% - 280px);
@@ -237,7 +238,7 @@ const Collaterals = ({ collaterals }: { collaterals?: any }) => {
           />
         </SortContainer>
       </SortFilterContainer>
-      <CollateralItems>{CollateralList}</CollateralItems>
+      <CollateralItems>{!collaterals.length ? <EmptyState /> : CollateralList}</CollateralItems>
     </CollateralsContainer>
   )
 }
