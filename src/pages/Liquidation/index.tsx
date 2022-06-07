@@ -191,7 +191,7 @@ export default function Liquidation() {
   return (
     <Body className="header-padding">
       <Header />
-      <Collaterals collaterals={collaterals} />
+      <Collaterals loading={true} collaterals={collaterals} />
     </Body>
   )
 }
