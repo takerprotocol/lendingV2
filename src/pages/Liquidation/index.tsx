@@ -5,7 +5,7 @@ import Collaterals from './components/Collaterals'
 import Collection1 from '../../assets/images/png/liquidation/example/1.png'
 import Collection2 from '../../assets/images/png/liquidation/example/2.png'
 import Collection3 from '../../assets/images/png/liquidation/example/3.png'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 
 const Body = styled(Box)`
@@ -16,6 +16,56 @@ const Body = styled(Box)`
 export default function Liquidation() {
   const collaterals = useMemo(
     () => [
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 0.1,
+        collections: [
+          {
+            image: Collection1,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection2,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection3,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection2,
+            nfts: new Array(2),
+          },
+        ],
+        debt: 5,
+        riskPercentage: 110,
+        riskLevel: 'Liquidation',
+      },
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 0.1,
+        collections: [
+          {
+            image: Collection1,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection2,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection3,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection2,
+            nfts: new Array(2),
+          },
+        ],
+        debt: 5,
+        riskPercentage: 110,
+        riskLevel: 'Liquidation',
+      },
       {
         address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
         collateral: 0.1,
@@ -138,10 +188,13 @@ export default function Liquidation() {
     ],
     []
   )
+
+  const [loading] = useState(false)
+
   return (
     <Body className="header-padding">
       <Header />
-      <Collaterals collaterals={collaterals} />
+      <Collaterals loading={loading} collaterals={collaterals} />
     </Body>
   )
 }

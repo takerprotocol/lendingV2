@@ -4,28 +4,22 @@ import { MenuItem, Select, SelectProps } from '@mui/material'
 
 const StyledSelect = styled(Select)`
   display: flex;
-
   width: 240px;
   height: 48px;
-
   /* Cool Gray 300 */
-
   border: 1px solid #d9dbe9;
   border-radius: 50px;
   padding-right: 20px;
   padding-left: 20px;
   padding-top: 2px;
   cursor: pointer;
-
   fieldset {
     border: 1px solid #d9dbe9 !important;
   }
-
   ::before,
   ::after {
     border-bottom: none !important;
   }
-
   .MuiInput-input {
     background: transparent !important;
   }

@@ -4,6 +4,8 @@ import { Typography } from '@mui/material'
 import CustomizedSelect from 'components/Select'
 import { useCallback, useMemo, useState } from 'react'
 import CollateralItem from './CollateralItem'
+import CollateralItemSkeleton from './CollateralItemSkeleton'
+import EmptyState from './EmptyState'
 
 const CollateralsContainer = styled(Box)`
   width: calc(100% - 280px);
@@ -113,7 +115,8 @@ const CollateralItems = styled('div')`
   gap: 16px;
 `
 
-const Collaterals = ({ collaterals }: { collaterals?: any }) => {
+const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; loading: boolean }) => {
+  console.log(loading)
   const [search, setSearch] = useState('')
   const handleSearch = (e: any) => setSearch(String(e.target.value))
   const [collateralFilter, setCollateralFilter] = useState(0)
@@ -155,6 +158,12 @@ const Collaterals = ({ collaterals }: { collaterals?: any }) => {
     })
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [collaterals, sort, debtFilter, search, collateralFilter])
+
+  const CollateralSkeletonList = useMemo(() => {
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((collateral: any) => {
+      return <CollateralItemSkeleton key={`collateral-${JSON.stringify(collateral)}`} />
+    })
+  }, [])
 
   return (
     <CollateralsContainer>
@@ -237,7 +246,9 @@ const Collaterals = ({ collaterals }: { collaterals?: any }) => {
           />
         </SortContainer>
       </SortFilterContainer>
-      <CollateralItems>{CollateralList}</CollateralItems>
+      <CollateralItems>
+        {loading ? CollateralSkeletonList : !!collaterals.length ? CollateralList : <EmptyState />}
+      </CollateralItems>
     </CollateralsContainer>
   )
 }

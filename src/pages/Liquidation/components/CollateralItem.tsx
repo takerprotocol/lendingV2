@@ -1,6 +1,6 @@
 import { Button, styled, Typography } from '@mui/material'
 import Copy from 'components/Copy'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { abbrevAddress } from 'utils/abbrevAddres'
 
 const Card = styled('div')`
@@ -43,11 +43,28 @@ const CollectionDataItem = styled(DataItem)`
   width: 250px;
 `
 
-const CollectionImage = styled('img')`
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-`
+const StyledCollectionImage = styled('img')(({ theme }) => ({
+  width: 24,
+  height: 24,
+  borderRadius: 4,
+  backgroundColor: theme.palette.primary.main,
+}))
+
+const StyledCollectionPlaceholder = styled('div')(({ theme }) => ({
+  width: 24,
+  height: 24,
+  borderRadius: 4,
+  backgroundColor: theme.palette.primary.main,
+}))
+
+const CollectionImage = (props: any) => {
+  const [error, setError] = useState(false)
+  if (props.src || error) {
+    return <StyledCollectionImage onLoad={() => setError(false)} onError={() => setError(true)} {...props} />
+  } else {
+    return <StyledCollectionPlaceholder />
+  }
+}
 
 const CollectionImageContainer = styled('div')`
   display: flex;
