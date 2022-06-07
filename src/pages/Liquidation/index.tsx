@@ -61,6 +61,56 @@ export default function Liquidation() {
             image: Collection2,
             nfts: new Array(2),
           },
+        ],
+        debt: 5,
+        riskPercentage: 110,
+        riskLevel: 'Liquidation',
+      },
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 0.1,
+        collections: [
+          {
+            image: Collection1,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection2,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection3,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection2,
+            nfts: new Array(2),
+          },
+        ],
+        debt: 5,
+        riskPercentage: 110,
+        riskLevel: 'Liquidation',
+      },
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 0.1,
+        collections: [
+          {
+            image: Collection1,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection2,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection3,
+            nfts: new Array(2),
+          },
+          {
+            image: Collection2,
+            nfts: new Array(2),
+          },
           {
             image: Collection1,
             nfts: new Array(2),
