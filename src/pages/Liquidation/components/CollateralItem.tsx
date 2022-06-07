@@ -43,11 +43,27 @@ const CollectionDataItem = styled(DataItem)`
   width: 250px;
 `
 
-const CollectionImage = styled('img')`
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-`
+const StyledCollectionImage = styled('img')(({ theme }) => ({
+  width: 24,
+  height: 24,
+  borderRadius: 4,
+  backgroundColor: theme.palette.primary.main,
+}))
+
+const StyledCollectionPlaceholder = styled('div')(({ theme }) => ({
+  width: 24,
+  height: 24,
+  borderRadius: 4,
+  backgroundColor: theme.palette.primary.main,
+}))
+
+const CollectionImage = (props: any) => {
+  if (props.src) {
+    return <StyledCollectionImage {...props} />
+  } else {
+    return <StyledCollectionPlaceholder />
+  }
+}
 
 const CollectionImageContainer = styled('div')`
   display: flex;
