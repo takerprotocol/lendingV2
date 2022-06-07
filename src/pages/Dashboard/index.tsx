@@ -8,6 +8,7 @@ import PoolMySupply from './components/PoolMySupply'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
 import NFTPool from './components/NFTPool'
+import OperateModal from 'components/Modal/operate'
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
   background-image: url(${BgIcon});
@@ -20,6 +21,7 @@ const Main = styled(Box)`
 export default function Dashboard() {
   return (
     <Body className="header-padding">
+      <OperateModal isOpen>111</OperateModal>
       <BlueChipNFTs></BlueChipNFTs>
       <Main>
         <DashboardTotal></DashboardTotal>
