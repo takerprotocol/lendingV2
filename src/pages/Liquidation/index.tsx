@@ -5,7 +5,7 @@ import Collaterals from './components/Collaterals'
 import Collection1 from '../../assets/images/png/liquidation/example/1.png'
 import Collection2 from '../../assets/images/png/liquidation/example/2.png'
 import Collection3 from '../../assets/images/png/liquidation/example/3.png'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 
 const Body = styled(Box)`
@@ -188,10 +188,13 @@ export default function Liquidation() {
     ],
     []
   )
+
+  const [loading] = useState(false)
+
   return (
     <Body className="header-padding">
       <Header />
-      <Collaterals loading={true} collaterals={collaterals} />
+      <Collaterals loading={loading} collaterals={collaterals} />
     </Body>
   )
 }

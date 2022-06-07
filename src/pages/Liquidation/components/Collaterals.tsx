@@ -247,7 +247,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         </SortContainer>
       </SortFilterContainer>
       <CollateralItems>
-        {loading ? CollateralSkeletonList : !collaterals.length ? CollateralList : <EmptyState />}
+        {loading ? CollateralSkeletonList : !!collaterals.length ? CollateralList : <EmptyState />}
       </CollateralItems>
     </CollateralsContainer>
   )
