@@ -5,6 +5,7 @@ import CustomizedSelect from 'components/Select'
 import { useCallback, useMemo, useState } from 'react'
 import CollateralItem from './CollateralItem'
 import CollateralItemSkeleton from './CollateralItemSkeleton'
+import EmptyState from './EmptyState'
 
 const CollateralsContainer = styled(Box)`
   width: calc(100% - 280px);
@@ -164,8 +165,6 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
     })
   }, [])
 
-  console.log(CollateralSkeletonList)
-
   return (
     <CollateralsContainer>
       <CollateralsFilterHeader>
@@ -247,7 +246,9 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
           />
         </SortContainer>
       </SortFilterContainer>
-      <CollateralItems>{CollateralSkeletonList}</CollateralItems>
+      <CollateralItems>
+        {loading ? CollateralSkeletonList : !collaterals.length ? CollateralList : <EmptyState />}
+      </CollateralItems>
     </CollateralsContainer>
   )
 }
