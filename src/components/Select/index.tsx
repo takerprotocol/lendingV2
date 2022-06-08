@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { MenuItem, Select, SelectProps } from '@mui/material'
 
@@ -38,20 +38,23 @@ const Arrow = () => (
   </svg>
 )
 
-type CustomizedSelectProps = SelectProps & { options: { value: any; label: string }[] }
+type CustomizedSelectProps = SelectProps & { options: { value: any; name: string }[] }
 
 export default function CustomizedSelect(props: CustomizedSelectProps) {
   const Options = useMemo(
     () =>
       props.options.map((option: any) => (
         <MenuItem key={`${option.value}-item`} value={option.value}>
-          {option.label}
+          {option.name}
         </MenuItem>
       )),
     [props.options]
   )
 
   const [open, setOpen] = useState(false)
+
+  const [value, setValue] = useState('0')
+  const onChange = useCallback((event: any) => setValue(String(event.target.value)), [])
 
   return (
     <div>
@@ -62,6 +65,8 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
         open={open}
         onClick={() => setOpen(!open)}
         className={props.startAdornment ? 'withicon' : ''}
+        value={value}
+        onChange={onChange}
       >
         {Options}
       </StyledSelect>

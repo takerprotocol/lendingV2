@@ -43,11 +43,20 @@ const CollectionDataItem = styled(DataItem)`
   width: 250px;
 `
 
-const StyledCollectionImage = styled('img')(({ theme }) => ({
+const StyledCollectionImage = styled('img', {
+  shouldForwardProp: (props) => true,
+})<{ overflow?: boolean }>(({ theme, overflow }) => ({
   width: 24,
   height: 24,
   borderRadius: 4,
   backgroundColor: theme.palette.primary.main,
+  borderLeft: overflow ? '2px white solid' : 'none',
+  marginLeft: overflow ? -10 : 0,
+  objectFit: 'cover',
+  ':first-child': {
+    borderLeft: 'none',
+    marginLeft: 'none',
+  },
 }))
 
 const StyledCollectionPlaceholder = styled('div')(({ theme }) => ({
@@ -57,10 +66,17 @@ const StyledCollectionPlaceholder = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
 }))
 
-const CollectionImage = (props: any) => {
+const CollectionImage = (props: any & { src?: string; overflow?: boolean }) => {
   const [error, setError] = useState(false)
   if (props.src || error) {
-    return <StyledCollectionImage onLoad={() => setError(false)} onError={() => setError(true)} {...props} />
+    return (
+      <StyledCollectionImage
+        overflow={!!props.overflow}
+        onLoad={() => setError(false)}
+        onError={() => setError(true)}
+        {...props}
+      />
+    )
   } else {
     return <StyledCollectionPlaceholder />
   }
@@ -92,8 +108,14 @@ const CollateralItem = ({
   nfts = 0,
 }: CollateralItemType) => {
   const Collections = useMemo(() => {
+    const overflow = !!(collections?.length > 9)
     return collections?.map((collection: any) => (
-      <CollectionImage key={`collection-${JSON.stringify(collection)}`} alt="collection" src={collection.image} />
+      <CollectionImage
+        key={`collection-${JSON.stringify(collection)}`}
+        alt="collection"
+        src={collection.image}
+        overflow={overflow}
+      />
     ))
   }, [collections])
 
@@ -126,7 +148,9 @@ const CollateralItem = ({
           {collections?.length || 0} Collections / {nfts} NFTs
         </Header>
         <Value>
-          <CollectionImageContainer>{Collections}</CollectionImageContainer>
+          <CollectionImageContainer style={{ marginLeft: collections?.length > 9 ? 10 : 0 }}>
+            {Collections}
+          </CollectionImageContainer>
         </Value>
       </CollectionDataItem>
       <DataItem>
