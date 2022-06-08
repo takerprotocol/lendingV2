@@ -1,6 +1,6 @@
 import { Button, styled, Typography } from '@mui/material'
 import Copy from 'components/Copy'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { abbrevAddress } from 'utils/abbrevAddres'
 
 const Card = styled('div')`
@@ -88,6 +88,33 @@ const CollectionImageContainer = styled('div')`
   flex-wrap: wrap;
 `
 
+const ShowMoreCollectionsButton = styled('div')`
+  width: 24px;
+  height: 24px;
+  background: #d9dbe9;
+  opacity: 0.5;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+
+  > div {
+    width: 3px;
+    height: 3px;
+    background: #a0a3bd;
+    border-radius: 50%;
+
+    :first-child {
+      margin-right: 2px;
+    }
+
+    :last-child {
+      margin-left: 2px;
+    }
+  }
+`
+
 type CollateralItemType = {
   address: string
   collateral: number
@@ -107,17 +134,19 @@ const CollateralItem = ({
   riskLevel,
   nfts = 0,
 }: CollateralItemType) => {
+  const overflow = (collections: any[]) => !!(collections?.length > 9)
+  const [shownCollections, setShowCollections] = useState(collections.slice(0, 8))
+  const showAllCollections = useCallback(() => setShowCollections(collections), [collections])
   const Collections = useMemo(() => {
-    const overflow = !!(collections?.length > 9)
-    return collections?.map((collection: any) => (
+    return shownCollections?.map((collection: any) => (
       <CollectionImage
         key={`collection-${JSON.stringify(collection)}`}
         alt="collection"
         src={collection.image}
-        overflow={overflow}
+        overflow={overflow(collections)}
       />
     ))
-  }, [collections])
+  }, [shownCollections, collections])
 
   return (
     <Card>
@@ -148,8 +177,15 @@ const CollateralItem = ({
           {collections?.length || 0} Collections / {nfts} NFTs
         </Header>
         <Value>
-          <CollectionImageContainer style={{ marginLeft: collections?.length > 9 ? 10 : 0 }}>
+          <CollectionImageContainer style={{ marginLeft: overflow(collections) ? 10 : 0 }}>
             {Collections}
+            {overflow(collections) && collections?.length !== shownCollections?.length && (
+              <ShowMoreCollectionsButton onClick={showAllCollections}>
+                <div />
+                <div />
+                <div />
+              </ShowMoreCollectionsButton>
+            )}
           </CollectionImageContainer>
         </Value>
       </CollectionDataItem>
