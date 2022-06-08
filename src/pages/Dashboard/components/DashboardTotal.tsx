@@ -2,8 +2,8 @@ import { Box, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import TotalBorrowedIcon from 'assets/images/svg/dashboard/total-borrowed.svg'
 import TotalLiquidityIcon from 'assets/images/svg/dashboard/total-liquidity.svg'
-import totaiLeft from 'assets/images/svg/dashboard/totaiLeft.svg'
-import totaiRight from 'assets/images/svg/dashboard/totaiRight.svg'
+import TotalLeft from 'assets/images/svg/dashboard/totalLeft.svg'
+import TotalRight from 'assets/images/svg/dashboard/totalRight.svg'
 import TopLiquidity from 'assets/images/svg/dashboard/top-liquidity.svg'
 import BottomLiquidity from 'assets/images/svg/dashboard/bottom-liquidity.svg'
 import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
@@ -28,7 +28,7 @@ export default function DashboardTotal({ type }: { type: number }) {
             </Box>
           ) : (
             <Box width="62px" height="62px" marginLeft="23px">
-              <img src={totaiLeft} alt=" " />
+              <img src={TotalLeft} width="62px" alt=" " />
             </Box>
           )}
           <Box marginLeft="24px">
@@ -99,7 +99,7 @@ export default function DashboardTotal({ type }: { type: number }) {
             </Box>
           ) : (
             <Box width="62px" height="62px">
-              <img src={totaiRight} alt="" />
+              <img src={TotalRight} width="62px" alt="" />
             </Box>
           )}
           <Box sx={{ marginLeft: '24px' }}>
