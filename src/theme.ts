@@ -243,7 +243,6 @@ const theme = createTheme({
           width: 240px !important;
           background: white !important;
           margin-top: 15px !important;
-          left: 190px !important;
         }
       `,
     },

@@ -93,6 +93,7 @@ const FilterContainer = styled('div')`
   display: flex;
   width: 100%;
   margin-top: 40px;
+  gap: 20px;
 `
 
 const SortContainer = styled('div')`
@@ -186,14 +187,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
             options={collateralOptions}
             onChange={handleCollateralFilterChange}
             startAdornment={
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ marginRight: 6 }}
-              >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
                 <path d="M7 8H17" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M8 5H16" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
@@ -207,14 +201,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
             options={debtFilters}
             onChange={handleDebtFilterChange}
             startAdornment={
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ marginRight: 6 }}
-              >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 11.7576L11.5 3L17 11.7576L11.5 20L6 11.7576Z" stroke="#6E7191" strokeLinejoin="round" />
                 <path d="M6 11.5L11.5 15L17 11.5" stroke="#6E7191" strokeLinejoin="round" />
               </svg>
@@ -229,14 +216,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
             options={sortOptions}
             onChange={handleSortUpdate}
             startAdornment={
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ marginRight: 6 }}
-              >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8.5 18.5V5.5L5.5 8.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M14.5 5.5V18.5L17.5 15.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

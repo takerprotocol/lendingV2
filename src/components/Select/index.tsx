@@ -22,6 +22,7 @@ const StyledSelect = styled(Select)`
   }
   .MuiInput-input {
     background: transparent !important;
+    padding-left: 10px;
   }
 `
 
@@ -54,7 +55,14 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
 
   return (
     <div>
-      <StyledSelect {...props} IconComponent={Arrow} variant="standard" open={open} onClick={() => setOpen(!open)}>
+      <StyledSelect
+        {...props}
+        IconComponent={Arrow}
+        variant="standard"
+        open={open}
+        onClick={() => setOpen(!open)}
+        className={props.startAdornment ? 'withicon' : ''}
+      >
         {Options}
       </StyledSelect>
     </div>
