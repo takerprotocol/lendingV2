@@ -150,6 +150,22 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         value: 0,
         name: 'All Debts',
       },
+      {
+        value: 1,
+        name: '< 10 ETH',
+      },
+      {
+        value: 2,
+        name: '10 ETH - 30 ETH',
+      },
+      {
+        value: 3,
+        name: '30 ETH - 50 ETH',
+      },
+      {
+        value: 4,
+        name: '> 50 ETH',
+      },
     ]
   }, [])
 
