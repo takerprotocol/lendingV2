@@ -128,6 +128,18 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         value: 0,
         name: 'All Collaterals',
       },
+      {
+        value: 1,
+        name: 'Risky',
+      },
+      {
+        value: 2,
+        name: 'High Risk',
+      },
+      {
+        value: 3,
+        name: 'Liquidation',
+      },
     ]
   }, [])
   const [debtFilter, setDebtFilter] = useState(0)
