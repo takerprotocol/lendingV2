@@ -26,6 +26,12 @@ const StyledSelect = styled(Select)`
   }
 `
 
+const StyledMenuItem = styled(MenuItem)`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`
+
 const Arrow = () => (
   <svg width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
@@ -38,15 +44,15 @@ const Arrow = () => (
   </svg>
 )
 
-type CustomizedSelectProps = SelectProps & { options: { value: any; name: string }[] }
+type CustomizedSelectProps = SelectProps & { options: { value: any; name: string | JSX.Element }[] }
 
 export default function CustomizedSelect(props: CustomizedSelectProps) {
   const Options = useMemo(
     () =>
       props.options.map((option: any) => (
-        <MenuItem key={`${option.value}-item`} value={option.value}>
+        <StyledMenuItem key={`${option.value}-item`} value={option.value}>
           {option.name}
-        </MenuItem>
+        </StyledMenuItem>
       )),
     [props.options]
   )
