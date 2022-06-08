@@ -126,7 +126,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
     return [
       {
         value: 0,
-        label: 'All Collaterals',
+        name: 'All Collaterals',
       },
     ]
   }, [])
@@ -136,7 +136,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
     return [
       {
         value: 0,
-        label: 'All Debts',
+        name: 'All Debts',
       },
     ]
   }, [])
@@ -147,7 +147,31 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
     return [
       {
         value: 0,
-        label: 'Default Sort',
+        name: 'Default Sort',
+      },
+      {
+        value: 1,
+        name: 'Collateral ↓',
+      },
+      {
+        value: 2,
+        name: 'Collateral ↑',
+      },
+      {
+        value: 3,
+        name: 'Total Debt ↓',
+      },
+      {
+        value: 4,
+        name: 'Total Debt ↑',
+      },
+      {
+        value: 3,
+        name: 'Risk Level ↓',
+      },
+      {
+        value: 4,
+        name: 'Risk Level ↑',
       },
     ]
   }, [])
