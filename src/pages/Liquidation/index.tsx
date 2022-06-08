@@ -21,18 +21,22 @@ export default function Liquidation() {
         collateral: 0.1,
         collections: [
           {
+            name: 'Cryptopunks',
             image: Collection1,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
           {
+            name: 'Jadu Hoverboard',
             image: Collection3,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
@@ -46,18 +50,22 @@ export default function Liquidation() {
         collateral: 0.1,
         collections: [
           {
+            name: 'Cryptopunks',
             image: Collection1,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
           {
+            name: 'Jadu Hoverboard',
             image: Collection3,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
@@ -71,18 +79,22 @@ export default function Liquidation() {
         collateral: 0.1,
         collections: [
           {
+            name: 'Cryptopunks',
             image: Collection1,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
           {
+            name: 'Jadu Hoverboard',
             image: Collection3,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
@@ -96,34 +108,42 @@ export default function Liquidation() {
         collateral: 0.1,
         collections: [
           {
+            name: 'Cryptopunks',
             image: Collection1,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
           {
+            name: 'Jadu Hoverboard',
             image: Collection3,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
           {
+            name: 'Cryptopunks',
             image: Collection1,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
           {
+            name: 'Jadu Hoverboard',
             image: Collection3,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
@@ -137,46 +157,57 @@ export default function Liquidation() {
         collateral: 0.1,
         collections: [
           {
+            name: 'Cryptopunks',
             image: Collection1,
             nfts: new Array(2),
           },
           {
+            name: 'NFTrees',
             image: Collection2,
             nfts: new Array(2),
           },
           {
+            name: 'Jadu Hoverboard',
             image: Collection3,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(2),
           },
           {
+            name: 'Jadu Hoverboard',
             image: Collection3,
             nfts: new Array(5),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(5),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(5),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(5),
           },
           {
+            name: 'Jadu Hoverboard',
             image: Collection3,
             nfts: new Array(5),
           },
           {
+            name: 'Bored Ape Yacht Club',
             image: Collection2,
             nfts: new Array(3),
           },
