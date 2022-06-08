@@ -126,6 +126,7 @@ const CollectionSortItem = styled('div')`
     height: 16px;
     border-radius: 50%;
     backgroundcolor: #7646ff;
+    object-fit: cover;
   }
 `
 
