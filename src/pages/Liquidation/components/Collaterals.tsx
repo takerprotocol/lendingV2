@@ -116,32 +116,49 @@ const CollateralItems = styled('div')`
   gap: 16px;
 `
 
+const CollectionSortItem = styled('div')`
+  display: flex;
+  gap: 6px;
+  align-items: center;
+
+  img {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    backgroundcolor: #7646ff;
+  }
+`
+
 const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; loading: boolean }) => {
-  console.log(loading)
   const [search, setSearch] = useState('')
   const handleSearch = (e: any) => setSearch(String(e.target.value))
-  const [collateralFilter, setCollateralFilter] = useState(0)
-  const handleCollateralFilterChange = useCallback((value: any) => setCollateralFilter(value), [])
+  const [collectionFilter, setCollectionFilter] = useState(0)
+  const handleCollectionFilterChange = useCallback((value: any) => setCollectionFilter(value), [])
+  const collections = useMemo(() => collaterals.map((collateral: any) => collateral.collections).flat(), [collaterals])
+  const uniqueCollections = useMemo(
+    () => [...new Set(collections.map((collection: any) => collection.name))],
+    [collections]
+  )
   const collateralOptions = useMemo(() => {
     return [
       {
         value: 0,
-        name: 'All Collaterals',
+        name: 'All Collections',
       },
-      {
-        value: 1,
-        name: 'Risky',
-      },
-      {
-        value: 2,
-        name: 'High Risk',
-      },
-      {
-        value: 3,
-        name: 'Liquidation',
-      },
+      ...uniqueCollections.map((collection: any, index) => ({
+        value: index + 1,
+        name: (
+          <CollectionSortItem>
+            <img
+              alt={collection}
+              src={collections.find((findCollection: any) => findCollection.name === collection).image}
+            />
+            {collection}
+          </CollectionSortItem>
+        ),
+      })),
     ]
-  }, [])
+  }, [uniqueCollections, collections])
   const [debtFilter, setDebtFilter] = useState(0)
   const handleDebtFilterChange = useCallback((value: any) => setDebtFilter(value), [])
   const debtFilters = useMemo(() => {
@@ -210,7 +227,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       return <CollateralItem key={`collateral-${JSON.stringify(collateral)}`} {...collateral} nfts={nfts} />
     })
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [collaterals, sort, debtFilter, search, collateralFilter])
+  }, [collaterals, sort, debtFilter, search, collectionFilter])
 
   const CollateralSkeletonList = useMemo(() => {
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((collateral: any) => {
@@ -235,9 +252,9 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       <SortFilterContainer>
         <FilterContainer>
           <CustomizedSelect
-            value={collateralFilter}
+            value={collectionFilter}
             options={collateralOptions}
-            onChange={handleCollateralFilterChange}
+            onChange={handleCollectionFilterChange}
             startAdornment={
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
