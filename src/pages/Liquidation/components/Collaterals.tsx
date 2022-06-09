@@ -134,19 +134,22 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
   const [search, setSearch] = useState('')
   const handleSearch = (e: any) => setSearch(String(e.target.value))
   const [collectionFilter, setCollectionFilter] = useState(0)
-  const handleCollectionFilterChange = useCallback((value: any) => setCollectionFilter(value), [])
+  const handleCollectionFilterChange = useCallback(
+    (event: any) => setCollectionFilter(event.target.value as number),
+    []
+  )
   const collections = useMemo(() => collaterals.map((collateral: any) => collateral.collections).flat(), [collaterals])
-  const uniqueCollections = useMemo(
+  const uniqueCollections: any = useMemo(
     () => [...new Set(collections.map((collection: any) => collection.name))],
     [collections]
   )
-  const collateralOptions = useMemo(() => {
+  const collectionOptions = useMemo(() => {
     return [
       {
         value: 0,
         name: 'All Collections',
       },
-      ...uniqueCollections.map((collection: any, index) => ({
+      ...uniqueCollections.map((collection: any, index: number) => ({
         value: index + 1,
         name: (
           <CollectionSortItem>
@@ -160,6 +163,20 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       })),
     ]
   }, [uniqueCollections, collections])
+  const collectionsFilterFunction = useCallback(
+    (collateral: any) => {
+      if (!collectionFilter) {
+        return true
+      } else {
+        const filterCollection = String(uniqueCollections[collectionFilter - 1]).toLowerCase()
+        return Boolean(
+          collateral.collections.find((collection: any) => collection.name.toLowerCase() === filterCollection)
+        )
+      }
+    },
+    [collectionFilter, uniqueCollections]
+  )
+
   const [debtFilter, setDebtFilter] = useState(0)
   const handleDebtFilterChange = useCallback(
     (event: SelectChangeEvent<unknown>, _child: ReactNode) => setDebtFilter(event.target.value as number),
@@ -189,6 +206,23 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       },
     ]
   }, [])
+  const deptFilterFunction = useCallback(
+    (collateral: any) => {
+      switch (debtFilter) {
+        case 1:
+          return collateral.debt < 10
+        case 2:
+          return collateral.debt > 10 && collateral.debt < 30
+        case 3:
+          return collateral.debt > 30 && collateral.debt < 50
+        case 4:
+          return collateral.debt > 50
+        default:
+          return true
+      }
+    },
+    [debtFilter]
+  )
 
   const [sort, setSort] = useState(0)
   const handleSortUpdate = useCallback((value: any) => setSort(value), [])
@@ -224,31 +258,19 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       },
     ]
   }, [])
-  const deptFilterFunction = useCallback(
-    (collateral: any) => {
-      switch (debtFilter) {
-        case 1:
-          return collateral.debt < 10
-        case 2:
-          return collateral.debt > 10 && collateral.debt < 30
-        case 3:
-          return collateral.debt > 30 && collateral.debt < 50
-        case 4:
-          return collateral.debt > 50
-        default:
-          return true
-      }
-    },
-    [debtFilter]
-  )
+  const sortOptionsFunction = useCallback(() => true, [sort])
 
   const CollateralList = useMemo(() => {
-    return collaterals.filter(deptFilterFunction).map((collateral: any) => {
-      const nfts = collateral.collections.reduce((acc: any, current: any) => acc + current.nfts.length, 0)
-      return <CollateralItem key={`collateral-${JSON.stringify(collateral)}`} {...collateral} nfts={nfts} />
-    })
+    return collaterals
+      .filter(collectionsFilterFunction)
+      .filter(deptFilterFunction)
+      .sort(sortOptionsFunction)
+      .map((collateral: any) => {
+        const nfts = collateral.collections.reduce((acc: any, current: any) => acc + current.nfts.length, 0)
+        return <CollateralItem key={`collateral-${JSON.stringify(collateral)}`} {...collateral} nfts={nfts} />
+      })
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [collaterals, sort, search, collectionFilter, deptFilterFunction])
+  }, [collaterals, sortOptionsFunction, search, collectionsFilterFunction, deptFilterFunction])
 
   const CollateralSkeletonList = useMemo(() => {
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((collateral: any) => {
@@ -274,7 +296,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         <FilterContainer>
           <CustomizedSelect
             value={collectionFilter}
-            options={collateralOptions}
+            options={collectionOptions}
             onChange={handleCollectionFilterChange}
             startAdornment={
               <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
