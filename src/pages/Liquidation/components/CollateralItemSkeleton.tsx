@@ -1,16 +1,19 @@
 import { Button, Skeleton, styled, Typography } from '@mui/material'
 import { useMemo } from 'react'
 
-const Card = styled('div')`
-  background: #ffffff;
-  border: 1px solid #eff0f6;
-  border-radius: 12px;
-  width: 100%;
-  padding: 24px;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-`
+const Card = styled('div')(({ theme }) => ({
+  background: '#ffffff',
+  border: '1px solid #eff0f6',
+  borderRadius: 12,
+  width: '100%',
+  padding: 24,
+  display: 'flex',
+  justifyContent: 'space-between',
+  flexWrap: 'wrap',
+  [theme.breakpoints.down('md')]: {
+    gap: 20,
+  },
+}))
 
 const Value = styled(Typography)`
   font-family: 'Quicksand';
