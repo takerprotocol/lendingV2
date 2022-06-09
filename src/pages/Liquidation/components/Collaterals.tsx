@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
-import { Typography } from '@mui/material'
+import { SelectChangeEvent, Typography } from '@mui/material'
 import CustomizedSelect from 'components/Select'
-import { useCallback, useMemo, useState } from 'react'
+import React, { ReactNode, useCallback, useMemo, useState } from 'react'
 import CollateralItem from './CollateralItem'
 import CollateralItemSkeleton from './CollateralItemSkeleton'
 import EmptyState from './EmptyState'
@@ -161,7 +161,10 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
     ]
   }, [uniqueCollections, collections])
   const [debtFilter, setDebtFilter] = useState(0)
-  const handleDebtFilterChange = useCallback((value: any) => setDebtFilter(value), [])
+  const handleDebtFilterChange = useCallback(
+    (event: SelectChangeEvent<unknown>, _child: ReactNode) => setDebtFilter(event.target.value as number),
+    []
+  )
   const debtFilters = useMemo(() => {
     return [
       {
@@ -221,14 +224,31 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       },
     ]
   }, [])
+  const deptFilterFunction = useCallback(
+    (collateral: any) => {
+      switch (debtFilter) {
+        case 1:
+          return collateral.debt < 10
+        case 2:
+          return collateral.debt > 10 && collateral.debt < 30
+        case 3:
+          return collateral.debt > 30 && collateral.debt < 50
+        case 4:
+          return collateral.debt > 50
+        default:
+          return true
+      }
+    },
+    [debtFilter]
+  )
 
   const CollateralList = useMemo(() => {
-    return collaterals.map((collateral: any) => {
+    return collaterals.filter(deptFilterFunction).map((collateral: any) => {
       const nfts = collateral.collections.reduce((acc: any, current: any) => acc + current.nfts.length, 0)
       return <CollateralItem key={`collateral-${JSON.stringify(collateral)}`} {...collateral} nfts={nfts} />
     })
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [collaterals, sort, debtFilter, search, collectionFilter])
+  }, [collaterals, sort, search, collectionFilter, deptFilterFunction])
 
   const CollateralSkeletonList = useMemo(() => {
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((collateral: any) => {

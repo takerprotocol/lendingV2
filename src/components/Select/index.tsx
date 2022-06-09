@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from 'react'
+import React, { ReactNode, useCallback, useMemo, useState } from 'react'
 import { styled } from '@mui/material/styles'
-import { MenuItem, Select, SelectProps } from '@mui/material'
+import { MenuItem, Select, SelectChangeEvent, SelectProps } from '@mui/material'
 
 const StyledSelect = styled(Select)`
   display: flex;
@@ -60,7 +60,12 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
   const [open, setOpen] = useState(false)
 
   const [value, setValue] = useState('0')
-  const onChange = useCallback((event: any) => setValue(String(event.target.value)), [])
+  const onChange = useCallback((event: SelectChangeEvent<unknown>, child: ReactNode) => {
+    setValue(event.target.value as string)
+    if (props.onChange) {
+      props.onChange(event, child)
+    }
+  }, [])
 
   return (
     <div>
