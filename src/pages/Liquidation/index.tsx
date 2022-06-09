@@ -18,13 +18,50 @@ export default function Liquidation() {
     () => [
       {
         address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        collateral: 0.1,
+        collateral: 120,
         collections: [
           {
             name: 'Cryptopunks',
             image: Collection1,
             nfts: new Array(2),
           },
+        ],
+        debt: 50,
+        riskPercentage: 110,
+        riskLevel: 'Liquidation',
+      },
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 2,
+        collections: [
+          {
+            name: 'Cryptopunks',
+            image: Collection1,
+            nfts: new Array(2),
+          },
+        ],
+        debt: 2,
+        riskPercentage: 110,
+        riskLevel: 'Liquidation',
+      },
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 50,
+        collections: [
+          {
+            name: 'Cryptopunks',
+            image: Collection1,
+            nfts: new Array(2),
+          },
+        ],
+        debt: 398,
+        riskPercentage: 110,
+        riskLevel: 'Liquidation',
+      },
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 20,
+        collections: [
           {
             name: 'Bored Ape Yacht Club',
             image: Collection2,
@@ -41,7 +78,7 @@ export default function Liquidation() {
             nfts: new Array(2),
           },
         ],
-        debt: 5,
+        debt: 60,
         riskPercentage: 110,
         riskLevel: 'Liquidation',
       },
@@ -50,111 +87,18 @@ export default function Liquidation() {
         collateral: 0.1,
         collections: [
           {
-            name: 'Cryptopunks',
-            image: Collection1,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-          {
             name: 'Jadu Hoverboard',
             image: Collection3,
             nfts: new Array(2),
           },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
         ],
-        debt: 5,
+        debt: 20,
         riskPercentage: 110,
         riskLevel: 'Liquidation',
       },
       {
         address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        collateral: 0.1,
-        collections: [
-          {
-            name: 'Cryptopunks',
-            image: Collection1,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Jadu Hoverboard',
-            image: Collection3,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-        ],
-        debt: 5,
-        riskPercentage: 110,
-        riskLevel: 'Liquidation',
-      },
-      {
-        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        collateral: 0.1,
-        collections: [
-          {
-            name: 'Cryptopunks',
-            image: Collection1,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Jadu Hoverboard',
-            image: Collection3,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Cryptopunks',
-            image: Collection1,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Jadu Hoverboard',
-            image: Collection3,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-        ],
-        debt: 5,
-        riskPercentage: 110,
-        riskLevel: 'Liquidation',
-      },
-      {
-        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        collateral: 0.1,
+        collateral: 60,
         collections: [
           {
             name: 'Cryptopunks',
@@ -212,7 +156,7 @@ export default function Liquidation() {
             nfts: new Array(3),
           },
         ],
-        debt: 5,
+        debt: 35,
         riskPercentage: 110,
         riskLevel: 'Liquidation',
       },
