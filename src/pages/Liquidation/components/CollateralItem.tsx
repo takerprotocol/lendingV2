@@ -118,6 +118,16 @@ const ShowMoreCollectionsButton = styled('div')`
   }
 `
 
+const NoCollateralText = styled(Typography)`
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 160%;
+  color: #14142a;
+  opacity: 0.7;
+`
+
 type CollateralItemType = {
   address: string
   collateral: number
@@ -141,14 +151,18 @@ const CollateralItem = ({
   const [shownCollections, setShowCollections] = useState(collections.slice(0, 8))
   const showAllCollections = useCallback(() => setShowCollections(collections), [collections])
   const Collections = useMemo(() => {
-    return shownCollections?.map((collection: any) => (
-      <CollectionImage
-        key={`collection-${JSON.stringify(collection)}`}
-        alt="collection"
-        src={collection.image}
-        overflow={overflow(collections)}
-      />
-    ))
+    if (shownCollections.length) {
+      return shownCollections?.map((collection: any) => (
+        <CollectionImage
+          key={`collection-${JSON.stringify(collection)}`}
+          alt="collection"
+          src={collection.image}
+          overflow={overflow(collections)}
+        />
+      ))
+    } else {
+      return <NoCollateralText>No NFT collateral</NoCollateralText>
+    }
   }, [shownCollections, collections])
 
   return (
