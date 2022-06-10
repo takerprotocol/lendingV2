@@ -1,5 +1,4 @@
-import * as React from 'react'
-import greyShutOff from 'assets/images/svg/common/greyShutOff.svg'
+import greyShutOff from 'assets/images/svg/common/close-white.svg'
 import prompt from 'assets/images/svg/common/prompt.svg'
 import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material'
 import { useEffect, useState } from 'react'
@@ -34,24 +33,13 @@ const BottomBox = styled(Box)`
   position: absolute;
   top: 188px;
   padding: 24px;
-  .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-    padding: 0px;
-  }
-  .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-    border: 0px;
-  }
-  .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-    font-family: 'Quicksand';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 28px;
-    line-height: 45px;
-    color: #14142a;
-  }
 `
 const CenterBox = styled(Box)`
   display: flex;
   align-items: center;
+  .MuiInputBase-input {
+    font-size: 28px;
+  }
 `
 const SpaceBetweenBox = styled(Box)`
   display: flex;
@@ -74,6 +62,20 @@ const BorrowAmountBox = styled(Box)`
   background: #eff0f6;
   border-radius: 10px;
   padding: 16px;
+`
+
+export const MAXBox = styled(Box)`
+  padding: 2px 8px;
+  border: 1px solid #14142a;
+  border-radius: 4px;
+  margin-top: 16px;
+  width: 42px;
+  cursor: pointer;
+  color: #14142a;
+  :hover {
+    color: #ffffff;
+    background: #14142a;
+  }
 `
 export default function MySupplyModal({ open, handle, type }: { open: boolean; handle: Function; type: number }) {
   const [check, setCheck] = useState<number>(type)
@@ -123,12 +125,12 @@ export default function MySupplyModal({ open, handle, type }: { open: boolean; h
                 fontWeight="700"
                 component="h1"
                 sx={{ cursor: 'pointer' }}
-                color={check === 1 ? '#FFFFFF' : '#A0A3BD'}
+                color={check === 1 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
                 onClick={() => {
                   setCheck(1)
                 }}
               >
-                Borrow
+                Supply
               </Typography>
               <Box
                 className={check === 1 ? 'BorrowOrRepay' : ''}
@@ -141,12 +143,12 @@ export default function MySupplyModal({ open, handle, type }: { open: boolean; h
                 fontWeight="700"
                 component="h1"
                 sx={{ cursor: 'pointer' }}
-                color={check === 2 ? '#FFFFFF' : '#A0A3BD'}
+                color={check === 2 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
                 onClick={() => {
                   setCheck(2)
                 }}
               >
-                Repay
+                Withdraw
               </Typography>
               <Box
                 className={check === 2 ? 'BorrowOrRepay' : ''}
@@ -164,7 +166,7 @@ export default function MySupplyModal({ open, handle, type }: { open: boolean; h
                 </Typography>
                 <CenterBox width="200px">
                   <img src={myCollateral} alt="" />
-                  <TextField autoFocus={true} sx={{ marginLeft: '7px' }} placeholder="0.00" />
+                  <TextField autoFocus={true} sx={{ marginLeft: '7px', fontSize: '28px' }} placeholder="0.00" />
                 </CenterBox>
               </Box>
               {check === 3 ? (
@@ -183,20 +185,11 @@ export default function MySupplyModal({ open, handle, type }: { open: boolean; h
               ) : (
                 <Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Box
-                      sx={{
-                        padding: '2px 8px',
-                        border: '1px solid #14142A',
-                        borderRadius: '4px',
-                        marginTop: '16px',
-                        width: '42px',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <Typography variant="body2" component="p" fontWeight="700" color="#14142A">
+                    <MAXBox>
+                      <Typography variant="body2" component="p" fontWeight="700">
                         MAX
                       </Typography>
-                    </Box>
+                    </MAXBox>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Typography mt="4px" variant="body1" fontWeight="600" component="p" color="#14142A">

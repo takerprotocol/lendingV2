@@ -60,12 +60,15 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
   const [open, setOpen] = useState(false)
 
   const [value, setValue] = useState('0')
-  const onChange = useCallback((event: SelectChangeEvent<unknown>, child: ReactNode) => {
-    setValue(event.target.value as string)
-    if (props.onChange) {
-      props.onChange(event, child)
-    }
-  }, [])
+  const onChange = useCallback(
+    (event: SelectChangeEvent<unknown>, child: ReactNode) => {
+      setValue(event.target.value as string)
+      if (props.onChange) {
+        props.onChange(event, child)
+      }
+    },
+    [props]
+  )
 
   return (
     <div>

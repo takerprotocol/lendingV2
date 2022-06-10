@@ -58,7 +58,7 @@ export default function DepositHeader() {
             <Typography component="p" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66">
               Total Value Locked{' '}
             </Typography>
-            <Box>
+            <Box mt="8px">
               <img margin-top={'15px'} src={myCollateralIcon} alt="" />
               <Typography
                 ml="7px"
@@ -81,7 +81,7 @@ export default function DepositHeader() {
             <Typography component="p" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66">
               Floor Price
             </Typography>
-            <Box>
+            <Box mt="8px">
               <img margin-top={'15px'} src={myCollateralIcon} alt="" />
               <Typography
                 ml="7px"
@@ -102,7 +102,7 @@ export default function DepositHeader() {
             <Typography component="p" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66">
               TLoan to value
             </Typography>
-            <Box>
+            <Box mt="8px">
               <img margin-top={'15px'} src={myCollateralIcon} alt="" />
               <Typography
                 ml="7px"

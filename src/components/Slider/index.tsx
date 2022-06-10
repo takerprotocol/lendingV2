@@ -68,7 +68,7 @@ function AirbnbThumbComponent(props: AirbnbThumbComponentProps) {
 
 export default function CustomizedSlider() {
   return (
-    <Box sx={{ width: 470 }}>
+    <Box sx={{ width: '100%' }}>
       <PrettoSlider valueLabelDisplay="off" aria-label="pretto slider" defaultValue={20} />
     </Box>
   )

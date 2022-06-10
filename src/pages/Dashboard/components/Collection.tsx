@@ -5,6 +5,7 @@ import ButtonUp from 'assets/images/svg/dashboard/button-up.svg'
 import ButtonDown from 'assets/images/svg/dashboard/button-down.svg'
 import minMyCollateralIcon from 'assets/images/svg/dashboard/minMyCollateral-icon.svg'
 import { useState } from 'react'
+import { useAddress, useWalletModalToggle } from 'state/application/hooks'
 const CollectionBox = styled(Box)`
   width: 1160px;
   border-radius: 12px;
@@ -12,6 +13,9 @@ const CollectionBox = styled(Box)`
     background: #ffffff;
     box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
     border-radius: 12px;
+  }
+  .none {
+    display: none;
   }
 `
 const CollectionHeader = styled(Box)`
@@ -31,6 +35,8 @@ const CollectionUpBox = styled(Box)``
 export default function Collection(props: any) {
   const [check, setCheck] = useState<number | null>(1)
   const [list] = useState([1, 2])
+  const address = useAddress()
+  const toggleModal = useWalletModalToggle()
   return (
     <Box mt="24px">
       <CollectionHeader>
@@ -107,7 +113,7 @@ export default function Collection(props: any) {
                 </Typography>
               </CollectionFlexBox>
               <CollectionFlexBox sx={{ width: '126px' }}>
-                <Typography component="span" variant="body1" fontWeight="700" color="#4BC8B1">
+                <Typography component="span" variant="subtitle2" fontWeight="700" color="#4BC8B1">
                   30%
                 </Typography>
               </CollectionFlexBox>
@@ -126,7 +132,7 @@ export default function Collection(props: any) {
               </CollectionFlexBox>
             </CollectionFlexBox>
             {el === check && (
-              <CollectionUpBox>
+              <CollectionUpBox sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <CollectionFlexBox m="48px 0 0 24px">
                   <Box width="125px">
                     <Typography component="p" variant="subtitle1" color="#14142A">
@@ -170,8 +176,8 @@ export default function Collection(props: any) {
                       Liquidation Profit
                     </Typography>
                   </Box>
-                  <Box height="36px" border="1px solid #EFF0F6"></Box>
-                  <Box ml="50px" width="148px">
+                  <Box className={address ? '' : 'none'} height="36px" width="0px" border="1px solid #EFF0F6"></Box>
+                  <Box className={address ? '' : 'none'} ml="50px" width="148px">
                     <Typography component="span" variant="subtitle1" fontWeight="700" color="#7646FF">
                       20{' '}
                     </Typography>
@@ -182,7 +188,7 @@ export default function Collection(props: any) {
                       My Deposited
                     </Typography>
                   </Box>
-                  <Box width="130px">
+                  <Box className={address ? '' : 'none'} width="130px">
                     <Typography component="span" variant="subtitle1" fontWeight="700" color="#7646FF">
                       10{' '}
                     </Typography>
@@ -193,7 +199,9 @@ export default function Collection(props: any) {
                       My Balance
                     </Typography>
                   </Box>
-                  <Box>
+                </CollectionFlexBox>
+                {address ? (
+                  <Box mt="48px">
                     {props.type === 1 ? (
                       <Button variant="contained">Deposit</Button>
                     ) : (
@@ -202,7 +210,30 @@ export default function Collection(props: any) {
                       </Button>
                     )}
                   </Box>
-                </CollectionFlexBox>
+                ) : (
+                  <Box mt="48px">
+                    {props.type === 1 ? (
+                      <Button
+                        variant="contained"
+                        onClick={() => {
+                          toggleModal()
+                        }}
+                      >
+                        Connect Wallet
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => {
+                          toggleModal()
+                        }}
+                      >
+                        Connect Wallet
+                      </Button>
+                    )}
+                  </Box>
+                )}
               </CollectionUpBox>
             )}
           </Box>

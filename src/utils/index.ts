@@ -124,7 +124,7 @@ export function timestampFormat(diff: number): [number, number, number, number] 
   }
 }
 
-export function desensitization(str: string | undefined, beginLen = 4, endLen = -4, fillingLen = 4) {
+export function desensitization(str: string | undefined, beginLen = 4, endLen = -4, fillingLen = 3) {
   if (!str) return ''
   let tempStr = ''
   const len = str.length

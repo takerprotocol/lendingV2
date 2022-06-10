@@ -3,6 +3,7 @@ import CustomizedSwitches from 'components/Switch'
 import mySupplyIcon from 'assets/images/svg/dashboard/MySupply.svg'
 import MySupplyModal from './MySupplyModal'
 import { useState } from 'react'
+import { useAddress, useWalletModalToggle } from 'state/application/hooks'
 const MySupplyBox = styled(Box)`
   width: 494px;
   height: 285px;
@@ -30,6 +31,8 @@ const MyETHBox = styled(Box)`
 export default function MySupply() {
   const [open, handle] = useState<boolean>(false)
   const [type, setType] = useState<number>(1)
+  const toggleModal = useWalletModalToggle()
+  const address = useAddress()
   return (
     <MySupplyBox>
       <MySupplyFlexBox>
@@ -38,73 +41,106 @@ export default function MySupply() {
             My Supply
           </Typography>
         </Box>
-        <MySupplyFlexBox sx={{ justifyContent: 'flex-start' }}>
-          <Typography component="span" variant="h1" fontWeight="600" fontSize=" 14px" lineHeight="22px" color="#FFFFFF">
-            Used as Collateral
-          </Typography>
-          <Box ml="6px" width="14px" mb="5px" height="14px" mr="12px">
-            <img src={mySupplyIcon} alt="" />
-          </Box>
-          <CustomizedSwitches></CustomizedSwitches>
-        </MySupplyFlexBox>
-      </MySupplyFlexBox>
-      <MyETHBox>
-        <Typography
-          sx={{ opacity: 1 }}
-          component="span"
-          variant="h1"
-          fontWeight="600"
-          fontSize=" 28px"
-          lineHeight="45px"
-          color="#FFFFFF"
-        >
-          10.06 ETH
-        </Typography>
-      </MyETHBox>
-      <MySupplyFlexBox mt="26px">
-        <Box>
-          <Box>
+        {address ? (
+          <MySupplyFlexBox sx={{ justifyContent: 'flex-start' }}>
             <Typography
-              sx={{ opacity: 0.7 }}
-              component="p"
+              component="span"
               variant="h1"
               fontWeight="600"
               fontSize=" 14px"
               lineHeight="22px"
               color="#FFFFFF"
             >
-              My Balance
+              Used as Collateral
             </Typography>
+            <Box ml="6px" width="14px" mb="5px" height="14px" mr="12px">
+              <img src={mySupplyIcon} alt="" />
+            </Box>
+            <CustomizedSwitches></CustomizedSwitches>
+          </MySupplyFlexBox>
+        ) : (
+          <Box></Box>
+        )}
+      </MySupplyFlexBox>
+      <MyETHBox>
+        {address ? (
+          <Typography sx={{ opacity: 1 }} component="span" variant="h4" fontWeight="600" color="#FFFFFF">
+            10.06 ETH
+          </Typography>
+        ) : (
+          <Typography sx={{ opacity: 1 }} component="span" variant="subtitle2" color="#FFFFFF">
+            Please connect wallet to view details
+          </Typography>
+        )}
+      </MyETHBox>
+      <MySupplyFlexBox mt="26px">
+        {address ? (
+          <Box>
+            <Box>
+              <Typography
+                sx={{ opacity: 0.7 }}
+                component="p"
+                variant="h1"
+                fontWeight="600"
+                fontSize=" 14px"
+                lineHeight="22px"
+                color="#FFFFFF"
+              >
+                My Balance
+              </Typography>
+            </Box>
+            <Box mt="2px">
+              <Typography
+                component="p"
+                variant="h1"
+                fontWeight="600"
+                fontSize=" 18px"
+                lineHeight="29px"
+                color="#FFFFFF"
+              >
+                6.97 ETH
+              </Typography>
+            </Box>
           </Box>
-          <Box mt="2px">
-            <Typography component="p" variant="h1" fontWeight="600" fontSize=" 18px" lineHeight="29px" color="#FFFFFF">
-              6.97 ETH
-            </Typography>
+        ) : (
+          <Box></Box>
+        )}
+        {address ? (
+          <Box>
+            <Button
+              variant="contained"
+              color="warning"
+              onClick={() => {
+                setType(2)
+                handle(true)
+              }}
+            >
+              Withdraw
+            </Button>
+            <Button
+              sx={{ ml: '12px' }}
+              variant="contained"
+              color="info"
+              onClick={() => {
+                setType(1)
+                handle(true)
+              }}
+            >
+              Supply
+            </Button>
           </Box>
-        </Box>
-        <Box>
+        ) : (
           <Button
-            variant="contained"
-            color="warning"
-            onClick={() => {
-              setType(2)
-              handle(true)
-            }}
-          >
-            Withdraw
-          </Button>
-          <Button
-            sx={{ ml: '12px' }}
+            sx={{ width: ' 174px', height: '48px' }}
             variant="contained"
             color="info"
             onClick={() => {
-              setType(1)
-              handle(true)
+              toggleModal()
             }}
           >
-            Supply
+            Connect Wallet
           </Button>
-        </Box>
+        )}
       </MySupplyFlexBox>
       <MySupplyModal open={open} type={type} handle={handle}></MySupplyModal>
     </MySupplyBox>

@@ -1,4 +1,3 @@
-import * as React from 'react'
 import greyShutOff from 'assets/images/svg/common/greyShutOff.svg'
 import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material'
 import { useEffect, useState } from 'react'
@@ -6,6 +5,7 @@ import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
+import { MAXBox } from './MySupplyModal'
 const style = {
   width: '420px',
   height: '674px',
@@ -40,27 +40,13 @@ const BottomBox = styled(Box)`
   position: absolute;
   top: 188px;
   padding: 24px;
-  .css-1nc39zm-MuiSlider-root {
-    width: 372px;
-  }
-  .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-    padding: 0px;
-  }
-  .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-    border: 0px;
-  }
-  .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-    font-family: 'Quicksand';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 28px;
-    line-height: 45px;
-    color: #14142a;
-  }
 `
 const CenterBox = styled(Box)`
   display: flex;
   align-items: center;
+  .MuiInputBase-input {
+    font-size: 28px;
+  }
 `
 const SpaceBetweenBox = styled(Box)`
   display: flex;
@@ -212,20 +198,11 @@ export default function OverviewModal({ open, type, handle }: { open: boolean; t
               ) : (
                 <Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Box
-                      sx={{
-                        padding: '2px 8px',
-                        border: '1px solid #14142A',
-                        borderRadius: '4px',
-                        marginTop: '16px',
-                        width: '42px',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <Typography variant="body2" component="p" color="#14142A">
+                    <MAXBox>
+                      <Typography variant="body2" component="p">
                         MAX
                       </Typography>
-                    </Box>
+                    </MAXBox>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Typography mt="4px" variant="body1" component="p" color="#14142A">

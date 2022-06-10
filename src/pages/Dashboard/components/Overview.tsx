@@ -32,12 +32,6 @@ const TopRight = styled(Box)`
   align-items: center;
   padding: 0.875rem 1rem;
 `
-const OverviewTypography = styled(Typography)`
-  font-weight: 600;
-  font-size: 0.875rem;
-  line-height: 1.375rem;
-  color: #14142a;
-`
 const NetAPY = styled(Box)`
   padding: 1.5rem;
   height: 14.0625rem;
@@ -67,7 +61,7 @@ export default function Overview(props: any) {
   const [open, handle] = useState<boolean>(false)
   const [type, setType] = useState<number>(1)
   const address = useAddress()
-
+  // const toggleModal = useWalletModalToggle()
   return (
     <Box>
       {address ? (
@@ -78,17 +72,17 @@ export default function Overview(props: any) {
                 Overview
               </Typography>
             </Box>
-            <TopRight>
-              <OverviewTypography variant="h1" marginRight=".625rem">
+            <TopRight sx={{ cursor: 'pointer' }}>
+              <Typography variant="body1" component="span" fontWeight="600" marginRight=".625rem">
                 Rewards
-              </OverviewTypography>
+              </Typography>
               <img src={OverviewIcon} alt="" />
-              <OverviewTypography variant="h1" marginLeft=".25rem">
+              <Typography variant="subtitle2" component="span" marginLeft=".25rem">
                 16.84
-              </OverviewTypography>
-              <OverviewTypography variant="h1" marginLeft="1rem">
+              </Typography>
+              <Typography variant="body1" component="span" fontWeight="700" marginLeft="1rem">
                 Claim {'>'}
-              </OverviewTypography>
+              </Typography>
             </TopRight>
           </OverviewFlexBox>
           <OverviewFlexBox>
@@ -177,7 +171,7 @@ export default function Overview(props: any) {
                 </OverviewFlexBox>
               </NetAPY>
             </OverviewFlexBox>
-            <Box ml="6.125rem" mt="1.4375rem">
+            <Box ml="6.125rem" mt="1.4375rem" width="470px">
               <Box sx={{ width: '466' }}>
                 <RiskLevel>
                   <Box>
@@ -207,7 +201,7 @@ export default function Overview(props: any) {
                 <Box>
                   <CustomizedSlider></CustomizedSlider>
                   <Box mt="10px" display="flex" alignItems="center" justifyContent="space-between">
-                    <Typography variant="body1" component="h1" color="#4E4B66">
+                    <Typography variant="body1" fontWeight="600" component="h1" color="#4E4B66">
                       My Debt 3.09 ETH
                     </Typography>
                     <Typography variant="body1" component="h1" fontWeight="600" color="#4E4B66">
@@ -261,7 +255,7 @@ export default function Overview(props: any) {
           </OverviewFlexBox>
         </OverviewBox>
       ) : (
-        <ConnectWallet></ConnectWallet>
+        <ConnectWallet type={props.type}></ConnectWallet>
       )}
       <OverviewModal open={open} type={type} handle={handle}></OverviewModal>
     </Box>

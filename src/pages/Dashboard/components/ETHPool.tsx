@@ -84,18 +84,18 @@ export default function ETHpool() {
           </ETHpoolFlexBox>
           <ETHpoolFlexBox mt="8px">
             <Box>
-              <Typography component="p" variant="subtitle2" lineHeight="22px" color="#A0A3BD">
+              <Typography component="p" fontWeight="600" variant="body1" color="#A0A3BD">
                 Supply APY
               </Typography>
-              <Typography mt="4px" component="p" variant="subtitle2" lineHeight="22px" color="#A0A3BD">
+              <Typography mt="4px" fontWeight="600" component="p" variant="body1" color="#A0A3BD">
                 Reward APY
               </Typography>
             </Box>
             <Box ml="8px">
-              <Typography component="p" variant="subtitle2" lineHeight="22px" color="#6E7191">
+              <Typography component="p" fontWeight="600" variant="body1" color="#6E7191">
                 5%
               </Typography>
-              <Typography mt="4px" component="p" variant="subtitle2" fontWeight="700" lineHeight="22px" color="#4BC8B1">
+              <Typography mt="4px" component="p" variant="body1" fontWeight="700" color="#4BC8B1">
                 15%
               </Typography>
             </Box>
@@ -115,18 +115,18 @@ export default function ETHpool() {
           </ETHpoolFlexBox>
           <ETHpoolFlexBox mt="8px">
             <Box>
-              <Typography component="p" variant="subtitle2" lineHeight="22px" color="#A0A3BD">
+              <Typography component="p" fontWeight="600" variant="body1" color="#A0A3BD">
                 Supply APY
               </Typography>
-              <Typography mt="4px" component="p" variant="subtitle2" lineHeight="22px" color="#A0A3BD">
+              <Typography mt="4px" component="p" fontWeight="600" variant="body1" color="#A0A3BD">
                 Reward APY
               </Typography>
             </Box>
             <Box ml="8px">
-              <Typography component="p" variant="subtitle2" lineHeight="22px" color="#6E7191">
+              <Typography component="p" variant="body1" fontWeight="600" color="#6E7191">
                 -10%
               </Typography>
-              <Typography mt="4px" component="p" variant="subtitle2" fontWeight="700" lineHeight="22px" color="#4BC8B1">
+              <Typography mt="4px" component="p" variant="body1" fontWeight="700" color="#4BC8B1">
                 20%
               </Typography>
             </Box>

@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import { SelectChangeEvent, Typography } from '@mui/material'
 import CustomizedSelect from 'components/Select'
-import React, { ReactNode, useCallback, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import CollateralItem from './CollateralItem'
 import CollateralItemSkeleton from './CollateralItemSkeleton'
 import EmptyState from './EmptyState'
@@ -125,7 +125,7 @@ const CollectionSortItem = styled('div')`
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    backgroundcolor: #7646ff;
+    background-color: #7646ff;
     object-fit: cover;
   }
 `
@@ -258,7 +258,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       },
     ]
   }, [])
-  const sortOptionsFunction = useCallback(() => true, [sort])
+  const sortOptionsFunction = useCallback(() => true, [])
 
   const CollateralList = useMemo(() => {
     return collaterals

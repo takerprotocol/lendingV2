@@ -6,7 +6,6 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { useModalOpen, useWalletModalToggle } from 'state/application/hooks'
 import { ApplicationModal, setAddress } from 'state/application/reducer'
 import usePrevious from 'hooks/usePrevious'
-
 import { injected } from 'connectors'
 import { SUPPORTED_WALLETS } from 'constants/wallet'
 import { isMobile } from 'utils/userAgent'
@@ -38,6 +37,11 @@ export default function WalletModal() {
     }
   }, [account, previousAccount, toggleWalletModal, walletModalOpen])
 
+  useEffect(() => {
+    if (account) {
+      dispatch(setAddress(account))
+    }
+  }, [account, dispatch])
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     Object.keys(SUPPORTED_WALLETS).map((key) => {
       if (connector === SUPPORTED_WALLETS[key].connector) {

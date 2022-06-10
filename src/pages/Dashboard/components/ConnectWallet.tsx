@@ -32,7 +32,7 @@ const WalletBgBox = styled(Box)`
   box-shadow: 0px 4px 8px rgba(75, 75, 122, 0.1), inset 0px 2px 2px rgba(75, 86, 132, 0.5);
   border-radius: 6px;
 `
-export default function ConnectWallet() {
+export default function ConnectWallet({ type }: { type: number }) {
   const toggleModal = useWalletModalToggle()
 
   return (
@@ -50,15 +50,28 @@ export default function ConnectWallet() {
         <Typography variant="body1" component="h1" color="#A0A3BD">
           need to connect your wallet.
         </Typography>
-        <Button
-          variant="contained"
-          sx={{ width: '172px', borderRadius: '31px', mt: '24px' }}
-          onClick={() => {
-            toggleModal()
-          }}
-        >
-          Connect Wallet
-        </Button>
+        {type === 1 ? (
+          <Button
+            variant="contained"
+            sx={{ width: '172px', borderRadius: '31px', mt: '24px' }}
+            onClick={() => {
+              toggleModal()
+            }}
+          >
+            Connect Wallet
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ width: '172px', borderRadius: '31px', mt: '24px' }}
+            onClick={() => {
+              toggleModal()
+            }}
+          >
+            Connect Wallet
+          </Button>
+        )}
       </WalletFlexBox>
     </ConnectWalletBox>
   )

@@ -29,8 +29,8 @@ export const colors: COLOR = {
   },
   barBackground: '#4221DE',
   primary: '#FFB900',
-  secondary: '#03011B',
-  text: '#03011B',
+  secondary: '#14142A',
+  text: '#14142A',
   progressBackground: '#805d00',
   barSecondBackground: 'rgba(66, 33, 222, 0.2)',
   tooltipBackground: '#5050A0',
@@ -49,10 +49,10 @@ const theme = createTheme({
     primary: {
       main: '#7646FF',
       dark: 'rgba(0, 255, 10, 0.88)',
-      contrastText: '#262338',
+      contrastText: '#14142A',
     },
     secondary: {
-      main: '#03011B',
+      main: '#14142A',
       dark: 'rgba(255, 255, 255, 0.88)',
       contrastText: '#ffffff',
       50: 'rgba(3, 1, 27, 0.8)',
@@ -156,6 +156,31 @@ const theme = createTheme({
         `,
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        root: `
+          padding: 0;
+          box-sizing: border-box;
+          border-radius: 8px;
+          height: 45px;
+          width: 100%;
+          font-weight: 500;
+          color: #14142A;
+          input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        input[type="number"] {
+          -moz-appearance: textfield;
+        }
+        .MuiInputBase-input {
+          padding: 0;
+        }
+        .MuiOutlinedInput-notchedOutline {
+          border-width: 0!important;
+        }
+        `,
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: `
@@ -232,6 +257,9 @@ const theme = createTheme({
       styleOverrides: `
         .header-padding {
           padding-top: 70px;
+        }
+        body {
+          color: #14142A;
         }
         a {
           text-decoration: none;
