@@ -2,7 +2,7 @@ import { Box, Button, styled, Typography } from '@mui/material'
 import LogoIcon from 'assets/images/svg/logo.svg'
 import AddressIcon from 'assets/images/svg/wallet/address.svg'
 import WalletModal from 'components/WalletModal'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAddress, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { FlexBox } from 'styleds'
@@ -53,9 +53,10 @@ const WalletButton = styled(Button)`
 export const Header = () => {
   const toggleModal = useToggleModal(ApplicationModal.WALLET)
   const address = useAddress()
+  const navigate = useNavigate()
   return (
     <HeaderBox>
-      <img alt="" src={LogoIcon} />
+      <img onClick={() => navigate('/')} alt="logo" src={LogoIcon} />
       <FlexBox>
         <Link to="/">
           <Typography component="span" variant="button" marginRight="49px">
