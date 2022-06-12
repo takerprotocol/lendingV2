@@ -24,6 +24,7 @@ const CollateralsContainer = styled(Box)`
   padding-left: 50px;
   padding-right: 50px;
   position: relative;
+  padding-bottom: 48px;
 `
 
 const CollateralSelectText = styled(Typography)`
@@ -292,7 +293,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         return <CollateralItem key={`collateral-${JSON.stringify(collateral)}`} {...collateral} nfts={nfts} />
       })
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [collaterals, sortOptionsFunction, search, collectionsFilterFunction, deptFilterFunction])
+  }, [collaterals, sortOptionsFunction, search, collectionsFilterFunction, deptFilterFunction, collaterals])
 
   const CollateralSkeletonList = useMemo(() => {
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((collateral: any) => {
@@ -363,7 +364,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       <CollateralItems>
         {loading ? CollateralSkeletonList : !!collaterals.length ? CollateralList : <EmptyState />}
       </CollateralItems>
-      <CollateralPagination collaterals={collaterals} />
+      <CollateralPagination collaterals={collaterals} onPageSelect={(number: number) => null} />
     </CollateralsContainer>
   )
 }

@@ -169,10 +169,12 @@ export default function Liquidation() {
     setTimeout(() => setLoading(false), 2000)
   }, [])
 
+  const multipleCollaterals = [...collaterals, ...collaterals, ...collaterals, ...collaterals, ...collaterals]
+
   return (
     <Body className="header-padding">
       <Header />
-      <Collaterals loading={loading} collaterals={collaterals} />
+      <Collaterals loading={loading} collaterals={multipleCollaterals} />
     </Body>
   )
 }

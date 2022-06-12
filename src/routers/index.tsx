@@ -9,6 +9,7 @@ export default function CustomizeRoutes() {
       <Route path="/" element={<Dashboard />} />
       <Route path="/deposit" element={<Deposit />} />
       <Route path="/liquidation" element={<Liquidation />} />
+      <Route path="/liquidation/:page" element={<Liquidation />} />
       <Route path="*" element={<Dashboard />} />
     </Routes>
   )
