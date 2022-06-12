@@ -1,6 +1,7 @@
 import { Button, styled, Typography } from '@mui/material'
 import Copy from 'components/Copy'
 import { useCallback, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { abbrevAddress } from 'utils/abbrevAddres'
 
 const Card = styled('div')(({ theme }) => ({
@@ -165,6 +166,8 @@ const CollateralItem = ({
     }
   }, [shownCollections, collections])
 
+  const navigate = useNavigate()
+
   return (
     <Card>
       <DataItem>
@@ -227,7 +230,7 @@ const CollateralItem = ({
           {riskPercentage}% - {riskLevel}
         </Value>
       </DataItem>
-      <Button variant="contained" color="primary">
+      <Button onClick={() => navigate('/liquidate')} variant="contained" color="primary">
         Liquidate
       </Button>
     </Card>
