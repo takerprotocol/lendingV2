@@ -50,13 +50,18 @@ const WalletButton = styled(Button)`
     background-clip: text;
   }
 `
+
+const HeaderLogo = styled('img')`
+  cursor: pointer;
+`
+
 export const Header = () => {
   const toggleModal = useToggleModal(ApplicationModal.WALLET)
   const address = useAddress()
   const navigate = useNavigate()
   return (
     <HeaderBox>
-      <img onClick={() => navigate('/')} alt="logo" src={LogoIcon} />
+      <HeaderLogo onClick={() => navigate('/')} alt="logo" src={LogoIcon} />
       <FlexBox>
         <Link to="/">
           <Typography component="span" variant="button" marginRight="49px">
