@@ -9,7 +9,6 @@ const CollateralStatsContainer = styled('div')`
 `
 
 const Body = styled(Box)`
-  background: #e5e5e5;
   width: 100%;
   max-width: 1012px;
   margin: 0 auto;
@@ -35,6 +34,17 @@ const CollateralAddress = styled(Typography)`
   color: #a0a3bd;
   display: flex;
   gap: 10px;
+  align-items: center;
+
+  > div {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  > div > svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
 `
 
 const RiskLevelContainer = styled('div')`
