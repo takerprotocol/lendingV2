@@ -54,6 +54,13 @@ const SplitContainer = styled('div')`
   gap: 24px;
 `
 
+const SplitTitleContainer = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-direction: row;
+`
+
 const Split1Title = styled(Typography)`
   font-family: 'Quicksand';
   font-style: normal;
@@ -62,9 +69,6 @@ const Split1Title = styled(Typography)`
   line-height: 160%;
   color: #ffffff;
   opacity: 0.5;
-  display: flex;
-  align-items: center;
-  gap: 12px;
 `
 
 const Split = styled('div')`
@@ -146,11 +150,10 @@ const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2
       <SplitStatContainer>
         <SplitContainer>
           <Split>
-            <Split1Title>
-              {' '}
+            <SplitTitleContainer>
               <IndicatorColor color="#BB77FF" />
-              {split1Title}
-            </Split1Title>
+              <Split1Title>{split1Title}</Split1Title>
+            </SplitTitleContainer>
             <SplitValue>
               <svg width="17" height="23" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g opacity="0.5">
@@ -167,11 +170,10 @@ const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2
             </SplitValue>
           </Split>
           <Split>
-            <Split1Title>
-              {' '}
+            <SplitTitleContainer>
               <IndicatorColor color="#72AAFF" />
-              {split2Title}
-            </Split1Title>
+              <Split1Title>{split2Title}</Split1Title>
+            </SplitTitleContainer>
             <SplitValue>
               <svg width="17" height="23" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g opacity="0.5">
