@@ -83,7 +83,7 @@ const Liquidate = () => {
         <InfoContainer>
           <CollateralAddress>
             1A12567J...36YU
-            <Copy text="ddd" />
+            <Copy text="1A12567J...36YU" />
           </CollateralAddress>
           <RiskLevelContainer>
             <RiskLevel>Risk level 110%</RiskLevel>
@@ -99,12 +99,12 @@ const Liquidate = () => {
             split2={165.93}
           />
           <CollateralStat
-            title="Collateral"
-            total={526.1862}
-            split1Title="NFT Collateral"
-            split1={360.26}
-            split2Title="ETH Collateral"
-            split2={165.93}
+            title="Total Debt"
+            total={467.5814}
+            split1Title="ETH Debt"
+            split1={420.82}
+            split2Title="Borrowings"
+            split2={46.75}
           />
         </CollateralStatsContainer>
       </Stats>
