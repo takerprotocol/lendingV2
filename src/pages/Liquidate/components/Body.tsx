@@ -1,4 +1,5 @@
 import { styled, Typography } from '@mui/material'
+import NFTItem from './NFTItem'
 
 const Container = styled('div')`
   width: 1012px;
@@ -63,6 +64,13 @@ const NFTRowTitle = styled(Typography)`
   color: #14142a;
 `
 
+const NFTCollaterals = styled('div')`
+  display: grid;
+  margin-top: 30px;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 24px;
+`
+
 const LiquidateBody = ({ total, collaterals }: { total: number; collaterals: any[] }) => {
   return (
     <Container>
@@ -87,6 +95,12 @@ const LiquidateBody = ({ total, collaterals }: { total: number; collaterals: any
       <NFTRow>
         <NFTRowTitle>{collaterals.length || 0} NFT Collaterals</NFTRowTitle>
       </NFTRow>
+      <NFTCollaterals>
+        <NFTItem />
+        <NFTItem />
+        <NFTItem />
+        <NFTItem />
+      </NFTCollaterals>
     </Container>
   )
 }
