@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import { styled } from '@mui/system'
+import LiquidateBody from './components/Body'
 import LiquidateHeader from './components/Header'
 
 const Body = styled(Box)`
@@ -22,6 +23,7 @@ const Liquidate = () => {
         ethDebt={420.82}
         borrowings={46.75}
       />
+      <LiquidateBody total={233.7965} collaterals={[]} />
     </Body>
   )
 }
