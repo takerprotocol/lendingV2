@@ -30,6 +30,14 @@ const NFTImage = styled('img')`
   object-fit: cover;
 `
 
+const NFTImagePlaceholder = styled('div')`
+  width: 74px;
+  height: 74px;
+  border-radius: 6px;
+  object-fit: cover;
+  background-color: #7646ff;
+`
+
 const CollectionInfoContainer = styled('div')`
   display: flex;
   gap: 5px;
@@ -43,6 +51,14 @@ const CollectionImage = styled('img')`
   border-radius: 50%;
 `
 
+const CollectionImagePlaceholder = styled('img')`
+  width: 16px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 50%;
+  background-color: #7646ff;
+`
+
 const CollectionTitle = styled(Typography)`
   font-family: 'Quicksand';
   font-style: normal;
@@ -50,6 +66,10 @@ const CollectionTitle = styled(Typography)`
   font-size: 12px;
   line-height: 160%;
   color: #14142a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
 `
 
 const CollectionImageTitle = styled('div')`
@@ -134,15 +154,32 @@ const NFTItem = () => {
   const [checked, setChecked] = useState<boolean>(false)
   const handleCheck = useCallback(() => setChecked(!checked), [checked])
   const [floorPrice, setFloorPrice] = useState<string | number>('')
+  const [errorNftImage, setErrorNftImage] = useState(false)
+  const handleNftImageError = useCallback(() => setErrorNftImage(true), [])
+  const [errorCollectionImage, setErrorCollectionImage] = useState(false)
+  const handleCollectionImageError = useCallback(() => setErrorCollectionImage(true), [])
+
   return (
     <Container>
       <StyledCheckbox checked={checked} onChange={handleCheck} />
       <ActionInfoContainer>
         <NFTInfoContainer>
-          <NFTImage src="https://www.hwupgrade.it/i/n/cryptopunks_720.jpg" alt="nft" />
+          {!errorNftImage ? (
+            <NFTImage onError={handleNftImageError} src="https://www.hwupgrade.it/i/n/cryptopunks_720.jpg" alt="nft" />
+          ) : (
+            <NFTImagePlaceholder />
+          )}
           <CollectionInfoContainer>
             <CollectionImageTitle>
-              <CollectionImage src="https://www.hwupgrade.it/i/n/cryptopunks_720.jpg" alt="collection" />
+              {!errorCollectionImage ? (
+                <CollectionImage
+                  onError={handleCollectionImageError}
+                  src="https://www.hwupgrade.it/i/n/cryptopunks_720.jpg"
+                  alt="collection"
+                />
+              ) : (
+                <CollectionImagePlaceholder />
+              )}
               <CollectionTitle>Cryptopunks</CollectionTitle>
             </CollectionImageTitle>
             <NFTTitle>CRYPTOPUNK #4728dlsifhdsoifhdsaiofuhfdas</NFTTitle>
@@ -157,6 +194,7 @@ const NFTItem = () => {
             value={floorPrice}
             onChange={(event) => setFloorPrice(event.target.value)}
             type="number"
+            disabled={!checked}
           />
           <EthValue>
             <svg width="17" height="24" viewBox="0 0 17 24" fill="none" xmlns="http://www.w3.org/2000/svg">
