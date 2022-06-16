@@ -110,6 +110,8 @@ const PotentialProfitContainer = styled('div')`
   border-radius: 10px;
   flex: 1;
   padding: 24px;
+  display: flex;
+  justify-content: space-between;
 `
 
 const LiquidationAmountTitle = styled(Typography)`
@@ -207,6 +209,82 @@ const EthCollateralProfitable = styled('div')`
   height: 60px;
 `
 
+const PotentialProfitLabel = styled(Typography)`
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 160%;
+  /* or 22px */
+
+  /* Cool Gray 400 */
+
+  color: #a0a3bd;
+`
+
+const LabelContainer = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+`
+
+const ValueContainer = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`
+
+const ProfitValue = styled(Typography)`
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 160%;
+  /* or 22px */
+
+  text-align: right;
+
+  /* Cool Gray 600 */
+  color: #4e4b66;
+`
+
+const SubtotalValue = styled(Typography)`
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 160%;
+  /* or 35px */
+
+  text-align: right;
+
+  /* Main color 2 */
+
+  color: #7646ff;
+`
+
+const SubtotalValueContainer = styled('div')`
+  display: flex;
+  gap: 6px;
+  align-items: center;
+`
+
+const SubtotalStrikeThroughValue = styled(Typography)`
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 160%;
+  /* or 22px */
+
+  text-align: right;
+  text-decoration-line: line-through;
+
+  /* Cool Gray 400 */
+
+  color: #a0a3bd;
+`
+
 const LiquidateBody = ({ total, collaterals }: { total: number; collaterals: any[] }) => {
   return (
     <Container>
@@ -267,7 +345,28 @@ const LiquidateBody = ({ total, collaterals }: { total: number; collaterals: any
             <MaxValue>117.5789 ETH</MaxValue>
           </MaxContainer>
         </LiquidationAmountContainer>
-        <PotentialProfitContainer></PotentialProfitContainer>
+        <PotentialProfitContainer>
+          <LabelContainer>
+            <PotentialProfitLabel>Potential Profit</PotentialProfitLabel>
+            <PotentialProfitLabel>Subtotal</PotentialProfitLabel>
+          </LabelContainer>
+          <ValueContainer>
+            <ProfitValue>4.6 ETH</ProfitValue>
+            <SubtotalValueContainer>
+              <SubtotalStrikeThroughValue>46.00</SubtotalStrikeThroughValue>
+              <svg width="13" height="23" viewBox="0 0 13 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M2 12.697L6.5 6L11 12.697L6.5 19L2 12.697Z"
+                  stroke="#A0A3BD"
+                  strokeWidth="1.2"
+                  strokeLinejoin="round"
+                />
+                <path d="M2 12L6.5 15L11 12" stroke="#A0A3BD" strokeWidth="1.2" strokeLinejoin="round" />
+              </svg>
+              <SubtotalValue>41.4</SubtotalValue>
+            </SubtotalValueContainer>
+          </ValueContainer>
+        </PotentialProfitContainer>
       </EthCollateralsContainer>
     </Container>
   )
