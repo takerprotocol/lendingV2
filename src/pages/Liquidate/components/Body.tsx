@@ -198,8 +198,9 @@ const ProfitableBadge = styled(Typography)`
   padding-left: 5px;
   padding-top: 2px;
   padding-bottom: 2px;
-  border: 1px solid #7646ff;
+  border: 1px solid rgba(118, 70, 255, 0.3);
   height: 25px;
+  border-radius: 3px;
 `
 
 const EthCollateralProfitable = styled('div')`
