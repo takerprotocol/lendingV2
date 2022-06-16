@@ -1,5 +1,4 @@
 import { Skeleton, styled, TextField, Typography } from '@mui/material'
-import { useState } from 'react'
 
 const Container = styled('div')`
   padding: 12px;
@@ -136,8 +135,6 @@ const EthValue = styled(Skeleton)`
 `
 
 const NFTItemSkeleton = () => {
-  const [floorPrice, setFloorPrice] = useState<string | number>('')
-
   return (
     <Container>
       <StyledCheckbox variant="rectangular" />
@@ -153,12 +150,7 @@ const NFTItemSkeleton = () => {
           </CollectionInfoContainer>
         </NFTInfoContainer>
         <NFTActionContainer>
-          <StyledTextField
-            value={''}
-            onChange={(event) => setFloorPrice(event.target.value)}
-            type="number"
-            disabled={true}
-          />
+          <StyledTextField value={''} onChange={() => null} type="number" disabled={true} />
           <EthValue variant="rectangular" width="50px" height="30px">
             <svg width="17" height="24" viewBox="0 0 17 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g opacity="0.5">
