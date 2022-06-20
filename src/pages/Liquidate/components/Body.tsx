@@ -1,5 +1,7 @@
 import { Button, styled, Typography } from '@mui/material'
+import { useMemo } from 'react'
 import NFTItem from './NFTItem'
+import NFTItemSkeleton from './NftItemSkeleton'
 
 const Container = styled('div')`
   width: 1012px;
@@ -293,7 +295,7 @@ const TotalLiquidationAmountContainer = styled('div')`
   margin: 0 auto;
   padding: 24px;
   padding-bottom: 18px;
-  margin-top: 69px;
+  margin-top: 43px;
   display: flex;
   gap: 40px;
   justify-content: space-between;
@@ -379,7 +381,21 @@ const TotalPriceValue = styled(Typography)`
   color: #ffffff;
 `
 
-const LiquidateBody = ({ total, collaterals }: { total: number; collaterals: any[] }) => {
+const LiquidateBody = ({ total, collaterals, loading }: { total: number; collaterals: any[]; loading: boolean }) => {
+  const Collaterals = useMemo(
+    () =>
+      collaterals
+        .slice(0, 9)
+        .map((collateral, index) => <NFTItem {...collateral} key={`collateral-${collateral.name}-${index}`} />),
+    [collaterals]
+  )
+  const LoadingCollaterals = useMemo(
+    () =>
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        .slice(0, 9)
+        .map((_collateral, index) => <NFTItemSkeleton key={`collateral-${index}`} />),
+    [collaterals]
+  )
   return (
     <Container>
       <TitleRow>
@@ -403,14 +419,7 @@ const LiquidateBody = ({ total, collaterals }: { total: number; collaterals: any
       <NFTRow>
         <NFTRowTitle>{collaterals.length || 0} NFT Collaterals</NFTRowTitle>
       </NFTRow>
-      <NFTCollaterals>
-        <NFTItem />
-        <NFTItem />
-        <NFTItem />
-        <NFTItem />
-        <NFTItem />
-        <NFTItem />
-      </NFTCollaterals>
+      <NFTCollaterals>{loading ? LoadingCollaterals : Collaterals}</NFTCollaterals>
       <EthCollateralProfitable>
         <EthCollateralsTitle>ETH Collateral</EthCollateralsTitle>
         <ProfitableBadge>Profitable</ProfitableBadge>
