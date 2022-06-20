@@ -1,4 +1,4 @@
-import { Skeleton, styled, TextField, Typography } from '@mui/material'
+import { Skeleton, styled, TextField } from '@mui/material'
 
 const Container = styled('div')`
   padding: 12px;
@@ -98,19 +98,6 @@ const StyledTextField = styled(TextField)`
     max-width: 100px;
     max-height: 30px;
   }
-`
-
-const MaxText = styled(Typography)`
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 160%;
-  text-align: right;
-  color: #6e7191;
-  position: absolute;
-  right: 10px;
-  cursor: pointer;
 `
 
 const EthValue = styled(Skeleton)`
