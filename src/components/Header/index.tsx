@@ -2,24 +2,26 @@ import { Box, Button, styled, Typography } from '@mui/material'
 import LogoIcon from 'assets/images/svg/logo.svg'
 import AddressIcon from 'assets/images/svg/wallet/address.svg'
 import WalletModal from 'components/WalletModal'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAddress, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { FlexBox } from 'styleds'
 import { desensitization } from 'utils'
 
-const HeaderBox = styled(Box)`
-  display: flex;
-  position: fixed;
-  align-items: center;
-  justify-content: space-between;
-  height: 70px;
-  padding: 0 30px;
-  width: 100vw;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(50px);
-  z-index: 10;
-`
+const HeaderBox = styled(Box, {
+  shouldForwardProp: (prop) => true,
+})<{ lightBackground?: boolean }>(({ theme, lightBackground }) => ({
+  display: 'flex',
+  position: 'fixed',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  height: 70,
+  padding: '0 30px',
+  width: '100vw',
+  background: lightBackground ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(50px)',
+  zIndex: 10,
+}))
 
 const AddressBox = styled(Box)`
   display: flex;
@@ -59,8 +61,10 @@ export const Header = () => {
   const toggleModal = useToggleModal(ApplicationModal.WALLET)
   const address = useAddress()
   const navigate = useNavigate()
+  const location = useLocation()
+  const lightBackground = ['/deposit', '/liquidate'].includes(location.pathname)
   return (
-    <HeaderBox>
+    <HeaderBox lightBackground={lightBackground}>
       <HeaderLogo onClick={() => navigate('/')} alt="logo" src={LogoIcon} />
       <FlexBox>
         <Link to="/">
