@@ -9,6 +9,8 @@ const Container = styled('div')`
   display: flex;
   gap: 14px;
   align-items: center;
+  cursor: pointer;
+  user-select: none;
 `
 
 const StyledCheckbox = styled(Checkbox)(() => ({
@@ -101,6 +103,7 @@ const ActionInfoContainer = styled('div')`
 const NFTActionContainer = styled('div')`
   display: flex;
   gap: 10px;
+  justify-content: space-between;
 `
 
 const StyledTextField = styled(TextField)`
@@ -115,6 +118,19 @@ const StyledTextField = styled(TextField)`
     max-width: 100px;
     max-height: 30px;
   }
+`
+
+const FloorPriceLabel = styled(Typography)`
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 160%;
+  /* or 22px */
+
+  /* Cool Gray 400 */
+
+  color: #a0a3bd;
 `
 
 const MaxText = styled(Typography)`
@@ -150,7 +166,18 @@ const EthValue = styled(Typography)`
   color: #7646ff;
 `
 
-const NFTItem = () => {
+type NFTItemProps = {
+  name: string
+  image: string
+  collection: {
+    name: string
+    image: string
+  }
+  price: number
+  max: number
+}
+
+const NFTItem = ({ name, image, collection, price, max }: NFTItemProps) => {
   const [checked, setChecked] = useState<boolean>(false)
   const handleCheck = useCallback(() => setChecked(!checked), [checked])
   const [floorPrice, setFloorPrice] = useState<string | number>('')
@@ -160,42 +187,42 @@ const NFTItem = () => {
   const handleCollectionImageError = useCallback(() => setErrorCollectionImage(true), [])
 
   return (
-    <Container>
+    <Container onClick={handleCheck}>
       <StyledCheckbox checked={checked} onChange={handleCheck} />
       <ActionInfoContainer>
         <NFTInfoContainer>
-          {!errorNftImage ? (
-            <NFTImage onError={handleNftImageError} src="https://www.hwupgrade.it/i/n/cryptopunks_720.jpg" alt="nft" />
-          ) : (
-            <NFTImagePlaceholder />
-          )}
+          {!errorNftImage ? <NFTImage onError={handleNftImageError} src={image} alt="nft" /> : <NFTImagePlaceholder />}
           <CollectionInfoContainer>
             <CollectionImageTitle>
               {!errorCollectionImage ? (
                 <CollectionImage
                   onError={handleCollectionImageError}
-                  src="https://www.hwupgrade.it/i/n/cryptopunks_720.jpg"
-                  alt="collection"
+                  src={collection.image}
+                  alt={`collection-${collection.name}`}
                 />
               ) : (
                 <CollectionImagePlaceholder />
               )}
-              <CollectionTitle>Cryptopunks</CollectionTitle>
+              <CollectionTitle>{collection.name || ''}</CollectionTitle>
             </CollectionImageTitle>
-            <NFTTitle>CRYPTOPUNK #4728dlsifhdsoifhdsaiofuhfdas</NFTTitle>
+            <NFTTitle>{name || ''}</NFTTitle>
           </CollectionInfoContainer>
         </NFTInfoContainer>
         <NFTActionContainer>
-          <StyledTextField
-            placeholder="Floor Price"
-            InputProps={{
-              endAdornment: <MaxText onClick={() => setFloorPrice(15)}>Max 15</MaxText>,
-            }}
-            value={floorPrice}
-            onChange={(event) => setFloorPrice(event.target.value)}
-            type="number"
-            disabled={!checked}
-          />
+          {!!max ? (
+            <StyledTextField
+              placeholder="Floor Price"
+              InputProps={{
+                endAdornment: <MaxText onClick={() => setFloorPrice(15)}>Max {max}</MaxText>,
+              }}
+              value={floorPrice}
+              onChange={(event) => setFloorPrice(event.target.value)}
+              type="number"
+              disabled={!checked}
+            />
+          ) : (
+            <FloorPriceLabel>Floor Price</FloorPriceLabel>
+          )}
           <EthValue>
             <svg width="17" height="24" viewBox="0 0 17 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g opacity="0.5">
@@ -208,7 +235,7 @@ const NFTItem = () => {
                 <path d="M4 12L8.5 14.5L13 12" stroke="#6E7191" strokeLinejoin="round" />
               </g>
             </svg>
-            7.2176
+            {price || '0.0000'}
           </EthValue>
         </NFTActionContainer>
       </ActionInfoContainer>
