@@ -4,7 +4,7 @@ import theme from 'theme'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { useModalOpen, useWalletModalToggle } from 'state/application/hooks'
-import { ApplicationModal, setAddress } from 'state/application/reducer'
+import { ApplicationModal, setAddress, setWalletBalance } from 'state/application/reducer'
 import usePrevious from 'hooks/usePrevious'
 import { injected } from 'connectors'
 import { SUPPORTED_WALLETS } from 'constants/wallet'
@@ -15,6 +15,8 @@ import MetamaskIcon from 'assets/images/png/metamask.png'
 import Option from './Option'
 import Modal from 'components/Modal'
 import { useAppDispatch } from 'state/hooks'
+import { Web3Provider } from '@ethersproject/providers'
+import { formatUnits } from 'ethers/lib/utils'
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -54,9 +56,14 @@ export default function WalletModal() {
       activate(connector, undefined, true)
         .then(async () => {
           const walletAddress = await connector.getAccount()
+          const provider = new Web3Provider(await connector.getProvider())
+          const balance = Number(formatUnits(await provider.getBalance(String(walletAddress)), 'gwei'))
           if (walletAddress) {
             localStorage.setItem('address', walletAddress)
             dispatch(setAddress(walletAddress))
+          }
+          if (balance) {
+            dispatch(setWalletBalance(balance))
           }
         })
         .catch((error) => {
