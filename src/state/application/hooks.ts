@@ -22,6 +22,10 @@ export function useAddress(): string {
   return useAppSelector((state: AppState) => state.application.address)
 }
 
+export function useWalletBalance(): number {
+  return useAppSelector((state: AppState) => state.application.balance)
+}
+
 export function useUpdateAddress(address: string): () => void {
   const dispatch = useAppDispatch()
   return useCallback(() => dispatch(setAddress(address)), [dispatch, address])

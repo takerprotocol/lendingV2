@@ -15,14 +15,14 @@ import NFT7 from 'assets/images/svg/wallet/NFT7.svg'
 import NFT8 from 'assets/images/svg/wallet/NFT8.svg'
 import NFT9 from 'assets/images/svg/wallet/NFT9.svg'
 import NFT10 from 'assets/images/svg/wallet/NFT10.svg'
-import fi_copy from 'assets/images/svg/common/fi_copy.svg'
-import fi_copy1 from 'assets/images/svg/common/fi_copy1.svg'
 import headPortrait from 'assets/images/svg/common/headPortrait.svg'
-import { useAddress } from 'state/application/hooks'
+import { useAddress, useWalletBalance } from 'state/application/hooks'
 import { useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { useAppDispatch } from 'state/hooks'
 import { setAddress } from 'state/application/reducer'
+import Copy from 'components/Copy'
+
 const PopperBox = styled(Box)`
   align-items: flex-end;
   padding: 16px 16px 24px;
@@ -53,6 +53,7 @@ const LogoutBox = styled(Box)`
 `
 export default function HeaderPopper({ open, anchorEl, placement }: { open: boolean; anchorEl: any; placement: any }) {
   const address = useAddress()
+  const balance = useWalletBalance()
   const dispatch = useAppDispatch()
   const { deactivate } = useWeb3React()
   const [open1, setOpen] = useState<boolean>(false)
@@ -93,7 +94,7 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
                   >
                     {desensitization(address)}
                   </Typography>
-                  <img src={fi_copy} alt="" />
+                  <Copy text={address} />
                 </CenterBox>
                 <Box
                   sx={{ cursor: 'pointer' }}
@@ -112,7 +113,7 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
                 <CenterBox mt="3px">
                   <img src={purpleETH} alt="" />
                   <Typography mr="7px" variant="h5" component="span" color="#7646FF">
-                    67.2647
+                    {balance}
                   </Typography>
                 </CenterBox>
               </CenterBox>
@@ -182,7 +183,7 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
               >
                 0x5068L3NJSL58O932
               </Typography>
-              <img src={fi_copy1} alt="" />
+              <Copy text="0x5068L3NJSL58O932" />
             </FlexBox>
           </PopperBox>
         </Fade>

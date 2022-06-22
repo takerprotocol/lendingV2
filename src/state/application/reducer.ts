@@ -13,16 +13,19 @@ export enum ApplicationModal {
 export interface ApplicationState {
   readonly openModal: ApplicationModal | null
   readonly address: string
+  readonly balance: number
 }
 
 export interface TokenDecimals {
   symbol: string
   decimals: number
+  balance: number
 }
 
 const initialState: ApplicationState = {
   openModal: null,
   address: localStorage.getItem('address') || '',
+  balance: 0,
 }
 
 const applicationSlice = createSlice({
@@ -36,8 +39,11 @@ const applicationSlice = createSlice({
       localStorage.removeItem('address')
       state.address = action.payload
     },
+    setWalletBalance(state, action) {
+      state.balance = action.payload
+    },
   },
 })
 
-export const { setOpenModal, setAddress } = applicationSlice.actions
+export const { setOpenModal, setAddress, setWalletBalance } = applicationSlice.actions
 export default applicationSlice.reducer
