@@ -6,6 +6,7 @@ import ButtonDown from 'assets/images/svg/dashboard/button-down.svg'
 import minMyCollateralIcon from 'assets/images/svg/dashboard/minMyCollateral-icon.svg'
 import { useState } from 'react'
 import { useAddress, useWalletModalToggle } from 'state/application/hooks'
+import { useNavigate } from 'react-router-dom'
 const CollectionBox = styled(Box)`
   width: 1160px;
   border-radius: 12px;
@@ -37,6 +38,7 @@ export default function Collection(props: any) {
   const [list] = useState([1, 2])
   const address = useAddress()
   const toggleModal = useWalletModalToggle()
+  const navigate = useNavigate()
   return (
     <Box mt="24px">
       <CollectionHeader>
@@ -203,7 +205,9 @@ export default function Collection(props: any) {
                 {address ? (
                   <Box mt="48px">
                     {props.type === 1 ? (
-                      <Button variant="contained">Deposit</Button>
+                      <Button onClick={() => navigate('/deposit')} variant="contained">
+                        Deposit
+                      </Button>
                     ) : (
                       <Button variant="contained" color="success">
                         Deposit

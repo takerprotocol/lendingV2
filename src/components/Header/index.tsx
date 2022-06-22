@@ -2,7 +2,7 @@ import { Box, Button, styled, Typography } from '@mui/material'
 import LogoIcon from 'assets/images/svg/logo.svg'
 import AddressIcon from 'assets/images/svg/wallet/address.svg'
 import WalletModal from 'components/WalletModal'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAddress, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { FlexBox } from 'styleds'
@@ -11,18 +11,21 @@ import * as React from 'react'
 import { PopperPlacementType } from '@mui/material/Popper'
 import HeaderPopper from './components/HeaderPopper'
 
-const HeaderBox = styled(Box)`
-  display: flex;
-  position: fixed;
-  align-items: center;
-  justify-content: space-between;
-  height: 70px;
-  padding: 0 30px;
-  width: 100vw;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(50px);
-  z-index: 10;
-`
+const HeaderBox = styled(Box, {
+  shouldForwardProp: (prop) => true,
+})<{ lightBackground?: boolean }>(({ theme, lightBackground }) => ({
+  display: 'flex',
+  position: 'fixed',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  height: 70,
+  padding: '0 30px',
+  width: '100vw',
+  background: lightBackground ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(50px)',
+  zIndex: 10,
+}))
+
 const AddressBox = styled(Box)`
   display: flex;
   align-items: center;
@@ -51,6 +54,11 @@ const WalletButton = styled(Button)`
     background-clip: text;
   }
 `
+
+const HeaderLogo = styled('img')`
+  cursor: pointer;
+`
+
 export const Header = () => {
   const toggleModal = useToggleModal(ApplicationModal.WALLET)
   const address = useAddress()
@@ -63,9 +71,12 @@ export const Header = () => {
     setOpen((prev) => placement !== newPlacement || !prev)
     setPlacement(newPlacement)
   }
+  const navigate = useNavigate()
+  const location = useLocation()
+  const lightBackground = ['/deposit', '/liquidate'].includes(location.pathname)
   return (
-    <HeaderBox>
-      <img alt="" src={LogoIcon} />
+    <HeaderBox lightBackground={lightBackground}>
+      <HeaderLogo onClick={() => navigate('/')} alt="logo" src={LogoIcon} />
       <FlexBox>
         <Link to="/">
           <Typography component="span" variant="button" marginRight="49px">

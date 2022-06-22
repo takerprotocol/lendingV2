@@ -6,6 +6,7 @@ import { ReactNode, useCallback, useMemo, useState } from 'react'
 import CollateralItem from './CollateralItem'
 import CollateralItemSkeleton from './CollateralItemSkeleton'
 import EmptyState from './EmptyState'
+import CollateralPagination from './CollateralPagination'
 
 const CollateralsContainer = styled(Box)`
   width: calc(100% - 280px);
@@ -23,6 +24,7 @@ const CollateralsContainer = styled(Box)`
   padding-left: 50px;
   padding-right: 50px;
   position: relative;
+  padding-bottom: 48px;
 `
 
 const CollateralSelectText = styled(Typography)`
@@ -109,8 +111,6 @@ const DebtFilterSelect = styled(CustomizedSelect)`
 
 const CollateralItems = styled('div')`
   margin-top: 50px;
-  margin-bottom: 100px;
-  padding-bottom: 100px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -120,6 +120,9 @@ const CollectionSortItem = styled('div')`
   display: flex;
   gap: 6px;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   img {
     width: 16px;
@@ -225,7 +228,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
   )
 
   const [sort, setSort] = useState(0)
-  const handleSortUpdate = useCallback((value: any) => setSort(value), [])
+  const handleSortUpdate = useCallback((event: any) => setSort(event.target.value as number), [])
   const sortOptions = useMemo(() => {
     return [
       {
@@ -249,16 +252,36 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         name: 'Total Debt ↑',
       },
       {
-        value: 3,
+        value: 5,
         name: 'Risk Level ↓',
       },
       {
-        value: 4,
+        value: 6,
         name: 'Risk Level ↑',
       },
     ]
   }, [])
-  const sortOptionsFunction = useCallback(() => true, [])
+  const sortOptionsFunction = useCallback(
+    (collateralA: any, collateralB: any) => {
+      switch (sort) {
+        case 1:
+          return collateralA.collateral - collateralB.collateral
+        case 2:
+          return collateralB.collateral - collateralA.collateral
+        case 3:
+          return collateralA.debt - collateralB.debt
+        case 4:
+          return collateralB.debt - collateralA.debt
+        case 5:
+          return collateralA.riskPercentage - collateralB.riskPercentage
+        case 6:
+          return collateralB.riskPercentage - collateralA.riskPercentage
+        default:
+          return true
+      }
+    },
+    [sort]
+  )
 
   const CollateralList = useMemo(() => {
     return collaterals
@@ -270,7 +293,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         return <CollateralItem key={`collateral-${JSON.stringify(collateral)}`} {...collateral} nfts={nfts} />
       })
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [collaterals, sortOptionsFunction, search, collectionsFilterFunction, deptFilterFunction])
+  }, [collaterals, sortOptionsFunction, search, collectionsFilterFunction, deptFilterFunction, collaterals])
 
   const CollateralSkeletonList = useMemo(() => {
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((collateral: any) => {
@@ -341,6 +364,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       <CollateralItems>
         {loading ? CollateralSkeletonList : !!collaterals.length ? CollateralList : <EmptyState />}
       </CollateralItems>
+      <CollateralPagination collaterals={collaterals} onPageSelect={(number: number) => null} />
     </CollateralsContainer>
   )
 }

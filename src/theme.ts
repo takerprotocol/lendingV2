@@ -253,6 +253,20 @@ const theme = createTheme({
         `,
       },
     },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: `
+        .MuiCheckbox-root {
+          border-radius: 4px;
+          color: #EFF0F6;
+          border: none;
+        }
+        &.Mui-checked {
+          color: #4E4B66;
+        }
+      `,
+      },
+    },
     MuiCssBaseline: {
       styleOverrides: `
         .header-padding {

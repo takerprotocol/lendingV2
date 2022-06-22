@@ -27,7 +27,7 @@ export default function Liquidation() {
           },
         ],
         debt: 50,
-        riskPercentage: 110,
+        riskPercentage: 105,
         riskLevel: 'Liquidation',
       },
       {
@@ -41,7 +41,7 @@ export default function Liquidation() {
           },
         ],
         debt: 2,
-        riskPercentage: 110,
+        riskPercentage: 90,
         riskLevel: 'Liquidation',
       },
       {
@@ -55,7 +55,7 @@ export default function Liquidation() {
           },
         ],
         debt: 398,
-        riskPercentage: 110,
+        riskPercentage: 0,
         riskLevel: 'Liquidation',
       },
       {
@@ -169,10 +169,12 @@ export default function Liquidation() {
     setTimeout(() => setLoading(false), 2000)
   }, [])
 
+  const multipleCollaterals = [...collaterals, ...collaterals, ...collaterals, ...collaterals, ...collaterals]
+
   return (
     <Body className="header-padding">
       <Header />
-      <Collaterals loading={loading} collaterals={collaterals} />
+      <Collaterals loading={loading} collaterals={multipleCollaterals} />
     </Body>
   )
 }

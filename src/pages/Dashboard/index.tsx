@@ -9,10 +9,12 @@ import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
 import NFTPool from './components/NFTPool'
 import { useState } from 'react'
+
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
   background-image: url(${BgIcon});
   background-repeat: no-repeat;
+  background-size: cover;
 `
 const Main = styled(Box)`
   width: 1159px;
