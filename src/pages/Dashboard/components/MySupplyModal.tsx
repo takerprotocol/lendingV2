@@ -7,7 +7,6 @@ import rightIcon from 'assets/images/svg/common/right.svg'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 const style = {
   width: '420px',
-  height: '674px',
   transform: 'rgba(0, 0, 0, 0.5)',
   borderRadius: '12px',
   position: 'relative',
@@ -18,7 +17,6 @@ const TopBox = styled(Box)`
   background: linear-gradient(81.09deg, #688ff2 0.64%, #7a81f9 50.49%, #9272eb 100.5%);
   box-shadow: 0px 10px 20px rgba(20, 20, 42, 0.3);
   border-radius: 12px 12px 0px 0px;
-  position: absolute;
   .BorrowOrRepay {
     color: #ffffff;
     background: #ffffff;
@@ -27,11 +25,10 @@ const TopBox = styled(Box)`
 const BottomBox = styled(Box)`
   height: 485px;
   width: 420px;
+  margin-top: -12px;
   background: #ffffff;
   box-shadow: 0px 15px 30px rgba(20, 20, 42, 0.2);
   border-radius: 12px;
-  position: absolute;
-  top: 188px;
   padding: 24px;
 `
 const CenterBox = styled(Box)`

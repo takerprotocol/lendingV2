@@ -33,6 +33,7 @@ const applicationSlice = createSlice({
       state.openModal = action.payload
     },
     setAddress(state, action) {
+      localStorage.removeItem('address')
       state.address = action.payload
     },
   },

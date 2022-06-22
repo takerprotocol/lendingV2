@@ -1,9 +1,9 @@
-import { Typography, Button, Box, styled } from '@mui/material'
-import CustomizedSwitches from 'components/Switch'
+import { Typography, Button, Box, styled, Switch } from '@mui/material'
 import mySupplyIcon from 'assets/images/svg/dashboard/MySupply.svg'
 import MySupplyModal from './MySupplyModal'
 import { useState } from 'react'
 import { useAddress, useWalletModalToggle } from 'state/application/hooks'
+import MySupplySwitchModal from './MySupplySwitchModal'
 const MySupplyBox = styled(Box)`
   width: 494px;
   height: 285px;
@@ -30,6 +30,7 @@ const MyETHBox = styled(Box)`
 
 export default function MySupply() {
   const [open, handle] = useState<boolean>(false)
+  const [open1, handle1] = useState<boolean>(false)
   const [type, setType] = useState<number>(1)
   const toggleModal = useWalletModalToggle()
   const address = useAddress()
@@ -56,7 +57,12 @@ export default function MySupply() {
             <Box ml="6px" width="14px" mb="5px" height="14px" mr="12px">
               <img src={mySupplyIcon} alt="" />
             </Box>
-            <CustomizedSwitches></CustomizedSwitches>
+            <Switch
+              onClick={() => {
+                handle1(true)
+              }}
+              defaultChecked
+            />
           </MySupplyFlexBox>
         ) : (
           <Box></Box>
@@ -112,7 +118,7 @@ export default function MySupply() {
               color="warning"
               onClick={() => {
                 setType(2)
-                handle(true)
+                handle1(true)
               }}
             >
               Withdraw
@@ -143,6 +149,7 @@ export default function MySupply() {
         )}
       </MySupplyFlexBox>
       <MySupplyModal open={open} type={type} handle={handle}></MySupplyModal>
+      <MySupplySwitchModal open1={open1} handle1={handle1}></MySupplySwitchModal>
     </MySupplyBox>
   )
 }

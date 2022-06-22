@@ -11,6 +11,8 @@ export enum SupportedChainId {
   OPTIMISTIC_KOVAN = 69,
   BSC_MAINNET = 56,
   BSC_TESTNET = 97,
+  POLYGON_MAINNET = 137,
+  POLYGON_TESTNET = 137,
 }
 
 export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
@@ -27,4 +29,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   // bsc
   SupportedChainId.BSC_MAINNET,
   SupportedChainId.BSC_TESTNET,
+  // Polygon
+  SupportedChainId.POLYGON_MAINNET,
+  SupportedChainId.POLYGON_TESTNET,
 ]

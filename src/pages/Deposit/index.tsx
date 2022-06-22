@@ -13,6 +13,7 @@ const Main = styled(Box)`
   width: 1012px;
   margin: 0 auto;
 `
+
 export default function Deposit() {
   return (
     <Body className="header-padding">

@@ -1,9 +1,13 @@
 import { Typography, Box, styled } from '@mui/material'
 import NFT1 from 'assets/images/svg/dashboard/NFT1.svg'
+import List from 'assets/images/svg/dashboard/List.svg'
 import NFT2 from 'assets/images/svg/dashboard/NFT2.svg'
 import NFT3 from 'assets/images/svg/dashboard/NFT3.svg'
 import NFT4 from 'assets/images/svg/dashboard/NFT4.svg'
 import minMyCollateralIcon from 'assets/images/svg/dashboard/minMyCollateral-icon.svg'
+import * as React from 'react'
+import { PopperPlacementType } from '@mui/material/Popper'
+import NFTListPopper from './NFTListPopper'
 const NFTpoolBox = styled(Box)`
   width: 494px;
   height: 98px;
@@ -22,6 +26,14 @@ const ImgBox = styled(Box)`
   }
 `
 export default function Pool() {
+  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null)
+  const [open, setOpen] = React.useState(false)
+  const [placement, setPlacement] = React.useState<PopperPlacementType>()
+  const handleClick = (newPlacement: PopperPlacementType) => (event: React.MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget)
+    setOpen((prev) => placement !== newPlacement || !prev)
+    setPlacement(newPlacement)
+  }
   return (
     <Box mt="48px">
       <Box mb="24px">
@@ -94,6 +106,9 @@ export default function Pool() {
                 <ImgBox>
                   <img width="24px" height="24px" src={NFT4} alt="" />
                 </ImgBox>
+                <Box onMouseEnter={handleClick('top')} onMouseLeave={handleClick('top')} sx={{ cursor: 'pointer' }}>
+                  <img src={List} alt="" />
+                </Box>
               </NFTpoolFlexBox>
               <Box>
                 <Typography component="p" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66" mt="12px">
@@ -127,6 +142,7 @@ export default function Pool() {
           </NFTpoolFlexBox>
         </NFTpoolBox>
       </NFTpoolFlexBox>
+      <NFTListPopper open={open} anchorEl={anchorEl} placement={placement}></NFTListPopper>
     </Box>
   )
 }

@@ -4,8 +4,6 @@ import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import NFT5 from 'assets/images/svg/deposit/NFT5.svg'
-import NFT6 from 'assets/images/svg/deposit/NFT6.svg'
-import NFT7 from 'assets/images/svg/deposit/NFT7.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds/index'
 
 const style = {
@@ -65,50 +63,6 @@ export default function NFTsSelectedModal({ open1, handle1 }: { open1: boolean; 
             <Box width="232px" ml="12px" mr="24px">
               <Typography variant="body1" fontWeight="600" component="h1" color="#A0A3BD">
                 CryptoPunk #8314
-              </Typography>
-            </Box>
-            <Typography variant="body1" component="h1" color="#A0A3BD">
-              x 1
-            </Typography>
-          </FlexBox>
-          <FlexBox mb="24px">
-            <img src={NFT5} alt="" />
-            <Box width="232px" ml="12px" mr="24px">
-              <Typography variant="body1" fontWeight="600" component="h1" color="#A0A3BD">
-                CryptoPunk #8314
-              </Typography>
-            </Box>
-            <Typography variant="body1" component="h1" color="#A0A3BD">
-              x 1
-            </Typography>
-          </FlexBox>
-          <FlexBox mb="24px">
-            <img src={NFT6} alt="" />
-            <Box width="232px" ml="12px" mr="24px">
-              <Typography variant="body1" fontWeight="600" component="h1" color="#A0A3BD">
-                CryptoPunk #8112
-              </Typography>
-            </Box>
-            <Typography variant="body1" component="h1" color="#A0A3BD">
-              x 1
-            </Typography>
-          </FlexBox>
-          <FlexBox mb="24px">
-            <img src={NFT7} alt="" />
-            <Box width="232px" ml="12px" mr="24px">
-              <Typography variant="body1" fontWeight="600" component="h1" color="#A0A3BD">
-                CryptoPunk #8884
-              </Typography>
-            </Box>
-            <Typography variant="body1" component="h1" color="#A0A3BD">
-              x 1
-            </Typography>
-          </FlexBox>
-          <FlexBox mb="24px">
-            <img src={NFT7} alt="" />
-            <Box width="232px" ml="12px" mr="24px">
-              <Typography variant="body1" fontWeight="600" component="h1" color="#A0A3BD">
-                CryptoPunk #8114
               </Typography>
             </Box>
             <Typography variant="body1" component="h1" color="#A0A3BD">
@@ -211,7 +165,6 @@ export default function NFTsSelectedModal({ open1, handle1 }: { open1: boolean; 
                 <img height="8.25px" width="8.25px" src={rightIcon} alt="" />
               </FlexBox>
             </Box>
-
             <Box>
               <Typography component="p" variant="subtitle2" lineHeight="16px" color="#4E4B66">
                 10%

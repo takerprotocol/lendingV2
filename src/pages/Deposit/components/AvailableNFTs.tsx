@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { Box, Button, Checkbox, TextField, Typography } from '@mui/material'
-import Rectangle from 'assets/images/svg/deposit/Rectangle 853.svg'
+import { Box, Button, Typography } from '@mui/material'
 import XIcon from 'assets/images/svg/common/close.svg'
 import RefreshIcon from 'assets/images/svg/common/refresh.svg'
 import RefreshIcon2 from 'assets/images/svg/common/refresh2.svg'
@@ -9,6 +8,7 @@ import hoverPageRight from 'assets/images/svg/common/hoverPageRight.svg'
 import { useState } from 'react'
 import SureModal from './SureModal'
 import NFTsSelectedModal from './NFTsSelectedModal'
+import NFTsList from './NFTsList'
 
 const AvailableNFTsBox = styled(Box)`
   width: 1012px;
@@ -20,7 +20,7 @@ const AvailableNFTsBox = styled(Box)`
 `
 const AvailableNFTsStyleBox = styled(Box)`
   .opacity {
-    opacity: '0.7';
+    opacity: 0.7;
   }
   .MuiOutlinedInput-notchedOutline {
     border: 0px;
@@ -45,9 +45,6 @@ const AvailableNFTsStyleBox = styled(Box)`
 const RightPageBox = styled(Box)`
   position: absolute;
   width: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 48px;
   background: #ffffff;
   border: 1px solid #f7f7fc;
@@ -60,8 +57,6 @@ const RightPageBox = styled(Box)`
   :hover {
     background-color: rgba(78, 75, 102, 1);
     background-image: url(${hoverPageRight});
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
     box-shadow: 0px 10px 20px rgba(78, 75, 102, 0.15);
   }
 `
@@ -82,30 +77,13 @@ const ButtonBox = styled(Box)`
   align-items: center;
   cursor: pointer;
 `
-const BgBox = styled(Box)`
-  width: 305px;
-  height: 144px;
-  border-radius: 10px;
-  margin-right: 24px;
-  margin-bottom: 24px;
-  background: rgba(217, 219, 233, 0.1);
-`
-const ImgBox = styled(Box)`
-  width: 305px;
-  height: 144px;
-  padding: 12px;
-  background: #ffffff;
-  border: 1px solid #f7f7fc;
-  box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
-  border-radius: 10px;
-`
 export default function AvailableNFTs() {
-  const [check, setCheck] = useState<number>(1)
-  const [check1, setCheck1] = useState<number>(1)
-  const [check2, setCheck2] = useState<number>(1)
-  const [list] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9])
-  const [open, handle] = useState<boolean>(false)
-  const [open1, handle1] = useState<boolean>(false)
+  const [check, setCheck] = useState<number>(1) // deposit
+  const [check1, setCheck1] = useState<number>(1) // deposit
+  const [check2, setCheck2] = useState<number>(1) //page
+  const [check3, setCheck3] = useState<number>(1) //NFTsList
+  const [open, handle] = useState<boolean>(false) //SureModal
+  const [open1, handle1] = useState<boolean>(false) //NFTsSelectedModal
   return (
     <AvailableNFTsStyleBox>
       <AvailableNFTsBox sx={{ position: 'relative' }}>
@@ -114,7 +92,6 @@ export default function AvailableNFTs() {
           className={check2 === 1 ? 'none' : ''}
           onClick={() => {
             if (check2 > 1) {
-              // const count = check2 - 1
               setCheck2(() => {
                 return check2 - 1
               })
@@ -162,10 +139,8 @@ export default function AvailableNFTs() {
                 className={check1 === 1 ? '' : 'opacity'}
                 variant="contained"
                 onClick={() => {
-                  if (1 === check) {
-                    if (check1 === 1) {
-                      setCheck(2)
-                    }
+                  if (check1 === 1) {
+                    setCheck(2)
                   }
                 }}
               >
@@ -185,9 +160,7 @@ export default function AvailableNFTs() {
                   <ButtonBox
                     sx={{ background: '#eff0f7', width: '44px', height: '44px', borderRadius: '100%' }}
                     onClick={() => {
-                      if (2 === check) {
-                        setCheck(1)
-                      }
+                      setCheck(1)
                     }}
                   >
                     <img src={RefreshIcon} alt="" />
@@ -213,127 +186,7 @@ export default function AvailableNFTs() {
             )}
           </Box>
         </FlexBox>
-        {check === 1 ? (
-          <Box
-            sx={{
-              display: ' flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              mt: '36px',
-              justifyContent: 'flex-start',
-            }}
-          >
-            {list.map((list) => (
-              <BgBox key={`${list} NFTs`}>
-                <ImgBox className={check1 === 1 ? '' : 'opacity'}>
-                  <Box sx={{ display: ' flex', alignItems: 'flex-start' }}>
-                    <img width={'74px'} height={'74px'} src={Rectangle} alt="" />
-                    <Typography ml={'12px'} variant="subtitle2" component="span" fontWeight="700" color="#14142A">
-                      CRYPTOPUNK #4728
-                    </Typography>
-                  </Box>
-                  <Box mt={'16px'} display="flex" justifyContent="flex-start">
-                    <Box
-                      sx={{
-                        height: '30px',
-                        padding: '4px 8px 4px 8px',
-                        marginRight: '12px',
-                        background: '#F7F7FC',
-                      }}
-                    >
-                      <Typography variant="body1" component="span" color="#A0A3BD">
-                        ERC-1155
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        height: '30px',
-                        padding: '4px 8px 4px 8px',
-                        marginRight: '12px',
-                        background: '#F7F7FC',
-                      }}
-                    >
-                      <Typography variant="body1" component="span" fontWeight="600" color="#4E4B66">
-                        x 5 NFTs
-                      </Typography>
-                    </Box>
-                  </Box>
-                </ImgBox>
-              </BgBox>
-            ))}
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              display: ' flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              mt: '36px',
-              justifyContent: 'flex-start',
-            }}
-          >
-            <BgBox>
-              <ImgBox>
-                <FlexBox>
-                  <FlexBox sx={{ width: '20px', height: '20px', background: ' #EFF0F6', borderRadius: '4px' }}>
-                    <Checkbox
-                      sx={{
-                        width: '20px',
-                        height: '20px',
-                      }}
-                      defaultChecked
-                      color="default"
-                    />
-                  </FlexBox>
-                  <Box ml="10px">
-                    <Box sx={{ display: ' flex', alignItems: 'flex-start' }}>
-                      <img width={'74px'} height={'74px'} src={Rectangle} alt="" />
-                      <Typography ml={'10px'} variant="subtitle2" component="span" fontWeight="700" color="#14142A">
-                        CRYPTOPUNK #4728
-                      </Typography>
-                    </Box>
-                    <Box mt={'16px'} display="flex" justifyContent="flex-start">
-                      <Box
-                        sx={{
-                          width: '127px',
-                          height: '30px',
-                          padding: '4px 8px 4px 8px',
-                          marginRight: '12px',
-                          background: '#F7F7FC',
-                        }}
-                      >
-                        <TextField variant="outlined" />
-                        <Typography ml="6px" component="span" variant="body1" color="#A0A3BD">
-                          NTFs
-                        </Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          width: '69px',
-                          height: '30px',
-                          background: '#4E4B66',
-                          borderRadius: '23px',
-                          cursor: 'pointer',
-                          padding: '4px 10px',
-                        }}
-                      >
-                        <Typography
-                          variant="body1"
-                          component="span"
-                          fontWeight="600"
-                          fontStyle="normal"
-                          color="#F7F7FC"
-                        >
-                          Max 15
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Box>
-                </FlexBox>
-              </ImgBox>
-            </BgBox>
-          </Box>
-        )}
+        <NFTsList check={check} check1={check1}></NFTsList>
         <Box sx={{ height: '6px', display: 'flex', justifyContent: 'center', mt: '12px' }}>
           <Box
             width={check2 === 1 ? '24px' : '6px'}
@@ -382,32 +235,19 @@ export default function AvailableNFTs() {
           </Box>
           {check1 === 1 ? (
             <Box mr="24px">
-              {check === 1 ? (
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => {
-                    if (1 === check) {
-                      setCheck1(2)
-                    }
-                  }}
-                >
-                  Withdraw
-                </Button>
-              ) : (
-                <Button
-                  sx={{ opacity: '0.7' }}
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => {
-                    if (1 === check) {
-                      setCheck1(2)
-                    }
-                  }}
-                >
-                  Withdraw
-                </Button>
-              )}
+              <Button
+                className={check === 1 ? '' : 'opacity'}
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  if (check === 1) {
+                    setCheck1(2)
+                    setCheck3(2)
+                  }
+                }}
+              >
+                Withdraw
+              </Button>
             </Box>
           ) : (
             <Box mr={'24px'}>
@@ -432,6 +272,7 @@ export default function AvailableNFTs() {
                   }}
                   onClick={() => {
                     setCheck1(1)
+                    setCheck3(1)
                   }}
                 >
                   <Typography variant="body1" component="h1" fontWeight="700" color="#14142A">
@@ -442,127 +283,7 @@ export default function AvailableNFTs() {
             </Box>
           )}
         </FlexBox>
-        {check1 === 1 ? (
-          <Box
-            sx={{
-              display: ' flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              mt: '36px',
-              justifyContent: 'flex-start',
-            }}
-          >
-            {list.map((item) => (
-              <BgBox key={`${item} NFTs`}>
-                <ImgBox className={check === 1 ? '' : 'opacity'}>
-                  <Box sx={{ display: ' flex', alignItems: 'flex-start' }}>
-                    <img width={'74px'} height={'74px'} src={Rectangle} alt="" />
-                    <Typography ml={'12px'} variant="subtitle2" component="span" fontWeight="700" color="#14142A">
-                      CRYPTOPUNK #4728
-                    </Typography>
-                  </Box>
-                  <Box mt={'16px'} display="flex" justifyContent="flex-start">
-                    <Box
-                      sx={{
-                        height: '30px',
-                        padding: '4px 8px 4px 8px',
-                        marginRight: '12px',
-                        background: '#F7F7FC',
-                      }}
-                    >
-                      <Typography variant="body1" component="span" color="#A0A3BD">
-                        ERC-1155
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        height: '30px',
-                        padding: '4px 8px 4px 8px',
-                        marginRight: '12px',
-                        background: '#F7F7FC',
-                      }}
-                    >
-                      <Typography variant="body1" component="span" fontWeight="600" color="#4E4B66">
-                        x 15 NFTs
-                      </Typography>
-                    </Box>
-                  </Box>
-                </ImgBox>
-              </BgBox>
-            ))}
-          </Box>
-        ) : (
-          <Box
-            sx={{
-              display: ' flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              mt: '36px',
-              justifyContent: 'flex-start',
-            }}
-          >
-            <BgBox>
-              <ImgBox>
-                <FlexBox>
-                  <FlexBox sx={{ width: '20px', height: '20px', background: ' #EFF0F6', borderRadius: '4px' }}>
-                    <Checkbox
-                      sx={{
-                        width: '20px',
-                        height: '20px',
-                      }}
-                      defaultChecked
-                      color="default"
-                    />
-                  </FlexBox>
-                  <Box ml="10px">
-                    <Box sx={{ display: ' flex', alignItems: 'flex-start' }}>
-                      <img width={'74px'} height={'74px'} src={Rectangle} alt="" />
-                      <Typography ml={'10px'} variant="subtitle2" component="span" fontWeight="700" color="#14142A">
-                        CRYPTOPUNK #4728
-                      </Typography>
-                    </Box>
-                    <Box mt={'16px'} display="flex" justifyContent="flex-start">
-                      <Box
-                        sx={{
-                          width: '127px',
-                          height: '30px',
-                          padding: '4px 8px 4px 8px',
-                          marginRight: '12px',
-                          background: '#F7F7FC',
-                        }}
-                      >
-                        <TextField id="outlined-basic" variant="outlined" />
-                        <Typography ml="6px" component="span" variant="body1" color="#A0A3BD">
-                          NTFs
-                        </Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          width: '69px',
-                          height: '30px',
-                          background: '#4E4B66',
-                          borderRadius: '23px',
-                          cursor: 'pointer',
-                          padding: '4px 10px',
-                        }}
-                      >
-                        <Typography
-                          variant="body1"
-                          component="span"
-                          fontWeight="600"
-                          fontStyle="normal"
-                          color="#F7F7FC"
-                        >
-                          Max 15
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Box>
-                </FlexBox>
-              </ImgBox>
-            </BgBox>
-          </Box>
-        )}
+        <NFTsList check={check3} check1={check1}></NFTsList>
         <Box sx={{ height: '6px', display: 'flex', justifyContent: 'center', mt: '12px' }}>
           <Box
             sx={{ width: '6px', height: '6px', background: '#D9DBE9', opacity: '0.7', borderRadius: '3px', ml: '8px' }}

@@ -24,6 +24,8 @@ export const NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ARBITRUM_RINKEBY]: `https://arbitrum-rinkeby.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.BSC_MAINNET]: 'https://bsc-dataseed.binance.org/',
   [SupportedChainId.BSC_TESTNET]: 'https://data-seed-prebsc-2-s3.binance.org:8545',
+  [SupportedChainId.POLYGON_MAINNET]: 'https://mumbai.polygonscan.com/',
+  [SupportedChainId.POLYGON_TESTNET]: 'https://mumbai.polygonscan.com/',
 }
 
 export const network = new NetworkConnector({

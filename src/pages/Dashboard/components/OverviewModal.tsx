@@ -8,7 +8,6 @@ import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
 const style = {
   width: '420px',
-  height: '674px',
   transform: 'rgba(0, 0, 0, 0.5)',
   borderRadius: '12px',
   position: 'relative',
@@ -25,7 +24,6 @@ const TopBox = styled(Box)`
     linear-gradient(180deg, #1d172e 0%, #181529 83.56%);
   box-shadow: 0px 10px 20px rgba(75, 75, 122, 0.2);
   border-radius: 12px 12px 0px 0px;
-  position: absolute;
   .BorrowOrRepay {
     color: #ffffff;
     background: #ffffff;
@@ -37,8 +35,7 @@ const BottomBox = styled(Box)`
   background: #ffffff;
   box-shadow: 0px 15px 30px rgba(20, 20, 42, 0.2);
   border-radius: 12px;
-  position: absolute;
-  top: 188px;
+  margin-top: -12px;
   padding: 24px;
 `
 const CenterBox = styled(Box)`
