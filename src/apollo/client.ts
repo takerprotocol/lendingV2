@@ -4,7 +4,7 @@ import { HttpLink } from 'apollo-link-http'
 import { SupportedChainId } from 'constants/chains'
 export const clientEth = new ApolloClient({
   link: new HttpLink({
-    uri: 'https://api.thegraph.com/subgraphs/name/takerprotocol/taker-renting-rinkeby',
+    uri: 'https://api.studio.thegraph.com/query/29748/lendingv2/0.0.1',
   }),
   cache: new InMemoryCache(),
 })

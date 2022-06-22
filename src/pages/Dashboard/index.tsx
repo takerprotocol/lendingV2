@@ -9,6 +9,9 @@ import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
 import NFTPool from './components/NFTPool'
 import { useState } from 'react'
+import { getClient } from 'apollo/client'
+import { SupportedChainId } from 'constants/chains'
+import { TEST } from 'apollo/queries'
 
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
@@ -25,6 +28,15 @@ export default function Dashboard() {
   const changeCheck = (a: number) => {
     setType(a)
   }
+  const client = getClient()[SupportedChainId.MAINNET]
+  client
+    .query({
+      query: TEST('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'),
+      fetchPolicy: 'network-only',
+    })
+    .then((res) => {
+      console.log(res)
+    })
   return (
     <Body className="header-padding">
       <BlueChipNFTs changeCheck={changeCheck}></BlueChipNFTs>
