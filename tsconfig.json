@@ -1,9 +1,4 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "baseUrl": "src"
-  },
-  "exclude": ["node_modules"],
-  "include": ["src/**/*"]
+  "extends": "@graphprotocol/graph-ts/types/tsconfig.base.json",
+  "include": ["src"]
 }

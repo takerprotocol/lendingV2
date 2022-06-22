@@ -1,0 +1,60 @@
+type Pool @entity {
+  id: ID!
+  address: Bytes! # address
+  reserves: [Reserve!]! @derivedFrom(field: "pool")
+  nfts: [Collection!]! @derivedFrom(field: "pool")
+}
+
+type Reserve @entity {
+  id: ID! # underlying address, ETH = 0
+  pool: Pool!
+  tToken: Bytes! # address
+  debtToken: Bytes! # address
+  liquidityIndex: BigInt!
+  debtIndex: BigInt!
+  depositRate: BigInt!
+  borrowRate: BigInt!
+  totalLiquidity: BigInt! # tToken.totalSupply() * liquidityIndex
+  totalDebt: BigInt! # debtToken.totalSupply() * debtIndex
+  users: [UserReserve!]! @derivedFrom(field: "reserve")
+}
+
+type Collection @entity {
+  id: ID!  # underlying address
+  pool: Pool!
+  tERCToken: Bytes! # address
+  ercType: ERCType!
+  totalLiquidity: BigInt! # tERCToken.totalSupply()
+  floorPrice: BigInt!
+  users: [UserCollection!]! @derivedFrom(field: "collection")
+}
+
+type User @entity {
+  id: ID! # address
+  reserves: [UserReserve!]! @derivedFrom(field: "user")
+  collections: [UserCollection!]! @derivedFrom(field: "user")
+}
+
+type UserReserve @entity {
+  id: ID! # user - reserve
+  user: User!
+  reserve: Reserve!
+  depositedAmount: BigInt! # tToken.balanceOf(user) * LiqInx
+  borrowedAmount: BigInt! # debtToken.balanceOf(user) * DebtIdx
+  usedAsCollateral: Boolean!
+}
+
+type UserCollection  @entity {
+  id: ID! # user - collection - tokenId
+  user: User!
+  collection: Collection!
+  tokenId: BigInt # null if ERC20
+  amount: BigInt!
+}
+
+enum ERCType {
+  ERC20
+  ERC721
+  ERC1155
+}
+

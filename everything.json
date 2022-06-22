@@ -1,0 +1,147 @@
+[
+  {
+    "IIncentivesController": [
+      "function handleERC20Action(address,uint256,uint256)",
+      "function handleNFTAction(address,uint256)"
+    ]
+  },
+  {
+    "IInterestRateCalculator" : [
+      "function calculateInterestRates(uint256,uint256,uint256) view returns (uint256, uint256)",
+      "function getMaxBorrowRate() view returns (uint256)"
+    ]
+  },
+  {
+    "ILendingPool" : [
+      // 🐒
+      "event CollateralStatusUpdated(address indexed,address indexed,bool)",
+      "event Deposited(address indexed,address,address indexed,uint256)",
+      "event NFTDeposited(address[] indexed,address,address indexed,uint256[],uint256[])",
+      "event NFTsWithdrawn(address[] indexed,address indexed,address indexed,uint256[],uint256[])",
+      "event ReserveDataUpdated(address indexed,uint256,uint256,uint256,uint256)",
+      "event Withdrawn(address indexed,address indexed,address indexed,uint256)",
+      //
+      "function borrow(address,uint256,address)",
+      "function deposit(address,uint256,address)",
+      "function depositNFTs(address[],uint256[],uint256[],address)",
+      "function getReserveNormalizedDebtScale(address) view returns (uint256)",
+      "function getReserveNormalizedLiquidityScale(address) view returns (uint256)",
+      "function repay(address,uint256,address) returns (uint256)",
+      "function withdraw(address,uint256,address)",
+      "function withdrawNFTs(address[],uint256[],uint256[],address)"
+    ]
+  },
+  {
+    "ILendingPoolAddressesProvider" : [
+      "function getLendingPoolConfigurator() view returns (address)",
+      "function getPriceOracle() view returns (address)"
+    ]
+
+  },
+  {
+    "IPriceOracleGetter" : [
+      "function getNFTPrice(address) view returns (uint256)",
+      "function getReserveAssetPrice(address) view returns (uint256)",
+      "function getTokenizedNFTPrice(address) view returns (uint256)"
+    ]
+
+  },
+  {
+    "IDebtToken" : [
+      "event Approval(address indexed,address indexed,uint256)",
+      // 🐒
+      "event Initialized(address indexed,address indexed,address,uint8,string,string)",
+      "event Transfer(address indexed,address indexed,uint256)",
+      //
+      "function allowance(address,address) view returns (uint256)",
+      "function approve(address,uint256) returns (bool)",
+      "function balanceOf(address) view returns (uint256)",
+      "function burn(address,uint256,uint256)",
+      "function compoundedBalanceOf(address) view returns (uint256)",
+      "function compoundedTotalSupply() view returns (uint256)",
+      "function initialize(address,address,address,uint8,string,string)",
+      "function mint(address,uint256,uint256) returns (bool)",
+      "function mint(address,address,uint256,uint256) returns (bool)",
+      "function totalSupply() view returns (uint256)",
+      "function transfer(address,uint256) returns (bool)",
+      "function transferFrom(address,address,uint256) returns (bool)"
+    ]
+  },
+  {
+    "ITToken" : [
+      "event Approval(address indexed,address indexed,uint256)",
+      // 🐒
+      "event Initialized(address indexed,address indexed,address,uint8,string,string)",
+      "event Transfer(address indexed,address indexed,uint256)",
+      //
+      "function allowance(address,address) view returns (uint256)",
+      "function approve(address,uint256) returns (bool)",
+      "function balanceOf(address) view returns (uint256)",
+      "function burn(address,address,uint256,uint256)",
+      "function burn(address,uint256,uint256)",
+      "function compoundedBalanceOf(address) view returns (uint256)",
+      "function compoundedTotalSupply() view returns (uint256)",
+      "function initialize(address,address,address,uint8,string,string)",
+      "function mint(address,uint256,uint256) returns (bool)",
+      "function totalSupply() view returns (uint256)",
+      "function transfer(address,uint256) returns (bool)",
+      "function transferFrom(address,address,uint256) returns (bool)",
+      "function transferOnLiquidation(address,address,uint256)",
+      "function transferUnderlying(address,uint256)"
+    ]
+  },
+  {
+    "IInitializableTNFT" : [
+      "event Initialized(address indexed,address indexed,address,string,string)",
+      "function initialize(address,address,address,string,string)"
+    ]
+  },
+  {
+    "IScaledERC20" : [
+      "event Approval(address indexed,address indexed,uint256)",
+      "event Initialized(address indexed,address indexed,address,uint8,string,string)",
+      "event Transfer(address indexed,address indexed,uint256)",
+      "function allowance(address,address) view returns (uint256)",
+      "function approve(address,uint256) returns (bool)",
+      "function balanceOf(address) view returns (uint256)",
+      "function burn(address,uint256,uint256)",
+      "function compoundedBalanceOf(address) view returns (uint256)",
+      "function compoundedTotalSupply() view returns (uint256)",
+      "function initialize(address,address,address,uint8,string,string)",
+      "function mint(address,uint256,uint256) returns (bool)",
+      "function totalSupply() view returns (uint256)",
+      "function transfer(address,uint256) returns (bool)",
+      "function transferFrom(address,address,uint256) returns (bool)"
+    ]
+  },
+  {
+    "ITERC20" : [
+      // 🐒
+      "event Initialized(address indexed,address indexed,address,uint8,string,string)",
+      //
+      "function burn(address,uint256)",
+      "function initialize(address,address,address,uint8,string,string)",
+      "function mint(address,uint256)"
+    ]
+  },
+  {
+    "ITERC721" : [
+      // 🐒
+      "event Initialized(address indexed,address indexed,address,string,string)",
+      //
+      "function burn(uint256)",
+      "function initialize(address,address,address,string,string)",
+      "function mint(address,uint256)"
+    ]
+  },
+  {
+    "ITERC1155" : [
+      // 🐒
+      "event Initialized(address indexed,address indexed,address)",
+      //
+      "function burn(address,uint256[],uint256[])",
+      "function initialize(address,address,address)",
+      "function mint(address,uint256,uint256)"
+    ]
+  }
+]
