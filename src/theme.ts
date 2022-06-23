@@ -210,7 +210,7 @@ const theme = createTheme({
             box-shadow: none !important;
           }
           &:focus {
-            border: 4px solid #c4b7e8 !important;;
+            border: 4px solid #c4b7e8;
             box-shadow: none !important;
           }
           &.MuiButton-containedSecondary {
