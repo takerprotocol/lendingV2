@@ -24,6 +24,7 @@ import { setAddress } from 'state/application/reducer'
 import Copy from 'components/Copy'
 
 const PopperBox = styled(Box)`
+  z-index: 4;
   align-items: flex-end;
   padding: 16px 16px 24px;
   width: 358px;
@@ -51,6 +52,11 @@ const LogoutBox = styled(Box)`
   border-radius: 6px;
   padding: 9px 12px 8px;
 `
+
+const StyledPopper = styled(Popper)`
+  z-index: 3;
+`
+
 export default function HeaderPopper({ open, anchorEl, placement }: { open: boolean; anchorEl: any; placement: any }) {
   const address = useAddress()
   const balance = useWalletBalance()
@@ -64,12 +70,13 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
   //   }
 
   return (
-    <Popper
+    <StyledPopper
       open={open || open1}
       onMouseLeave={() => {
         setOpen(false)
       }}
       onMouseOver={() => {
+        console.log('hey')
         setOpen(true)
       }}
       className="account-popper"
@@ -188,6 +195,6 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
           </PopperBox>
         </Fade>
       )}
-    </Popper>
+    </StyledPopper>
   )
 }
