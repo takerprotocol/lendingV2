@@ -24,6 +24,7 @@ const BlueChipNFTs = styled(Box)`
   padding: 8px 24px;
   height: 45px;
   border-radius: 115px;
+  cursor: pointer;
 `
 export default function ChipNFTs({ changeCheck }: any) {
   const [check, setCheck] = useState<number>(1)
