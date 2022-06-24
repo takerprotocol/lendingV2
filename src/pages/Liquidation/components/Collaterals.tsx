@@ -340,7 +340,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         <CollateralSelectText>All Collaterals</CollateralSelectText>
         <InputContainer>
           <KeywordSearchInput value={search} onChange={handleSearch} placeholder="Search keyword" />
-          {search && (
+          {search && autocompleteOptions.find((option: string) => option.toLowerCase().includes(search.toLowerCase())) && (
             <AutoCompleteContainer>
               {autocompleteOptions.map((option: string) => {
                 if (option.toLowerCase().includes(search.toLowerCase())) {
@@ -348,14 +348,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
                     <AutoCompleteItem
                       key={option}
                       dangerouslySetInnerHTML={{
-                        __html: option
-                          .toLowerCase()
-                          .replace(
-                            search.toLowerCase(),
-                            `<span class="searchterm">${
-                              search.toLowerCase().charAt(0).toUpperCase() + search.slice(1)
-                            }</span>`
-                          ),
+                        __html: option.replace(new RegExp(search, 'i'), `<span class="searchterm">${search}</span>`),
                       }}
                     />
                   )
