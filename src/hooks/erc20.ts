@@ -27,7 +27,7 @@ export function useTokenBalance(token: string) {
 }
 
 export function useTokenDecimal(token: string) {
-  const [decimals, setDcimals] = useState<number>()
+  const [decimals, setDecimals] = useState<number>()
   const { library } = useWeb3React()
   const _contarct = getContract(token, ERC20_ABI, library)
   const previousDecimal = usePrevious(decimals)
@@ -35,7 +35,7 @@ export function useTokenDecimal(token: string) {
     async function getDecimal() {
       const result = await _contarct.decimals()
       if (!previousDecimal) {
-        setDcimals(result)
+        setDecimals(result)
       }
     }
     getDecimal()
