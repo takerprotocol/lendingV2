@@ -44,7 +44,7 @@ export const colors: COLOR = {
 }
 
 // A custom theme for this app
-const theme = createTheme({
+export const theme = createTheme({
   palette: {
     primary: {
       main: '#7646FF',
@@ -212,6 +212,7 @@ const theme = createTheme({
           &:focus {
             border: 4px solid #c4b7e8;
             box-shadow: none !important;
+            box-sizing: border-box;
           }
           &.MuiButton-containedSecondary {
             background: #F7F7FC;

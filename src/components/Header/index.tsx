@@ -10,6 +10,7 @@ import { desensitization } from 'utils'
 import * as React from 'react'
 import { PopperPlacementType } from '@mui/material/Popper'
 import HeaderPopper from './components/HeaderPopper'
+import theme from 'theme'
 
 const HeaderBox = styled(Box, {
   shouldForwardProp: (prop) => true,
@@ -60,6 +61,10 @@ const HeaderLogo = styled('img')`
   cursor: pointer;
 `
 
+const StyledLinkText = styled(Typography, { shouldForwardProp: (prop) => true })<{ color: string }>(({ color }) => ({
+  color,
+}))
+
 export const Header = () => {
   const toggleModal = useToggleModal(ApplicationModal.WALLET)
   const address = useAddress()
@@ -75,29 +80,46 @@ export const Header = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const lightBackground = ['/deposit', '/liquidate'].includes(location.pathname)
+  console.log(location.pathname === '/' ? theme.palette.primary.main : theme.palette.text)
   return (
     <HeaderBox lightBackground={lightBackground}>
       <HeaderLogo onClick={() => navigate('/')} alt="logo" src={LogoIcon} />
       <FlexBox>
         <Link to="/">
-          <Typography component="span" variant="button" marginRight="49px">
+          <StyledLinkText
+            color={String(location.pathname === '/' ? theme.palette.primary.main : theme.palette.text)}
+            variant="button"
+            marginRight="49px"
+          >
             Home
-          </Typography>
+          </StyledLinkText>
         </Link>
         <Link to="/dashboard">
-          <Typography component="span" variant="button" marginRight="49px">
+          <StyledLinkText
+            color={String(location.pathname === '/dashboard' ? theme.palette.primary.main : theme.palette.text)}
+            variant="button"
+            marginRight="49px"
+          >
             Dashboard
-          </Typography>
+          </StyledLinkText>
         </Link>
         <Link to="/liquidation">
-          <Typography component="span" variant="button" marginRight="49px">
+          <StyledLinkText
+            color={String(location.pathname === '/liquidation' ? theme.palette.primary.main : theme.palette.text)}
+            variant="button"
+            marginRight="49px"
+          >
             Liquidation
-          </Typography>
+          </StyledLinkText>
         </Link>
         <Link to="/faqs">
-          <Typography component="span" variant="button" marginRight="49px">
+          <StyledLinkText
+            color={String(location.pathname === '/faqs' ? theme.palette.primary.main : theme.palette.text)}
+            variant="button"
+            marginRight="49px"
+          >
             FAQs
-          </Typography>
+          </StyledLinkText>
         </Link>
         {!address ? (
           <WalletButton
