@@ -4,7 +4,7 @@ import theme from 'theme'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { useModalOpen, useWalletModalToggle } from 'state/application/hooks'
-import { ApplicationModal, setAddress, setWalletBalance } from 'state/application/reducer'
+import { ApplicationModal, setAddress, setAccountBalance } from 'state/application/reducer'
 import usePrevious from 'hooks/usePrevious'
 import { injected } from 'connectors'
 import { SUPPORTED_WALLETS } from 'constants/wallet'
@@ -63,7 +63,7 @@ export default function WalletModal() {
             dispatch(setAddress(walletAddress))
           }
           if (balance) {
-            dispatch(setWalletBalance(balance))
+            dispatch(setAccountBalance(balance))
           }
         })
         .catch((error) => {

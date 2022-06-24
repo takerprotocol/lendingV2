@@ -39,11 +39,11 @@ const applicationSlice = createSlice({
       localStorage.removeItem('address')
       state.address = action.payload
     },
-    setWalletBalance(state, action) {
+    setAccountBalance(state, action) {
       state.balance = action.payload
     },
   },
 })
 
-export const { setOpenModal, setAddress, setWalletBalance } = applicationSlice.actions
+export const { setOpenModal, setAddress, setAccountBalance } = applicationSlice.actions
 export default applicationSlice.reducer
