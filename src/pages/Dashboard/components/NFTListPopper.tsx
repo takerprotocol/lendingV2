@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Box, styled, Fade, Paper, Popper, Typography } from '@mui/material'
+import { Box, styled, Fade, Popper, Typography } from '@mui/material'
 import TheMonkeez from 'assets/images/svg/dashboard/TheMonkeez.svg'
 import { FlexBox } from 'styleds/index'
 import { useState } from 'react'
@@ -29,15 +29,15 @@ const BeforeBox = styled(Box)`
   }
 `
 export default function NFTListPopper({ open, anchorEl, placement }: { open: boolean; anchorEl: any; placement: any }) {
-  const [open1, setopen] = useState<boolean>(false)
+  const [openMouseOve, setOpenMouseOve] = useState<boolean>(false)
   return (
     <Popper
-      open={open || open1}
+      open={open || openMouseOve}
       onMouseLeave={() => {
-        setopen(false)
+        setOpenMouseOve(false)
       }}
       onMouseOver={() => {
-        setopen(true)
+        setOpenMouseOve(true)
       }}
       anchorEl={anchorEl}
       placement={placement}
@@ -45,60 +45,22 @@ export default function NFTListPopper({ open, anchorEl, placement }: { open: boo
     >
       {({ TransitionProps }) => (
         <Fade {...TransitionProps}>
-          <Paper>
-            <BeforeBox>
-              <PopperBox>
-                <FlexBox mb="16px">
-                  <img src={TheMonkeez} alt="" />
-                  <Typography ml="8px" variant="body2" component="h1" color="#4E4B66">
-                    The Monkeez
-                  </Typography>
-                </FlexBox>
-                <FlexBox mb="16px">
-                  <img src={TheMonkeez} alt="" />
-                  <Typography ml="8px" variant="body2" component="h1" color="#4E4B66">
-                    The Monkeez
-                  </Typography>
-                </FlexBox>{' '}
-                <FlexBox mb="16px">
-                  <img src={TheMonkeez} alt="" />
-                  <Typography ml="8px" variant="body2" component="h1" color="#4E4B66">
-                    The Monkeez
-                  </Typography>
-                </FlexBox>{' '}
-                <FlexBox mb="16px">
-                  <img src={TheMonkeez} alt="" />
-                  <Typography ml="8px" variant="body2" component="h1" color="#4E4B66">
-                    The Monkeez
-                  </Typography>
-                </FlexBox>{' '}
-                <FlexBox mb="16px">
-                  <img src={TheMonkeez} alt="" />
-                  <Typography ml="8px" variant="body2" component="h1" color="#4E4B66">
-                    The Monkeez
-                  </Typography>
-                </FlexBox>{' '}
-                <FlexBox mb="16px">
-                  <img src={TheMonkeez} alt="" />
-                  <Typography ml="8px" variant="body2" component="h1" color="#4E4B66">
-                    The Monkeez
-                  </Typography>
-                </FlexBox>{' '}
-                <FlexBox mb="16px">
-                  <img src={TheMonkeez} alt="" />
-                  <Typography ml="8px" variant="body2" component="h1" color="#4E4B66">
-                    The Monkeez
-                  </Typography>
-                </FlexBox>{' '}
-                <FlexBox mb="16px">
-                  <img src={TheMonkeez} alt="" />
-                  <Typography ml="8px" variant="body2" component="h1" color="#4E4B66">
-                    The Monkeez
-                  </Typography>
-                </FlexBox>
-              </PopperBox>
-            </BeforeBox>
-          </Paper>
+          <BeforeBox>
+            <PopperBox>
+              <FlexBox mb="16px">
+                <img src={TheMonkeez} alt="" />
+                <Typography ml="8px" variant="body2" component="h1" color="#4E4B66">
+                  The Monkeez
+                </Typography>
+              </FlexBox>
+              <FlexBox mb="16px">
+                <img src={TheMonkeez} alt="" />
+                <Typography ml="8px" variant="body2" component="h1" color="#4E4B66">
+                  The Monkeez
+                </Typography>
+              </FlexBox>
+            </PopperBox>
+          </BeforeBox>
         </Fade>
       )}
     </Popper>

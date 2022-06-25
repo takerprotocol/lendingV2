@@ -12,51 +12,49 @@ const style = {
   boxShadow: '0px 15px 30px rgba(20, 20, 42, 0.2)',
   borderRadius: '12px',
 }
-export const FlexEndBox = styled(Box)`
+const FlexEndBox = styled(Box)`
   display: flex;
   margin: 8px 8px 0px 0px;
   align-items: center;
   justify-content: flex-end;
   cursor: pointer;
 `
-export default function SureModal({ open, handle }: { open: boolean; handle: Function }) {
-  console.log(open)
+const SureButton = styled(Button)`
+  width: 50%;
+  height: 48px;
+`
+interface SureModalProps {
+  openSureModal: boolean
+  setOpenSureModal: Function
+}
+export default function SureModal({ openSureModal, setOpenSureModal }: SureModalProps) {
   return (
-    <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+    <Modal open={openSureModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
         <FlexEndBox
           onClick={() => {
-            handle(false)
+            setOpenSureModal(false)
           }}
         >
           <img src={shutOff} alt="" />
         </FlexEndBox>
-        <FlexBox
-          sx={{
-            justifyContent: 'center',
-            marginTop: '32px',
-          }}
-        >
-          <Typography variant="h5" component="h1" color="#14142A">
+        <FlexBox sx={{ justifyContent: 'center', marginTop: '32px' }}>
+          <Typography variant="h5" component="h1">
             Are you sure you want to cancel
           </Typography>
         </FlexBox>
-        <FlexBox
-          sx={{
-            justifyContent: 'center',
-          }}
-        >
-          <Typography variant="h5" component="h1" color="#14142A">
+        <FlexBox sx={{ justifyContent: 'center' }}>
+          <Typography variant="h5" component="h1">
             the selection?
           </Typography>
         </FlexBox>
         <SpaceBetweenBox mt="64px">
-          <Button color="secondary" variant="contained" sx={{ width: '174px', height: '48px' }}>
+          <SureButton color="secondary" variant="contained">
             Think about it
-          </Button>
-          <Button variant="contained" sx={{ width: '174px', height: '48px' }}>
+          </SureButton>
+          <SureButton sx={{ marginLeft: '24px' }} variant="contained">
             Cancel
-          </Button>
+          </SureButton>
         </SpaceBetweenBox>
       </Box>
     </Modal>

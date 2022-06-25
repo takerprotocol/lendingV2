@@ -4,6 +4,7 @@ import MySupplyModal from './MySupplyModal'
 import { useState } from 'react'
 import { useAddress, useWalletModalToggle } from 'state/application/hooks'
 import MySupplySwitchModal from './MySupplySwitchModal'
+import MySupplySkeleton from './DashboardSkeleton/MySupplySkeleton'
 const MySupplyBox = styled(Box)`
   width: 494px;
   height: 285px;
@@ -27,129 +28,122 @@ const MyETHBox = styled(Box)`
   background: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
 `
-
-export default function MySupply() {
-  const [open, handle] = useState<boolean>(false)
-  const [open1, handle1] = useState<boolean>(false)
+interface MySupplyType {
+  loading: boolean
+}
+export default function MySupply({ loading }: MySupplyType) {
+  const [openMySupplyModal, setOpenMySupplyModal] = useState<boolean>(false)
+  const [openMySupplySwitchModal, setOpenMySupplySwitchModal] = useState<boolean>(false)
   const [type, setType] = useState<number>(1)
   const toggleModal = useWalletModalToggle()
   const address = useAddress()
   return (
-    <MySupplyBox>
-      <MySupplyFlexBox>
-        <Box>
-          <Typography component="span" variant="h1" fontWeight="600" fontSize=" 28px" lineHeight="45px" color="#FFFFFF">
-            My Supply
-          </Typography>
-        </Box>
-        {address ? (
-          <MySupplyFlexBox sx={{ justifyContent: 'flex-start' }}>
-            <Typography
-              component="span"
-              variant="h1"
-              fontWeight="600"
-              fontSize=" 14px"
-              lineHeight="22px"
-              color="#FFFFFF"
-            >
-              Used as Collateral
-            </Typography>
-            <Box ml="6px" width="14px" mb="5px" height="14px" mr="12px">
-              <img src={mySupplyIcon} alt="" />
-            </Box>
-            <Switch
-              onClick={() => {
-                handle1(true)
-              }}
-              defaultChecked
-            />
-          </MySupplyFlexBox>
-        ) : (
-          <Box></Box>
-        )}
-      </MySupplyFlexBox>
-      <MyETHBox>
-        {address ? (
-          <Typography sx={{ opacity: 1 }} component="span" variant="h4" fontWeight="600" color="#FFFFFF">
-            10.06 ETH
-          </Typography>
-        ) : (
-          <Typography sx={{ opacity: 1 }} component="span" variant="subtitle2" color="#FFFFFF">
-            Please connect wallet to view details
-          </Typography>
-        )}
-      </MyETHBox>
-      <MySupplyFlexBox mt="26px">
-        {address ? (
-          <Box>
+    <>
+      {loading ? (
+        <MySupplySkeleton />
+      ) : (
+        <MySupplyBox>
+          <MySupplyFlexBox>
             <Box>
-              <Typography
-                sx={{ opacity: 0.7 }}
-                component="p"
-                variant="h1"
-                fontWeight="600"
-                fontSize=" 14px"
-                lineHeight="22px"
-                color="#FFFFFF"
-              >
-                My Balance
+              <Typography component="span" variant="h4" fontWeight="600" color="#FFFFFF">
+                My Supply
               </Typography>
             </Box>
-            <Box mt="2px">
-              <Typography
-                component="p"
-                variant="h1"
-                fontWeight="600"
-                fontSize=" 18px"
-                lineHeight="29px"
-                color="#FFFFFF"
-              >
-                6.97 ETH
+            {address ? (
+              <MySupplyFlexBox sx={{ justifyContent: 'flex-start' }}>
+                <Typography component="span" variant="body1" fontWeight="600" color="#FFFFFF">
+                  Used as Collateral
+                </Typography>
+                <Box ml="6px" width="14px" mb="5px" height="14px" mr="12px">
+                  <img src={mySupplyIcon} alt="" />
+                </Box>
+                <Switch
+                  onClick={() => {
+                    setOpenMySupplySwitchModal(true)
+                  }}
+                  defaultChecked
+                />
+              </MySupplyFlexBox>
+            ) : (
+              <Box></Box>
+            )}
+          </MySupplyFlexBox>
+          <MyETHBox>
+            {address ? (
+              <Typography sx={{ opacity: 1 }} component="span" variant="h4" fontWeight="600" color="#FFFFFF">
+                10.06 ETH
               </Typography>
-            </Box>
-          </Box>
-        ) : (
-          <Box></Box>
-        )}
-        {address ? (
-          <Box>
-            <Button
-              variant="contained"
-              color="warning"
-              onClick={() => {
-                setType(2)
-                handle1(true)
-              }}
-            >
-              Withdraw
-            </Button>
-            <Button
-              sx={{ ml: '12px' }}
-              variant="contained"
-              color="info"
-              onClick={() => {
-                setType(1)
-                handle(true)
-              }}
-            >
-              Supply
-            </Button>
-          </Box>
-        ) : (
-          <Button
-            sx={{ width: ' 174px', height: '48px' }}
-            variant="contained"
-            color="info"
-            onClick={() => {
-              toggleModal()
-            }}
-          >
-            Connect Wallet
-          </Button>
-        )}
-      </MySupplyFlexBox>
-      <MySupplyModal open={open} type={type} handle={handle}></MySupplyModal>
-      <MySupplySwitchModal open1={open1} handle1={handle1}></MySupplySwitchModal>
-    </MySupplyBox>
+            ) : (
+              <Typography sx={{ opacity: 1 }} component="span" variant="subtitle2" color="#FFFFFF">
+                Please connect wallet to view details
+              </Typography>
+            )}
+          </MyETHBox>
+          <MySupplyFlexBox mt="26px">
+            {address ? (
+              <Box>
+                <Box>
+                  <Typography sx={{ opacity: 0.7 }} component="p" variant="body1" fontWeight="600" color="#FFFFFF">
+                    My Balance
+                  </Typography>
+                </Box>
+                <Box mt="2px">
+                  <Typography component="p" variant="subtitle1" color="#FFFFFF">
+                    6.97 ETH
+                  </Typography>
+                </Box>
+              </Box>
+            ) : (
+              <Box></Box>
+            )}
+            {address ? (
+              <Box>
+                <Button
+                  variant="contained"
+                  color="warning"
+                  onClick={() => {
+                    setType(2)
+                    setOpenMySupplyModal(true)
+                  }}
+                >
+                  Withdraw
+                </Button>
+                <Button
+                  sx={{ ml: '12px' }}
+                  variant="contained"
+                  color="info"
+                  onClick={() => {
+                    setType(1)
+                    setOpenMySupplyModal(true)
+                  }}
+                >
+                  Supply
+                </Button>
+              </Box>
+            ) : (
+              <Button
+                sx={{ width: ' 174px', height: '48px' }}
+                variant="contained"
+                color="info"
+                onClick={() => {
+                  toggleModal()
+                }}
+              >
+                Connect Wallet
+              </Button>
+            )}
+          </MySupplyFlexBox>
+          <MySupplyModal
+            openMySupplyModal={openMySupplyModal}
+            type={type}
+            setOpenMySupplyModal={setOpenMySupplyModal}
+          ></MySupplyModal>
+          <MySupplySwitchModal
+            openMySupplySwitchModal={openMySupplySwitchModal}
+            setOpenMySupplySwitchModal={setOpenMySupplySwitchModal}
+          ></MySupplySwitchModal>
+        </MySupplyBox>
+      )}
+    </>
   )
 }

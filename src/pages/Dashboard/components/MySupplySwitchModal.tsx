@@ -3,7 +3,7 @@ import whiteShutOff from 'assets/images/svg/common/whiteShutOff.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import whiteRight from 'assets/images/svg/common/whiteRight.svg'
 import Right from 'assets/images/svg/common/right.svg'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { CenterBox, SpaceBetweenBox } from 'styleds/index'
 const style = {
   position: 'relative',
@@ -22,10 +22,39 @@ const BottomBox = styled(Box)`
   box-shadow: 0px 15px 30px rgba(20, 20, 42, 0.2);
   border-radius: 12px;
 `
-export default function MySupplySwitchModal({ open1, handle1 }: { open1: boolean; handle1: Function }) {
-  const [check] = useState<number>(2)
+const DataBox = styled(Box)`
+  padding: 12px 16px;
+  margin-top: 36px;
+  margin-bottom: 48px;
+  height: 122px;
+  width: 372px;
+  background: #f7f7fc;
+  border-radius: 6px;
+`
+export const RightBgBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  margin-right: 12px;
+  height: 18px;
+  border-radius: 100%;
+`
+interface MySupplySwitchModalType {
+  openMySupplySwitchModal: boolean
+  setOpenMySupplySwitchModal: Function
+}
+export default function MySupplySwitchModal({
+  openMySupplySwitchModal,
+  setOpenMySupplySwitchModal,
+}: MySupplySwitchModalType) {
+  const [check] = useState<number>(1)
   return (
-    <Modal open={open1} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+    <Modal
+      open={openMySupplySwitchModal}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
       <Box sx={style}>
         <TopBox
           sx={{
@@ -37,7 +66,7 @@ export default function MySupplySwitchModal({ open1, handle1 }: { open1: boolean
           <CenterBox
             sx={{ justifyContent: 'flex-end', cursor: 'pointer' }}
             onClick={() => {
-              handle1(false)
+              setOpenMySupplySwitchModal(false)
             }}
           >
             <img src={check === 1 ? shutOff : whiteShutOff} alt="" />
@@ -58,17 +87,9 @@ export default function MySupplySwitchModal({ open1, handle1 }: { open1: boolean
               >
                 0.00
               </Typography>
-              <CenterBox
-                sx={{
-                  width: '18px',
-                  marginRight: '12px',
-                  height: '18px',
-                  background: `${check === 1 ? '#D9DBE9' : 'rgba(255, 255, 255, 0.2)'}`,
-                  borderRadius: '100%',
-                }}
-              >
+              <RightBgBox sx={{ background: `${check === 1 ? '#D9DBE9' : 'rgba(255, 255, 255, 0.2)'}` }}>
                 <img src={check === 1 ? Right : whiteRight} alt="" />
-              </CenterBox>
+              </RightBgBox>
               <Typography
                 mr="6px"
                 variant="h4"
@@ -111,17 +132,7 @@ export default function MySupplySwitchModal({ open1, handle1 }: { open1: boolean
               increase your account risk level
             </Typography>
           </Box>
-          <Box
-            sx={{
-              padding: '12px 16px',
-              marginTop: '36px',
-              marginBottom: '48px',
-              height: '122px',
-              width: '372px',
-              background: '#F7F7FC',
-              borderRadius: '6px',
-            }}
-          >
+          <DataBox>
             <SpaceBetweenBox>
               <Box>
                 <Typography variant="body1" component="h1" color="#A0A3BD">
@@ -154,11 +165,10 @@ export default function MySupplySwitchModal({ open1, handle1 }: { open1: boolean
             </SpaceBetweenBox>
             <SpaceBetweenBox>
               <Box>
-                <Typography variant="body1" component="span" color="#A0A3BD">
+                <Typography mr="8px" variant="body1" component="span" color="#A0A3BD">
                   Risk level
                 </Typography>
                 <Typography
-                  ml="8px"
                   variant="body1"
                   fontWeight="700"
                   component="span"
@@ -176,13 +186,13 @@ export default function MySupplySwitchModal({ open1, handle1 }: { open1: boolean
                 </Typography>
               </Box>
             </SpaceBetweenBox>
-          </Box>
+          </DataBox>
           {check === 1 ? (
             <SpaceBetweenBox mt="12px">
-              <Button sx={{ width: '174px', height: '48px' }} color="secondary" variant="contained">
+              <Button sx={{ width: '50%', height: '48px' }} color="secondary" variant="contained">
                 Unable
               </Button>
-              <Button sx={{ width: '174px', height: '48px' }} variant="contained">
+              <Button sx={{ width: '50%', height: '48px', marginLeft: '24px' }} variant="contained">
                 Think about it
               </Button>
             </SpaceBetweenBox>

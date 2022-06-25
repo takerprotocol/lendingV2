@@ -8,7 +8,7 @@ import PoolMySupply from './components/PoolMySupply'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
 import NFTPool from './components/NFTPool'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getClient } from 'apollo/client'
 import { SupportedChainId } from 'constants/chains'
 import { TEST } from 'apollo/queries'
@@ -25,6 +25,7 @@ const Main = styled(Box)`
 `
 export default function Dashboard() {
   const [type, setType] = useState<number>(1)
+  const [loading, setLoading] = useState<boolean>(true)
   const changeCheck = (a: number) => {
     setType(a)
   }
@@ -36,15 +37,18 @@ export default function Dashboard() {
     .then((res) => {
       console.log(res)
     })
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 2000)
+  }, [])
   return (
     <Body className="header-padding">
       <BlueChipNFTs changeCheck={changeCheck}></BlueChipNFTs>
       <Main>
-        <DashboardTotal type={type}></DashboardTotal>
-        <Overview type={type}></Overview>
-        <PoolMySupply></PoolMySupply>
-        <NFTPool></NFTPool>
-        <Collection type={type}></Collection>
+        <DashboardTotal loading={loading} type={type}></DashboardTotal>
+        <Overview loading={loading} type={type}></Overview>
+        <PoolMySupply type={type} loading={loading}></PoolMySupply>
+        <NFTPool loading={loading}></NFTPool>
+        <Collection loading={loading} type={type}></Collection>
       </Main>
     </Body>
   )

@@ -8,6 +8,7 @@ import minMyCollateralIcon from 'assets/images/svg/dashboard/minMyCollateral-ico
 import * as React from 'react'
 import { PopperPlacementType } from '@mui/material/Popper'
 import NFTListPopper from './NFTListPopper'
+import NFTPoolSkeleton from './DashboardSkeleton/NFTPoolSkeleton'
 const NFTpoolBox = styled(Box)`
   width: 494px;
   height: 98px;
@@ -25,7 +26,10 @@ const ImgBox = styled(Box)`
     transition: all 0.25s ease-in;
   }
 `
-export default function Pool() {
+interface NFTPoolType {
+  loading: boolean
+}
+export default function NFTPool({ loading }: NFTPoolType) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null)
   const [open, setOpen] = React.useState(false)
   const [placement, setPlacement] = React.useState<PopperPlacementType>()
@@ -36,113 +40,119 @@ export default function Pool() {
   }
   return (
     <Box mt="48px">
-      <Box mb="24px">
-        <Typography component="samp" variant="h4" color="#14142A" ml="24px">
-          NFT Pool
-        </Typography>
-      </Box>
-      <NFTpoolFlexBox>
-        <NFTpoolBox>
+      {loading ? (
+        <NFTPoolSkeleton />
+      ) : (
+        <>
+          <Box mb="24px">
+            <Typography component="samp" variant="h4" color="#14142A" ml="24px">
+              NFT Pool
+            </Typography>
+          </Box>
           <NFTpoolFlexBox>
-            <Box width="50%" padding="24px">
-              <NFTpoolFlexBox height="24px">
-                <ImgBox mr="4px">
-                  <img width="24px" height="24px" src={NFT1} alt="" />
-                </ImgBox>
-                <ImgBox mr="4px">
-                  <img width="24px" height="24px" src={NFT2} alt="" />
-                </ImgBox>
-                <ImgBox mr="4px">
-                  <img width="24px" height="24px" src={NFT3} alt="" />
-                </ImgBox>
-                <ImgBox>
-                  <img width="24px" height="24px" src={NFT4} alt="" />
-                </ImgBox>
-              </NFTpoolFlexBox>
-              <Box>
-                <Typography component="p" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66" mt="12px">
-                  4 Deposited Collections
-                </Typography>
-              </Box>
-            </Box>
-            <Box width="50%">
-              <NFTpoolFlexBox mt="17px">
-                <Box>
-                  <Typography component="span" variant="h5" fontWeight="600" color="#14142A" mr="10px">
-                    6
-                  </Typography>
-                  <Typography component="span" variant="subtitle1" fontWeight="700" color="#14142A" mr="12px">
-                    NFTs
-                  </Typography>
+            <NFTpoolBox>
+              <NFTpoolFlexBox>
+                <Box width="50%" padding="24px">
+                  <NFTpoolFlexBox height="24px">
+                    <ImgBox mr="4px">
+                      <img width="24px" height="24px" src={NFT1} alt="" />
+                    </ImgBox>
+                    <ImgBox mr="4px">
+                      <img width="24px" height="24px" src={NFT2} alt="" />
+                    </ImgBox>
+                    <ImgBox mr="4px">
+                      <img width="24px" height="24px" src={NFT3} alt="" />
+                    </ImgBox>
+                    <ImgBox>
+                      <img width="24px" height="24px" src={NFT4} alt="" />
+                    </ImgBox>
+                  </NFTpoolFlexBox>
+                  <Box mt="12px">
+                    <Typography variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66">
+                      4 Deposited Collections
+                    </Typography>
+                  </Box>
                 </Box>
-                <Box display="flex" alignItems="center">
-                  <img width="17px" src={minMyCollateralIcon} alt="" />
-                  <Typography component="span" variant="subtitle2" color="#A0A3BD" ml="6px">
-                    26.48
-                  </Typography>
+                <Box width="50%">
+                  <NFTpoolFlexBox mt="17px">
+                    <Box>
+                      <Typography component="span" variant="h5" fontWeight="600" color="#14142A" mr="10px">
+                        6
+                      </Typography>
+                      <Typography component="span" variant="subtitle1" fontWeight="700" color="#14142A" mr="12px">
+                        NFTs
+                      </Typography>
+                    </Box>
+                    <Box display="flex" alignItems="center">
+                      <img width="17px" src={minMyCollateralIcon} alt="" />
+                      <Typography component="span" variant="subtitle2" color="#A0A3BD" ml="6px">
+                        26.48
+                      </Typography>
+                    </Box>
+                  </NFTpoolFlexBox>
+                  <Box>
+                    <Typography component="span" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66">
+                      My Deposited
+                    </Typography>
+                  </Box>
                 </Box>
               </NFTpoolFlexBox>
-              <Box>
-                <Typography component="span" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66">
-                  My Deposited
-                </Typography>
-              </Box>
-            </Box>
+            </NFTpoolBox>
+            <NFTpoolBox>
+              <NFTpoolFlexBox>
+                <Box padding="24px" width="50%">
+                  <NFTpoolFlexBox height="24px">
+                    <ImgBox mr="4px">
+                      <img width="24px" height="24px" src={NFT1} alt="" />
+                    </ImgBox>
+                    <ImgBox mr="4px">
+                      <img width="24px" height="24px" src={NFT2} alt="" />
+                    </ImgBox>
+                    <ImgBox mr="4px">
+                      <img width="24px" height="24px" src={NFT3} alt="" />
+                    </ImgBox>
+                    <ImgBox>
+                      <img width="24px" height="24px" src={NFT4} alt="" />
+                    </ImgBox>
+                    <Box onMouseEnter={handleClick('top')} onMouseLeave={handleClick('top')} sx={{ cursor: 'pointer' }}>
+                      <img src={List} alt="" />
+                    </Box>
+                  </NFTpoolFlexBox>
+                  <Box mt="12px">
+                    <Typography variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66">
+                      6 Deposited Collections
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box width="50%">
+                  <NFTpoolFlexBox mt="17px">
+                    <Box>
+                      <Typography component="span" variant="h5" color="#14142A" mr="10px">
+                        12
+                      </Typography>
+                      <Typography component="span" variant="subtitle2" fontWeight="700" color="#14142A" mr="12px">
+                        NFTs
+                      </Typography>
+                    </Box>
+                    <Box display="flex" alignItems="center">
+                      <img width="17px" src={minMyCollateralIcon} alt="" />
+                      <Typography component="span" variant="subtitle2" color="#A0A3BD" ml="6px">
+                        48.75
+                      </Typography>
+                    </Box>
+                  </NFTpoolFlexBox>
+                  <Box>
+                    <Typography component="span" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66">
+                      My Available Balance
+                    </Typography>
+                  </Box>
+                </Box>
+              </NFTpoolFlexBox>
+            </NFTpoolBox>
           </NFTpoolFlexBox>
-        </NFTpoolBox>
-        <NFTpoolBox>
-          <NFTpoolFlexBox>
-            <Box padding="24px" width="50%">
-              <NFTpoolFlexBox height="24px">
-                <ImgBox mr="4px">
-                  <img width="24px" height="24px" src={NFT1} alt="" />
-                </ImgBox>
-                <ImgBox mr="4px">
-                  <img width="24px" height="24px" src={NFT2} alt="" />
-                </ImgBox>
-                <ImgBox mr="4px">
-                  <img width="24px" height="24px" src={NFT3} alt="" />
-                </ImgBox>
-                <ImgBox>
-                  <img width="24px" height="24px" src={NFT4} alt="" />
-                </ImgBox>
-                <Box onMouseEnter={handleClick('top')} onMouseLeave={handleClick('top')} sx={{ cursor: 'pointer' }}>
-                  <img src={List} alt="" />
-                </Box>
-              </NFTpoolFlexBox>
-              <Box>
-                <Typography component="p" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66" mt="12px">
-                  6 Deposited Collections
-                </Typography>
-              </Box>
-            </Box>
-            <Box width="50%">
-              <NFTpoolFlexBox mt="17px">
-                <Box>
-                  <Typography component="span" variant="h5" color="#14142A" mr="10px">
-                    12
-                  </Typography>
-                  <Typography component="span" variant="subtitle2" fontWeight="700" color="#14142A" mr="12px">
-                    NFTs
-                  </Typography>
-                </Box>
-                <Box display="flex" alignItems="center">
-                  <img width="17px" src={minMyCollateralIcon} alt="" />
-                  <Typography component="span" variant="subtitle2" color="#A0A3BD" ml="6px">
-                    48.75
-                  </Typography>
-                </Box>
-              </NFTpoolFlexBox>
-              <Box>
-                <Typography component="span" variant="body1" fontWeight="600" lineHeight="14px" color="#4E4B66">
-                  My Available Balance
-                </Typography>
-              </Box>
-            </Box>
-          </NFTpoolFlexBox>
-        </NFTpoolBox>
-      </NFTpoolFlexBox>
-      <NFTListPopper open={open} anchorEl={anchorEl} placement={placement}></NFTListPopper>
+          <NFTListPopper open={open} anchorEl={anchorEl} placement={placement}></NFTListPopper>
+        </>
+      )}
     </Box>
   )
 }

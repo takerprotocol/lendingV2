@@ -30,7 +30,6 @@ const TopBox = styled(Box)`
   }
 `
 const BottomBox = styled(Box)`
-  height: 485px;
   width: 420px;
   background: #ffffff;
   box-shadow: 0px 15px 30px rgba(20, 20, 42, 0.2);
@@ -54,11 +53,31 @@ const FlexBox = styled(Box)`
   align-items: center;
   justify-content: flex-start;
 `
+const RightBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 18px;
+  border-radius: 100%;
+  height: 18px;
+  background: #eff0f6;
+  padding: 4.88px;
+`
 const RightFlexBox = styled(Box)`
   background: #f7f7fc;
   border-radius: 10px;
   padding: 16px;
   margin-top: 24px;
+`
+const HealthyButton = styled(Box)`
+  padding: 4px 12px;
+  width: 85px;
+  height: 30px;
+  margin-top: 34px;
+  background: linear-gradient(180deg, #1cc1a4 0%, #1cb5ab 100%);
+  box-shadow: 0px 4px 8px rgba(28, 183, 171, 0.1);
+  border-radius: 20px;
+  cursor: pointer;
 `
 const BorrowAmountBox = styled(Box)`
   width: 372px;
@@ -71,17 +90,22 @@ const BorrowAmountBox = styled(Box)`
     display: block;
     position: absolute;
     left: 38.5px;
-    top: 127px;
+    top: 314px;
     border-width: 11.5px 7.5px;
     border-style: dashed solid dashed dashed;
     border-color: #eff0f6 transparent transparent transparent;
   }
 `
-export default function OverviewModal({ open, type, handle }: { open: boolean; type: number; handle: Function }) {
-  const [check, setCheck] = useState<number>(type)
+interface OverviewModalType {
+  open: boolean
+  repayRoBorrow: number
+  onClose: Function
+}
+export default function OverviewModal({ open, repayRoBorrow, onClose }: OverviewModalType) {
+  const [check, setCheck] = useState<number>(repayRoBorrow)
   useEffect(() => {
-    setCheck(type)
-  }, [type])
+    setCheck(repayRoBorrow)
+  }, [repayRoBorrow])
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -105,27 +129,16 @@ export default function OverviewModal({ open, type, handle }: { open: boolean; t
                 sx={{ display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }}
                 mr="8px"
                 onClick={() => {
-                  handle(false)
+                  onClose(false)
                 }}
               >
                 <img src={greyShutOff} alt="" />
               </Box>
-              <Box
-                sx={{
-                  padding: ' 4px 12px',
-                  width: '85px',
-                  height: '30px',
-                  marginTop: '34px',
-                  background: 'linear-gradient(180deg, #1CC1A4 0%, #1CB5AB 100%)',
-                  boxShadow: '0px 4px 8px rgba(28, 183, 171, 0.1)',
-                  borderRadius: ' 20px',
-                  cursor: 'pointer',
-                }}
-              >
+              <HealthyButton>
                 <Typography variant="body1" component="span" fontWeight="700" color="#FFFFFF">
                   HEALTHY
                 </Typography>
-              </Box>
+              </HealthyButton>
             </Box>
           </SpaceBetweenBox>
           <SpaceBetweenBox mt="24px">
@@ -182,12 +195,12 @@ export default function OverviewModal({ open, type, handle }: { open: boolean; t
               {check === 1 ? (
                 <Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Typography mt="16px" variant="body2" component="p" color="#A0A3BD">
+                    <Typography mt="16px" variant="body2" fontWeight="600" color="#A0A3BD">
                       Borrow Limit
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Typography mt="4px" variant="body1" component="p" color="#A0A3BD">
+                    <Typography mt="4px" variant="body1" fontWeight="600" color="#A0A3BD">
                       18.0928 ETH
                     </Typography>
                   </Box>
@@ -210,10 +223,10 @@ export default function OverviewModal({ open, type, handle }: { open: boolean; t
               )}
             </SpaceBetweenBox>
           </BorrowAmountBox>
-          <Box mb="15px" mt="17px" width="372px">
+          <Box mb="15px" mt="12px" height="8px" width="372px">
             <CustomizedSlider></CustomizedSlider>
           </Box>
-          <SpaceBetweenBox>
+          <SpaceBetweenBox mb="16.5px">
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
                 Risk level
@@ -231,33 +244,35 @@ export default function OverviewModal({ open, type, handle }: { open: boolean; t
               </Typography>
             </Box>
           </SpaceBetweenBox>
-          <Box sx={{ width: '371px', border: '1px solid #EFF0F6', marginTop: '16.5px' }}></Box>
+          <Box sx={{ width: '371px', border: '1px solid #EFF0F6' }}></Box>
           <SpaceBetweenBox mt="16.5px">
             <Box>
               <Typography variant="body1" component="p" color="#A0A3BD">
                 Debt (ETH)
               </Typography>
-              <Typography mt="16px" variant="body1" component="p" color="#A0A3BD">
+            </Box>
+            <Box>
+              <Typography variant="body1" component="span" color="#A0A3BD">
+                3.0918 {'>'}
+              </Typography>
+              <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+                3.0918
+              </Typography>
+            </Box>
+          </SpaceBetweenBox>
+          <SpaceBetweenBox mt="16px">
+            <Box>
+              <Typography variant="body1" color="#A0A3BD">
                 Borrow Limit Used
               </Typography>
             </Box>
             <Box>
-              <Box>
-                <Typography variant="body1" component="span" color="#A0A3BD">
-                  3.0918 {'>'}
-                </Typography>
-                <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                  3.0918
-                </Typography>
-              </Box>
-              <Box mt="16px">
-                <Typography variant="body1" component="span" color="#A0A3BD">
-                  20% {'>'}
-                </Typography>
-                <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                  20%
-                </Typography>
-              </Box>
+              <Typography variant="body1" component="span" color="#A0A3BD">
+                20% {'>'}
+              </Typography>
+              <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+                20%
+              </Typography>
             </Box>
           </SpaceBetweenBox>
           <RightFlexBox>
@@ -268,15 +283,7 @@ export default function OverviewModal({ open, type, handle }: { open: boolean; t
                 </Typography>
               </Box>
               <Box sx={{ width: '52px' }}>
-                <FlexBox
-                  sx={{
-                    width: '18px',
-                    borderRadius: '100%',
-                    height: '18px',
-                    background: '#EFF0F6',
-                    padding: '4.88px',
-                  }}
-                >
+                <FlexBox>
                   <img height="8.25px" width="8.25px" src={addIcon} alt="" />
                 </FlexBox>
               </Box>
@@ -286,17 +293,9 @@ export default function OverviewModal({ open, type, handle }: { open: boolean; t
                 </Typography>
               </Box>
               <Box width="50px">
-                <FlexBox
-                  sx={{
-                    width: '18px',
-                    borderRadius: '100%',
-                    height: '18px',
-                    background: '#EFF0F6',
-                    padding: '4.88px',
-                  }}
-                >
+                <RightBox>
                   <img height="8.25px" width="8.25px" src={rightIcon} alt="" />
-                </FlexBox>
+                </RightBox>
               </Box>
 
               <Box>

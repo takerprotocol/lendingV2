@@ -36,19 +36,29 @@ const WithdrawList = styled(Box)`
   overflow: auto;
   padding: 16px 16px 0px 16px;
 `
-export default function NFTsSelectedModal({ open1, handle1 }: { open1: boolean; handle1: Function }) {
+const BodyTypography = styled(Typography)`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+  color: #a0a3bd;
+`
+interface NFTsSelectedTypy {
+  openSelectedModal: boolean
+  setOpenSelectedModal: Function
+}
+export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedModal }: NFTsSelectedTypy) {
   return (
-    <Modal open={open1} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+    <Modal open={openSelectedModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
         <FlexEndBox
           onClick={() => {
-            handle1(false)
+            setOpenSelectedModal(false)
           }}
         >
           <img src={shutOff} alt="" />
         </FlexEndBox>
         <FlexBox>
-          <Typography variant="h5" component="h1" color="#14142A">
+          <Typography variant="h5" component="h1">
             7 NFTs selected
           </Typography>
         </FlexBox>
@@ -58,73 +68,63 @@ export default function NFTsSelectedModal({ open1, handle1 }: { open1: boolean; 
           </Typography>
         </FlexBox>
         <WithdrawList>
-          <FlexBox mb="24px">
-            <img src={NFT5} alt="" />
-            <Box width="232px" ml="12px" mr="24px">
-              <Typography variant="body1" fontWeight="600" component="h1" color="#A0A3BD">
-                CryptoPunk #8314
-              </Typography>
-            </Box>
-            <Typography variant="body1" component="h1" color="#A0A3BD">
-              x 1
-            </Typography>
-          </FlexBox>
+          {[0, 1, 2, 3, 4, 5].map((el: any, index: number) => (
+            <FlexBox mb="24px" key={index}>
+              <img src={NFT5} alt="" />
+              <Box width="232px" ml="12px" mr="24px">
+                <BodyTypography color="#6E7191 !important" fontWeight="600 !important">
+                  CryptoPunk #8314
+                </BodyTypography>
+              </Box>
+              <BodyTypography>x 1</BodyTypography>
+            </FlexBox>
+          ))}
         </WithdrawList>
+
         <SpaceBetweenBox mt="24px">
           <Box>
-            <Typography variant="body1" component="p" color="#A0A3BD">
-              Collateral value (ETH)
-            </Typography>
-            <Typography mt="16px" variant="body1" component="p" color="#A0A3BD">
-              Borrow Limited (ETH)
-            </Typography>
-            <Typography mt="16px" variant="body1" component="p" color="#A0A3BD">
-              Borrow Limit Used
-            </Typography>
+            <BodyTypography>Collateral value (ETH)</BodyTypography>
+            <BodyTypography mt="16px"> Borrow Limited (ETH)</BodyTypography>
+            <BodyTypography mt="16px">Borrow Limit Used</BodyTypography>
           </Box>
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Typography variant="body1" component="span" color="#A0A3BD">
-                3.0918 {'>'}
-              </Typography>
-              <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+              <BodyTypography>3.0918 {'>'}</BodyTypography>
+              <BodyTypography ml="6px" fontWeight="700 !important" color="#14142A !important">
                 3.0918
-              </Typography>
+              </BodyTypography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
-              <Typography variant="body1" component="span" color="#A0A3BD">
-                20% {'>'}
-              </Typography>
-              <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+              <BodyTypography>20% {'>'}</BodyTypography>
+              <BodyTypography ml="6px !important" fontWeight="700" color="#14142A !important">
                 20%
-              </Typography>
+              </BodyTypography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
-              <Typography variant="body1" component="span" color="#A0A3BD">
-                20% {'>'}
-              </Typography>
-              <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+              <BodyTypography>20% {'>'}</BodyTypography>
+              <BodyTypography ml="6px" fontWeight="700 !important" color="#14142A !important">
                 20%
-              </Typography>
+              </BodyTypography>
             </Box>
           </Box>
         </SpaceBetweenBox>
         <SpaceBetweenBox mt="16px">
           <Box>
-            <Typography variant="body1" component="span" color="#A0A3BD">
-              Risk level
-            </Typography>
-            <Typography ml="8px" variant="body1" component="span" fontWeight="700" color="#4BC8B1">
+            <BodyTypography sx={{ display: 'inline-block' }}>Risk level</BodyTypography>
+            <BodyTypography
+              sx={{ display: 'inline-block' }}
+              ml="8px"
+              fontWeight="700 !important"
+              color="#4BC8B1 !important"
+            >
               HEALTHY
-            </Typography>
+            </BodyTypography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Typography variant="body1" component="span" color="#A0A3BD">
-              186% {'>'}
-            </Typography>
-            <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+            <BodyTypography>186% {'>'}</BodyTypography>
+            <BodyTypography ml="6px" fontWeight="700 !important" color="#14142A !important">
               186%
-            </Typography>
+            </BodyTypography>
           </Box>
         </SpaceBetweenBox>
         <RightFlexBox>
@@ -173,19 +173,15 @@ export default function NFTsSelectedModal({ open1, handle1 }: { open1: boolean; 
           </FlexBox>
           <FlexBox>
             <Box width="117px">
-              <Typography component="span" variant="body2" fontWeight="500" color="#A0A3BD">
-                Token Reward
-              </Typography>
+              <BodyTypography>Token Reward</BodyTypography>
             </Box>
             <Box width="116px">
-              <Typography component="span" variant="body2" fontWeight="600" color="#A0A3BD">
-                Borrow APY
-              </Typography>
+              <BodyTypography fontWeight="600 !important">Borrow APY</BodyTypography>
             </Box>
             <Box>
-              <Typography component="span" variant="body2" fontWeight="600" color="#4E4B66">
+              <BodyTypography fontWeight="600 !important" color="#4E4B66 !important">
                 Net Borrow APY
-              </Typography>
+              </BodyTypography>
             </Box>
           </FlexBox>
         </RightFlexBox>

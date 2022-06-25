@@ -33,3 +33,40 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.POLYGON_MAINNET,
   SupportedChainId.POLYGON_TESTNET,
 ]
+export const chainIdList: any = {
+  Ethereum: 4,
+  BSC: 97,
+  Polygon: 137,
+}
+
+export const chainScanUrlList: any = {
+  [chainIdList.Ethereum]: 'https://rinkeby.etherscan.io/',
+  [chainIdList.BSC]: 'https://testnet.bscscan.com/',
+  [chainIdList.Polygon]: 'https://mumbai.polygonscan.com/',
+}
+export const chainNodeList: any = {
+  [chainIdList.Ethereum]: 'https://rinkeby.infura.io/v3/',
+  [chainIdList.BSC]: 'https://data-seed-prebsc-2-s1.binance.org:8545/',
+  [chainIdList.Polygon]: 'https://polygon-rpc.com',
+}
+export const chainAlchemyList: any = {
+  [chainIdList.Ethereum]: 'https://eth-rinkeby.alchemyapi.io/v2/',
+  [chainIdList.Polygon]: 'https://polygon-mumbai.g.alchemyapi.io/v2/',
+}
+export const chainNameList: any = {
+  [chainIdList.Ethereum]: 'Ethereum Testnet',
+  [chainIdList.BSC]: 'Binance Smart Chain Testnet',
+  [chainIdList.Polygon]: 'Mubai Testnet',
+}
+
+export const networkTokens: any = {
+  [chainIdList.Ethereum]: 'ETH',
+  [chainIdList.BSC]: 'BNB',
+  [chainIdList.Polygon]: 'MATIC',
+}
+
+export const networkName: any = {
+  [chainIdList.Ethereum]: 'Ethereum',
+  [chainIdList.BSC]: 'BSC',
+  [chainIdList.Polygon]: 'Polygon',
+}

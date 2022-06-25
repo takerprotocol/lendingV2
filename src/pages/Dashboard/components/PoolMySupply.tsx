@@ -7,14 +7,18 @@ const FlexBox = styled(Box)`
   justify-content: flex-start;
   margin-top: 24px;
 `
-export default function PoolMySupply() {
+interface PoolMySupplyType {
+  loading: boolean
+  type: number
+}
+export default function PoolMySupply({ loading, type }: PoolMySupplyType) {
   return (
     <FlexBox>
       <Box mr="24px">
-        <ETHpool></ETHpool>
+        <ETHpool type={type} loading={loading}></ETHpool>
       </Box>
       <Box>
-        <MySupply></MySupply>
+        <MySupply loading={loading}></MySupply>
       </Box>
     </FlexBox>
   )

@@ -2,7 +2,7 @@ import { Typography, Box, styled } from '@mui/material'
 import promptIcon from 'assets/images/svg/dashboard/prompt-icon.svg'
 import minMyCollateralIcon from 'assets/images/svg/dashboard/minMyCollateral-icon.svg'
 import purpleETHpool from 'assets/images/svg/dashboard/purpleETHpool.svg'
-import { useState } from 'react'
+import ETHPoolSkeleton from './DashboardSkeleton/ETHPoolSkeleton'
 const ETHpoolBox = styled(Box)`
   width: 642px;
   height: 285px;
@@ -30,109 +30,117 @@ const ETHpooLeftBox = styled(Box)`
   border-radius: 10px;
   padding: 43px 24px;
 `
-
-export default function ETHpool() {
-  const [ETHpoolcheck] = useState<number | null>(2)
+interface ETHpoolType {
+  loading: boolean
+  type: number
+}
+export default function ETHpool({ loading, type }: ETHpoolType) {
   return (
     <ETHpoolBox>
-      <Typography component="h1" variant="h4" color="#14142A">
-        ETH Pool
-      </Typography>
-      <ETHpoolFlexBox mt="24px">
-        {ETHpoolcheck === 1 ? (
-          <ETHpooLeftBox>
-            <ETHpoolFlexBox>
-              <Typography component="span" variant="subtitle2" color="#FFFFFF" mr="6px">
-                Liquidity
-              </Typography>
-              <img src={promptIcon} alt="" />
-            </ETHpoolFlexBox>
-            <ETHpoolFlexBox mt="10px">
-              <img height="30px" src={minMyCollateralIcon} alt="" />
-              <Typography component="span" variant="h4" fontWeight="600" color="#FFFFFF" ml="9px">
-                98,189.50
-              </Typography>
-            </ETHpoolFlexBox>
-          </ETHpooLeftBox>
-        ) : (
-          <ETHpooLeftBox sx={{ boxShadow: '0', background: '#F7F7FC' }}>
-            <ETHpoolFlexBox>
-              <Typography component="span" variant="subtitle2" color="#14142A" mr="6px">
-                Liquidity
-              </Typography>
-              <img src={promptIcon} alt="" />
-            </ETHpoolFlexBox>
-            <ETHpoolFlexBox mt="10px">
-              <img height="30px" src={purpleETHpool} alt="" />
-              <Typography component="span" variant="h4" fontWeight="600" color="#7646FF" ml="9px">
-                98,189.50
-              </Typography>
-            </ETHpoolFlexBox>
-          </ETHpooLeftBox>
-        )}
-        <Box ml="48px">
-          <ETHpoolFlexBox>
-            <Typography component="span" variant="body1" fontWeight="700" color="#14142A" mr="6px">
-              Net Supply APY
-            </Typography>
-            <img src={promptIcon} alt="" />
-          </ETHpoolFlexBox>
-          <ETHpoolFlexBox mt="4px">
-            <Typography component="span" variant="h4" color="#14142A">
-              15%
-            </Typography>
-          </ETHpoolFlexBox>
-          <ETHpoolFlexBox mt="8px">
-            <Box>
-              <Typography component="p" fontWeight="600" variant="body1" color="#A0A3BD">
-                Supply APY
-              </Typography>
-              <Typography mt="4px" fontWeight="600" component="p" variant="body1" color="#A0A3BD">
-                Reward APY
-              </Typography>
+      {loading ? (
+        <ETHPoolSkeleton />
+      ) : (
+        <>
+          <Typography component="h1" variant="h4" color="#14142A">
+            ETH Pool
+          </Typography>
+          <ETHpoolFlexBox mt="24px">
+            {type === 1 ? (
+              <ETHpooLeftBox>
+                <ETHpoolFlexBox>
+                  <Typography component="span" variant="subtitle2" color="#FFFFFF" mr="6px">
+                    Liquidity
+                  </Typography>
+                  <img src={promptIcon} alt="" />
+                </ETHpoolFlexBox>
+                <ETHpoolFlexBox mt="10px">
+                  <img height="30px" src={minMyCollateralIcon} alt="" />
+                  <Typography component="span" variant="h4" fontWeight="600" color="#FFFFFF" ml="9px">
+                    98,189.50
+                  </Typography>
+                </ETHpoolFlexBox>
+              </ETHpooLeftBox>
+            ) : (
+              <ETHpooLeftBox sx={{ boxShadow: '0', background: '#F7F7FC' }}>
+                <ETHpoolFlexBox>
+                  <Typography component="span" variant="subtitle2" color="#14142A" mr="6px">
+                    Liquidity
+                  </Typography>
+                  <img src={promptIcon} alt="" />
+                </ETHpoolFlexBox>
+                <ETHpoolFlexBox mt="10px">
+                  <img height="30px" src={purpleETHpool} alt="" />
+                  <Typography component="span" variant="h4" fontWeight="600" color="#7646FF" ml="9px">
+                    98,189.50
+                  </Typography>
+                </ETHpoolFlexBox>
+              </ETHpooLeftBox>
+            )}
+            <Box ml="48px">
+              <ETHpoolFlexBox>
+                <Typography component="span" variant="body1" fontWeight="700" color="#14142A" mr="6px">
+                  Net Supply APY
+                </Typography>
+                <img src={promptIcon} alt="" />
+              </ETHpoolFlexBox>
+              <ETHpoolFlexBox mt="4px">
+                <Typography component="span" variant="h4" color="#14142A">
+                  15%
+                </Typography>
+              </ETHpoolFlexBox>
+              <ETHpoolFlexBox mt="8px">
+                <Box>
+                  <Typography component="p" fontWeight="600" variant="body1" color="#A0A3BD">
+                    Supply APY
+                  </Typography>
+                  <Typography mt="4px" fontWeight="600" component="p" variant="body1" color="#A0A3BD">
+                    Reward APY
+                  </Typography>
+                </Box>
+                <Box ml="8px">
+                  <Typography component="p" fontWeight="600" variant="body1" color="#6E7191">
+                    5%
+                  </Typography>
+                  <Typography mt="4px" component="p" variant="body1" fontWeight="700" color="#4BC8B1">
+                    15%
+                  </Typography>
+                </Box>
+              </ETHpoolFlexBox>
             </Box>
-            <Box ml="8px">
-              <Typography component="p" fontWeight="600" variant="body1" color="#6E7191">
-                5%
-              </Typography>
-              <Typography mt="4px" component="p" variant="body1" fontWeight="700" color="#4BC8B1">
-                15%
-              </Typography>
+            <Box ml="24px">
+              <ETHpoolFlexBox>
+                <Typography component="span" variant="body1" fontWeight="700" color="#14142A" mr="6px">
+                  Borrow APY
+                </Typography>
+                <img src={promptIcon} alt="" />
+              </ETHpoolFlexBox>
+              <ETHpoolFlexBox mt="4px">
+                <Typography component="span" variant="h4" color="#14142A">
+                  10%
+                </Typography>
+              </ETHpoolFlexBox>
+              <ETHpoolFlexBox mt="8px">
+                <Box>
+                  <Typography component="p" fontWeight="600" variant="body1" color="#A0A3BD">
+                    Supply APY
+                  </Typography>
+                  <Typography mt="4px" component="p" fontWeight="600" variant="body1" color="#A0A3BD">
+                    Reward APY
+                  </Typography>
+                </Box>
+                <Box ml="8px">
+                  <Typography component="p" variant="body1" fontWeight="600" color="#6E7191">
+                    -10%
+                  </Typography>
+                  <Typography mt="4px" component="p" variant="body1" fontWeight="700" color="#4BC8B1">
+                    20%
+                  </Typography>
+                </Box>
+              </ETHpoolFlexBox>
             </Box>
           </ETHpoolFlexBox>
-        </Box>
-        <Box ml="24px">
-          <ETHpoolFlexBox>
-            <Typography component="span" variant="body1" fontWeight="700" color="#14142A" mr="6px">
-              Borrow APY
-            </Typography>
-            <img src={promptIcon} alt="" />
-          </ETHpoolFlexBox>
-          <ETHpoolFlexBox mt="4px">
-            <Typography component="span" variant="h4" color="#14142A">
-              10%
-            </Typography>
-          </ETHpoolFlexBox>
-          <ETHpoolFlexBox mt="8px">
-            <Box>
-              <Typography component="p" fontWeight="600" variant="body1" color="#A0A3BD">
-                Supply APY
-              </Typography>
-              <Typography mt="4px" component="p" fontWeight="600" variant="body1" color="#A0A3BD">
-                Reward APY
-              </Typography>
-            </Box>
-            <Box ml="8px">
-              <Typography component="p" variant="body1" fontWeight="600" color="#6E7191">
-                -10%
-              </Typography>
-              <Typography mt="4px" component="p" variant="body1" fontWeight="700" color="#4BC8B1">
-                20%
-              </Typography>
-            </Box>
-          </ETHpoolFlexBox>
-        </Box>
-      </ETHpoolFlexBox>
+        </>
+      )}
     </ETHpoolBox>
   )
 }

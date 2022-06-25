@@ -44,7 +44,6 @@ export default function ChipsArray() {
         if (data.label === 'React') {
           icon = <TagFacesIcon />
         }
-
         return (
           <ListItem key={data.key}>
             <Chip icon={icon} label={data.label} onDelete={data.label === 'React' ? undefined : handleDelete(data)} />

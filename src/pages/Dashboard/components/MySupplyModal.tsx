@@ -23,7 +23,6 @@ const TopBox = styled(Box)`
   }
 `
 const BottomBox = styled(Box)`
-  height: 485px;
   width: 420px;
   margin-top: -12px;
   background: #ffffff;
@@ -47,6 +46,15 @@ const FlexBox = styled(Box)`
   align-items: center;
   justify-content: flex-start;
 `
+const AddBgBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  width: 18px;
+  border-radius: 100%;
+  height: 18px;
+  background: #eff0f6;
+  padding: 4.88px;
+`
 const RightFlexBox = styled(Box)`
   background: #f7f7fc;
   border-radius: 10px;
@@ -60,7 +68,6 @@ const BorrowAmountBox = styled(Box)`
   border-radius: 10px;
   padding: 16px;
 `
-
 export const MAXBox = styled(Box)`
   padding: 2px 8px;
   border: 1px solid #14142a;
@@ -74,13 +81,18 @@ export const MAXBox = styled(Box)`
     background: #14142a;
   }
 `
-export default function MySupplyModal({ open, handle, type }: { open: boolean; handle: Function; type: number }) {
-  const [check, setCheck] = useState<number>(type)
+interface MySupplyModalType {
+  openMySupplyModal: boolean
+  setOpenMySupplyModal: Function
+  type: number
+}
+export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal, type }: MySupplyModalType) {
+  const [borrowOrRepay, setBorrowOrRepay] = useState<number>(type)
   useEffect(() => {
-    setCheck(type)
+    setBorrowOrRepay(type)
   }, [type])
   return (
-    <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+    <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
         <TopBox>
           <SpaceBetweenBox alignItems="flex-start">
@@ -102,7 +114,7 @@ export default function MySupplyModal({ open, handle, type }: { open: boolean; h
                 sx={{ display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }}
                 mr="8px"
                 onClick={() => {
-                  handle(false)
+                  setOpenMySupplyModal(false)
                 }}
               >
                 <img src={greyShutOff} alt="" />
@@ -122,15 +134,15 @@ export default function MySupplyModal({ open, handle, type }: { open: boolean; h
                 fontWeight="700"
                 component="h1"
                 sx={{ cursor: 'pointer' }}
-                color={check === 1 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
+                color={borrowOrRepay === 1 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
                 onClick={() => {
-                  setCheck(1)
+                  setBorrowOrRepay(1)
                 }}
               >
                 Supply
               </Typography>
               <Box
-                className={check === 1 ? 'BorrowOrRepay' : ''}
+                className={borrowOrRepay === 1 ? 'BorrowOrRepay' : ''}
                 sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '13px' }}
               ></Box>
             </Box>
@@ -140,15 +152,15 @@ export default function MySupplyModal({ open, handle, type }: { open: boolean; h
                 fontWeight="700"
                 component="h1"
                 sx={{ cursor: 'pointer' }}
-                color={check === 2 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
+                color={borrowOrRepay === 2 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
                 onClick={() => {
-                  setCheck(2)
+                  setBorrowOrRepay(2)
                 }}
               >
                 Withdraw
               </Typography>
               <Box
-                className={check === 2 ? 'BorrowOrRepay' : ''}
+                className={borrowOrRepay === 2 ? 'BorrowOrRepay' : ''}
                 sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '13px' }}
               ></Box>
             </Box>
@@ -166,7 +178,7 @@ export default function MySupplyModal({ open, handle, type }: { open: boolean; h
                   <TextField autoFocus={true} sx={{ marginLeft: '7px', fontSize: '28px' }} placeholder="0.00" />
                 </CenterBox>
               </Box>
-              {check === 3 ? (
+              {borrowOrRepay === 3 ? (
                 <Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Typography mt="16px" variant="body2" component="p" color="#A0A3BD">
@@ -263,17 +275,9 @@ export default function MySupplyModal({ open, handle, type }: { open: boolean; h
                 </Typography>
               </Box>
               <Box sx={{ width: '52px' }}>
-                <FlexBox
-                  sx={{
-                    width: '18px',
-                    borderRadius: '100%',
-                    height: '18px',
-                    background: '#EFF0F6',
-                    padding: '4.88px',
-                  }}
-                >
+                <AddBgBox>
                   <img height="8.25px" width="8.25px" src={addIcon} alt="" />
-                </FlexBox>
+                </AddBgBox>
               </Box>
               <Box width={'66px'}>
                 <Typography component="p" variant="subtitle2" lineHeight="16px" color="#6E7191">
@@ -281,17 +285,9 @@ export default function MySupplyModal({ open, handle, type }: { open: boolean; h
                 </Typography>
               </Box>
               <Box width="50px">
-                <FlexBox
-                  sx={{
-                    width: '18px',
-                    borderRadius: '100%',
-                    height: '18px',
-                    background: '#EFF0F6',
-                    padding: '4.88px',
-                  }}
-                >
+                <AddBgBox>
                   <img height="8.25px" width="8.25px" src={rightIcon} alt="" />
-                </FlexBox>
+                </AddBgBox>
               </Box>
 
               <Box>
