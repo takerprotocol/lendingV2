@@ -292,6 +292,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       },
     ]
   }, [])
+
   const sortOptionsFunction = useCallback(
     (collateralA: any, collateralB: any) => {
       switch (sort) {
@@ -314,7 +315,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
     [sort]
   )
 
-  const CollateralList = useMemo(() => {
+  const CollateralList = () => {
     return collaterals
       .filter(collectionsFilterFunction)
       .filter(deptFilterFunction)
@@ -324,7 +325,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         return <CollateralItem key={`collateral-${JSON.stringify(collateral)}`} {...collateral} nfts={nfts} />
       })
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [collaterals, sortOptionsFunction, search, collectionsFilterFunction, deptFilterFunction, collaterals])
+  }
 
   const CollateralSkeletonList = useMemo(() => {
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((collateral: any) => {
@@ -412,7 +413,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         </SortContainer>
       </SortFilterContainer>
       <CollateralItems>
-        {loading ? CollateralSkeletonList : !!collaterals.length ? CollateralList : <EmptyState />}
+        {loading ? CollateralSkeletonList : !!collaterals.length ? <CollateralList /> : <EmptyState />}
       </CollateralItems>
       <CollateralPagination collaterals={collaterals} onPageSelect={(number: number) => null} />
     </CollateralsContainer>
