@@ -57,7 +57,7 @@ export default function WalletModal() {
         .then(async () => {
           const walletAddress = await connector.getAccount()
           const provider = new Web3Provider(await connector.getProvider())
-          const balance = Number(formatUnits(await provider.getBalance(String(walletAddress)), 'gwei'))
+          const balance = Number(formatUnits(await provider.getBalance(String(walletAddress)), 'ether'))
           if (walletAddress) {
             localStorage.setItem('address', walletAddress)
             dispatch(setAddress(walletAddress))
