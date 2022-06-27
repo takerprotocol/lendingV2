@@ -76,7 +76,6 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
         setOpen(false)
       }}
       onMouseOver={() => {
-        console.log('hey')
         setOpen(true)
       }}
       className="account-popper"
