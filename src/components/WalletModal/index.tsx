@@ -16,7 +16,7 @@ import Option from './Option'
 import Modal from 'components/Modal'
 import { useAppDispatch } from 'state/hooks'
 import { Web3Provider } from '@ethersproject/providers'
-import { formatUnits } from 'ethers/lib/utils'
+import { formatEther } from 'ethers/lib/utils'
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -57,13 +57,14 @@ export default function WalletModal() {
         .then(async () => {
           const walletAddress = await connector.getAccount()
           const provider = new Web3Provider(await connector.getProvider())
-          const balance = Number(formatUnits(await provider.getBalance(String(walletAddress)), 'ether'))
+          const balance = await provider.getBalance(String(walletAddress))
+          const ethBalance = formatEther(balance.sub(balance.mod(1e14)))
           if (walletAddress) {
             localStorage.setItem('address', walletAddress)
             dispatch(setAddress(walletAddress))
           }
           if (balance) {
-            dispatch(setAccountBalance(balance))
+            dispatch(setAccountBalance(ethBalance))
           }
           connector.addListener('Web3ReactDeactivate', () => {
             dispatch(setAddress(''))

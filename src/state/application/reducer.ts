@@ -13,19 +13,19 @@ export enum ApplicationModal {
 export interface ApplicationState {
   readonly openModal: ApplicationModal | null
   readonly address: string
-  readonly balance: number
+  readonly balance: string
 }
 
 export interface TokenDecimals {
   symbol: string
   decimals: number
-  balance: number
+  balance: string
 }
 
 const initialState: ApplicationState = {
   openModal: null,
   address: localStorage.getItem('address') || '',
-  balance: 0,
+  balance: '0',
 }
 
 const applicationSlice = createSlice({

@@ -22,7 +22,7 @@ export function useAddress(): string {
   return useAppSelector((state: AppState) => state.application.address)
 }
 
-export function useWalletBalance(): number {
+export function useWalletBalance(): string {
   return useAppSelector((state: AppState) => state.application.balance)
 }
 
