@@ -65,6 +65,9 @@ export default function WalletModal() {
           if (balance) {
             dispatch(setAccountBalance(balance))
           }
+          connector.addListener('Web3ReactDeactivate', () => {
+            dispatch(setAddress(''))
+          })
         })
         .catch((error) => {
           console.log(error, '-----------')
