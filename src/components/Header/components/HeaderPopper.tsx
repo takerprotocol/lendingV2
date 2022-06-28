@@ -75,7 +75,7 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
 
   return (
     <StyledPopper
-      open={true}
+      open={open1 || open}
       onMouseLeave={() => {
         setOpen(false)
       }}
