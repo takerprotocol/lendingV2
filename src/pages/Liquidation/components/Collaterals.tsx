@@ -166,7 +166,8 @@ const AutoCompleteItem = styled(Typography)`
 
 const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; loading: boolean }) => {
   const [search, setSearch] = useState('')
-  const handleSearch = (e: any) => setSearch(String(e.target.value))
+  const [searchTerms, setSearchTerms] = useState<string[]>([])
+  const handleSearch = (e: React.FormEvent<HTMLInputElement>) => setSearch(String(e.currentTarget.value))
   const [collectionFilter, setCollectionFilter] = useState(0)
   const handleCollectionFilterChange = useCallback(
     (event: any) => setCollectionFilter(event.target.value as number),
@@ -315,32 +316,104 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
     [sort]
   )
 
-  const CollateralList = () => {
+  const CollateralList = useMemo(() => {
     return collaterals
       .filter(collectionsFilterFunction)
       .filter(deptFilterFunction)
       .sort(sortOptionsFunction)
-      .map((collateral: any) => {
+      .map((collateral: any, index: number) => {
         const nfts = collateral.collections.reduce((acc: any, current: any) => acc + current.nfts.length, 0)
-        return <CollateralItem key={`collateral-${JSON.stringify(collateral)}`} {...collateral} nfts={nfts} />
+        return <CollateralItem key={`collateral-${JSON.stringify(collateral)}${index}`} {...collateral} nfts={nfts} />
       })
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }
+  }, [collaterals, collectionFilter, debtFilter, sort, searchTerms])
 
   const CollateralSkeletonList = useMemo(() => {
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((collateral: any) => {
-      return <CollateralItemSkeleton key={`collateral-${JSON.stringify(collateral)}`} />
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((collateral: any, index: number) => {
+      return <CollateralItemSkeleton key={`collateral-${JSON.stringify(collateral)}${index}`} />
     })
   }, [])
 
-  const autocompleteOptions = ['Remlesbale', 'Rem.less', 'Rem.net', 'Rem.acorss']
+  const autocompleteOptions = useMemo(
+    () =>
+      collaterals
+        .map((collateral: any) => collateral.collections.map((collection: any) => collection.name))
+        .flat()
+        .filter((collection: string, index: number, self: any) => self.indexOf(collection) === index),
+    []
+  )
+
+  const handleAddSearchTerm = useCallback(
+    (term: string) => {
+      setSearchTerms([...searchTerms, term])
+      setSearch('')
+    },
+    [searchTerms]
+  )
+
+  const TermsContainer = styled('div')`
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    left: 50px;
+  `
+
+  const TermItem = styled('div')`
+    height: 40px;
+    left: 48px;
+    top: 7px;
+
+    /* Cool Gray 100 */
+
+    background: #f7f7fc;
+    border-radius: 6px;
+    padding: 12px 9px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  `
+
+  const CloseTermIcon = styled('svg')`
+    cursor: pointer;
+  `
 
   return (
     <CollateralsContainer>
       <CollateralsFilterHeader>
         <CollateralSelectText>All Collaterals</CollateralSelectText>
         <InputContainer>
-          <KeywordSearchInput value={search} onChange={handleSearch} placeholder="Search keyword" />
+          <TermsContainer>
+            {searchTerms.map((term: string, index: number) => (
+              <TermItem key={`${term}${index}`}>
+                {term}
+                <CloseTermIcon
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  onClick={() => setSearchTerms(searchTerms.filter((currentTerm: string) => currentTerm !== term))}
+                >
+                  <path
+                    d="M11.3957 1.81286C11.7295 1.47912 11.7295 0.938023 11.3957 0.604285C11.062 0.270548 10.5209 0.270548 10.1871 0.604286L6 4.79143L1.81286 0.604285C1.47912 0.270547 0.938023 0.270548 0.604286 0.604285C0.270548 0.938023 0.270548 1.47912 0.604286 1.81286L4.79143 6L0.604285 10.1871C0.270547 10.5209 0.270548 11.062 0.604286 11.3957C0.938023 11.7294 1.47912 11.7294 1.81286 11.3957L6 7.20857L10.1871 11.3957C10.5209 11.7294 11.062 11.7294 11.3957 11.3957C11.7295 11.062 11.7295 10.5209 11.3957 10.1871L7.20857 6L11.3957 1.81286Z"
+                    fill="#A0A3BD"
+                  />
+                </CloseTermIcon>
+              </TermItem>
+            ))}
+          </TermsContainer>
+          <KeywordSearchInput
+            value={search}
+            onChange={handleSearch}
+            placeholder={!searchTerms.length ? 'Search keyword' : undefined}
+            onKeyDown={(e: any) => {
+              if (e.code === 'Tab' || e.code === 'Enter') {
+                handleAddSearchTerm(search)
+              }
+            }}
+            disabled={!!searchTerms.length}
+          />
           {search && autocompleteOptions.find((option: string) => option.toLowerCase().includes(search.toLowerCase())) && (
             <AutoCompleteContainer>
               {autocompleteOptions.map((option: string) => {
@@ -351,6 +424,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
                       dangerouslySetInnerHTML={{
                         __html: option.replace(new RegExp(search, 'i'), `<span class="searchterm">${search}</span>`),
                       }}
+                      onClick={() => handleAddSearchTerm(option)}
                     />
                   )
                 }
@@ -413,7 +487,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         </SortContainer>
       </SortFilterContainer>
       <CollateralItems>
-        {loading ? CollateralSkeletonList : !!collaterals.length ? <CollateralList /> : <EmptyState />}
+        {loading ? CollateralSkeletonList : !!collaterals.length ? CollateralList : <EmptyState />}
       </CollateralItems>
       <CollateralPagination collaterals={collaterals} onPageSelect={(number: number) => null} />
     </CollateralsContainer>
