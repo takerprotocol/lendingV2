@@ -15,13 +15,13 @@ import NFT7 from 'assets/images/svg/wallet/NFT7.svg'
 import NFT8 from 'assets/images/svg/wallet/NFT8.svg'
 import NFT9 from 'assets/images/svg/wallet/NFT9.svg'
 import NFT10 from 'assets/images/svg/wallet/NFT10.svg'
-import headPortrait from 'assets/images/svg/common/headPortrait.svg'
 import { useAddress, useWalletBalance } from 'state/application/hooks'
 import { useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { useAppDispatch } from 'state/hooks'
 import { setAddress } from 'state/application/reducer'
 import Copy from 'components/Copy'
+import Blockies from 'react-blockies'
 
 const PopperBox = styled(Box)`
   z-index: 4;
@@ -57,6 +57,10 @@ const StyledPopper = styled(Popper)`
   z-index: 10;
 `
 
+const StyledBlockie = styled(Blockies)`
+  border-radius: 50%;
+`
+
 export default function HeaderPopper({ open, anchorEl, placement }: { open: boolean; anchorEl: any; placement: any }) {
   const address = useAddress()
   const balance = useWalletBalance()
@@ -71,7 +75,7 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
 
   return (
     <StyledPopper
-      open={open || open1}
+      open={true}
       onMouseLeave={() => {
         setOpen(false)
       }}
@@ -89,7 +93,7 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
             <LogoutBox>
               <SpaceBetweenBox>
                 <CenterBox>
-                  <img src={headPortrait} alt="" />
+                  <StyledBlockie seed={address} size={12} scale={2} />
                   <Typography
                     variant="subtitle2"
                     component="h1"

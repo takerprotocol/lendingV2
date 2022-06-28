@@ -81,6 +81,7 @@
     "prettier": "^2.2.1",
     "qrcode.react": "^3.0.1",
     "react": "latest",
+    "react-blockies": "^1.4.1",
     "react-dom": "latest",
     "react-feather": "^2.0.9",
     "react-infinite-scroll-hook": "^4.0.3",
@@ -123,5 +124,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/react-blockies": "^1.4.1"
+  }
 }
