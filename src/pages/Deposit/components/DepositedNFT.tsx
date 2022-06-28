@@ -77,8 +77,12 @@ export default function DepositedNFT({
       <DepositedNFTsBox
         sx={{
           background: `${
-            loading ? '' : 'linear-gradient(180deg, rgba(217, 219, 233, 0.3) 17.89%, rgba(217, 219, 233, 0) 33.61%)'
-          }`,
+            loading
+              ? ''
+              : `${
+                  list ? 'linear-gradient(180deg, rgba(217, 219, 233, 0.3) 17.89%, rgba(217, 219, 233, 0) 33.61%)' : ''
+                }`
+          } `,
           opacity: `${depositType === 'open' ? '0.7' : '1'}`,
         }}
       >
@@ -95,7 +99,12 @@ export default function DepositedNFT({
               </Typography>
             </Box>
             {withdrawType === 'shut' ? (
-              <Button sx={{ marginRight: '24px' }} variant="contained" color="secondary" onClick={ButtonWithdraw}>
+              <Button
+                sx={{ display: `${!list && 'none'}`, marginRight: '24px' }}
+                variant="contained"
+                color="secondary"
+                onClick={ButtonWithdraw}
+              >
                 Withdraw
               </Button>
             ) : (

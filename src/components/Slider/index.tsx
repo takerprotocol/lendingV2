@@ -65,11 +65,18 @@ function AirbnbThumbComponent(props: AirbnbThumbComponentProps) {
     </SliderThumb>
   )
 }
-
-export default function CustomizedSlider() {
+interface CustomizedSliderProps {
+  colorClass: string
+}
+export default function CustomizedSlider({ colorClass }: CustomizedSliderProps) {
   return (
     <Box sx={{ width: '100%' }}>
-      <PrettoSlider valueLabelDisplay="off" aria-label="pretto slider" defaultValue={20} />
+      <PrettoSlider
+        className={`Slider-${colorClass}`}
+        valueLabelDisplay="off"
+        aria-label="pretto slider"
+        defaultValue={20}
+      />
     </Box>
   )
 }

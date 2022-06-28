@@ -10,7 +10,6 @@ import { useState } from 'react'
 const AvailableNFTsBox = styled(Box)`
   width: 1012px;
   position: relative;
-  background: linear-gradient(180deg, #ffffff 12.77%, rgba(255, 255, 255, 0) 33.61%);
   border-radius: 12px;
   padding: 24px 0 0 24px;
   margin-top: 24px;
@@ -79,7 +78,9 @@ export default function AvailableNFTs({
     <AvailableNFTsStyleBox>
       <AvailableNFTsBox
         sx={{
-          background: `${loading ? '' : 'linear-gradient(180deg, #ffffff 12.77%, rgba(255, 255, 255, 0) 33.61%)'}`,
+          background: `${
+            loading ? '' : `${list ? 'linear-gradient(180deg, #ffffff 12.77%, rgba(255, 255, 255, 0) 33.61%)' : ''}`
+          } `,
           opacity: `${withdrawType === 'open' ? '0.7' : '1'}`,
         }}
       >
@@ -97,7 +98,7 @@ export default function AvailableNFTs({
             </Box>
             <Box mr="24px">
               {depositType === 'shut' ? (
-                <Button variant="contained" onClick={ButtonDeposit}>
+                <Button sx={{ display: `${!list && 'none'}` }} variant="contained" onClick={ButtonDeposit}>
                   Deposit
                 </Button>
               ) : (

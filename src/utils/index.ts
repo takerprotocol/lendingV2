@@ -153,3 +153,27 @@ export const formatFiatPrice = (value: string | number, price: string | number):
   }
   return new BigNumber(value).times(price).decimalPlaces(2, 1).toString()
 }
+export const RiskLevel = (value: string | number) => {
+  switch (true) {
+    case value < 100:
+      return 'In liquidation...'
+    case value <= 110 && value >= 100:
+      return 'HIGH RISK'
+    case value <= 130 && value > 110:
+      return 'RISKY'
+    default:
+      return 'HEALTHY'
+  }
+}
+export const RiskLevelTag = (value: string | number) => {
+  switch (true) {
+    case value < 100:
+      return 'In-liquidation'
+    case value < 110 && value >= 100:
+      return 'High-Risk'
+    case value <= 130 && value > 110:
+      return 'Risky'
+    default:
+      return 'Healthy'
+  }
+}

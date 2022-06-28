@@ -91,6 +91,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   useEffect(() => {
     setBorrowOrRepay(type)
   }, [type])
+  console.log(borrowOrRepay)
   return (
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>

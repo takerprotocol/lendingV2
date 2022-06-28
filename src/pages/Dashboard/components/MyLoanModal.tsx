@@ -6,6 +6,7 @@ import rightIcon from 'assets/images/svg/common/right.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
+import { RiskLevel, RiskLevelTag } from 'utils'
 const style = {
   width: '420px',
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -71,13 +72,30 @@ const RightFlexBox = styled(Box)`
 `
 const HealthyButton = styled(Box)`
   padding: 4px 12px;
-  width: 85px;
   height: 30px;
   margin-top: 34px;
-  background: linear-gradient(180deg, #1cc1a4 0%, #1cb5ab 100%);
-  box-shadow: 0px 4px 8px rgba(28, 183, 171, 0.1);
   border-radius: 20px;
   cursor: pointer;
+  background: linear-gradient(180deg, #1cc1a4 0%, #1cb5ab 100%);
+  box-shadow: 0px 4px 8px rgba(28, 183, 171, 0.1);
+`
+const HighRiskButton = styled(Box)`
+  padding: 4px 12px;
+  height: 30px;
+  margin-top: 34px;
+  border-radius: 20px;
+  cursor: pointer;
+  background: linear-gradient(180deg, #ff7272 0%, #e1536c 100%);
+  box-shadow: 0px 4px 8px rgba(221, 140, 140, 0.1);
+`
+const RiskyButton = styled(Box)`
+  padding: 4px 12px;
+  height: 30px;
+  margin-top: 34px;
+  border-radius: 20px;
+  cursor: pointer;
+  background: linear-gradient(180deg, #fba170 0%, #ef884f 100%);
+  box-shadow: 0px 4px 8px rgba(221, 183, 140, 0.1);
 `
 const BorrowAmountBox = styled(Box)`
   width: 372px;
@@ -96,13 +114,16 @@ const BorrowAmountBox = styled(Box)`
     border-color: #eff0f6 transparent transparent transparent;
   }
 `
-interface OverviewModalType {
+interface MyLoanModalProps {
   open: boolean
   repayRoBorrow: number
   onClose: Function
 }
-export default function OverviewModal({ open, repayRoBorrow, onClose }: OverviewModalType) {
+export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModalProps) {
   const [check, setCheck] = useState<number>(repayRoBorrow)
+  const [riskLevelType, setRiskLevelType] = useState<number>(120)
+  const TypographyRiskLevel = RiskLevel(riskLevelType)
+  const ColorClass = RiskLevelTag(riskLevelType)
   useEffect(() => {
     setCheck(repayRoBorrow)
   }, [repayRoBorrow])
@@ -124,7 +145,7 @@ export default function OverviewModal({ open, repayRoBorrow, onClose }: Overview
                 </Typography>
               </Box>
             </Box>
-            <Box width="85px" m="32px 24px 0px 0px">
+            <Box m="32px 24px 0px 0px">
               <Box
                 sx={{ display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }}
                 mr="8px"
@@ -134,11 +155,25 @@ export default function OverviewModal({ open, repayRoBorrow, onClose }: Overview
               >
                 <img src={greyShutOff} alt="" />
               </Box>
-              <HealthyButton>
-                <Typography variant="body1" component="span" fontWeight="700" color="#FFFFFF">
-                  HEALTHY
-                </Typography>
-              </HealthyButton>
+              {riskLevelType >= 100 && riskLevelType <= 110 ? (
+                <HighRiskButton>
+                  <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
+                    {TypographyRiskLevel}
+                  </Typography>
+                </HighRiskButton>
+              ) : riskLevelType > 110 && riskLevelType <= 130 ? (
+                <RiskyButton>
+                  <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
+                    {TypographyRiskLevel}
+                  </Typography>
+                </RiskyButton>
+              ) : (
+                <HealthyButton>
+                  <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
+                    {TypographyRiskLevel}
+                  </Typography>
+                </HealthyButton>
+              )}
             </Box>
           </SpaceBetweenBox>
           <SpaceBetweenBox mt="24px">
@@ -189,7 +224,15 @@ export default function OverviewModal({ open, repayRoBorrow, onClose }: Overview
                 </Typography>
                 <CenterBox>
                   <img src={myCollateral} alt="" />
-                  <TextField autoFocus={true} sx={{ marginLeft: '7px' }} placeholder="0.00" />
+                  <TextField
+                    autoFocus={true}
+                    sx={{ marginLeft: '7px' }}
+                    placeholder="0.00"
+                    onChange={(event: any) => {
+                      console.log(event)
+                      setRiskLevelType(event.target.value * 1)
+                    }}
+                  />
                 </CenterBox>
               </Box>
               {check === 1 ? (
@@ -224,15 +267,15 @@ export default function OverviewModal({ open, repayRoBorrow, onClose }: Overview
             </SpaceBetweenBox>
           </BorrowAmountBox>
           <Box mb="15px" mt="12px" height="8px" width="372px">
-            <CustomizedSlider></CustomizedSlider>
+            <CustomizedSlider colorClass={ColorClass}></CustomizedSlider>
           </Box>
           <SpaceBetweenBox mb="16.5px">
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
                 Risk level
               </Typography>
-              <Typography ml="8px" variant="body1" component="span" fontWeight="700" color="#4BC8B1">
-                HEALTHY
+              <Typography className={ColorClass} ml="8px" variant="body1" component="span" fontWeight="700">
+                {TypographyRiskLevel}
               </Typography>
             </Box>
             <Box>

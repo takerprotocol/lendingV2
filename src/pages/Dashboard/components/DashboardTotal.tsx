@@ -4,9 +4,8 @@ import TotalBorrowedIcon from 'assets/images/svg/dashboard/total-borrowed.svg'
 import TotalLiquidityIcon from 'assets/images/svg/dashboard/total-liquidity.svg'
 import TotalLeft from 'assets/images/svg/dashboard/totalLeft.svg'
 import TotalRight from 'assets/images/svg/dashboard/totalRight.svg'
-import TopLiquidity from 'assets/images/svg/dashboard/top-liquidity.svg'
+import TopLiquidity from 'assets/images/svg/dashboard/Tips-liquidity.svg'
 import BottomLiquidity from 'assets/images/svg/dashboard/bottom-liquidity.svg'
-import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import DashboardTotalSkeleton from './DashboardSkeleton/TotalSkeleton'
 
 const FlexBox = styled(Box)`
@@ -24,7 +23,7 @@ interface DashboardTotalType {
 }
 export default function DashboardTotal({ type, loading }: DashboardTotalType) {
   return (
-    <Box mt="56px">
+    <Box>
       {loading ? (
         <DashboardTotalSkeleton />
       ) : (
@@ -36,49 +35,28 @@ export default function DashboardTotal({ type, loading }: DashboardTotalType) {
               </Box>
             ) : (
               <Box width="62px" height="62px" marginLeft="23px">
-                <img src={TotalLeft} width="62px" alt=" " />
+                <img src={TotalLeft} height="62px" width="62px" alt=" " />
               </Box>
             )}
             <Box marginLeft="24px">
               {type === 1 ? (
                 <CenterBox marginY="0px">
-                  <Typography
-                    component="span"
-                    variant="subtitle1"
-                    fontWeight="500"
-                    lineHeight="18px"
-                    color=" #14142A"
-                    marginRight="8px"
-                  >
+                  <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px" marginRight="8px">
                     Total Liquidity
                   </Typography>
                   <img src={TopLiquidity} alt="" />
                 </CenterBox>
               ) : (
                 <CenterBox marginY="0px">
-                  <Typography
-                    component="span"
-                    variant="subtitle1"
-                    fontWeight="500"
-                    lineHeight="18px"
-                    color="#6E7191"
-                    marginRight="8px"
-                  >
+                  <Typography variant="subtitle1" fontWeight="500" lineHeight="18px" marginRight="8px">
                     Total Liquidity
                   </Typography>
-                  <img src={greyPrompt} alt="" />
+                  <img src={TopLiquidity} alt="" />
                 </CenterBox>
               )}
               <Box marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
-                <Typography
-                  component="span"
-                  variant="h4"
-                  marginLeft="6px"
-                  fontWeight="600"
-                  lineHeight="28px"
-                  color="#14142A"
-                >
+                <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">
                   174,236.01
                 </Typography>
               </Box>
@@ -107,33 +85,26 @@ export default function DashboardTotal({ type, loading }: DashboardTotalType) {
               </Box>
             ) : (
               <Box width="62px" height="62px">
-                <img src={TotalRight} width="62px" alt="" />
+                <img src={TotalRight} height="62px" width="62px" alt="" />
               </Box>
             )}
             <Box sx={{ marginLeft: '24px' }}>
               {type === 1 ? (
                 <Box>
-                  <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px" color=" #14142A">
+                  <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px">
                     Total Borrowed
                   </Typography>
                 </Box>
               ) : (
                 <Box>
-                  <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px" color="#6E7191">
+                  <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px">
                     Total Borrowed
                   </Typography>
                 </Box>
               )}
               <Box marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
-                <Typography
-                  component="span"
-                  variant="h4"
-                  marginLeft="6px"
-                  fontWeight="600"
-                  lineHeight="28px"
-                  color=" #14142A"
-                >
+                <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">
                   64,236.42
                 </Typography>
               </Box>

@@ -9,6 +9,7 @@ const ConnectWalletBox = styled(Box)`
   border-radius: 12px;
   padding: 49px 0px;
   margin-top: 48px;
+  margin-bottom: 24px;
 `
 const WalletFlexBox = styled(Box)`
   justify-content: center;

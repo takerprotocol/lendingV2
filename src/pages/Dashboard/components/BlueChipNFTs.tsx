@@ -1,65 +1,100 @@
 import { styled } from '@mui/material/styles'
-import { Link, Box, Typography } from '@mui/material'
-import { useState } from 'react'
+import { Box, Typography } from '@mui/material'
+import blueChipNFTs from 'assets/images/svg/dashboard/blueChipNFTs.svg'
+import growthNFTs from 'assets/images/svg/dashboard/growthNFTs.svg'
 const FlexBox = styled(Box)`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 4px;
-  width: 344px;
-  height: 53px;
-  background: rgba(160, 163, 189, 0.2);
-  border-radius: 40px;
-  margin-left: 111px;
-  margin-top: 30px;
-  a {
-    cursor: pointer;
-  }
-  .open {
-    background: #14142a;
-    box-shadow: 0px 5px 10px rgba(110, 113, 145, 0.05);
-  }
+  margin-left: 116px;
 `
 const BlueChipNFTs = styled(Box)`
-  padding: 8px 24px;
-  height: 45px;
+  padding: 12px 24px 12px 17px;
+  height: 53px;
+  display: flex;
+  align-items: center;
   border-radius: 115px;
   cursor: pointer;
+  position: relative;
+  background: #ffffff;
+  border-radius: 8px;
+  &.open {
+    background: #14142a;
+    box-shadow: 0px 5px 10px rgba(110, 113, 145, 0.05);
+    ::before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 90px;
+      top: 53px;
+      border-width: 11px 9px;
+      border-style: dashed solid dashed dashed;
+      border-color: #14142a transparent transparent transparent;
+    }
+  }
 `
-export default function ChipNFTs({ changeCheck }: any) {
-  const [check, setCheck] = useState<number>(1)
+const GrowthNFTs = styled(Box)`
+  padding: 12px 24px 12px 17px;
+  height: 53px;
+  margin-left: 8px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  border-radius: 115px;
+  cursor: pointer;
+  background: #ffffff;
+  border-radius: 8px;
+  &.open {
+    background: linear-gradient(263.58deg, #7076ff 0%, #796aff 49.95%, #8e6bfd 100%);
+    box-shadow: 0px 5px 10px rgba(125, 112, 239, 0.1);
+    ::before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 82px;
+      top: 53px;
+      border-width: 11px 9px;
+      border-style: dashed solid dashed dashed;
+      border-color: #7b6bff transparent transparent transparent;
+    }
+  }
+`
+interface BlueChipGrowthNFTs {
+  changeCheck: Function
+  type: number
+}
+export default function ChipNFTs({ changeCheck, type }: BlueChipGrowthNFTs) {
   return (
     <FlexBox>
       <BlueChipNFTs
-        className={check === 1 ? 'open' : ''}
+        className={type === 1 ? 'open' : ''}
         onClick={() => {
-          if (check !== 1) {
-            setCheck(1)
+          if (type !== 1) {
             changeCheck(1)
           }
         }}
       >
-        <Link underline="none">
-          <Typography component="span" variant="subtitle1" color={check === 2 ? '#14142A' : '#ffffff'}>
-            Blue Chip NFTs
-          </Typography>
-        </Link>
+        <Box mr="8px" width="24px" height="24px" display={type === 1 ? '' : 'none'}>
+          <img src={blueChipNFTs} alt="" />
+        </Box>
+        <Typography variant="subtitle1" color={type === 2 ? '#14142A' : '#ffffff'}>
+          Blue Chip NFTs
+        </Typography>
       </BlueChipNFTs>
-      <BlueChipNFTs
-        className={check === 2 ? 'open' : ''}
+      <GrowthNFTs
+        className={type === 2 ? 'open' : ''}
         onClick={() => {
-          if (check !== 2) {
-            setCheck(2)
+          if (type !== 2) {
             changeCheck(2)
           }
         }}
       >
-        <Link underline="none">
-          <Typography component="span" variant="subtitle1" color={check === 1 ? '#14142A' : '#ffffff'}>
-            Growth NFTs
-          </Typography>
-        </Link>
-      </BlueChipNFTs>
+        <Box mr="8px" width="24px" height="24px" display={type === 2 ? '' : 'none'}>
+          <img src={growthNFTs} alt="" />
+        </Box>
+        <Typography variant="subtitle1" color={type === 1 ? '#14142A' : '#ffffff'}>
+          Growth NFTs
+        </Typography>
+      </GrowthNFTs>
     </FlexBox>
   )
 }

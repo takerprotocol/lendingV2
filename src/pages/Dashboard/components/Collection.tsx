@@ -50,6 +50,7 @@ interface CollectionType {
 export default function Collection({ type, loading }: CollectionType) {
   const [check, setCheck] = useState<number | null>(1)
   const [list] = useState([1, 2])
+  const [dataType] = useState<Boolean>(true) //有没有数据
   const address = useAddress()
   const toggleModal = useWalletModalToggle()
   const navigate = useNavigate()
@@ -59,8 +60,11 @@ export default function Collection({ type, loading }: CollectionType) {
         <CollectionSkeleton />
       ) : (
         <>
+          <Typography variant="h4" m="36px 0px 16px 24px">
+            Collection Supported
+          </Typography>
           <CollectionHeader>
-            <CollectionFlexBox mb="24px">
+            <CollectionFlexBox>
               <Box sx={{ width: '272px' }}>
                 <TitleTypography>Collection</TitleTypography>
               </Box>
@@ -182,22 +186,26 @@ export default function Collection({ type, loading }: CollectionType) {
                       </Box>
                       <Box className={address ? '' : 'none'} height="36px" width="0px" border="1px solid #EFF0F6"></Box>
                       <Box className={address ? '' : 'none'} ml="50px" width="148px">
-                        <Typography component="span" variant="subtitle1" fontWeight="700" color="#7646FF">
-                          20{' '}
-                        </Typography>
-                        <Typography component="span" variant="body1" fontWeight="700" color="#7646FF">
-                          NTFs
+                        <Typography
+                          component="span"
+                          variant="subtitle1"
+                          fontWeight="700"
+                          color={dataType ? '#7646FF' : '#A0A3BD'}
+                        >
+                          20 NTFs
                         </Typography>
                         <Typography component="p" variant="body1" fontWeight="600" color="#A0A3BD">
                           My Deposited
                         </Typography>
                       </Box>
                       <Box className={address ? '' : 'none'} width="130px">
-                        <Typography component="span" variant="subtitle1" fontWeight="700" color="#7646FF">
-                          10{' '}
-                        </Typography>
-                        <Typography component="span" variant="body1" fontWeight="700" color="#7646FF">
-                          NTFs
+                        <Typography
+                          component="span"
+                          variant="subtitle1"
+                          fontWeight="700"
+                          color={dataType ? '#7646FF' : '#A0A3BD'}
+                        >
+                          10 NTFs
                         </Typography>
                         <Typography component="p" variant="body1" fontWeight="600" color="#A0A3BD">
                           My Balance
@@ -218,26 +226,14 @@ export default function Collection({ type, loading }: CollectionType) {
                       </Box>
                     ) : (
                       <Box mt="48px">
-                        {type === 1 ? (
-                          <Button
-                            variant="contained"
-                            onClick={() => {
-                              toggleModal()
-                            }}
-                          >
-                            Connect Wallet
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() => {
-                              toggleModal()
-                            }}
-                          >
-                            Connect Wallet
-                          </Button>
-                        )}
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            toggleModal()
+                          }}
+                        >
+                          Connect Wallet
+                        </Button>
                       </Box>
                     )}
                   </CollectionUpBox>

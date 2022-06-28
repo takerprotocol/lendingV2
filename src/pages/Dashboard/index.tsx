@@ -2,16 +2,13 @@
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import BgIcon from 'assets/images/png/dashboard/bg.png'
-import DashboardTotal from './components/DashboardTotal'
-import Overview from './components/Overview'
-import PoolMySupply from './components/PoolMySupply'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
-import NFTPool from './components/NFTPool'
 import { useEffect, useState } from 'react'
 import { getClient } from 'apollo/client'
 import { SupportedChainId } from 'constants/chains'
 import { TEST } from 'apollo/queries'
+import DataNFTs from './components/DataNFTs'
 
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
@@ -20,7 +17,7 @@ const Body = styled(Box)`
   background-size: cover;
 `
 const Main = styled(Box)`
-  width: 1159px;
+  width: 1208px;
   margin: 0 auto;
 `
 export default function Dashboard() {
@@ -40,14 +37,12 @@ export default function Dashboard() {
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000)
   }, [])
+  console.log('client', client)
   return (
     <Body className="header-padding">
-      <BlueChipNFTs changeCheck={changeCheck}></BlueChipNFTs>
+      <BlueChipNFTs type={type} changeCheck={changeCheck}></BlueChipNFTs>
       <Main>
-        <DashboardTotal loading={loading} type={type}></DashboardTotal>
-        <Overview loading={loading} type={type}></Overview>
-        <PoolMySupply type={type} loading={loading}></PoolMySupply>
-        <NFTPool loading={loading}></NFTPool>
+        <DataNFTs loading={loading} type={type}></DataNFTs>
         <Collection loading={loading} type={type}></Collection>
       </Main>
     </Body>
