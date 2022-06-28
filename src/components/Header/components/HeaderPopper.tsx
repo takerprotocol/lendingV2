@@ -54,7 +54,7 @@ const LogoutBox = styled(Box)`
 `
 
 const StyledPopper = styled(Popper)`
-  z-index: 3;
+  z-index: 10;
 `
 
 export default function HeaderPopper({ open, anchorEl, placement }: { open: boolean; anchorEl: any; placement: any }) {
