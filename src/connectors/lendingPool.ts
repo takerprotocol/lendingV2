@@ -1,25 +1,40 @@
 // eslint-disable-next-line no-restricted-imports
-import { ethers } from 'ethers'
+import { Signer, Contract, ContractInterface } from 'ethers'
 import { Web3Provider } from '@ethersproject/providers'
 import lendingPoolAbi from '../abis/ILendingPool.json'
 
-export class LendingPool {
-  private contract?: ethers.Contract
+interface Deps {
+  provider: Web3Provider
+  chainId: number
+  lendingPool: string
+}
 
-  async getContract(chainId: number, provider: Web3Provider): Promise<ethers.Contract> {
-    if (this.contract && (await this.contract.signer.getChainId()) === chainId) {
+export class LendingPool {
+  private contract?: Contract
+  private chainId?: number
+  private lendingPool: string
+  static signer: Signer
+
+  constructor({ lendingPool }: Deps) {
+    this.lendingPool = lendingPool
+    this.getContract = this.getContract.bind(this)
+  }
+
+  static async build({ provider, chainId, lendingPool }: Deps) {
+    this.signer = await provider.getSigner(chainId)
+    return new LendingPool({ provider, chainId, lendingPool })
+  }
+
+  async getContract(): Promise<Contract> {
+    if (this.contract && (await this.contract.signer.getChainId()) === this.chainId) {
       return this.contract
     }
 
-    const signer = await provider.getSigner(chainId)
-
-    const lendingPoolAddress = process.env.LENDING_POOL_ADDRESS
-
-    if (!lendingPoolAddress) {
+    if (!this.lendingPool) {
       throw new Error('LendingPool address not provided. Please set the LENDING_POOL_ADDRESS env')
     }
 
-    this.contract = new ethers.Contract(lendingPoolAddress, lendingPoolAbi as ethers.ContractInterface).connect(signer)
+    this.contract = new Contract(this.lendingPool, lendingPoolAbi as ContractInterface).connect(LendingPool.signer)
 
     return this.contract
   }
