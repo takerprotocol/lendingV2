@@ -287,6 +287,45 @@ export const theme = createTheme({
           background: white !important;
           margin-top: 15px !important;
         }
+        .Healthy {
+          color: #4BC8B1;
+        }
+        .Risky {
+          color: #EF884F;
+        }
+        .High-Risk{
+          color: #E1536C;
+        }
+        .Slider-Healthy {
+          background: #EFF0F6;
+          color:  #66DEC8 !important;
+          & .MuiSlider-valueLabel {
+            backgroundColor:  #66DEC8 !important;
+            }
+          & .MuiSlider-thumb{
+            background: linear-gradient(213.69deg, #66DEC8 14%, #4BC8B1 92%) !important;
+          }
+        }
+        .Slider-Risky {
+          background: #EFF0F6;
+          color: #FBA170 !important;
+          & .MuiSlider-valueLabel {
+            backgroundColor:  #EF884F !important;
+            }
+          & .MuiSlider-thumb{
+            background: linear-gradient(180deg, #FBA170 0%, #EF884F 100%) !important;
+          }
+        }
+        .Slider-High-Risk{
+          background: #EFF0F6;
+          color: #FF7272 !important;
+          & .MuiSlider-valueLabel {
+            backgroundColor: #E1536C !important;
+            }
+            & .MuiSlider-thumb{
+              background: linear-gradient(180deg, #FF7272 0%, #E1536C 100%) !important;
+            }
+        }
       `,
     },
   },
