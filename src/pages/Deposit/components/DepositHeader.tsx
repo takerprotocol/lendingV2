@@ -18,6 +18,11 @@ const FlexBox = styled(Box)`
   align-items: center;
   justify-content: flex-start;
 `
+
+const FlexBoxBetween = styled(FlexBox)`
+  justify-content: space-between;
+`
+
 const BgFlexBox = styled(Box)`
   width: 24px;
   border-radius: 100%;
@@ -53,9 +58,11 @@ const RightFlexBox = styled(Box)`
   border-radius: 10px;
   padding: 24px 24px 24px 50px;
 `
+
 interface DepositHeaderProps {
   loading: boolean
 }
+
 export default function DepositHeader({ loading }: DepositHeaderProps) {
   return (
     <Box>
@@ -114,7 +121,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
               </Typography>
             </Box>
           </FlexBox>
-          <FlexBox mt={'24px'}>
+          <FlexBoxBetween mt={'24px'}>
             <RightFlexBox>
               <FlexBox>
                 <Box width={'86px'}>
@@ -167,7 +174,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 </Box>
               </FlexBox>
             </RightFlexBox>
-          </FlexBox>
+          </FlexBoxBetween>
         </HeaderBox>
       )}
     </Box>
