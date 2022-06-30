@@ -1,3 +1,4 @@
+import { OwnedNftsResponse } from '@alch/alchemy-sdk'
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from '../index'
@@ -16,6 +17,10 @@ export function useToggleModal(modal: ApplicationModal): () => void {
 
 export function useWalletModalToggle(): () => void {
   return useToggleModal(ApplicationModal.WALLET)
+}
+
+export function useAccountNfts(): OwnedNftsResponse | any {
+  return useAppSelector((state: AppState) => state.application.ownedNfts)
 }
 
 export function useAddress(): string {
