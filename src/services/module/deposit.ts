@@ -1,19 +1,20 @@
-import { chainIdList } from 'constants/chains'
-import usePrevious from 'hooks/usePrevious'
-import { useEffect, useState } from 'react'
-import { getNFTs } from 'utils/alchemyApi'
+import { getNftsForOwner, OwnedNftsResponse } from '@alch/alchemy-sdk'
+import alchemy from 'constants/alchemy'
+import { useCallback, useEffect, useState } from 'react'
 
-export function useOwnerNft(address: string) {
-  const [list, setList] = useState<any>([])
-  const previousBanners = usePrevious(list)
-  useEffect(() => {
-    if (previousBanners) {
-      getNFTs(address, chainIdList.Ethereum).then((res: any) => {
-        if (res) {
-          setList(res.ownedNfts)
-        }
-      })
+export function useDepositableNfts(address: string) {
+  // TODO check if NFT wasn't deposited yet
+  const [list, setList] = useState<OwnedNftsResponse | any>([])
+  const getList = useCallback(async () => {
+    try {
+      const response = await getNftsForOwner(alchemy, address)
+      setList(response.ownedNfts)
+    } catch (e: any) {
+      console.error(`Error fetching nfts for ${address}`)
     }
-  }, [previousBanners, address])
+  }, [])
+  useEffect(() => {
+    getList()
+  }, [address, getList])
   return list
 }
