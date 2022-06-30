@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
-import { Box, Checkbox, TextField, Typography } from '@mui/material'
-import Rectangle from 'assets/images/svg/deposit/Rectangle 853.svg'
+import { Box, Checkbox, Skeleton, TextField, Typography } from '@mui/material'
 import { useMemo, useState } from 'react'
 import NftListSkeleton from './depositSkeleton/NftListSkeleton'
 
@@ -23,6 +22,7 @@ const StyledCheckbox = styled(Checkbox)(() => ({
 }))
 const NftBox = styled(Box)`
   width: 305px;
+  height: 144px;
   padding: 11px;
   background: #ffffff;
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
@@ -41,6 +41,31 @@ const MaxBox = styled(Box)`
   cursor: pointer;
   padding: 4px 10px;
 `
+
+const NftImage = styled('img')<{ loaded: boolean }>(({ loaded }) => ({
+  borderRadius: 6,
+  widht: 74,
+  height: 74,
+  zIndex: loaded ? 1 : -1,
+  position: loaded ? 'relative' : 'absolute',
+}))
+
+const NftImageLoading = styled(Skeleton)`
+  width: 74px;
+  height: 74px;
+  border-radius: 6px;
+`
+
+const Image = (props: any) => {
+  const [imageLoaded, setImageLoaded] = useState(false)
+  return (
+    <>
+      <NftImage loaded={imageLoaded} onLoad={() => setImageLoaded(true)} {...props} />
+      {!imageLoaded && <NftImageLoading variant="rectangular" />}
+    </>
+  )
+}
+
 interface NFTsLisProps {
   list: any[]
   loading: boolean
@@ -55,7 +80,7 @@ export default function NFTsList({ list, loading, depositType, onChange, TypeKey
     () => [0, 1, 2, 3, 4, 5].slice(0, 6).map((_collateral, index) => <NftListSkeleton key={`${TypeKey}-${index}`} />),
     [TypeKey]
   )
-  // debugger
+
   return (
     <>
       <ListBox>
@@ -82,9 +107,9 @@ export default function NFTsList({ list, loading, depositType, onChange, TypeKey
                   />
                   <Box ml="10px">
                     <Box sx={{ display: ' flex', alignItems: 'flex-start' }}>
-                      <img width={'74px'} height={'74px'} src={Rectangle} alt="" />
+                      <Image src={el.media[0]?.gateway || ''} alt={`nft-${el.title}`} />
                       <Typography ml={'10px'} variant="subtitle2" component="span" fontWeight="700" color="#14142A">
-                        {el.metadata.description}
+                        {el.title}
                       </Typography>
                     </Box>
                     {type === '1155' && (
