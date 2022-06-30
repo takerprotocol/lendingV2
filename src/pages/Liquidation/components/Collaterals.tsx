@@ -340,7 +340,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         .map((collateral: any) => collateral.collections.map((collection: any) => collection.name))
         .flat()
         .filter((collection: string, index: number, self: any) => self.indexOf(collection) === index),
-    []
+    [collaterals]
   )
 
   const handleAddSearchTerm = useCallback(

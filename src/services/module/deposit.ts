@@ -12,7 +12,7 @@ export function useDepositableNfts(address: string) {
     } catch (e: any) {
       console.error(`Error fetching nfts for ${address}`)
     }
-  }, [])
+  }, [address])
   useEffect(() => {
     getList()
   }, [address, getList])
