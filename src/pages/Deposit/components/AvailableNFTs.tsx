@@ -90,10 +90,10 @@ export default function AvailableNFTs({
           <FlexBox sx={{ marginBottom: '30px' }}>
             <Box>
               <Typography component="span" variant="h5" fontSize=" 24px" lineHeight="38px">
-                60 Available NFTs
+                You can deposit
               </Typography>
               <Typography ml={'16px'} component="span" variant="subtitle1" lineHeight="18px" color="#6E7191">
-                253.57 ETH
+                {list.length} NFTs / 253.57 ETH
               </Typography>
             </Box>
             <Box mr="24px">
