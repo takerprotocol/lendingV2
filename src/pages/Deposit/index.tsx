@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 import DepositedNFT from './components/DepositedNFT'
 import NFTsSelectedModal from './components/NFTsSelectedModal'
 import SureModal from './components/SureModal'
-import { useOwnerNft } from 'services/module/deposit'
+import { useDepositableNfts } from 'services/module/deposit'
 
 const Body = styled(Box)`
   padding-top: 233px;
@@ -32,7 +32,7 @@ const HeaderBg = styled(Box)`
   z-index: -1;
 `
 export default function Deposit() {
-  const list = useOwnerNft('0x1108f964b384f1dCDa03658B24310ccBc48E226F')
+  const list = useDepositableNfts('0x1108f964b384f1dCDa03658B24310ccBc48E226F')
   const [openSelectedModal, setOpenSelectedModal] = useState<boolean>(false) //SureModal
   const [openSureModal, setOpenSureModal] = useState<boolean>(false) //NFTsSelectedModal
   const [loading, setLoading] = useState(true)
