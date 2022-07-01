@@ -5,10 +5,13 @@ import BgIcon from 'assets/images/png/dashboard/bg.png'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
 import { useEffect, useState } from 'react'
-import { getClient } from 'apollo/client'
-import { SupportedChainId } from 'constants/chains'
-import { TEST } from 'apollo/queries'
+import lendingPoolAbi from 'abis/IDebtToken.json'
+
+// import { getClient } from 'apollo/client'
+// import { SupportedChainId } from 'constants/chains'
+// import { TEST } from 'apollo/queries'
 import DataNFTs from './components/DataNFTs'
+import { useContract } from 'hooks/useContract'
 
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
@@ -23,21 +26,29 @@ const Main = styled(Box)`
 export default function Dashboard() {
   const [type, setType] = useState<number>(1)
   const [loading, setLoading] = useState<boolean>(true)
+  const contract = useContract('0xAc53F9c510C935a173E452BE0ed3692795727a1D', lendingPoolAbi)
   const changeCheck = (a: number) => {
     setType(a)
   }
-  const client = getClient()[SupportedChainId.MAINNET]
-  client
-    .query({
-      query: TEST('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'),
-    })
-    .then((res) => {
-      console.log(res)
-    })
+  useEffect(() => {
+    if (contract) {
+      // contract.compoundedBalanceOf('0x1D6F0d81a8384fB5359a2fc55cc46C7a3149e675').then((res: any) => {
+      //   console.log(res)
+      // })
+    }
+  }, [contract])
+  // const client = getClient()[SupportedChainId.MAINNET]
+  // client
+  //   .query({
+  //     query: TEST('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'),
+  //   })
+  //   .then((res) => {
+  //     console.log(res)
+  //   })
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000)
   }, [])
-  console.log('client', client)
+  // console.log('client', client)
   return (
     <Body className="header-padding">
       <BlueChipNFTs type={type} changeCheck={changeCheck}></BlueChipNFTs>

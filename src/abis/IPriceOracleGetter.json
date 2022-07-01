@@ -1,0 +1,5 @@
+[
+  "function getNFTPrice(address) view returns (uint256)",
+  "function getReserveAssetPrice(address) view returns (uint256)",
+  "function getTokenizedNFTPrice(address) view returns (uint256)"
+]
