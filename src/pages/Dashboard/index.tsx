@@ -5,7 +5,8 @@ import BgIcon from 'assets/images/png/dashboard/bg.png'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
 import { useEffect, useState } from 'react'
-import lendingPoolAbi from 'abis/IDebtToken.json'
+import lendingPoolAbi from 'abis/ILendingPool.json'
+// import lendingPoolAbi from 'abis/ILendingPoolAddressesProvider.json'
 
 // import { getClient } from 'apollo/client'
 // import { SupportedChainId } from 'constants/chains'
@@ -26,12 +27,15 @@ const Main = styled(Box)`
 export default function Dashboard() {
   const [type, setType] = useState<number>(1)
   const [loading, setLoading] = useState<boolean>(true)
-  const contract = useContract('0xAc53F9c510C935a173E452BE0ed3692795727a1D', lendingPoolAbi)
+  const contract = useContract('0x6898525468568BCd2B0a979690Ac690cAdC79BCd', lendingPoolAbi)
   const changeCheck = (a: number) => {
     setType(a)
   }
   useEffect(() => {
     if (contract) {
+      contract.getPoolValues().then((res: any) => {
+        console.log(res)
+      })
       // contract.compoundedBalanceOf('0x1D6F0d81a8384fB5359a2fc55cc46C7a3149e675').then((res: any) => {
       //   console.log(res)
       // })
