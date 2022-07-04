@@ -1,38 +1,55 @@
-type Pool @entity {
-  id: ID!
-  address: Bytes! # address
+type LendingPool @entity {
+  id: ID! # proxy
+  addressProvider: Bytes! #address
+  lendingPoolConfigurator: Bytes! # proxy
+  poolAdmin: Bytes!
+  emergencyAdmin: Bytes!
+  priceOracle: Bytes!
   reserves: [Reserve!]! @derivedFrom(field: "pool")
-  nfts: [Collection!]! @derivedFrom(field: "pool")
+  nfts: [NftCollection!]! @derivedFrom(field: "pool")
 }
 
 type Reserve @entity {
   id: ID! # underlying address, ETH = 0
-  pool: Pool!
-  tToken: Bytes! # address
-  debtToken: Bytes! # address
+  pool: LendingPool!
+
+  configuration: BigInt!
   liquidityIndex: BigInt!
   debtIndex: BigInt!
   depositRate: BigInt!
   borrowRate: BigInt!
+  lastUpdateTimestamp: BigInt!
+  tToken: Bytes! # proxy
+  debtToken: Bytes! # proxy
+  interestRateCalculator: Bytes! #library
+  treasury: Bytes! #address
+  reserveId: BigInt!
+
   totalLiquidity: BigInt! # tToken.totalSupply() * liquidityIndex
   totalDebt: BigInt! # debtToken.totalSupply() * debtIndex
+
   users: [UserReserve!]! @derivedFrom(field: "reserve")
 }
 
-type Collection @entity {
+type NftCollection @entity {
   id: ID!  # underlying address
-  pool: Pool!
-  tERCToken: Bytes! # address
+  pool: LendingPool!
+
+  tNFT: Bytes! # proxy
   ercType: ERCType!
-  totalLiquidity: BigInt! # tERCToken.totalSupply()
+
+  totalLiquidity: BigInt! # tNFT.totalSupply()
   floorPrice: BigInt!
-  users: [UserCollection!]! @derivedFrom(field: "collection")
+
+  users: [UserNftCollection!]! @derivedFrom(field: "collection")
 }
 
 type User @entity {
   id: ID! # address
+  reserveConfig: BigInt!
+  nftConfig: BigInt!
   reserves: [UserReserve!]! @derivedFrom(field: "user")
-  collections: [UserCollection!]! @derivedFrom(field: "user")
+  collections: [UserNftCollection!]! @derivedFrom(field: "user")
 }
 
 type UserReserve @entity {
@@ -44,10 +61,10 @@ type UserReserve @entity {
   usedAsCollateral: Boolean!
 }
 
-type UserCollection  @entity {
+type UserNftCollection  @entity {
   id: ID! # user - collection - tokenId
   user: User!
-  collection: Collection!
+  collection: NftCollection!
   tokenId: BigInt # null if ERC20
   amount: BigInt!
 }

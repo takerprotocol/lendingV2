@@ -316,6 +316,226 @@ export class Withdrawn__Params {
   }
 }
 
+export class LendingPool__getAssetValuesResult {
+  value0: BigInt;
+  value1: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
+  }
+
+  getValue0(): BigInt {
+    return this.value0;
+  }
+
+  getValue1(): BigInt {
+    return this.value1;
+  }
+}
+
+export class LendingPool__getNftReserveDataResultValue0Struct extends ethereum.Tuple {
+  get configuration(): BigInt {
+    return this[0].toBigInt();
+  }
+
+  get tNFTAddress(): Address {
+    return this[1].toAddress();
+  }
+
+  get id(): i32 {
+    return this[2].toI32();
+  }
+}
+
+export class LendingPool__getPoolValuesResult {
+  value0: BigInt;
+  value1: BigInt;
+  value2: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    return map;
+  }
+
+  getValue0(): BigInt {
+    return this.value0;
+  }
+
+  getValue1(): BigInt {
+    return this.value1;
+  }
+
+  getValue2(): BigInt {
+    return this.value2;
+  }
+}
+
+export class LendingPool__getReserveDataResultValue0Struct extends ethereum.Tuple {
+  get configuration(): BigInt {
+    return this[0].toBigInt();
+  }
+
+  get liquidityIndex(): BigInt {
+    return this[1].toBigInt();
+  }
+
+  get debtIndex(): BigInt {
+    return this[2].toBigInt();
+  }
+
+  get depositRate(): BigInt {
+    return this[3].toBigInt();
+  }
+
+  get borrowRate(): BigInt {
+    return this[4].toBigInt();
+  }
+
+  get lastUpdateTimestamp(): BigInt {
+    return this[5].toBigInt();
+  }
+
+  get tTokenAddress(): Address {
+    return this[6].toAddress();
+  }
+
+  get debtTokenAddress(): Address {
+    return this[7].toAddress();
+  }
+
+  get interestRateCalculatorAddress(): Address {
+    return this[8].toAddress();
+  }
+
+  get treasury(): Address {
+    return this[9].toAddress();
+  }
+
+  get id(): i32 {
+    return this[10].toI32();
+  }
+}
+
+export class LendingPool__getUserAssetValuesResult {
+  value0: BigInt;
+  value1: BigInt;
+  value2: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    return map;
+  }
+
+  getValue0(): BigInt {
+    return this.value0;
+  }
+
+  getValue1(): BigInt {
+    return this.value1;
+  }
+
+  getValue2(): BigInt {
+    return this.value2;
+  }
+}
+
+export class LendingPool__getUserStateResult {
+  value0: BigInt;
+  value1: BigInt;
+  value2: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    return map;
+  }
+
+  getValue0(): BigInt {
+    return this.value0;
+  }
+
+  getValue1(): BigInt {
+    return this.value1;
+  }
+
+  getValue2(): BigInt {
+    return this.value2;
+  }
+}
+
+export class LendingPool__getUserValuesResult {
+  value0: BigInt;
+  value1: BigInt;
+  value2: BigInt;
+  value3: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt, value2: BigInt, value3: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
+    return map;
+  }
+
+  getValue0(): BigInt {
+    return this.value0;
+  }
+
+  getValue1(): BigInt {
+    return this.value1;
+  }
+
+  getValue2(): BigInt {
+    return this.value2;
+  }
+
+  getValue3(): BigInt {
+    return this.value3;
+  }
+}
+
 export class LendingPool extends ethereum.SmartContract {
   static bind(address: Address): LendingPool {
     return new LendingPool("LendingPool", address);
@@ -344,6 +564,52 @@ export class LendingPool extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  MAX_NUMBER_NFT_RESERVES(): BigInt {
+    let result = super.call(
+      "MAX_NUMBER_NFT_RESERVES",
+      "MAX_NUMBER_NFT_RESERVES():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_MAX_NUMBER_NFT_RESERVES(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "MAX_NUMBER_NFT_RESERVES",
+      "MAX_NUMBER_NFT_RESERVES():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  MAX_NUMBER_RESERVES(): BigInt {
+    let result = super.call(
+      "MAX_NUMBER_RESERVES",
+      "MAX_NUMBER_RESERVES():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_MAX_NUMBER_RESERVES(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "MAX_NUMBER_RESERVES",
+      "MAX_NUMBER_RESERVES():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   NAME(): string {
     let result = super.call("NAME", "NAME():(string)", []);
 
@@ -357,6 +623,184 @@ export class LendingPool extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  getAssetValues(asset: Address): LendingPool__getAssetValuesResult {
+    let result = super.call(
+      "getAssetValues",
+      "getAssetValues(address):(uint256,uint256)",
+      [ethereum.Value.fromAddress(asset)]
+    );
+
+    return new LendingPool__getAssetValuesResult(
+      result[0].toBigInt(),
+      result[1].toBigInt()
+    );
+  }
+
+  try_getAssetValues(
+    asset: Address
+  ): ethereum.CallResult<LendingPool__getAssetValuesResult> {
+    let result = super.tryCall(
+      "getAssetValues",
+      "getAssetValues(address):(uint256,uint256)",
+      [ethereum.Value.fromAddress(asset)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new LendingPool__getAssetValuesResult(
+        value[0].toBigInt(),
+        value[1].toBigInt()
+      )
+    );
+  }
+
+  getNftReserveConfig(asset: Address): BigInt {
+    let result = super.call(
+      "getNftReserveConfig",
+      "getNftReserveConfig(address):(uint256)",
+      [ethereum.Value.fromAddress(asset)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getNftReserveConfig(asset: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getNftReserveConfig",
+      "getNftReserveConfig(address):(uint256)",
+      [ethereum.Value.fromAddress(asset)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getNftReserveData(
+    asset: Address
+  ): LendingPool__getNftReserveDataResultValue0Struct {
+    let result = super.call(
+      "getNftReserveData",
+      "getNftReserveData(address):((uint256,address,uint8))",
+      [ethereum.Value.fromAddress(asset)]
+    );
+
+    return changetype<LendingPool__getNftReserveDataResultValue0Struct>(
+      result[0].toTuple()
+    );
+  }
+
+  try_getNftReserveData(
+    asset: Address
+  ): ethereum.CallResult<LendingPool__getNftReserveDataResultValue0Struct> {
+    let result = super.tryCall(
+      "getNftReserveData",
+      "getNftReserveData(address):((uint256,address,uint8))",
+      [ethereum.Value.fromAddress(asset)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      changetype<LendingPool__getNftReserveDataResultValue0Struct>(
+        value[0].toTuple()
+      )
+    );
+  }
+
+  getPoolValues(): LendingPool__getPoolValuesResult {
+    let result = super.call(
+      "getPoolValues",
+      "getPoolValues():(uint256,uint256,uint256)",
+      []
+    );
+
+    return new LendingPool__getPoolValuesResult(
+      result[0].toBigInt(),
+      result[1].toBigInt(),
+      result[2].toBigInt()
+    );
+  }
+
+  try_getPoolValues(): ethereum.CallResult<LendingPool__getPoolValuesResult> {
+    let result = super.tryCall(
+      "getPoolValues",
+      "getPoolValues():(uint256,uint256,uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new LendingPool__getPoolValuesResult(
+        value[0].toBigInt(),
+        value[1].toBigInt(),
+        value[2].toBigInt()
+      )
+    );
+  }
+
+  getReserveConfig(asset: Address): BigInt {
+    let result = super.call(
+      "getReserveConfig",
+      "getReserveConfig(address):(uint256)",
+      [ethereum.Value.fromAddress(asset)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getReserveConfig(asset: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getReserveConfig",
+      "getReserveConfig(address):(uint256)",
+      [ethereum.Value.fromAddress(asset)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getReserveData(
+    asset: Address
+  ): LendingPool__getReserveDataResultValue0Struct {
+    let result = super.call(
+      "getReserveData",
+      "getReserveData(address):((uint256,uint128,uint128,uint128,uint128,uint40,address,address,address,address,uint8))",
+      [ethereum.Value.fromAddress(asset)]
+    );
+
+    return changetype<LendingPool__getReserveDataResultValue0Struct>(
+      result[0].toTuple()
+    );
+  }
+
+  try_getReserveData(
+    asset: Address
+  ): ethereum.CallResult<LendingPool__getReserveDataResultValue0Struct> {
+    let result = super.tryCall(
+      "getReserveData",
+      "getReserveData(address):((uint256,uint128,uint128,uint128,uint128,uint40,address,address,address,address,uint8))",
+      [ethereum.Value.fromAddress(asset)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      changetype<LendingPool__getReserveDataResultValue0Struct>(
+        value[0].toTuple()
+      )
+    );
   }
 
   getReserveNormalizedDebtScale(asset: Address): BigInt {
@@ -407,6 +851,163 @@ export class LendingPool extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getUserAssetValues(
+    user: Address,
+    asset: Address
+  ): LendingPool__getUserAssetValuesResult {
+    let result = super.call(
+      "getUserAssetValues",
+      "getUserAssetValues(address,address):(uint256,uint256,uint256)",
+      [ethereum.Value.fromAddress(user), ethereum.Value.fromAddress(asset)]
+    );
+
+    return new LendingPool__getUserAssetValuesResult(
+      result[0].toBigInt(),
+      result[1].toBigInt(),
+      result[2].toBigInt()
+    );
+  }
+
+  try_getUserAssetValues(
+    user: Address,
+    asset: Address
+  ): ethereum.CallResult<LendingPool__getUserAssetValuesResult> {
+    let result = super.tryCall(
+      "getUserAssetValues",
+      "getUserAssetValues(address,address):(uint256,uint256,uint256)",
+      [ethereum.Value.fromAddress(user), ethereum.Value.fromAddress(asset)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new LendingPool__getUserAssetValuesResult(
+        value[0].toBigInt(),
+        value[1].toBigInt(),
+        value[2].toBigInt()
+      )
+    );
+  }
+
+  getUserConfig(user: Address): BigInt {
+    let result = super.call(
+      "getUserConfig",
+      "getUserConfig(address):(uint256)",
+      [ethereum.Value.fromAddress(user)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getUserConfig(user: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUserConfig",
+      "getUserConfig(address):(uint256)",
+      [ethereum.Value.fromAddress(user)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getUserNftConfig(user: Address): BigInt {
+    let result = super.call(
+      "getUserNftConfig",
+      "getUserNftConfig(address):(uint256)",
+      [ethereum.Value.fromAddress(user)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getUserNftConfig(user: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUserNftConfig",
+      "getUserNftConfig(address):(uint256)",
+      [ethereum.Value.fromAddress(user)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getUserState(user: Address): LendingPool__getUserStateResult {
+    let result = super.call(
+      "getUserState",
+      "getUserState(address):(uint256,uint256,uint256)",
+      [ethereum.Value.fromAddress(user)]
+    );
+
+    return new LendingPool__getUserStateResult(
+      result[0].toBigInt(),
+      result[1].toBigInt(),
+      result[2].toBigInt()
+    );
+  }
+
+  try_getUserState(
+    user: Address
+  ): ethereum.CallResult<LendingPool__getUserStateResult> {
+    let result = super.tryCall(
+      "getUserState",
+      "getUserState(address):(uint256,uint256,uint256)",
+      [ethereum.Value.fromAddress(user)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new LendingPool__getUserStateResult(
+        value[0].toBigInt(),
+        value[1].toBigInt(),
+        value[2].toBigInt()
+      )
+    );
+  }
+
+  getUserValues(user: Address): LendingPool__getUserValuesResult {
+    let result = super.call(
+      "getUserValues",
+      "getUserValues(address):(uint256,uint256,uint256,uint256)",
+      [ethereum.Value.fromAddress(user)]
+    );
+
+    return new LendingPool__getUserValuesResult(
+      result[0].toBigInt(),
+      result[1].toBigInt(),
+      result[2].toBigInt(),
+      result[3].toBigInt()
+    );
+  }
+
+  try_getUserValues(
+    user: Address
+  ): ethereum.CallResult<LendingPool__getUserValuesResult> {
+    let result = super.tryCall(
+      "getUserValues",
+      "getUserValues(address):(uint256,uint256,uint256,uint256)",
+      [ethereum.Value.fromAddress(user)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new LendingPool__getUserValuesResult(
+        value[0].toBigInt(),
+        value[1].toBigInt(),
+        value[2].toBigInt(),
+        value[3].toBigInt()
+      )
+    );
   }
 
   paused(): boolean {
@@ -578,6 +1179,90 @@ export class DepositNFTsCall__Outputs {
   }
 }
 
+export class InitNFTReserveCall extends ethereum.Call {
+  get inputs(): InitNFTReserveCall__Inputs {
+    return new InitNFTReserveCall__Inputs(this);
+  }
+
+  get outputs(): InitNFTReserveCall__Outputs {
+    return new InitNFTReserveCall__Outputs(this);
+  }
+}
+
+export class InitNFTReserveCall__Inputs {
+  _call: InitNFTReserveCall;
+
+  constructor(call: InitNFTReserveCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get configuration(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get tNFTAddress(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+}
+
+export class InitNFTReserveCall__Outputs {
+  _call: InitNFTReserveCall;
+
+  constructor(call: InitNFTReserveCall) {
+    this._call = call;
+  }
+}
+
+export class InitReserveCall extends ethereum.Call {
+  get inputs(): InitReserveCall__Inputs {
+    return new InitReserveCall__Inputs(this);
+  }
+
+  get outputs(): InitReserveCall__Outputs {
+    return new InitReserveCall__Outputs(this);
+  }
+}
+
+export class InitReserveCall__Inputs {
+  _call: InitReserveCall;
+
+  constructor(call: InitReserveCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get configuration(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get tTokenAddress(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
+  get debtAddress(): Address {
+    return this._call.inputValues[3].value.toAddress();
+  }
+
+  get interestRateStrategyAddress(): Address {
+    return this._call.inputValues[4].value.toAddress();
+  }
+}
+
+export class InitReserveCall__Outputs {
+  _call: InitReserveCall;
+
+  constructor(call: InitReserveCall) {
+    this._call = call;
+  }
+}
+
 export class InitializeCall extends ethereum.Call {
   get inputs(): InitializeCall__Inputs {
     return new InitializeCall__Inputs(this);
@@ -647,6 +1332,142 @@ export class RepayCall__Outputs {
 
   get value0(): BigInt {
     return this._call.outputValues[0].value.toBigInt();
+  }
+}
+
+export class SetNftReserveConfigCall extends ethereum.Call {
+  get inputs(): SetNftReserveConfigCall__Inputs {
+    return new SetNftReserveConfigCall__Inputs(this);
+  }
+
+  get outputs(): SetNftReserveConfigCall__Outputs {
+    return new SetNftReserveConfigCall__Outputs(this);
+  }
+}
+
+export class SetNftReserveConfigCall__Inputs {
+  _call: SetNftReserveConfigCall;
+
+  constructor(call: SetNftReserveConfigCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get configuration(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class SetNftReserveConfigCall__Outputs {
+  _call: SetNftReserveConfigCall;
+
+  constructor(call: SetNftReserveConfigCall) {
+    this._call = call;
+  }
+}
+
+export class SetReserveConfigCall extends ethereum.Call {
+  get inputs(): SetReserveConfigCall__Inputs {
+    return new SetReserveConfigCall__Inputs(this);
+  }
+
+  get outputs(): SetReserveConfigCall__Outputs {
+    return new SetReserveConfigCall__Outputs(this);
+  }
+}
+
+export class SetReserveConfigCall__Inputs {
+  _call: SetReserveConfigCall;
+
+  constructor(call: SetReserveConfigCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get configuration(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class SetReserveConfigCall__Outputs {
+  _call: SetReserveConfigCall;
+
+  constructor(call: SetReserveConfigCall) {
+    this._call = call;
+  }
+}
+
+export class SetReserveInterestRateCalculatorAddressCall extends ethereum.Call {
+  get inputs(): SetReserveInterestRateCalculatorAddressCall__Inputs {
+    return new SetReserveInterestRateCalculatorAddressCall__Inputs(this);
+  }
+
+  get outputs(): SetReserveInterestRateCalculatorAddressCall__Outputs {
+    return new SetReserveInterestRateCalculatorAddressCall__Outputs(this);
+  }
+}
+
+export class SetReserveInterestRateCalculatorAddressCall__Inputs {
+  _call: SetReserveInterestRateCalculatorAddressCall;
+
+  constructor(call: SetReserveInterestRateCalculatorAddressCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get interestRateCalculatorAddress(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class SetReserveInterestRateCalculatorAddressCall__Outputs {
+  _call: SetReserveInterestRateCalculatorAddressCall;
+
+  constructor(call: SetReserveInterestRateCalculatorAddressCall) {
+    this._call = call;
+  }
+}
+
+export class SetUserUsingAsCollateralCall extends ethereum.Call {
+  get inputs(): SetUserUsingAsCollateralCall__Inputs {
+    return new SetUserUsingAsCollateralCall__Inputs(this);
+  }
+
+  get outputs(): SetUserUsingAsCollateralCall__Outputs {
+    return new SetUserUsingAsCollateralCall__Outputs(this);
+  }
+}
+
+export class SetUserUsingAsCollateralCall__Inputs {
+  _call: SetUserUsingAsCollateralCall;
+
+  constructor(call: SetUserUsingAsCollateralCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get usingAsCollateral(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class SetUserUsingAsCollateralCall__Outputs {
+  _call: SetUserUsingAsCollateralCall;
+
+  constructor(call: SetUserUsingAsCollateralCall) {
+    this._call = call;
   }
 }
 

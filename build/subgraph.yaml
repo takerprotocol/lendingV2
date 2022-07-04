@@ -3,21 +3,78 @@ schema:
   file: schema.graphql
 dataSources:
   - kind: ethereum
+    name: TakerAddressesProviderRegistry
+    network: rinkeby
+    source:
+      address: "0xD7B4eC7c65fBFa64607017CfA1114257F03E19ab"
+      abi: TakerAddressesProviderRegistry
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - LendingPool
+      abis:
+        - name: TakerAddressesProviderRegistry
+          file: TakerAddressesProviderRegistry/abis/TakerAddressesProviderRegistry.json
+      eventHandlers:
+        - event: AddressesProviderRegistered(bytes32,indexed address)
+          handler: addressesProviderRegistered
+      file: TakerAddressesProviderRegistry/TakerAddressesProviderRegistry.wasm
+  - kind: ethereum
+    name: TakerAddressesProvider
+    network: rinkeby
+    source:
+      address: "0xa45B685C6502DC52BeA862fC63bFF6562fDC1C6e"
+      abi: TakerAddressesProvider
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - LendingPool
+      abis:
+        - name: TakerAddressesProvider
+          file: TakerAddressesProvider/abis/TakerAddressesProvider.json
+      eventHandlers:
+        - event: ConfigurationAdminUpdated(indexed address)
+          handler: configurationAdminUpdated
+      file: TakerAddressesProviderRegistry/TakerAddressesProviderRegistry.wasm
+  - kind: ethereum
+    name: PoolConfigurator
+    network: rinkeby
+    source:
+      address: "0xFB2886837854913a8f2EcB47Ec13c7388b53110C"
+      abi: PoolConfigurator
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - LendingPool
+      abis:
+        - name: PoolConfigurator
+          file: PoolConfigurator/abis/PoolConfigurator.json
+      eventHandlers:
+        - event: ReserveInitialized(indexed address,indexed address,address,address)
+          handler: reserveInitialized
+      file: TakerAddressesProviderRegistry/TakerAddressesProviderRegistry.wasm
+  - kind: ethereum
     name: LendingPool
     network: rinkeby
     source:
-      address: "0xffffffffffffffffffffffffffffffffffffffff"
+      address: "0x6898525468568BCd2B0a979690Ac690cAdC79BCd"
       abi: LendingPool
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - Pool
-        - Collection
+        - LendingPool
+        - NftCollection
         - User
         - UserReserve
-        - UserCollection
+        - UserNftCollection
       abis:
         - name: LendingPool
           file: LendingPool/abis/LendingPool.json
@@ -39,12 +96,12 @@ dataSources:
           handler: updateReserveData
         - event: CollateralStatusUpdated(indexed address,indexed address,bool)
           handler: updateUserCollateralStatus
-      file: LendingPool/LendingPool.wasm
+      file: TakerAddressesProviderRegistry/TakerAddressesProviderRegistry.wasm
   - kind: ethereum
     name: TToken
     network: rinkeby
     source:
-      address: "0xffffffffffffffffffffffffffffffffffffffff"
+      address: "0xD9711C41eE9149aE130B92e41DBbc2206915F8A9"
       abi: TToken
     mapping:
       kind: ethereum/events
@@ -93,7 +150,7 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - Collection
+        - NftCollection
       abis:
         - name: TERC20
           file: TERC20/abis/TERC20.json
@@ -112,7 +169,7 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - Collection
+        - NftCollection
       abis:
         - name: TERC721
           file: TERC721/abis/TERC721.json
@@ -131,7 +188,7 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - Collection
+        - NftCollection
       abis:
         - name: TERC1155
           file: TERC1155/abis/TERC1155.json

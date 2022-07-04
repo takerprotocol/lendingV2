@@ -1,19 +1,19 @@
-import {BigInt, Bytes, log} from "@graphprotocol/graph-ts"
+import {BigInt, Bytes, log} from "@graphprotocol/graph-ts";
 import {
     Transfer as LiquidityTransfer,
     Initialized as LiquidityInitialized
-} from "../generated/TToken/TToken"
+} from "../generated/TToken/TToken";
 import {
     Transfer as DebtTransfer,
     Initialized as DebtInitialized
-} from "../generated/DebtToken/DebtToken"
-import {Initialized as TERC20Initialized} from "../generated/TERC20/TERC20"
-import {Initialized as TERC721Initialized} from "../generated/TERC721/TERC721"
-import {Initialized as TERC1155Initialized} from "../generated/TERC1155/TERC1155"
+} from "../generated/DebtToken/DebtToken";
+import {Initialized as TERC20Initialized} from "../generated/TERC20/TERC20";
+import {Initialized as TERC721Initialized} from "../generated/TERC721/TERC721";
+import {Initialized as TERC1155Initialized} from "../generated/TERC1155/TERC1155";
 
 import {
-    Collection,
-    Pool, Reserve, User, UserReserve
+    NftCollection,
+    LendingPool, Reserve, User, UserReserve
 } from "../generated/schema"
 
 export function handleLiquidityInitialized(event: LiquidityInitialized): void {
@@ -106,7 +106,7 @@ export function handleDebtTransfer(event: DebtTransfer): void {
 
 
 export function handleTERC20Initialized(event: TERC20Initialized): void {
-    initializeCollection(
+    initializeNftCollection(
         event.params.underlyingAsset.toHex(),
         event.params.pool.toHex(),
         event.address,
@@ -116,7 +116,7 @@ export function handleTERC20Initialized(event: TERC20Initialized): void {
 }
 
 export function handleTERC721Initialized(event: TERC721Initialized): void {
-    initializeCollection(
+    initializeNftCollection(
         event.params.underlyingAsset.toHex(),
         event.params.pool.toHex(),
         event.address,
@@ -126,7 +126,7 @@ export function handleTERC721Initialized(event: TERC721Initialized): void {
 }
 
 export function handleTERC1155Initialized(event: TERC1155Initialized): void {
-    initializeCollection(
+    initializeNftCollection(
         event.params.underlyingAsset.toHex(),
         event.params.pool.toHex(),
         event.address,
@@ -135,16 +135,16 @@ export function handleTERC1155Initialized(event: TERC1155Initialized): void {
     );
 }
 
-function initializeCollection(
+function initializeNftCollection(
     collectionId: string,
     pool: string,
-    tERCToken: Bytes,
+    tNFT: Bytes,
     totalLiquidity: BigInt,
     floorPrice: BigInt
  ): void {
-    let collection = new Collection(collectionId);
+    let collection = new NftCollection(collectionId);
     collection.pool = pool;
-    collection.tERCToken = tERCToken;
+    collection.tNFT = tNFT;
     collection.totalLiquidity = totalLiquidity;
     collection.floorPrice = floorPrice;
     collection.save();

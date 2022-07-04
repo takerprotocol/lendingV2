@@ -60,6 +60,18 @@ export class Initialized__Params {
   get incentivesController(): Address {
     return this._event.parameters[2].value.toAddress();
   }
+
+  get decimals(): i32 {
+    return this._event.parameters[3].value.toI32();
+  }
+
+  get name(): string {
+    return this._event.parameters[4].value.toString();
+  }
+
+  get symbol(): string {
+    return this._event.parameters[5].value.toString();
+  }
 }
 
 export class Initialized1 extends ethereum.Event {
@@ -287,6 +299,21 @@ export class TERC1155 extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
+  name(): string {
+    let result = super.call("name", "name():(string)", []);
+
+    return result[0].toString();
+  }
+
+  try_name(): ethereum.CallResult<string> {
+    let result = super.tryCall("name", "name():(string)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
   onERC1155BatchReceived(
     param0: Address,
     param1: Address,
@@ -447,6 +474,36 @@ export class TERC1155 extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
+  symbol(): string {
+    let result = super.call("symbol", "symbol():(string)", []);
+
+    return result[0].toString();
+  }
+
+  try_symbol(): ethereum.CallResult<string> {
+    let result = super.tryCall("symbol", "symbol():(string)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  totalSupply(): BigInt {
+    let result = super.call("totalSupply", "totalSupply():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_totalSupply(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("totalSupply", "totalSupply():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   uri(id: BigInt): string {
     let result = super.call("uri", "uri(uint256):(string)", [
       ethereum.Value.fromUnsignedBigInt(id)
@@ -536,6 +593,18 @@ export class InitializeCall__Inputs {
 
   get incentivesController(): Address {
     return this._call.inputValues[2].value.toAddress();
+  }
+
+  get value3(): i32 {
+    return this._call.inputValues[3].value.toI32();
+  }
+
+  get namePrefix(): string {
+    return this._call.inputValues[4].value.toString();
+  }
+
+  get symbolPrefix(): string {
+    return this._call.inputValues[5].value.toString();
   }
 }
 
