@@ -6,6 +6,10 @@ import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import MyNFTCollateral from './MyNFTCollateral'
 import MyETHSupply from './MyETHSupply'
 import MyAccountSkeleton from './DashboardSkeleton/MyAccountSkeleton'
+import { useEffect, useState } from 'react'
+import BigNumber from 'bignumber.js'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { useAddress, useWalletBalance } from 'state/application/hooks'
 
 const MyAccountBox = styled(Box)`
   width: 716px;
@@ -31,9 +35,26 @@ const MyAssetsBox = styled(Box)`
 `
 interface MyAccountProps {
   type: number
-  loading: boolean
 }
-export default function MyAccount({ type, loading }: MyAccountProps) {
+export default function MyAccount({ type }: MyAccountProps) {
+  const balance = useWalletBalance()
+  const [loading, setLoading] = useState(true)
+  const address = useAddress()
+  const [userValues, setUserValues] = useState<BigNumber>(new BigNumber(0))
+  const contract = useLendingPool()
+  useEffect(() => {
+    if (contract && address) {
+      contract
+        .getUserConfig(address)
+        .then((res: BigNumber) => {
+          setLoading(false)
+          setUserValues(res)
+        })
+        .catch(() => {
+          setLoading(false)
+        })
+    }
+  }, [contract, address])
   return (
     <MyAccountBox className={loading ? 'SkeletonBg' : ''}>
       {loading ? (
@@ -48,7 +69,7 @@ export default function MyAccount({ type, loading }: MyAccountProps) {
               </Typography>
               <img src={OverviewIcon} alt="" />
               <Typography ml="4px" variant="subtitle2">
-                16.84
+                <>16.84{userValues.toString()}</>
               </Typography>
               <Typography ml="16px" variant="body1" fontWeight="700">
                 Claim{' >'}
@@ -63,7 +84,7 @@ export default function MyAccount({ type, loading }: MyAccountProps) {
               <CenterBox>
                 <img src={blackEthLogo} alt="" />
                 <Typography ml="13px" variant="h3" fontSize="32px" lineHeight="51px">
-                  22.4653
+                  {balance}
                 </Typography>
               </CenterBox>
               <FlexBox>

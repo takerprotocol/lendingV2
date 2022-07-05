@@ -7,6 +7,10 @@ import TotalRight from 'assets/images/svg/dashboard/totalRight.svg'
 import TopLiquidity from 'assets/images/svg/dashboard/Tips-liquidity.svg'
 import BottomLiquidity from 'assets/images/svg/dashboard/bottom-liquidity.svg'
 import DashboardTotalSkeleton from './DashboardSkeleton/TotalSkeleton'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { useEffect, useState } from 'react'
+import BigNumber from 'bignumber.js'
+import { bigNumberToString } from 'utils'
 
 const FlexBox = styled(Box)`
   height: 62px;
@@ -19,9 +23,24 @@ const CenterBox = styled(Box)`
 `
 interface DashboardTotalType {
   type: number
-  loading: boolean
 }
-export default function DashboardTotal({ type, loading }: DashboardTotalType) {
+export default function DashboardTotal({ type }: DashboardTotalType) {
+  const [loading, setLoading] = useState(true)
+  const [poolValues, setPoolValues] = useState<Array<BigNumber>>([new BigNumber(0), new BigNumber(0), new BigNumber(0)])
+  const contract = useLendingPool()
+  useEffect(() => {
+    if (contract) {
+      contract
+        .getPoolValues()
+        .then((res: Array<BigNumber>) => {
+          setLoading(false)
+          setPoolValues(res)
+        })
+        .catch(() => {
+          setLoading(false)
+        })
+    }
+  }, [contract])
   return (
     <Box>
       {loading ? (
@@ -57,7 +76,7 @@ export default function DashboardTotal({ type, loading }: DashboardTotalType) {
               <Box marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
                 <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">
-                  174,236.01
+                  {bigNumberToString(poolValues[1])}
                 </Typography>
               </Box>
             </Box>
@@ -71,10 +90,10 @@ export default function DashboardTotal({ type, loading }: DashboardTotalType) {
             </Box>
             <Box sx={{ marginLeft: '10px' }}>
               <Typography component="p" variant="subtitle2" color="#262338">
-                98,189.50 ETH
+                {bigNumberToString(poolValues[0])} ETH
               </Typography>
               <Typography component="p" marginTop="10px" variant="subtitle2" color="#262338">
-                76,046.50 ETH
+                {bigNumberToString(poolValues[1])} ETH
               </Typography>
             </Box>
           </FlexBox>
@@ -105,7 +124,7 @@ export default function DashboardTotal({ type, loading }: DashboardTotalType) {
               <Box marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
                 <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">
-                  64,236.42
+                  {bigNumberToString(poolValues[0])}
                 </Typography>
               </Box>
             </Box>

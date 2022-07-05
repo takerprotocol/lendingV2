@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Box, Typography } from '@mui/material'
 import theme from 'theme'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { useModalOpen, useWalletModalToggle } from 'state/application/hooks'
+import { useAddress, useModalOpen, useWalletModalToggle } from 'state/application/hooks'
 import { ApplicationModal, setAddress, setAccountBalance } from 'state/application/reducer'
 import usePrevious from 'hooks/usePrevious'
 import { injected } from 'connectors'
@@ -31,6 +31,7 @@ export default function WalletModal() {
   const toggleWalletModal = useWalletModalToggle()
   const previousAccount = usePrevious(account)
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
+  const address = useAddress()
   const previousWalletView = usePrevious(walletView)
   const dispatch = useAppDispatch()
   useEffect(() => {
@@ -44,6 +45,22 @@ export default function WalletModal() {
       dispatch(setAddress(account))
     }
   }, [account, dispatch])
+
+  const setBalance = useCallback(async () => {
+    if (connector && address) {
+      const provider = new Web3Provider(await connector.getProvider())
+      const balance = await provider.getBalance(String(address))
+      const ethBalance = formatEther(balance.sub(balance.mod(1e14)))
+      if (balance) {
+        dispatch(setAccountBalance(ethBalance))
+      }
+    }
+  }, [connector, address, dispatch])
+
+  useEffect(() => {
+    setBalance()
+  }, [setBalance])
+
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     Object.keys(SUPPORTED_WALLETS).map((key) => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
@@ -56,15 +73,9 @@ export default function WalletModal() {
       activate(connector, undefined, true)
         .then(async () => {
           const walletAddress = await connector.getAccount()
-          const provider = new Web3Provider(await connector.getProvider())
-          const balance = await provider.getBalance(String(walletAddress))
-          const ethBalance = formatEther(balance.sub(balance.mod(1e14)))
           if (walletAddress) {
             localStorage.setItem('address', walletAddress)
             dispatch(setAddress(walletAddress))
-          }
-          if (balance) {
-            dispatch(setAccountBalance(ethBalance))
           }
           connector.addListener('Web3ReactDeactivate', () => {
             dispatch(setAddress(''))

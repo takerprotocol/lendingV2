@@ -9,6 +9,7 @@ import { useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
 import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
+import { useWalletBalance } from 'state/application/hooks'
 
 const MyETHSupplyBox = styled(Box)`
   width: 322px;
@@ -79,6 +80,7 @@ interface MyETHSupplyProps {
 export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const [openMySupplyModal, setOpenMySupplyModal] = useState(false)
   const [dataType] = useState<boolean>(true)
+  const balance = useWalletBalance()
   const [typeModal, setTypeModal] = useState<number>(1) // MySupplyModal State Supply(1) ro Withdraw(0)
   const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
   const [openMySupplySwitchModal, setOpenMySupplySwitchModal] = useState<boolean>(false)
@@ -95,7 +97,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
         <SpaceBetweenBox>
           <FlexBox>
             <Typography variant="h5" fontWeight="600" color="#ffffff" lineHeight="22px">
-              12.0128 ETH
+              {balance} ETH
             </Typography>
             <Typography ml="8px" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
               ETH

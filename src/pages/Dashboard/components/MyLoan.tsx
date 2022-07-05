@@ -6,10 +6,16 @@ import addBox from 'assets/images/svg/dashboard/addBox.svg'
 import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
 import CustomizedSlider from 'components/Slider'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import MyLoanModal from './MyLoanModal'
-import { RiskLevel, RiskLevelTag } from 'utils'
+import { bigNumberToString, RiskLevel, RiskLevelTag } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
+import BigNumber from 'bignumber.js'
+// import { useLendingPool } from 'hooks/useLendingPool'
+import { useAddress } from 'state/application/hooks'
+import { useContract } from 'hooks/useContract'
+import lendingPoolAbi from 'abis/ILendingPool.json'
+// import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
 
 const MyLoanBox = styled(Box)`
   width: 420px;
@@ -74,14 +80,25 @@ const ImgBox = styled('img')`
 interface MyLoanProps {
   loading: boolean
   type: number
+  assets: BigNumber
 }
-export default function MyLoan({ loading, type }: MyLoanProps) {
+export default function MyLoan({ loading, type, assets }: MyLoanProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
   const [datatype] = useState<boolean>(true)
   const [riskLevelType] = useState<number>(120)
   const MyLoanRiskLevel = RiskLevel(riskLevelType)
   const MyLoanRiskLevelTag = RiskLevelTag(riskLevelType)
+  const contract = useContract('0x6898525468568BCd2B0a979690Ac690cAdC79BCd', lendingPoolAbi)
+  const address = useAddress()
+  useEffect(() => {
+    if (contract && address) {
+      console.log('contractcontract')
+      contract.deposit(address, 1, address).then((res: Array<BigNumber>) => {
+        console.log(res)
+      })
+    }
+  }, [contract, address])
   return (
     <MyLoanBox className={loading ? 'SkeletonBg' : ''}>
       {loading ? (
@@ -97,7 +114,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
               <CenterBox>
                 <img src={blackEthLogo} alt="" />
                 <Typography ml="13px" variant="h3" fontSize="32px" lineHeight="51px">
-                  22.4653
+                  {bigNumberToString(assets)}
                 </Typography>
               </CenterBox>
             </Box>

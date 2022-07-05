@@ -153,6 +153,19 @@ export const formatFiatPrice = (value: string | number, price: string | number):
   }
   return new BigNumber(value).times(price).decimalPlaces(2, 1).toString()
 }
+
+export function bigNumberToString(value: BigNumber, thousandSeparated = true) {
+  if (value) {
+    if (thousandSeparated) {
+      return new BigNumber(value.toString()).toFormat(2, 1)
+    } else {
+      return new BigNumber(value.toString()).toFixed(2, 1).toString()
+    }
+  } else {
+    return '0'
+  }
+}
+
 export const RiskLevel = (value: string | number) => {
   switch (true) {
     case value < 100:

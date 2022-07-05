@@ -1,4 +1,7 @@
 import { Box, styled } from '@mui/material'
+import BigNumber from 'bignumber.js'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { useEffect, useState } from 'react'
 import { useAddress } from 'state/application/hooks'
 import { FlexBox } from 'styleds/index'
 import ConnectWallet from './ConnectWallet'
@@ -17,23 +20,43 @@ const DataNFTsBox = styled(Box)`
 `
 interface DataNFTsProps {
   type: number
-  loading: boolean
 }
-export default function DataNFTs({ loading, type }: DataNFTsProps) {
+export default function DataNFTs({ type }: DataNFTsProps) {
   const address = useAddress()
+  const [loading, setLoading] = useState(true)
+  const [userValues, setUserValues] = useState<Array<BigNumber>>([
+    new BigNumber(0),
+    new BigNumber(0),
+    new BigNumber(0),
+    new BigNumber(0),
+  ])
+  const contract = useLendingPool()
+  useEffect(() => {
+    if (contract && address) {
+      contract
+        .getUserValues(address)
+        .then((res: Array<BigNumber>) => {
+          setLoading(false)
+          setUserValues(res)
+        })
+        .catch(() => {
+          setLoading(false)
+        })
+    }
+  }, [contract, address])
   return (
     <DataNFTsBox>
       <Box>
-        <DashboardTotal type={type} loading={loading}></DashboardTotal>
+        <DashboardTotal type={type}></DashboardTotal>
       </Box>
       <FlexBox mt="48px">
         {!address && !loading ? (
           <ConnectWallet type={type}></ConnectWallet>
         ) : (
           <>
-            <MyAccount type={type} loading={loading}></MyAccount>
+            <MyAccount type={type}></MyAccount>
             <Box width="24px"></Box>
-            <MyLoan type={type} loading={loading}></MyLoan>
+            <MyLoan assets={userValues[2]} type={type} loading={loading}></MyLoan>
           </>
         )}
       </FlexBox>
