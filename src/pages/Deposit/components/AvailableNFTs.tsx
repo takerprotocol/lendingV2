@@ -5,7 +5,11 @@ import RefreshIcon from 'assets/images/svg/common/refresh.svg'
 import NFTsList from './NFTsList'
 import Pager from './Pager'
 import AvailableAndDepositedSkeleton from './depositSkeleton/AvailableAndDepositedSkeleton'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import BigNumber from 'bignumber.js'
+import NFTsSelectedModal from './NFTsSelectedModal'
+import SureModal from './SureModal'
+import { NftTokenModel } from 'services/type/nft'
 
 const AvailableNFTsBox = styled(Box)`
   width: 1012px;
@@ -53,27 +57,32 @@ const XButtonBox = styled(Box)`
 interface AvailableNFTsProps {
   depositType: string
   withdrawType: string
-  list: any[]
+  list: NftTokenModel[]
   setDepositType: Function
   loading: boolean
-  setOpenSelectedModal: Function //SureModal
-  setOpenSureModal: Function //NFTsSelectedModal
 }
 export default function AvailableNFTs({
   depositType,
   withdrawType,
   list,
   loading,
-  setOpenSelectedModal,
-  setOpenSureModal,
   setDepositType,
 }: AvailableNFTsProps) {
+  const [checkedIndex, setCheckedIndex] = useState<Array<string>>([])
+  const [openSelectedModal, setOpenSelectedModal] = useState<boolean>(false)
+  const [openSureModal, setOpenSureModal] = useState<boolean>(false)
+
   function ButtonDeposit() {
     if (withdrawType === 'shut') {
       setDepositType('open')
     }
   }
   const [Available] = useState<string>('Available')
+  const amount = useMemo(() => {
+    return list.reduce((total: string, current: NftTokenModel) => {
+      return new BigNumber(total).plus(current.balance || '0').toString()
+    }, '0')
+  }, [list])
   return (
     <AvailableNFTsStyleBox>
       <AvailableNFTsBox
@@ -93,7 +102,7 @@ export default function AvailableNFTs({
                 You can deposit
               </Typography>
               <Typography ml={'16px'} component="span" variant="subtitle1" lineHeight="18px" color="#6E7191">
-                {list.length} NFTs / 253.57 ETH
+                {list.length} NFTs / {amount} ETH
               </Typography>
             </Box>
             <Box mr="24px">
@@ -116,7 +125,7 @@ export default function AvailableNFTs({
                     </RefreshButtonBox>
                     <DepositButtonBox onClick={() => setOpenSelectedModal(true)}>
                       <Typography variant="body1" component="h1" fontWeight="700" color="#14142A">
-                        Deposit 6 NFTs
+                        Deposit {checkedIndex.length} NFTs
                       </Typography>
                     </DepositButtonBox>
                   </FlexBox>
@@ -130,12 +139,18 @@ export default function AvailableNFTs({
           TypeKey={Available}
           loading={loading}
           list={list}
-          onChange={(data: Array<number>) => {
-            console.log(data)
+          onChange={(data: Array<string>) => {
+            setCheckedIndex(data)
           }}
         ></NFTsList>
         <Pager TypeKey={Available} list={list}></Pager>
       </AvailableNFTsBox>
+      <NFTsSelectedModal
+        data={list.filter((el) => checkedIndex.includes(el.tokenId))}
+        openSelectedModal={openSelectedModal}
+        setOpenSelectedModal={setOpenSelectedModal}
+      ></NFTsSelectedModal>
+      <SureModal openSureModal={openSureModal} setOpenSureModal={setOpenSureModal}></SureModal>
     </AvailableNFTsStyleBox>
   )
 }

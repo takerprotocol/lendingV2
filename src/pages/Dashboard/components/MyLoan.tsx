@@ -11,11 +11,8 @@ import MyLoanModal from './MyLoanModal'
 import { bigNumberToString, RiskLevel, RiskLevelTag } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import BigNumber from 'bignumber.js'
-// import { useLendingPool } from 'hooks/useLendingPool'
+import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress } from 'state/application/hooks'
-import { useContract } from 'hooks/useContract'
-import lendingPoolAbi from 'abis/ILendingPool.json'
-// import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
 
 const MyLoanBox = styled(Box)`
   width: 420px;
@@ -89,12 +86,11 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
   const [riskLevelType] = useState<number>(120)
   const MyLoanRiskLevel = RiskLevel(riskLevelType)
   const MyLoanRiskLevelTag = RiskLevelTag(riskLevelType)
-  const contract = useContract('0x6898525468568BCd2B0a979690Ac690cAdC79BCd', lendingPoolAbi)
+  const contract = useLendingPool()
   const address = useAddress()
   useEffect(() => {
     if (contract && address) {
-      console.log('contractcontract')
-      contract.deposit(address, 1, address).then((res: Array<BigNumber>) => {
+      contract.deposit(address, 1, address, { gasLimit: 50000 }).then((res: Array<BigNumber>) => {
         console.log(res)
       })
     }

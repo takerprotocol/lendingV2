@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import { Box, Checkbox, Skeleton, TextField, Typography } from '@mui/material'
 import { useMemo, useState } from 'react'
+import { NftTokenModel } from 'services/type/nft'
 import NftListSkeleton from './depositSkeleton/NftListSkeleton'
 
 const ListBox = styled(Box)`
@@ -67,7 +68,7 @@ const Image = (props: any) => {
 }
 
 interface NFTsLisProps {
-  list: any[]
+  list: NftTokenModel[]
   loading: boolean
   depositType: string
   TypeKey: string
@@ -75,7 +76,7 @@ interface NFTsLisProps {
 }
 export default function NFTsList({ list, loading, depositType, onChange, TypeKey }: NFTsLisProps) {
   const [type] = useState<string>('721')
-  const [checkboxType, setCheckboxType] = useState<Array<number>>([])
+  const [checkboxType, setCheckboxType] = useState<Array<string>>([])
   const LoadingNftListSkeleton = useMemo(
     () => [0, 1, 2, 3, 4, 5].slice(0, 6).map((_collateral, index) => <NftListSkeleton key={`${TypeKey}-${index}`} />),
     [TypeKey]
@@ -88,18 +89,18 @@ export default function NFTsList({ list, loading, depositType, onChange, TypeKey
           LoadingNftListSkeleton
         ) : (
           <>
-            {list.slice(1, 10).map((el: any, index: number) => (
-              <NftBox className={checkboxType.includes(index) ? 'isCheck' : ' '} key={`nft${TypeKey}-${index}`}>
+            {list.slice(0, 10).map((el: NftTokenModel, index: number) => (
+              <NftBox className={checkboxType.includes(el.tokenId) ? 'isCheck' : ' '} key={`nft${TypeKey}-${index}`}>
                 <FlexBox>
                   <StyledCheckbox
-                    checked={checkboxType.includes(index)}
+                    checked={checkboxType.includes(el.tokenId)}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                       if (event.target.checked) {
-                        onChange([...checkboxType, index])
-                        setCheckboxType([...checkboxType, index])
+                        onChange([...checkboxType, el.tokenId])
+                        setCheckboxType([...checkboxType, el.tokenId])
                       } else {
-                        onChange(checkboxType.filter((el) => el !== index))
-                        setCheckboxType(checkboxType.filter((el) => el !== index))
+                        onChange(checkboxType.filter((cel) => cel !== el.tokenId))
+                        setCheckboxType(checkboxType.filter((cel) => cel !== el.tokenId))
                       }
                     }}
                     sx={{ display: `${depositType === 'open' ? '' : 'none'}` }}

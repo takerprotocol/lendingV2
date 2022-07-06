@@ -16,7 +16,6 @@ export function useContract<T extends Contract = Contract>(
   withSignerIfPossible = true
 ): T | null {
   const { library, account, chainId } = useActiveWeb3React()
-
   return useMemo(() => {
     if (!addressOrAddressMap || !ABI || !library || !chainId) return null
     let address: string | undefined

@@ -3,11 +3,10 @@ import Box from '@mui/material/Box'
 import DepositHeader from 'pages/Deposit/components/DepositHeader'
 import AvailableNFTs from './components/AvailableNFTs'
 import BgImg from 'assets/images/svg/deposit/Bg.svg'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import DepositedNFT from './components/DepositedNFT'
-import NFTsSelectedModal from './components/NFTsSelectedModal'
-import SureModal from './components/SureModal'
 import { useDepositableNfts } from 'services/module/deposit'
+import { useAddress } from 'state/application/hooks'
 
 const Body = styled(Box)`
   padding-top: 233px;
@@ -32,15 +31,11 @@ const HeaderBg = styled(Box)`
   z-index: -1;
 `
 export default function Deposit() {
-  const list = useDepositableNfts('0x1108f964b384f1dCDa03658B24310ccBc48E226F')
-  const [openSelectedModal, setOpenSelectedModal] = useState<boolean>(false) //SureModal
-  const [openSureModal, setOpenSureModal] = useState<boolean>(false) //NFTsSelectedModal
-  const [loading, setLoading] = useState(true)
+  const address = useAddress()
   const [depositType, setDepositType] = useState<string>('shut')
   const [withdrawType, setWithdrawType] = useState<string>('shut')
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 2000)
-  }, [])
+  const { list, loading } = useDepositableNfts(address)
+
   return (
     <Body className="header-padding">
       <HeaderBg />
@@ -52,8 +47,6 @@ export default function Deposit() {
           setDepositType={setDepositType}
           depositType={depositType}
           withdrawType={withdrawType}
-          setOpenSelectedModal={setOpenSelectedModal}
-          setOpenSureModal={setOpenSureModal}
         ></AvailableNFTs>
         <DepositedNFT
           loading={loading}
@@ -61,14 +54,7 @@ export default function Deposit() {
           depositType={depositType}
           withdrawType={withdrawType}
           setWithdrawType={setWithdrawType}
-          setOpenSelectedModal={setOpenSelectedModal}
-          setOpenSureModal={setOpenSureModal}
         ></DepositedNFT>
-        <SureModal openSureModal={openSureModal} setOpenSureModal={setOpenSureModal}></SureModal>
-        <NFTsSelectedModal
-          openSelectedModal={openSelectedModal}
-          setOpenSelectedModal={setOpenSelectedModal}
-        ></NFTsSelectedModal>
       </Main>
     </Body>
   )

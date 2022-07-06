@@ -6,6 +6,9 @@ import NFTsList from './NFTsList'
 import Pager from './Pager'
 import AvailableAndDepositedSkeleton from './depositSkeleton/AvailableAndDepositedSkeleton'
 import { useState } from 'react'
+import NFTsSelectedModal from './NFTsSelectedModal'
+import SureModal from './SureModal'
+import { NftTokenModel } from 'services/type/nft'
 const DepositedNFTsStyleBox = styled(Box)``
 const DepositedNFTsBox = styled(Box)`
   width: 1012px;
@@ -52,20 +55,13 @@ interface DepositedNftProps {
   depositType: string
   withdrawType: string
   setWithdrawType: Function
-  list: any[]
+  list: NftTokenModel[]
   loading: boolean
-  setOpenSelectedModal: Function //SureModal
-  setOpenSureModal: Function //NFTsSelectedModal
 }
-export default function DepositedNFT({
-  depositType,
-  withdrawType,
-  setWithdrawType,
-  list,
-  loading,
-  setOpenSelectedModal,
-  setOpenSureModal,
-}: DepositedNftProps) {
+export default function DepositedNFT({ depositType, withdrawType, setWithdrawType, list, loading }: DepositedNftProps) {
+  const [checkedIndex, setCheckedIndex] = useState<Array<string>>([])
+  const [openSelectedModal, setOpenSelectedModal] = useState<boolean>(false)
+  const [openSureModal, setOpenSureModal] = useState<boolean>(false)
   function ButtonWithdraw() {
     if (depositType === 'shut') {
       setWithdrawType('open')
@@ -134,12 +130,18 @@ export default function DepositedNFT({
           TypeKey={Deposited}
           list={list}
           depositType={withdrawType}
-          onChange={(data: Array<number>) => {
-            console.log(data)
+          onChange={(data: Array<string>) => {
+            setCheckedIndex(data)
           }}
         ></NFTsList>
         <Pager TypeKey={Deposited} list={list}></Pager>
       </DepositedNFTsBox>
+      <NFTsSelectedModal
+        data={list.filter((el) => checkedIndex.includes(el.tokenId))}
+        openSelectedModal={openSelectedModal}
+        setOpenSelectedModal={setOpenSelectedModal}
+      ></NFTsSelectedModal>
+      <SureModal openSureModal={openSureModal} setOpenSureModal={setOpenSureModal}></SureModal>
     </DepositedNFTsStyleBox>
   )
 }

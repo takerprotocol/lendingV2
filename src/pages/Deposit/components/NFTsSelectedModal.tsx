@@ -1,10 +1,11 @@
 import { Box, Button, Modal, styled, Typography } from '@mui/material'
-import * as React from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
-import NFT5 from 'assets/images/svg/deposit/NFT5.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds/index'
+import { NftTokenModel } from 'services/type/nft'
+import { useMemo } from 'react'
+import BigNumber from 'bignumber.js'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -42,11 +43,17 @@ const BodyTypography = styled(Typography)`
   line-height: 22px;
   color: #a0a3bd;
 `
-interface NFTsSelectedTypy {
+interface NFTsSelectedType {
   openSelectedModal: boolean
+  data: NftTokenModel[]
   setOpenSelectedModal: Function
 }
-export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedModal }: NFTsSelectedTypy) {
+export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedModal, data }: NFTsSelectedType) {
+  const amount = useMemo(() => {
+    return data.reduce((total: string, current: NftTokenModel) => {
+      return new BigNumber(total).plus(current.balance || '0').toString()
+    }, '0')
+  }, [data])
   return (
     <Modal open={openSelectedModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -59,21 +66,21 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
         </FlexEndBox>
         <FlexBox>
           <Typography variant="h5" component="h1">
-            7 NFTs selected
+            {data.length} NFTs selected
           </Typography>
         </FlexBox>
         <FlexBox mt={'2px'}>
           <Typography variant="body1" component="h1" color="#A0A3BD">
-            2.0382 ETH value
+            {amount} ETH value
           </Typography>
         </FlexBox>
         <WithdrawList>
-          {[0, 1, 2, 3, 4, 5].map((el: any, index: number) => (
+          {data.map((el: NftTokenModel, index: number) => (
             <FlexBox mb="24px" key={index}>
-              <img src={NFT5} alt="" />
+              <img width="48px" src={el.rawMetadata.image} alt="" />
               <Box width="232px" ml="12px" mr="24px">
                 <BodyTypography color="#6E7191 !important" fontWeight="600 !important">
-                  CryptoPunk #8314
+                  {el.rawMetadata.name}
                 </BodyTypography>
               </Box>
               <BodyTypography>x 1</BodyTypography>
