@@ -154,7 +154,7 @@ export const formatFiatPrice = (value: string | number, price: string | number):
   return new BigNumber(value).times(price).decimalPlaces(2, 1).toString()
 }
 
-export function bigNumberToString(value: BigNumber, thousandSeparated = true) {
+export function bigNumberToString(value: BigNumber, thousandSeparated = true): string {
   if (value) {
     if (thousandSeparated) {
       return new BigNumber(value.toString()).toFormat(2, 1)

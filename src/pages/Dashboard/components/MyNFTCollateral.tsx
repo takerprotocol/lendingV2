@@ -5,6 +5,7 @@ import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useNftCollateral } from 'state/application/hooks'
 
 const MyNFTCollateralBox = styled(Box)`
   width: 322px;
@@ -73,6 +74,7 @@ interface MyNFTCollateralProps {
 export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps) {
   const navigate = useNavigate()
   const [dataType] = useState<boolean>(true)
+  const collateral = useNftCollateral()
   return (
     <MyNFTCollateralBox>
       <TopBox>
@@ -82,7 +84,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
         <SpaceBetweenBox>
           <FlexBox>
             <Typography variant="h5" fontWeight="600" color="#ffffff" lineHeight="22px">
-              10.3128
+              {collateral}
             </Typography>
             <Typography ml="8px" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
               ETH

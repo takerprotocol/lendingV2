@@ -35,3 +35,15 @@ export function useUpdateAddress(address: string): () => void {
   const dispatch = useAppDispatch()
   return useCallback(() => dispatch(setAddress(address)), [dispatch, address])
 }
+
+export function useNftDebt(): string {
+  return useAppSelector((state: AppState) => state.application.nftDebt)
+}
+
+export function useNftLiquidity(): string {
+  return useAppSelector((state: AppState) => state.application.nftLiquidity)
+}
+
+export function useNftCollateral(): string {
+  return useAppSelector((state: AppState) => state.application.nftCollateral)
+}

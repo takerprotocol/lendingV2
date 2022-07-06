@@ -6,13 +6,13 @@ import addBox from 'assets/images/svg/dashboard/addBox.svg'
 import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
 import CustomizedSlider from 'components/Slider'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import MyLoanModal from './MyLoanModal'
 import { bigNumberToString, RiskLevel, RiskLevelTag } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import BigNumber from 'bignumber.js'
-import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress } from 'state/application/hooks'
+// import { useLendingPool } from 'hooks/useLendingPool'
+// import { useAddress } from 'state/application/hooks'
 
 const MyLoanBox = styled(Box)`
   width: 420px;
@@ -86,15 +86,15 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
   const [riskLevelType] = useState<number>(120)
   const MyLoanRiskLevel = RiskLevel(riskLevelType)
   const MyLoanRiskLevelTag = RiskLevelTag(riskLevelType)
-  const contract = useLendingPool()
-  const address = useAddress()
-  useEffect(() => {
-    if (contract && address) {
-      contract.deposit(address, 1, address, { gasLimit: 50000 }).then((res: Array<BigNumber>) => {
-        console.log(res)
-      })
-    }
-  }, [contract, address])
+  // const contract = useLendingPool()
+  // const address = useAddress()
+  // useEffect(() => {
+  //   if (contract && address) {
+  //     contract.deposit(address, 1, address, { gasLimit: 50000 }).then((res: Array<BigNumber>) => {
+  //       console.log(res)
+  //     })
+  //   }
+  // }, [contract, address])
   return (
     <MyLoanBox className={loading ? 'SkeletonBg' : ''}>
       {loading ? (
@@ -105,7 +105,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
           <SpaceBetweenBox mt="39px" ml="16px">
             <Box>
               <Typography variant="subtitle2" fontWeight="500" component="p" color="#A0A3BD">
-                My assets
+                My Debt
               </Typography>
               <CenterBox>
                 <img src={blackEthLogo} alt="" />
@@ -123,7 +123,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
                 setRepayRoBorrow(2)
               }}
             >
-              Rapay {'>'}
+              Repay {'>'}
             </Button>
           </SpaceBetweenBox>
           <RiskLevelBox className={datatype ? 'before' : ''}>

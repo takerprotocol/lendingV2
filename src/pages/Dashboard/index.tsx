@@ -11,6 +11,12 @@ import { useEffect, useState } from 'react'
 // import { SupportedChainId } from 'constants/chains'
 // import { TEST } from 'apollo/queries'
 import DataNFTs from './components/DataNFTs'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { useAddress } from 'state/application/hooks'
+import BigNumber from 'bignumber.js'
+import { useAppDispatch } from 'state'
+import { setUserNftValues } from 'state/application/reducer'
+import { bigNumberToString } from 'utils'
 
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
@@ -25,6 +31,24 @@ const Main = styled(Box)`
 export default function Dashboard() {
   const [type, setType] = useState<number>(1)
   const [loading, setLoading] = useState<boolean>(true)
+  const dispatch = useAppDispatch()
+  const contract = useLendingPool()
+  const address = useAddress()
+  useEffect(() => {
+    if (contract && address) {
+      contract
+        .getUserAssetValues(address, '0xA8FD6E4736FDad7989b79b60a1ad5EddDEaEA637')
+        .then((res: Array<BigNumber>) => {
+          dispatch(
+            setUserNftValues(
+              res.map((el) => {
+                return bigNumberToString(el)
+              })
+            )
+          )
+        })
+    }
+  }, [contract, address, dispatch])
   const changeCheck = (a: number) => {
     setType(a)
   }
