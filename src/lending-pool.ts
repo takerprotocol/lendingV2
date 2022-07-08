@@ -3,10 +3,9 @@ import {
   Deposited, Withdrawn, Borrowed, Repaid,
   NFTsDeposited, NFTsWithdrawn,
   ReserveDataUpdated, CollateralStatusUpdated,
-  LendingPool as LendingPoolContract
 } from "../generated/LendingPool/LendingPool";
 import {
-  LendingPool, Reserve, NftCollection, User, UserReserve, UserNftCollection
+  Reserve, NftCollection, User, UserReserve, UserNftCollection
 } from "../generated/schema";
 
 import {ReserveInitialized} from "../generated/PoolConfigurator/PoolConfigurator";
@@ -15,73 +14,94 @@ import {AddressesProviderRegistered} from "../generated/TakerAddressesProviderRe
 import * as utils from "./utils";
 
 export function handleDeposited(event: Deposited): void {
+  let poolId = event.address.toHex();
+  let reserveId = event.params.asset.toHex();
+  let userId = event.params.to.toHex();
+  let userReserveId = userId + "-" + reserveId;
 
-  let userReserve = loadOrInitUserReserve(event);
-  userReserve.depositedAmount = userReserve.depositedAmount.plus(event.params.amount);
+  let reserve = Reserve.load(reserveId);
+  let user = User.load(userId);
+  let userReserve = UserReserve.load(userReserveId);
+
+  if (!reserve) {utils.initReserve(reserveId, poolId);}
+  if (!user) {utils.initUser(userId, poolId);}
+  if (!userReserve) {
+    userReserve = utils.initUserReserve(poolId, userId, reserveId);
+  }  userReserve.depositedAmount = userReserve.depositedAmount.plus(event.params.amount);
 
   userReserve.save();
 }
 
 export function handleWithdrawed(event: Withdrawn): void {
+  let poolId = event.address.toHex();
+  let reserveId = event.params.asset.toHex();
+  let userId = event.params.to.toHex();
+  let userReserveId = userId + "-" + reserveId;
 
-  let userReserve = loadOrInitUserReserve(event);
-  userReserve.depositedAmount = userReserve.depositedAmount.minus(event.params.amount);
+  let reserve = Reserve.load(reserveId);
+  let user = User.load(userId);
+  let userReserve = UserReserve.load(userReserveId);
 
+  if (!reserve) {utils.initReserve(reserveId, poolId);}
+  if (!user) {utils.initUser(userId, poolId);}
+  if (!userReserve) {
+    userReserve = utils.initUserReserve(poolId, userId, reserveId);
+  }  userReserve.depositedAmount = userReserve.depositedAmount.minus(event.params.amount);
 
   userReserve.save();
 }
 
 export function handleBorrowed(event: Borrowed): void {
+  let poolId = event.address.toHex();
+  let reserveId = event.params.asset.toHex();
+  let userId = event.params.to.toHex();
+  let userReserveId = userId + "-" + reserveId;
 
-  let userReserve = loadOrInitUserReserve(event);
-  userReserve.borrowedAmount = userReserve.borrowedAmount.plus(event.params.amount);
+  let reserve = Reserve.load(reserveId);
+  let user = User.load(userId);
+  let userReserve = UserReserve.load(userReserveId);
+
+  if (!reserve) {utils.initReserve(reserveId, poolId);}
+  if (!user) {utils.initUser(userId, poolId);}
+  if (!userReserve) {
+    userReserve = utils.initUserReserve(poolId, userId, reserveId);
+  }  userReserve.borrowedAmount = userReserve.borrowedAmount.plus(event.params.amount);
 
   userReserve.save();
 }
 
 export function handleRepaid(event: Repaid): void {
+  let poolId = event.address.toHex();
+  let reserveId = event.params.asset.toHex();
+  let userId = event.params.to.toHex();
+  let userReserveId = userId + "-" + reserveId;
 
-  let userReserve = loadOrInitUserReserve(event);
-  userReserve.depositedAmount = userReserve.borrowedAmount.minus(event.params.amount);
+  let reserve = Reserve.load(reserveId);
+  let user = User.load(userId);
+  let userReserve = UserReserve.load(userReserveId);
+
+  if (!reserve) {utils.initReserve(reserveId, poolId);}
+  if (!user) {utils.initUser(userId, poolId);}
+  if (!userReserve) {
+    userReserve = utils.initUserReserve(poolId, userId, reserveId);
+  }  userReserve.depositedAmount = userReserve.borrowedAmount.minus(event.params.amount);
 
   userReserve.save();
 }
 
-function loadOrInitUserReserve(event: Deposited | Withdrawn | Borrowed | Repaid): UserReserve {
-  let poolId = event.address.toHex();
-  let reserveId = event.params.asset.toHex();
-  let userId = event.params.to.toHex();
-
-  let reserve = Reserve.load(reserveId);
-  let user = User.load(userId);
-  let userReserve = UserReserve.load(userId + "-" + reserveId);
-
-  if (!reserve) {
-    utils.initReserve(reserveId, poolId);
-  }
-  if (!user) {
-    utils.initUser(userId, poolId);
-  }
-  if (!userReserve) {
-    userReserve = new UserReserve(userId + "-" + reserveId);
-    userReserve.user = userId;
-    userReserve.reserve = reserveId;
-    userReserve.depositedAmount = BigInt.zero();
-    userReserve.borrowedAmount = BigInt.zero();
-    userReserve.save();
-  }
-
-  return userReserve;
-}
 
 
 export function handleNFTsDeposited(event: NFTsDeposited): void {
-
+  let poolId = event.address.toHex();
   let userId = event.params.onBehalfOf.toHex();
+
+  let user = User.load(userId);
+  if (!user) {utils.initUser(userId, poolId);}
 
   for (let i = 0; i < event.params.nfts.length; i ++) {
     _depositNFT(
         event.params.nfts[i].toString(),
+        poolId,
         userId,
         event.params.tokenIds[i],
         event.params.amounts[i]
@@ -89,28 +109,40 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
   }
 }
 
-function _depositNFT(collectionId: string, userId: string, tokenId: BigInt, amount: BigInt): void {
-  let userNftCollection = UserNftCollection.load(userId + "-" + collectionId + "-" + tokenId.toString());
+function _depositNFT(collectionId: string, poolId: string, userId: string, tokenId: BigInt, amount: BigInt): void {
+  let userNftCollectionId = userId + "-" + collectionId + "-" + tokenId.toString();
+
+  let nftCollection = NftCollection.load(collectionId);
+  let userNftCollection = UserNftCollection.load(userNftCollectionId);
+
+  if (!nftCollection) {
+    utils.initNftCollection(collectionId, poolId);
+  }
   if (!userNftCollection) {
-    userNftCollection = new UserNftCollection(userId + "-" + collectionId + "-" + tokenId.toString());
-    userNftCollection.user = userId;
-    userNftCollection.collection = collectionId;
-    userNftCollection.tokenId =tokenId;
-    userNftCollection.amount = amount;
+    userNftCollection = utils.initUserNftCollection(poolId, userId, collectionId, tokenId, amount);
+  }
+  let idx = userNftCollection.tokenIds.indexOf(tokenId);
+  if (idx) {
+    userNftCollection.amounts[idx].plus(amount);
   } else {
-    userNftCollection.amount = userNftCollection.amount.plus(amount);
+    userNftCollection.tokenIds.push(tokenId);
+    userNftCollection.amounts.push(amount);
   }
 
   userNftCollection.save();
 }
 
 export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
-
+  let poolId = event.address.toHex();
   let userId = event.params.to.toHex();
+
+  let user = User.load(userId);
+  if (!user) {utils.initUser(userId, poolId);}
 
   for (let i = 0; i < event.params.nfts.length; i ++) {
     _withdrawNFT(
         event.params.nfts[i].toString(),
+        poolId,
         userId,
         event.params.tokenIds[i],
         event.params.amounts[i]
@@ -118,27 +150,34 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
   }
 }
 
-function _withdrawNFT(collectionId: string, userId: string, tokenId: BigInt, amount: BigInt): void {
-  let userNftCollection = UserNftCollection.load(userId + "-" + collectionId + "-" + tokenId.toString());
+function _withdrawNFT(collectionId: string, poolId: string, userId: string, tokenId: BigInt, amount: BigInt): void {
+  let userNftCollectionId = userId + "-" + collectionId + "-" + tokenId.toString();
+
+  let nftCollection = NftCollection.load(collectionId);
+  let userNftCollection = UserNftCollection.load(userNftCollectionId);
+
+  if (!nftCollection) {
+    utils.initNftCollection(collectionId, poolId);
+  }
   if (!userNftCollection) {
-    // TODO: rpc to get userNftCollection data and init
-    log.info("userReserve {} does not exist", [userId + "-" + collectionId]);
-    return;
+    userNftCollection = utils.initUserNftCollection(poolId, userId, collectionId, tokenId, amount);
+  }
+  let idx = userNftCollection.tokenIds.indexOf(tokenId);
+  if (idx) {
+    userNftCollection.amounts[idx].minus(amount);
   } else {
-    userNftCollection.amount = userNftCollection.amount.minus(amount);
+    console.error("tokenId: " + tokenId.toHex() + " not found.");
   }
 
   userNftCollection.save();
 }
 
-export function updateReserveData(event: ReserveDataUpdated): void {
+export function handleReserveDataUpdated(event: ReserveDataUpdated): void {
 
   let reserveId = event.params.asset.toHex();
   let reserve = Reserve.load(reserveId);
-
   if (!reserve) {
-    // TODO: set pool, tToken & debtToken
-    reserve = new Reserve(reserveId);
+    reserve = utils.initReserve(reserveId, event.address.toHex());
   }
   reserve.depositRate = event.params.depositRate;
   reserve.borrowRate = event.params.borrowRate;
@@ -148,25 +187,15 @@ export function updateReserveData(event: ReserveDataUpdated): void {
   reserve.save();
 }
 
-export function updateUserCollateralStatus(event: CollateralStatusUpdated): void {
+export function handleCollateralStatusUpdated(event: CollateralStatusUpdated): void {
 
   let reserveId = event.params.asset.toHex();
   let userId = event.params.user.toHex();
   let userReserve = UserReserve.load(userId + "-" + reserveId);
-
   if (!userReserve) {
-    userReserve = new UserReserve(userId + "-" + reserveId);
-    userReserve.user = userId;
-    userReserve.reserve = reserveId;
-    // TODO: rpc to get depositedAmount & borrowedAmount
+    userReserve =  utils.initUserReserve(event.address.toHex(), userId, reserveId);
   }
   userReserve.usedAsCollateral = event.params.status;
 
   userReserve.save();
 }
-
-export function addressesProviderRegistered(event: AddressesProviderRegistered): void {}
-
-export function configurationAdminUpdated(event: ConfigurationAdminUpdated): void {}
-
-export function reserveInitialized(event: ReserveInitialized): void {}

@@ -1,3 +1,8 @@
+type Registry @entity {
+  id: ID!
+  lendingPools: [LendingPool!]!
+}
+
 type LendingPool @entity {
   id: ID! # proxy
   addressProvider: Bytes! #address
@@ -19,8 +24,8 @@ type Reserve @entity {
   depositRate: BigInt!
   borrowRate: BigInt!
   lastUpdateTimestamp: BigInt!
-  tToken: Bytes! # proxy
-  debtToken: Bytes! # proxy
+  tToken: TToken! # proxy
+  debtToken: DebtToken! # proxy
   interestRateCalculator: Bytes! #library
   treasury: Bytes! #address
   reserveId: BigInt!
@@ -36,7 +41,7 @@ type NftCollection @entity {
   pool: LendingPool!
 
   configuration: BigInt!
-  tNFT: Bytes! # proxy
+  tNFT: TNft! # proxy
   ercType: ERCType!
 
   totalLiquidity: BigInt! # tNFT.totalSupply()
@@ -66,8 +71,8 @@ type UserNftCollection  @entity {
   id: ID! # user - collection - tokenId
   user: User!
   collection: NftCollection!
-  tokenId: BigInt # null if ERC20
-  amount: BigInt!
+  tokenIds: [BigInt!]!
+  amounts: [BigInt!]!
 }
 
 enum ERCType {
@@ -76,3 +81,32 @@ enum ERCType {
   ERC1155
 }
 
+type TToken @entity {
+  id: ID! # address
+  pool: LendingPool!
+  reserve: Reserve!
+  incentivesController: Bytes! # address
+  decimals: BigInt!
+  name: String!
+  symbol: String!
+}
+
+type DebtToken @entity {
+  id: ID! # address
+  pool: LendingPool!
+  reserve: Reserve!
+  incentivesController: Bytes! # address
+  decimals: BigInt!
+  name: String!
+  symbol: String!
+}
+
+type TNft @entity {
+  id: ID! # address
+  pool: LendingPool!
+  nftCollection: NftCollection!
+  incentivesController: Bytes! # address
+  name: String!
+  symbol: String!
+  ercType: ERCType!
+}

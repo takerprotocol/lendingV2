@@ -1,151 +1,190 @@
 import {BigInt, Bytes, log} from "@graphprotocol/graph-ts";
 import {
-    Transfer as LiquidityTransfer,
-    Initialized as LiquidityInitialized
+    TToken as TTokenContract,
+    Transfer as TTokenTransfer,
+    Initialized as TTokenInitialized
 } from "../generated/TToken/TToken";
 import {
-    Transfer as DebtTransfer,
-    Initialized as DebtInitialized
+    DebtToken as DebtTokenContract,
+    Transfer as DebtTokenTransfer,
+    Initialized as DebtTokenInitialized
 } from "../generated/DebtToken/DebtToken";
 import {Initialized as TERC20Initialized} from "../generated/TERC20/TERC20";
 import {Initialized as TERC721Initialized} from "../generated/TERC721/TERC721";
 import {Initialized as TERC1155Initialized} from "../generated/TERC1155/TERC1155";
-
 import {
     NftCollection,
-    LendingPool, Reserve, User, UserReserve
-} from "../generated/schema"
+    Reserve, User, UserReserve, TToken, DebtToken, TNft
+} from "../generated/schema";
+import * as utils from "./utils";
 
-export function handleLiquidityInitialized(event: LiquidityInitialized): void {
+export function handleTTokenInitialized(event: TTokenInitialized): void {
 
+    let poolId = event.params.pool.toHex();
     let reserveId = event.params.underlyingAsset.toHex();
+    let tTokenId = event.address.toHex();
+
     // reserve might have been initialized by DebtToken init
     let reserve = Reserve.load(reserveId);
+    if (!reserve) {utils.initReserve(reserveId, poolId);}
 
-    if (!reserve) {
-        reserve = new Reserve(reserveId);
-        reserve.pool = event.params.pool.toHex();
-    }
-    reserve.tToken = event.address;
-    reserve.save();
+    let tToken = new TToken(tTokenId);
+    tToken.pool = poolId;
+    tToken.reserve = reserveId;
+    tToken.incentivesController = event.params.incentivesController;
+    tToken.decimals = BigInt.fromI32(event.params.decimals);
+    tToken.name = event.params.name;
+    tToken.symbol = event.params.symbol;
 }
 
-export function handleLiquidityTransfer(event: LiquidityTransfer): void {
+export function handleTTokenTransfer(event: TTokenTransfer): void {
 
-    let reserveId = event.address.toHex();
+    let tTokenId = event.address.toHex();
     let fromUserId = event.params.from.toHex();
     let toUserId = event.params.to.toHex();
     let value = event.params.value;
 
-    let fromUserReserve = UserReserve.load(fromUserId + "-" + reserveId);
-    let toUserReserve = UserReserve.load(toUserId + "-" + reserveId);
-
-    if (!fromUserReserve) {
-        // TODO: rpc to get userReserve data and init
-        log.info("userReserve {} does not exist", [fromUserId + "-" + reserveId]);
+    let tToken = TToken.load(tTokenId);
+    if (!tToken) {
+        // Cannot init since we don't know the pool address
+        console.error("TToken: " + tTokenId + " entity is not initialized");
         return;
+    }
+    let reserve = Reserve.load(tToken.reserve);
+    if (!reserve) {
+        // Cannot init since we don't know the pool address
+        console.error("Reserve: " + tToken.reserve + " entity is not initialized");
+        return;
+    }
+
+    let fromUserReserve = UserReserve.load(fromUserId + "-" +  tToken.reserve);
+    let toUserReserve = UserReserve.load(toUserId + "-" +  tToken.reserve);
+    if (!fromUserReserve) {
+        fromUserReserve = utils.initUserReserve(tToken.id, fromUserId, tToken.reserve);
+        reserve.users.push(fromUserReserve.id);
+    }
+    if (!toUserReserve) {
+        toUserReserve = utils.initUserReserve(tToken.id, toUserId, tToken.reserve);
+        reserve.users.push(toUserReserve.id);
     }
     fromUserReserve.depositedAmount = fromUserReserve.depositedAmount.minus(value);
-
-    if (!toUserReserve) {
-        toUserReserve = new UserReserve(toUserId + "-" + reserveId);
-        toUserReserve.user = toUserId;
-        toUserReserve.reserve = reserveId;
-        toUserReserve.depositedAmount = value;
-    } else {
-        toUserReserve.depositedAmount = toUserReserve.depositedAmount.plus(value);
-    }
+    toUserReserve.depositedAmount = toUserReserve.depositedAmount.plus(value);
 
     fromUserReserve.save();
     toUserReserve.save();
-}
-
-export function handleDebtInitialized(event: DebtInitialized): void {
-
-    let reserveId = event.params.underlyingAsset.toHex();
-    // reserve might have been initialized by TToken init
-
-    let reserve = Reserve.load(reserveId);
-    if (!reserve) {
-        reserve = new Reserve(reserveId);
-        reserve.pool = event.params.pool.toHex();
-    }
-    reserve.debtToken = event.address;
     reserve.save();
 }
 
-export function handleDebtTransfer(event: DebtTransfer): void {
+export function handleDebtTokenInitialized(event: DebtTokenInitialized): void {
 
-    let reserveId = event.address.toHex();
+    let poolId = event.params.pool.toHex();
+    let reserveId = event.params.underlyingAsset.toHex();
+    let debtTokenId = event.address.toHex();
+
+    // reserve might have been initialized by DebtToken init
+    let reserve = Reserve.load(reserveId);
+    if (!reserve) {utils.initReserve(reserveId, poolId);}
+
+    let debtToken = new DebtToken(debtTokenId);
+    debtToken.pool = poolId;
+    debtToken.reserve = reserveId;
+    debtToken.incentivesController = event.params.incentivesController;
+    debtToken.decimals = BigInt.fromI32(event.params.decimals);
+    debtToken.name = event.params.name;
+    debtToken.symbol = event.params.symbol;
+}
+
+export function handleDebtTokenTransfer(event: DebtTokenTransfer): void {
+
+    let debtTokenId = event.address.toHex();
     let fromUserId = event.params.from.toHex();
     let toUserId = event.params.to.toHex();
     let value = event.params.value;
 
-    let fromUserReserve = UserReserve.load(fromUserId + "-" + reserveId);
-    let toUserReserve = UserReserve.load(toUserId + "-" + reserveId);
-
-    if (!fromUserReserve) {
-        // TODO: rpc to get userReserve data and init
-        log.info("userReserve {} does not exist", [fromUserId + "-" + reserveId]);
+    let debtToken = DebtToken.load(debtTokenId);
+    if (!debtToken) {
+        // Cannot init since we don't know the pool address
+        console.error("TToken: " + debtTokenId + " entity is not initialized");
         return;
     }
-    fromUserReserve.borrowedAmount = fromUserReserve.borrowedAmount.minus(value);
-
-    if (!toUserReserve) {
-        toUserReserve = new UserReserve(toUserId + "-" + reserveId);
-        toUserReserve.user = toUserId;
-        toUserReserve.reserve = reserveId;
-        toUserReserve.borrowedAmount = value;
-    } else {
-        toUserReserve.borrowedAmount = toUserReserve.borrowedAmount.plus(value);
+    let reserve = Reserve.load(debtToken.reserve);
+    if (!reserve) {
+        // Cannot init since we don't know the pool address
+        console.error("Reserve: " + debtToken.reserve + " entity is not initialized");
+        return;
     }
+
+    let fromUserReserve = UserReserve.load(fromUserId + "-" +  debtToken.reserve);
+    let toUserReserve = UserReserve.load(toUserId + "-" +  debtToken.reserve);
+    if (!fromUserReserve) {
+        fromUserReserve = utils.initUserReserve(debtToken.id, fromUserId, debtToken.reserve);
+        reserve.users.push(fromUserReserve.id);
+    }
+    if (!toUserReserve) {
+        toUserReserve = utils.initUserReserve(debtToken.id, toUserId, debtToken.reserve);
+        reserve.users.push(toUserReserve.id);
+    }
+    fromUserReserve.borrowedAmount = fromUserReserve.borrowedAmount.minus(value);
+    toUserReserve.borrowedAmount = toUserReserve.borrowedAmount.plus(value);
 
     fromUserReserve.save();
     toUserReserve.save();
+    reserve.save();
 }
 
-
 export function handleTERC20Initialized(event: TERC20Initialized): void {
-    initializeNftCollection(
-        event.params.underlyingAsset.toHex(),
-        event.params.pool.toHex(),
-        event.address,
-        BigInt.fromI32(0), //TODO
-        BigInt.fromI32(0)
-    );
+    let poolId = event.params.pool.toHex();
+    let nftCollectionId = event.params.underlyingAsset.toHex();
+    let tNnftId = event.address.toHex();
+
+    // reserve might have been initialized by DebtToken init
+    let nftCollection = NftCollection.load(nftCollectionId);
+    if (!nftCollection) {utils.initNftCollection(nftCollectionId, poolId);}
+
+    let tNft = new TNft(tNnftId);
+    tNft.pool = poolId;
+    tNft.nftCollection = nftCollectionId;
+    tNft.incentivesController = event.params.incentivesController;
+    tNft.name = event.params.name;
+    tNft.symbol = event.params.symbol;
+
+    tNft.save();
 }
 
 export function handleTERC721Initialized(event: TERC721Initialized): void {
-    initializeNftCollection(
-        event.params.underlyingAsset.toHex(),
-        event.params.pool.toHex(),
-        event.address,
-        BigInt.fromI32(0), //TODO
-        BigInt.fromI32(0)
-    );
+    let poolId = event.params.pool.toHex();
+    let nftCollectionId = event.params.underlyingAsset.toHex();
+    let tNnftId = event.address.toHex();
+
+    // reserve might have been initialized by DebtToken init
+    let nftCollection = NftCollection.load(nftCollectionId);
+    if (!nftCollection) {utils.initNftCollection(nftCollectionId, poolId);}
+
+    let tNft = new TNft(tNnftId);
+    tNft.pool = poolId;
+    tNft.nftCollection = nftCollectionId;
+    tNft.incentivesController = event.params.incentivesController;
+    tNft.name = event.params.name;
+    tNft.symbol = event.params.symbol;
+
+    tNft.save();
 }
 
 export function handleTERC1155Initialized(event: TERC1155Initialized): void {
-    initializeNftCollection(
-        event.params.underlyingAsset.toHex(),
-        event.params.pool.toHex(),
-        event.address,
-        BigInt.fromI32(0), //TODO
-        BigInt.fromI32(0)
-    );
-}
+    let poolId = event.params.pool.toHex();
+    let nftCollectionId = event.params.underlyingAsset.toHex();
+    let tNnftId = event.address.toHex();
 
-function initializeNftCollection(
-    collectionId: string,
-    pool: string,
-    tNFT: Bytes,
-    totalLiquidity: BigInt,
-    floorPrice: BigInt
- ): void {
-    let collection = new NftCollection(collectionId);
-    collection.pool = pool;
-    collection.tNFT = tNFT;
-    collection.totalLiquidity = totalLiquidity;
-    collection.floorPrice = floorPrice;
-    collection.save();
+    // reserve might have been initialized by DebtToken init
+    let nftCollection = NftCollection.load(nftCollectionId);
+    if (!nftCollection) {utils.initNftCollection(nftCollectionId, poolId);}
+
+    let tNft = new TNft(tNnftId);
+    tNft.pool = poolId;
+    tNft.nftCollection = nftCollectionId;
+    tNft.incentivesController = event.params.incentivesController;
+    tNft.name = event.params.name;
+    tNft.symbol = event.params.symbol;
+
+    tNft.save();
 }

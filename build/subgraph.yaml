@@ -13,19 +13,18 @@ dataSources:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - LendingPool
+        - Registry
       abis:
         - name: TakerAddressesProviderRegistry
           file: TakerAddressesProviderRegistry/abis/TakerAddressesProviderRegistry.json
       eventHandlers:
         - event: AddressesProviderRegistered(bytes32,indexed address)
-          handler: addressesProviderRegistered
+          handler: handleAddressesProviderRegistered
       file: TakerAddressesProviderRegistry/TakerAddressesProviderRegistry.wasm
   - kind: ethereum
     name: TakerAddressesProvider
     network: rinkeby
     source:
-      address: "0xa45B685C6502DC52BeA862fC63bFF6562fDC1C6e"
       abi: TakerAddressesProvider
     mapping:
       kind: ethereum/events
@@ -38,13 +37,18 @@ dataSources:
           file: TakerAddressesProvider/abis/TakerAddressesProvider.json
       eventHandlers:
         - event: ConfigurationAdminUpdated(indexed address)
-          handler: configurationAdminUpdated
+          handler: handleConfigurationAdminUpdated
+        - event: EmergencyAdminUpdated(indexed address)
+          handler: handleEmergencyAdminUpdated
+        - event: LendingPoolConfiguratorUpdated(indexed address)
+          handler: handleLendingPoolConfiguratorUpdated
+        - event: PriceOracleUpdated(indexed address)
+          handler: handlePriceOracleUpdated
       file: TakerAddressesProviderRegistry/TakerAddressesProviderRegistry.wasm
   - kind: ethereum
     name: PoolConfigurator
     network: rinkeby
     source:
-      address: "0xFB2886837854913a8f2EcB47Ec13c7388b53110C"
       abi: PoolConfigurator
     mapping:
       kind: ethereum/events
@@ -52,18 +56,21 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - LendingPool
+        - Reserve
+        - NftCollection
       abis:
         - name: PoolConfigurator
           file: PoolConfigurator/abis/PoolConfigurator.json
       eventHandlers:
         - event: ReserveInitialized(indexed address,indexed address,address,address)
-          handler: reserveInitialized
+          handler: handleReserveInitialized
+        - event: NftReserveInitialized(indexed address,indexed address,uint8,uint256,uint256)
+          handler: handleNftReserveInitialized
       file: TakerAddressesProviderRegistry/TakerAddressesProviderRegistry.wasm
   - kind: ethereum
     name: LendingPool
     network: rinkeby
     source:
-      address: "0x6898525468568BCd2B0a979690Ac690cAdC79BCd"
       abi: LendingPool
     mapping:
       kind: ethereum/events
@@ -96,12 +103,11 @@ dataSources:
           handler: updateReserveData
         - event: CollateralStatusUpdated(indexed address,indexed address,bool)
           handler: updateUserCollateralStatus
-      file: TakerAddressesProviderRegistry/TakerAddressesProviderRegistry.wasm
+      file: LendingPool/LendingPool.wasm
   - kind: ethereum
     name: TToken
     network: rinkeby
     source:
-      address: "0xD9711C41eE9149aE130B92e41DBbc2206915F8A9"
       abi: TToken
     mapping:
       kind: ethereum/events
@@ -114,15 +120,14 @@ dataSources:
           file: TToken/abis/TToken.json
       eventHandlers:
         - event: Initialized(indexed address,indexed address,address,uint8,string,string)
-          handler: handleLiquidityInitialized
+          handler: handleTTokenInitialized
         - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleLiquidityTransfer
+          handler: handleTTokenTransfer
       file: TToken/TToken.wasm
   - kind: ethereum
     name: DebtToken
     network: rinkeby
     source:
-      address: "0xffffffffffffffffffffffffffffffffffffffff"
       abi: DebtToken
     mapping:
       kind: ethereum/events
@@ -143,7 +148,6 @@ dataSources:
     name: TERC20
     network: rinkeby
     source:
-      address: "0xffffffffffffffffffffffffffffffffffffffff"
       abi: TERC20
     mapping:
       kind: ethereum/events
@@ -162,7 +166,6 @@ dataSources:
     name: TERC721
     network: rinkeby
     source:
-      address: "0xffffffffffffffffffffffffffffffffffffffff"
       abi: TERC721
     mapping:
       kind: ethereum/events
@@ -174,14 +177,13 @@ dataSources:
         - name: TERC721
           file: TERC721/abis/TERC721.json
       eventHandlers:
-        - event: Initialized(indexed address,indexed address,address,string,string)
+        - event: Initialized(indexed address,indexed address,address,uint8,string,string)
           handler: handleTERC721Initialized
       file: TToken/TToken.wasm
   - kind: ethereum
     name: TERC1155
     network: rinkeby
     source:
-      address: "0xffffffffffffffffffffffffffffffffffffffff"
       abi: TERC1155
     mapping:
       kind: ethereum/events
@@ -193,6 +195,185 @@ dataSources:
         - name: TERC1155
           file: TERC1155/abis/TERC1155.json
       eventHandlers:
-        - event: Initialized(indexed address,indexed address,address)
+        - event: Initialized(indexed address,indexed address,address,uint8,string,string)
+          handler: handleTERC1155Initialized
+      file: TToken/TToken.wasm
+templates:
+  - kind: ethereum
+    name: TakerAddressesProvider
+    network: rinkeby
+    source:
+      abi: TakerAddressesProvider
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - LendingPool
+      abis:
+        - name: TakerAddressesProvider
+          file: TakerAddressesProvider/abis/TakerAddressesProvider.json
+      eventHandlers:
+        - event: ConfigurationAdminUpdated(indexed address)
+          handler: handleConfigurationAdminUpdated
+        - event: EmergencyAdminUpdated(indexed address)
+          handler: handleEmergencyAdminUpdated
+        - event: LendingPoolConfiguratorUpdated(indexed address)
+          handler: handleLendingPoolConfiguratorUpdated
+        - event: PriceOracleUpdated(indexed address)
+          handler: handlePriceOracleUpdated
+      file: TakerAddressesProviderRegistry/TakerAddressesProviderRegistry.wasm
+  - kind: ethereum
+    name: PoolConfigurator
+    network: rinkeby
+    source:
+      abi: PoolConfigurator
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - LendingPool
+        - Reserve
+        - NftCollection
+      abis:
+        - name: PoolConfigurator
+          file: PoolConfigurator/abis/PoolConfigurator.json
+      eventHandlers:
+        - event: ReserveInitialized(indexed address,indexed address,address,address)
+          handler: handleReserveInitialized
+        - event: NftReserveInitialized(indexed address,indexed address,uint8,uint256,uint256)
+          handler: handleNftReserveInitialized
+      file: TakerAddressesProviderRegistry/TakerAddressesProviderRegistry.wasm
+  - kind: ethereum
+    name: LendingPool
+    network: rinkeby
+    source:
+      abi: LendingPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - LendingPool
+        - NftCollection
+        - User
+        - UserReserve
+        - UserNftCollection
+      abis:
+        - name: LendingPool
+          file: LendingPool/abis/LendingPool.json
+      eventHandlers:
+        - event: Deposited(indexed address,address,indexed address,uint256)
+          handler: handleDeposited
+        - event: Withdrawn(indexed address,indexed address,indexed address,uint256)
+          handler: handleWithdrawed
+        - event: Borrowed(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleBorrowed
+        - event: Repaid(indexed address,indexed address,indexed address,uint256)
+          handler: handleRepaid
+        - event: NFTsDeposited(indexed address[],address,indexed address,uint256[],uint256[])
+          handler: handleNFTsDeposited
+        - event: NFTsWithdrawn(indexed address[],indexed address,indexed
+            address,uint256[],uint256[])
+          handler: handleNFTsWithdrawn
+        - event: ReserveDataUpdated(indexed address,uint256,uint256,uint256,uint256)
+          handler: updateReserveData
+        - event: CollateralStatusUpdated(indexed address,indexed address,bool)
+          handler: updateUserCollateralStatus
+      file: LendingPool/LendingPool.wasm
+  - kind: ethereum
+    name: TToken
+    network: rinkeby
+    source:
+      abi: TToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - UserReserve
+        - TToken
+      abis:
+        - name: TToken
+          file: TToken/abis/TToken.json
+      eventHandlers:
+        - event: Initialized(indexed address,indexed address,address,uint8,string,string)
+          handler: handleTTokenInitialized
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTTokenTransfer
+      file: TToken/TToken.wasm
+  - kind: ethereum
+    name: DebtToken
+    network: rinkeby
+    source:
+      abi: DebtToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Reserve
+      abis:
+        - name: DebtToken
+          file: DebtToken/abis/DebtToken.json
+      eventHandlers:
+        - event: Initialized(indexed address,indexed address,address,uint8,string,string)
+          handler: handleDebtInitialized
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleDebtTransfer
+      file: TToken/TToken.wasm
+  - kind: ethereum
+    name: TERC20
+    network: rinkeby
+    source:
+      abi: TERC20
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - NftCollection
+      abis:
+        - name: TERC20
+          file: TERC20/abis/TERC20.json
+      eventHandlers:
+        - event: Initialized(indexed address,indexed address,address,uint8,string,string)
+          handler: handleTERC20Initialized
+      file: TToken/TToken.wasm
+  - kind: ethereum
+    name: TERC721
+    network: rinkeby
+    source:
+      abi: TERC721
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - NftCollection
+      abis:
+        - name: TERC721
+          file: TERC721/abis/TERC721.json
+      eventHandlers:
+        - event: Initialized(indexed address,indexed address,address,uint8,string,string)
+          handler: handleTERC721Initialized
+      file: TToken/TToken.wasm
+  - kind: ethereum
+    name: TERC1155
+    network: rinkeby
+    source:
+      abi: TERC1155
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - NftCollection
+      abis:
+        - name: TERC1155
+          file: TERC1155/abis/TERC1155.json
+      eventHandlers:
+        - event: Initialized(indexed address,indexed address,address,uint8,string,string)
           handler: handleTERC1155Initialized
       file: TToken/TToken.wasm
