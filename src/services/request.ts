@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelTokenStatic } from 'axios'
 import { ResponseBase } from './responseBase'
-import { apiUrl } from '../config'
 import { toast } from 'react-toastify'
 
 export class Request {
@@ -18,7 +17,7 @@ export class Request {
   protected successCode: Array<number> = [200, 201, 204]
   protected tokenInvalidCode = 602
   protected hasExitedCode = 600
-  protected baseURL = apiUrl + 'api/'
+  protected baseURL = 'api/'
 
   constructor() {
     this.requestConfig()

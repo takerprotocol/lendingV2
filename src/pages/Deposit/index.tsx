@@ -6,7 +6,7 @@ import BgImg from 'assets/images/svg/deposit/Bg.svg'
 import { useState } from 'react'
 import DepositedNFT from './components/DepositedNFT'
 import { useDepositableNfts } from 'services/module/deposit'
-import { useAddress } from 'state/application/hooks'
+import { useAddress } from 'state/user/hooks'
 
 const Body = styled(Box)`
   padding-top: 233px;

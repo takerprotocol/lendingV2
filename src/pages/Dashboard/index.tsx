@@ -12,10 +12,10 @@ import { useEffect, useState } from 'react'
 // import { TEST } from 'apollo/queries'
 import DataNFTs from './components/DataNFTs'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress } from 'state/application/hooks'
+import { useAddress } from 'state/user/hooks'
 import BigNumber from 'bignumber.js'
 import { useAppDispatch } from 'state'
-import { setUserNftValues } from 'state/application/reducer'
+import { setUserNftConfig, setUserNftValues } from 'state/user/reducer'
 import { bigNumberToString } from 'utils'
 
 const Body = styled(Box)`
@@ -39,6 +39,7 @@ export default function Dashboard() {
       contract
         .getUserAssetValues(address, '0xA8FD6E4736FDad7989b79b60a1ad5EddDEaEA637')
         .then((res: Array<BigNumber>) => {
+          setLoading(false)
           dispatch(
             setUserNftValues(
               res.map((el) => {
@@ -47,6 +48,14 @@ export default function Dashboard() {
             )
           )
         })
+      // contract.getUserValues(address).then((res: BigNumber) => {
+      //   setLoading(false)
+      //   console.log(res)
+      // })
+      contract.getUserConfig(address).then((res: BigNumber) => {
+        setLoading(false)
+        dispatch(setUserNftConfig(bigNumberToString(res)))
+      })
     }
   }, [contract, address, dispatch])
   const changeCheck = (a: number) => {
@@ -60,9 +69,6 @@ export default function Dashboard() {
   //   .then((res) => {
   //     console.log(res)
   //   })
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 2000)
-  }, [])
   // console.log('client', client)
   return (
     <Body className="header-padding">

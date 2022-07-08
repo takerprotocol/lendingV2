@@ -5,7 +5,7 @@ import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useNftCollateral } from 'state/application/hooks'
+import { useNftCollateral, useUserNftConfig } from 'state/user/hooks'
 
 const MyNFTCollateralBox = styled(Box)`
   width: 322px;
@@ -73,6 +73,7 @@ interface MyNFTCollateralProps {
 }
 export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps) {
   const navigate = useNavigate()
+  const nftConfig = useUserNftConfig()
   const [dataType] = useState<boolean>(true)
   const collateral = useNftCollateral()
   return (
@@ -92,7 +93,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
           </FlexBox>
           {dataType && (
             <ButtonBox>
-              <TypographyButton>6 NFTs</TypographyButton>
+              <TypographyButton>{nftConfig} NFTs</TypographyButton>
             </ButtonBox>
           )}
         </SpaceBetweenBox>

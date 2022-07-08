@@ -1,8 +1,7 @@
-import { OwnedNftsResponse } from '@alch/alchemy-sdk'
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from '../index'
-import { ApplicationModal, setAddress, setOpenModal } from './reducer'
+import { ApplicationModal, setOpenModal } from './reducer'
 
 export function useModalOpen(modal: ApplicationModal): boolean {
   const openModal = useAppSelector((state: AppState) => state.application.openModal)
@@ -17,33 +16,4 @@ export function useToggleModal(modal: ApplicationModal): () => void {
 
 export function useWalletModalToggle(): () => void {
   return useToggleModal(ApplicationModal.WALLET)
-}
-
-export function useAccountNfts(): OwnedNftsResponse | any {
-  return useAppSelector((state: AppState) => state.application.ownedNfts)
-}
-
-export function useAddress(): string {
-  return useAppSelector((state: AppState) => state.application.address)
-}
-
-export function useWalletBalance(): string {
-  return useAppSelector((state: AppState) => state.application.balance)
-}
-
-export function useUpdateAddress(address: string): () => void {
-  const dispatch = useAppDispatch()
-  return useCallback(() => dispatch(setAddress(address)), [dispatch, address])
-}
-
-export function useNftDebt(): string {
-  return useAppSelector((state: AppState) => state.application.nftDebt)
-}
-
-export function useNftLiquidity(): string {
-  return useAppSelector((state: AppState) => state.application.nftLiquidity)
-}
-
-export function useNftCollateral(): string {
-  return useAppSelector((state: AppState) => state.application.nftCollateral)
 }

@@ -9,7 +9,7 @@ import { useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
 import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
-import { useWalletBalance } from 'state/application/hooks'
+import { useWalletBalance } from 'state/user/hooks'
 
 const MyETHSupplyBox = styled(Box)`
   width: 322px;
@@ -97,7 +97,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
         <SpaceBetweenBox>
           <FlexBox>
             <Typography variant="h5" fontWeight="600" color="#ffffff" lineHeight="22px">
-              {balance} ETH
+              {balance}
             </Typography>
             <Typography ml="8px" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
               ETH

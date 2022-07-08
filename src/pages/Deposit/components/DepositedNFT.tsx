@@ -137,6 +137,7 @@ export default function DepositedNFT({ depositType, withdrawType, setWithdrawTyp
         <Pager TypeKey={Deposited} list={list}></Pager>
       </DepositedNFTsBox>
       <NFTsSelectedModal
+        type="Withdraw"
         data={list.filter((el) => checkedIndex.includes(el.tokenId))}
         openSelectedModal={openSelectedModal}
         setOpenSelectedModal={setOpenSelectedModal}

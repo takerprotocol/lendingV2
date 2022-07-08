@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { useDispatch } from 'react-redux'
 import application from './application/reducer'
+import user from './user/reducer'
 
 const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
   reducer: {
     application,
+    user,
   },
 })
 

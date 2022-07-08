@@ -9,7 +9,7 @@ import MyAccountSkeleton from './DashboardSkeleton/MyAccountSkeleton'
 import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress, useWalletBalance } from 'state/application/hooks'
+import { useAddress, useWalletBalance } from 'state/user/hooks'
 
 const MyAccountBox = styled(Box)`
   width: 716px;

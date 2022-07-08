@@ -146,6 +146,7 @@ export default function AvailableNFTs({
         <Pager TypeKey={Available} list={list}></Pager>
       </AvailableNFTsBox>
       <NFTsSelectedModal
+        type="Deposit"
         data={list.filter((el) => checkedIndex.includes(el.tokenId))}
         openSelectedModal={openSelectedModal}
         setOpenSelectedModal={setOpenSelectedModal}

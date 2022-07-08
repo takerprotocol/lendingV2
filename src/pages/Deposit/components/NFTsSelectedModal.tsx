@@ -6,6 +6,10 @@ import { FlexBox, SpaceBetweenBox } from 'styleds/index'
 import { NftTokenModel } from 'services/type/nft'
 import { useMemo } from 'react'
 import BigNumber from 'bignumber.js'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { useAddress } from 'state/user/hooks'
+import { gasLimit } from 'config'
+import { toast } from 'react-toastify'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -47,13 +51,43 @@ interface NFTsSelectedType {
   openSelectedModal: boolean
   data: NftTokenModel[]
   setOpenSelectedModal: Function
+  type: string
 }
-export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedModal, data }: NFTsSelectedType) {
+export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedModal, data, type }: NFTsSelectedType) {
+  const contract = useLendingPool()
+  const address = useAddress()
   const amount = useMemo(() => {
     return data.reduce((total: string, current: NftTokenModel) => {
       return new BigNumber(total).plus(current.balance || '0').toString()
     }, '0')
   }, [data])
+  const withdraw = () => {
+    console.log('withdraw')
+  }
+  const deposit = async () => {
+    console.log(
+      data.map((el) => el.contract.address),
+      data.map((el) => el.tokenId),
+      1,
+      address
+    )
+    if (contract && address) {
+      contract
+        .depositNFTs(
+          data.map((el) => el.contract.address),
+          data.map((el) => el.tokenId),
+          [1],
+          address,
+          { gasLimit }
+        )
+        .then((res: any) => {
+          if (res && res.hash) {
+            toast.success('success')
+          }
+        })
+    }
+    console.log('deposit')
+  }
   return (
     <Modal open={openSelectedModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -192,8 +226,18 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             </Box>
           </FlexBox>
         </RightFlexBox>
-        <Button variant="contained" sx={{ width: '372px', height: '54px', marginTop: '24px' }}>
-          Withdraw
+        <Button
+          variant="contained"
+          sx={{ width: '372px', height: '54px', marginTop: '24px' }}
+          onClick={() => {
+            if (type === 'Withdraw') {
+              withdraw()
+            } else {
+              deposit()
+            }
+          }}
+        >
+          {type}
         </Button>
       </Box>
     </Modal>

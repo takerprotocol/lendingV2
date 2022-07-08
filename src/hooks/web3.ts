@@ -4,6 +4,19 @@ import { useWeb3React } from '@web3-react/core'
 import { NetworkContextName } from '../constants/misc'
 import { injected } from '../connectors'
 
+export function useWeb3() {
+  const { connector } = useWeb3React()
+  const [web3, setWeb3] = useState<Web3Provider | null>(null)
+  useEffect(() => {
+    if (connector) {
+      connector.getProvider().then((res) => {
+        setWeb3(new Web3Provider(res))
+      })
+    }
+  }, [connector])
+  return web3
+}
+
 export function useActiveWeb3React() {
   const context = useWeb3React<Web3Provider>()
   const contextNetwork = useWeb3React<Web3Provider>(NetworkContextName)
