@@ -6,10 +6,13 @@ import { FlexBox, SpaceBetweenBox } from 'styleds/index'
 import { NftTokenModel } from 'services/type/nft'
 import { useMemo } from 'react'
 import BigNumber from 'bignumber.js'
+// import ILendingPoolConfigurator from 'abis/ILendingPoolConfigurator.json'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress } from 'state/user/hooks'
 import { gasLimit } from 'config'
 import { toast } from 'react-toastify'
+// import { useContract } from 'hooks/useContract'
+// import { useContract } from 'hooks/useContract'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -56,6 +59,8 @@ interface NFTsSelectedType {
 export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedModal, data, type }: NFTsSelectedType) {
   const contract = useLendingPool()
   const address = useAddress()
+  // const lendingPoolContract = useContract('0x5b44a299fbd133146E68d8C04AFa7b5d35F5828f', ILendingPoolConfigurator)
+
   const amount = useMemo(() => {
     return data.reduce((total: string, current: NftTokenModel) => {
       return new BigNumber(total).plus(current.balance || '0').toString()
@@ -64,19 +69,46 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const withdraw = () => {
     console.log('withdraw')
   }
+  // useEffect(() => {
+  //   if (lendingPoolContract) {
+  //     lendingPoolContract
+  //       .setAdmin('0x87FB26034477ebe07f7EDC62c4A617E0a1b8d077', { gasLimit: 30000000 })
+  //       .then((res: any) => {
+  //         console.log(res)
+  //       })
+  //   }
+  // }, [lendingPoolContract])
   const deposit = async () => {
-    console.log(
-      data.map((el) => el.contract.address),
-      data.map((el) => el.tokenId),
-      1,
-      address
-    )
+    // if (contract) {
+    //   contract.estimateGas
+    //     .depositNFTs(
+    //       data.map((el) => el.contract.address),
+    //       data.map((el) => el.tokenId),
+    //       [1],
+    //       address,
+    //       { gasLimit: 10000 }
+    //     )
+    //     .then((res) => {
+    //       console.log(res)
+    //     })
+    // }
     if (contract && address) {
+      // contract
+      //   .setNftReserveConfig(
+      //     '0xa8fd6e4736fdad7989b79b60a1ad5edddeaea637',
+      //     '0000000000000000000000000000000000000000000009223373214265645100',
+      //     { gasLimit: 23000000 }
+      //   )
+      //   .then((res: any) => {
+      //     toast.success('success')
+      //     console.log(res)
+      //     // console.log(new BigNumber('0x8000011223281770').toNumber())
+      //   })
       contract
         .depositNFTs(
           data.map((el) => el.contract.address),
           data.map((el) => el.tokenId),
-          [1],
+          [5],
           address,
           { gasLimit }
         )
@@ -86,7 +118,6 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           }
         })
     }
-    console.log('deposit')
   }
   return (
     <Modal open={openSelectedModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">

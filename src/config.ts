@@ -1,3 +1,3 @@
-const gasLimit = 50000
+const gasLimit = 23000000
 
 export { gasLimit }

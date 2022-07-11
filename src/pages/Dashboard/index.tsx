@@ -17,6 +17,9 @@ import BigNumber from 'bignumber.js'
 import { useAppDispatch } from 'state'
 import { setUserNftConfig, setUserNftValues } from 'state/user/reducer'
 import { bigNumberToString } from 'utils'
+// import { getClient } from 'apollo/client'
+// import { SupportedChainId } from 'constants/chains'
+// import { TEST1 } from 'apollo/queries'
 
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
@@ -48,10 +51,10 @@ export default function Dashboard() {
             )
           )
         })
-      // contract.getUserValues(address).then((res: BigNumber) => {
-      //   setLoading(false)
-      //   console.log(res)
-      // })
+      contract.getUserValues(address).then((res: BigNumber) => {
+        setLoading(false)
+        console.log(res)
+      })
       contract.getUserConfig(address).then((res: BigNumber) => {
         setLoading(false)
         dispatch(setUserNftConfig(bigNumberToString(res)))
@@ -64,12 +67,11 @@ export default function Dashboard() {
   // const client = getClient()[SupportedChainId.MAINNET]
   // client
   //   .query({
-  //     query: TEST('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'),
+  //     query: TEST1('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'),
   //   })
   //   .then((res) => {
   //     console.log(res)
   //   })
-  // console.log('client', client)
   return (
     <Body className="header-padding">
       <BlueChipNFTs type={type} changeCheck={changeCheck}></BlueChipNFTs>

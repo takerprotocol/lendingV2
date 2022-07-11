@@ -142,7 +142,16 @@ export default function DepositedNFT({ depositType, withdrawType, setWithdrawTyp
         openSelectedModal={openSelectedModal}
         setOpenSelectedModal={setOpenSelectedModal}
       ></NFTsSelectedModal>
-      <SureModal openSureModal={openSureModal} setOpenSureModal={setOpenSureModal}></SureModal>
+      <SureModal
+        openSureModal={openSureModal}
+        handle={(type: string) => {
+          if (type === 'cancel') {
+            setWithdrawType('shut')
+            setCheckedIndex([])
+          }
+          setOpenSureModal(false)
+        }}
+      ></SureModal>
     </DepositedNFTsStyleBox>
   )
 }

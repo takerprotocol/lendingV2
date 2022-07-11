@@ -151,7 +151,16 @@ export default function AvailableNFTs({
         openSelectedModal={openSelectedModal}
         setOpenSelectedModal={setOpenSelectedModal}
       ></NFTsSelectedModal>
-      <SureModal openSureModal={openSureModal} setOpenSureModal={setOpenSureModal}></SureModal>
+      <SureModal
+        openSureModal={openSureModal}
+        handle={(type: string) => {
+          if (type === 'cancel') {
+            setDepositType('shut')
+            setCheckedIndex([])
+          }
+          setOpenSureModal(false)
+        }}
+      ></SureModal>
     </AvailableNFTsStyleBox>
   )
 }

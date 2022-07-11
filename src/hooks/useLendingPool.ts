@@ -11,6 +11,7 @@ export function useLendingPool() {
     if (contract && !address) {
       contract.getLendingPool().then((res: string) => {
         if (res) {
+          console.log(res)
           setAddress(res)
         }
       })

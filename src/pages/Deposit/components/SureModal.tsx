@@ -25,15 +25,15 @@ const SureButton = styled(Button)`
 `
 interface SureModalProps {
   openSureModal: boolean
-  setOpenSureModal: Function
+  handle: Function
 }
-export default function SureModal({ openSureModal, setOpenSureModal }: SureModalProps) {
+export default function SureModal({ openSureModal, handle }: SureModalProps) {
   return (
     <Modal open={openSureModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
         <FlexEndBox
           onClick={() => {
-            setOpenSureModal(false)
+            handle('close')
           }}
         >
           <img src={shutOff} alt="" />
@@ -49,10 +49,22 @@ export default function SureModal({ openSureModal, setOpenSureModal }: SureModal
           </Typography>
         </FlexBox>
         <SpaceBetweenBox mt="64px">
-          <SureButton color="secondary" variant="contained">
+          <SureButton
+            color="secondary"
+            variant="contained"
+            onClick={() => {
+              handle('close')
+            }}
+          >
             Think about it
           </SureButton>
-          <SureButton sx={{ marginLeft: '24px' }} variant="contained">
+          <SureButton
+            sx={{ marginLeft: '24px' }}
+            variant="contained"
+            onClick={() => {
+              handle('cancel')
+            }}
+          >
             Cancel
           </SureButton>
         </SpaceBetweenBox>
