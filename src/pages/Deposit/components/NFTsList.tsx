@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Box, Checkbox, Skeleton, TextField, Typography } from '@mui/material'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { NftTokenModel } from 'services/type/nft'
 import NftListSkeleton from './depositSkeleton/NftListSkeleton'
 
@@ -73,14 +73,19 @@ interface NFTsLisProps {
   depositType: string
   TypeKey: string
   onChange: Function
+  checked: Array<string>
 }
-export default function NFTsList({ list, loading, depositType, onChange, TypeKey }: NFTsLisProps) {
+export default function NFTsList({ list, loading, depositType, onChange, TypeKey, checked }: NFTsLisProps) {
   const [type] = useState<string>('721')
   const [checkboxType, setCheckboxType] = useState<Array<string>>([])
   const LoadingNftListSkeleton = useMemo(
     () => [0, 1, 2, 3, 4, 5].slice(0, 6).map((_collateral, index) => <NftListSkeleton key={`${TypeKey}-${index}`} />),
     [TypeKey]
   )
+
+  useEffect(() => {
+    setCheckboxType(checked)
+  }, [checked])
 
   return (
     <>

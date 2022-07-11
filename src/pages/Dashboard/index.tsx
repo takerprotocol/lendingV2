@@ -51,10 +51,10 @@ export default function Dashboard() {
             )
           )
         })
-      contract.getUserValues(address).then((res: BigNumber) => {
-        setLoading(false)
-        console.log(res)
-      })
+      // contract.getUserValues(address).then((res: BigNumber) => {
+      //   setLoading(false)
+      //   console.log(res)
+      // })
       contract.getUserConfig(address).then((res: BigNumber) => {
         setLoading(false)
         dispatch(setUserNftConfig(bigNumberToString(res)))

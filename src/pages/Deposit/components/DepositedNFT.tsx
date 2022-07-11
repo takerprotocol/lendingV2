@@ -130,6 +130,7 @@ export default function DepositedNFT({ depositType, withdrawType, setWithdrawTyp
           TypeKey={Deposited}
           list={list}
           depositType={withdrawType}
+          checked={checkedIndex}
           onChange={(data: Array<string>) => {
             setCheckedIndex(data)
           }}

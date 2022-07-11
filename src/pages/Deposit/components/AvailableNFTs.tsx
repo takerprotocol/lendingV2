@@ -118,6 +118,7 @@ export default function AvailableNFTs({
                     </XButtonBox>
                     <RefreshButtonBox
                       onClick={() => {
+                        setCheckedIndex([])
                         setDepositType('shut')
                       }}
                     >
@@ -139,6 +140,7 @@ export default function AvailableNFTs({
           TypeKey={Available}
           loading={loading}
           list={list}
+          checked={checkedIndex}
           onChange={(data: Array<string>) => {
             setCheckedIndex(data)
           }}
