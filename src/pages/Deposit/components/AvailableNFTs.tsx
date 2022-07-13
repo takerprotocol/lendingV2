@@ -78,11 +78,18 @@ export default function AvailableNFTs({
     }
   }
   const [Available] = useState<string>('Available')
+
+  const nfts = useMemo(
+    () => list.filter((el) => el.contract.address === '0xf7a9e50baa8023fc2a4ba6e555967b9555ebe952'),
+    [list]
+  )
+
   const amount = useMemo(() => {
-    return list.reduce((total: string, current: NftTokenModel) => {
+    return nfts.reduce((total: string, current: NftTokenModel) => {
       return new BigNumber(total).plus(current.balance || '0').toString()
     }, '0')
-  }, [list])
+  }, [nfts])
+
   return (
     <AvailableNFTsStyleBox>
       <AvailableNFTsBox
@@ -102,7 +109,7 @@ export default function AvailableNFTs({
                 You can deposit
               </Typography>
               <Typography ml={'16px'} component="span" variant="subtitle1" lineHeight="18px" color="#6E7191">
-                {list.length} NFTs / {amount} ETH
+                {nfts.length} NFTs / {amount} ETH
               </Typography>
             </Box>
             <Box mr="24px">
@@ -139,7 +146,7 @@ export default function AvailableNFTs({
           depositType={depositType}
           TypeKey={Available}
           loading={loading}
-          list={list}
+          list={nfts}
           checked={checkedIndex}
           onChange={(data: Array<string>) => {
             setCheckedIndex(data)

@@ -14,7 +14,7 @@ export const TEST = (id: string) => {
 export const TEST1 = (id: string) => {
   const queryString = `
   query registry {
-    Registry {
+    registry(id: "${id}") {
       id
     }
   }

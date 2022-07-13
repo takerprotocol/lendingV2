@@ -94,21 +94,18 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
     // }
     if (contract && address) {
       // contract
-      //   .setNftReserveConfig(
-      //     '0xa8fd6e4736fdad7989b79b60a1ad5edddeaea637',
-      //     '0000000000000000000000000000000000000000000009223373214265645100',
-      //     { gasLimit: 23000000 }
-      //   )
+      //   .getNftReserveConfig('0xa8fd6e4736fdad7989b79b60a1ad5edddeaea637', { gasLimit: 23000000 })
       //   .then((res: any) => {
       //     toast.success('success')
+      //     console.log(new BigNumber('0x8000011223281770').toString())
       //     console.log(res)
-      //     // console.log(new BigNumber('0x8000011223281770').toNumber())
       //   })
+      console.log([data.map((el) => el.contract.address), data.map((el) => el.tokenId), [1], address])
       contract
         .depositNFTs(
           data.map((el) => el.contract.address),
           data.map((el) => el.tokenId),
-          [5],
+          [1],
           address,
           { gasLimit }
         )

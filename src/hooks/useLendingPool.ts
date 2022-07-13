@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 export function useLendingPool() {
   const [address, setAddress] = useState('')
   const contract = useContract(process.env.REACT_APP_PROXY_ADDRESSES_PROVIDER, ILendingPoolAddressesProviderAbi)
-  const lendingPoolContract = useContract('0x6898525468568BCd2B0a979690Ac690cAdC79BCd', lendingPoolAbi)
+  const lendingPoolContract = useContract(address, lendingPoolAbi)
   useEffect(() => {
     if (contract && !address) {
       contract.getLendingPool().then((res: string) => {
