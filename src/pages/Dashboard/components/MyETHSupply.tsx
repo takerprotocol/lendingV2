@@ -9,20 +9,20 @@ import { useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
 import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
-import { useWalletBalance } from 'state/user/hooks'
+// import { useWalletBalance } from 'state/user/hooks'
 
 const MyETHSupplyBox = styled(Box)`
   width: 322px;
   height: 333px;
   margin-left: 24px;
   position: relative;
-  z-index: 1;
 `
 const TopBox = styled(Box)`
   width: 322px;
   padding: 24px 24px;
   height: 98px;
   top: 0px;
+  position: absolute;
   background-image: url(${MyETHSupplyBg});
   background-repeat: no-repeat;
 `
@@ -47,7 +47,6 @@ const BottomBox = styled(Box)`
   padding: 36px 16px;
   width: 322px;
   top: 86px;
-  z-index: -1;
   height: 247px;
   position: absolute;
   background: linear-gradient(180deg, #ffffff 49.8%, rgba(255, 255, 255, 0) 100%);
@@ -80,7 +79,8 @@ interface MyETHSupplyProps {
 export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const [openMySupplyModal, setOpenMySupplyModal] = useState(false)
   const [dataType] = useState<boolean>(true)
-  const balance = useWalletBalance()
+  // const balance = useWalletBalance()
+  const [mySupply] = useState<number>(6)
   const [typeModal, setTypeModal] = useState<number>(1) // MySupplyModal State Supply(1) ro Withdraw(0)
   const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
   const [openMySupplySwitchModal, setOpenMySupplySwitchModal] = useState<boolean>(false)
@@ -90,31 +90,6 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const [switchType, setSwitchType] = useState<number>(0) //1
   return (
     <MyETHSupplyBox>
-      <TopBox>
-        <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
-          My ETH Supply
-        </Typography>
-        <SpaceBetweenBox>
-          <FlexBox>
-            <Typography variant="h5" fontWeight="600" color="#ffffff" lineHeight="22px">
-              {balance}
-            </Typography>
-            <Typography ml="8px" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
-              ETH
-            </Typography>
-          </FlexBox>
-          {dataType && (
-            <ButtonBox
-              onClick={() => {
-                setTypeModal(2)
-                setOpenMySupplyModal(true)
-              }}
-            >
-              <TypographyButton>Withdraw</TypographyButton>
-            </ButtonBox>
-          )}
-        </SpaceBetweenBox>
-      </TopBox>
       <BottomBox>
         <BottomTopBox>
           <SpaceBetweenBox>
@@ -194,10 +169,36 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
           <img className="left" src={ButtonSupply} alt="" />
         </Button>
       </BottomBox>
+      <TopBox>
+        <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
+          My ETH Supply
+        </Typography>
+        <SpaceBetweenBox>
+          <FlexBox>
+            <Typography variant="h5" fontWeight="600" color="#ffffff" lineHeight="22px">
+              {mySupply} ETH
+            </Typography>
+            <Typography ml="8px" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
+              ETH
+            </Typography>
+          </FlexBox>
+          {dataType && (
+            <ButtonBox
+              onClick={() => {
+                setTypeModal(2)
+                setOpenMySupplyModal(true)
+              }}
+            >
+              <TypographyButton>Withdraw</TypographyButton>
+            </ButtonBox>
+          )}
+        </SpaceBetweenBox>
+      </TopBox>
       <MySupplyModal
         openMySupplyModal={openMySupplyModal}
         setOpenMySupplyModal={setOpenMySupplyModal}
         type={typeModal}
+        mySupply={mySupply}
       ></MySupplyModal>
       <MySupplySwitchModal
         loanType={loanType}

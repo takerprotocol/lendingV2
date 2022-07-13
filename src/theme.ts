@@ -268,6 +268,30 @@ export const theme = createTheme({
       `,
       },
     },
+    MuiTooltip: {
+      styleOverrides: {
+        popper: `
+        .MuiTooltip-tooltip {
+          height: 27px !important;
+          background: #14142a !important;
+          border-radius: 6px !important;
+          font-family: 'Quicksand' !important;
+          font-style: normal !important;
+          font-weight: 600 !important;
+          font-size: 12px !important;
+          line-height: 160% !important;
+          text-align: center !important;
+          color: #ffffff !important;
+          padding: 4px 8px !important;
+        }
+        .MuiTooltip-arrow {
+          ::before {
+            background-color:  #14142a !important;
+          }
+        }
+      `,
+      },
+    },
     MuiCssBaseline: {
       styleOverrides: `
         .header-padding {
@@ -296,6 +320,9 @@ export const theme = createTheme({
         .High-Risk{
           color: #E1536C;
         }
+        .In-liquidation{
+          color: #E1536C;
+        }
         .Slider-Healthy {
           background: #EFF0F6;
           color:  #66DEC8 !important;
@@ -317,6 +344,16 @@ export const theme = createTheme({
           }
         }
         .Slider-High-Risk{
+          background: #EFF0F6;
+          color: #FF7272 !important;
+          & .MuiSlider-valueLabel {
+            backgroundColor: #E1536C !important;
+            }
+            & .MuiSlider-thumb{
+              background: linear-gradient(180deg, #FF7272 0%, #E1536C 100%) !important;
+            }
+        }
+        .Slider-In-liquidation{
           background: #EFF0F6;
           color: #FF7272 !important;
           & .MuiSlider-valueLabel {

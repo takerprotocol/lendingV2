@@ -1,16 +1,17 @@
 import styled from '@emotion/styled'
 import { Box, Button, Typography } from '@mui/material'
 import NFT1 from 'assets/images/svg/dashboard/NFT1.svg'
+import tokenUp from 'assets/images/svg/dashboard/tokenUp.svg'
 import ButtonUp from 'assets/images/svg/dashboard/button-up.svg'
 import ButtonDown from 'assets/images/svg/dashboard/button-down.svg'
 import minMyCollateralIcon from 'assets/images/svg/dashboard/minMyCollateral-icon.svg'
 import { useState } from 'react'
+import { SpaceBetweenBox, FlexBox } from 'styleds'
 import { useAddress } from 'state/user/hooks'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useNavigate } from 'react-router-dom'
 import CollectionSkeleton from './DashboardSkeleton/CollectionSkeleton'
 const CollectionBox = styled(Box)`
-  width: 1160px;
   border-radius: 12px;
   &.open {
     background: #ffffff;
@@ -44,6 +45,20 @@ const CollectionUpBox = styled(Box)`
   display: flex;
   justify-content: space-between;
 `
+const LiquidationBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  width: 568px;
+  height: 50px;
+  background: #f7f7fc;
+  opacity: 0.7;
+  border-radius: 6px;
+  margin-right: 108px;
+`
+const TokenUpBox = styled(Box)`
+  width: 35px;
+  height: 35px;
+`
 interface CollectionType {
   type: number
   loading: boolean
@@ -51,19 +66,49 @@ interface CollectionType {
 export default function Collection({ type, loading }: CollectionType) {
   const [check, setCheck] = useState<number | null>(1)
   const [list] = useState([1, 2])
-  const [dataType] = useState<Boolean>(true) //有没有数据
+  const [dataType] = useState<boolean>(true) //有没有数据
   const address = useAddress()
   const toggleModal = useWalletModalToggle()
   const navigate = useNavigate()
   return (
-    <Box mt="24px">
+    <Box ml="24px" width="1160px">
       {loading ? (
         <CollectionSkeleton />
       ) : (
         <>
-          <Typography variant="h4" m="36px 0px 16px 24px">
-            Collection Supported
-          </Typography>
+          <SpaceBetweenBox>
+            <Box m="36px 0px 16px 24px">
+              <Typography mb="8px" variant="h4">
+                Collection Supported
+              </Typography>
+              <Box display={dataType ? '' : 'none'}>
+                <Typography mr="16px" fontWeight="500" component="span" color="#6E7191" variant="subtitle2">
+                  30,291 NFT Collaterals
+                </Typography>
+                <Typography fontWeight="500" component="span" color="#6E7191" variant="subtitle2">
+                  76,046.50 ETH Total value
+                </Typography>
+              </Box>
+            </Box>
+            <Box display={dataType ? '' : 'none'}>
+              <FlexBox>
+                <TokenUpBox mr="24px">
+                  <img src={tokenUp} alt="" />
+                </TokenUpBox>
+                <Box>
+                  <Typography mr="8px" component="span" fontSize="24px" lineHeight="38px" color="#4BC8B1" variant="h5">
+                    +20%
+                  </Typography>
+                  <Typography component="span" variant="subtitle2" fontWeight="700">
+                    Token Reward !
+                  </Typography>
+                  <Typography variant="body2" fontWeight="600" color="#A0A3BD">
+                    Deposit NFTs to earn some borrow reward
+                  </Typography>
+                </Box>
+              </FlexBox>
+            </Box>
+          </SpaceBetweenBox>
           <CollectionHeader>
             <CollectionFlexBox>
               <Box sx={{ width: '272px' }}>
@@ -81,7 +126,7 @@ export default function Collection({ type, loading }: CollectionType) {
               <Box sx={{ width: '148px' }}>
                 <TitleTypography>Active user</TitleTypography>
               </Box>
-              <Box sx={{ width: '174px' }}>
+              <Box>
                 <TitleTypography>Token reward</TitleTypography>
               </Box>
             </CollectionFlexBox>
@@ -142,51 +187,22 @@ export default function Collection({ type, loading }: CollectionType) {
                 </CollectionFlexBox>
                 {el === check && (
                   <CollectionUpBox>
-                    <CollectionFlexBox m="48px 0 0 24px">
-                      <Box width="125px">
-                        <Typography component="p" variant="subtitle1">
-                          10%
-                        </Typography>
-                        <Typography component="p" variant="body1" fontWeight="600" color="#A0A3BD">
-                          Net Borrow APY
-                        </Typography>
-                      </Box>
-                      <CollectionFlexBox width="173px">
-                        <Box>
-                          <Typography component="p" variant="body1" fontWeight="600" color="#A0A3BD">
-                            Borrow APY
-                          </Typography>
-                          <Typography mt="6px" component="p" variant="body1" fontWeight="600" color="#A0A3BD">
-                            Token Reward
-                          </Typography>
-                        </Box>
-                        <Box ml="8px">
-                          <Typography component="p" variant="body1" fontWeight="600" color="#6E7191">
-                            -10%
-                          </Typography>
-                          <Typography mt="6px" component="p" variant="body1" fontWeight="700" color="#4BC8B1">
-                            20%
-                          </Typography>
-                        </Box>
-                      </CollectionFlexBox>
-                      <Box width="172px">
-                        <Typography component="p" variant="subtitle1">
-                          70%
-                        </Typography>
-                        <Typography component="p" variant="body1" fontWeight="600" color="#A0A3BD">
+                    <CollectionFlexBox m="48px 0 0 0">
+                      <LiquidationBox>
+                        <Typography ml="58px" fontWeight="600" color="#A0A3BD" variant="body1">
                           Liquidation Threshold
                         </Typography>
-                      </Box>
-                      <Box width="171px">
-                        <Typography component="p" variant="subtitle1">
+                        <Typography ml="24px" variant="subtitle2">
                           70%
                         </Typography>
-                        <Typography component="p" variant="body1" fontWeight="600" color="#A0A3BD">
+                        <Typography ml="63px" fontWeight="600" color="#A0A3BD" variant="body1">
                           Liquidation Profit
                         </Typography>
-                      </Box>
-                      <Box className={address ? '' : 'none'} height="36px" width="0px" border="1px solid #EFF0F6"></Box>
-                      <Box className={address ? '' : 'none'} ml="50px" width="148px">
+                        <Typography ml="24px" variant="subtitle2">
+                          20%
+                        </Typography>
+                      </LiquidationBox>
+                      <Box className={address ? '' : 'none'} width="148px">
                         <Typography
                           component="span"
                           variant="subtitle1"

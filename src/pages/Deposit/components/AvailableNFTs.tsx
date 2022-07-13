@@ -146,7 +146,7 @@ export default function AvailableNFTs({
           depositType={depositType}
           TypeKey={Available}
           loading={loading}
-          list={nfts}
+          list={list}
           checked={checkedIndex}
           onChange={(data: Array<string>) => {
             setCheckedIndex(data)

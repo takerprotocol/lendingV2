@@ -31,7 +31,6 @@ const RewardsBox = styled(Box)`
 `
 const MyAssetsBox = styled(Box)`
   margin: 39px 0 36px 24px;
-  width: 570px;
 `
 interface MyAccountProps {
   type: number
@@ -41,6 +40,7 @@ export default function MyAccount({ type }: MyAccountProps) {
   const [loading, setLoading] = useState(true)
   const address = useAddress()
   const [userValues, setUserValues] = useState<BigNumber>(new BigNumber(0))
+  const [data] = useState<boolean>(true)
   const contract = useLendingPool()
   useEffect(() => {
     if (contract && address) {
@@ -99,20 +99,45 @@ export default function MyAccount({ type }: MyAccountProps) {
                     <img width="14px" height="14px" src={greyPrompt} alt="" />
                   </CenterBox>
                 </Box>
-                <Box ml="36px">
-                  <Typography variant="subtitle2" component="span" color="#A0A3BD">
-                    {'≈ 0.46 ETH '}
-                  </Typography>
-                  <Typography variant="body1" component="span" fontWeight="600" color="#A0A3BD">
-                    {'/day '}
-                  </Typography>
-                  <CenterBox>
-                    <Typography mr="4px" component="span" variant="body2" color="#A0A3BD">
-                      Income estimation
+                {data ? (
+                  <Box ml="36px" width="194px">
+                    <Typography variant="subtitle2" component="span" color="#A0A3BD">
+                      {'≈ 0.46 ETH '}
                     </Typography>
-                    <img width="14px" height="14px" src={greyPrompt} alt="" />
-                  </CenterBox>
-                </Box>
+                    <Typography variant="body1" component="span" fontWeight="600" color="#A0A3BD">
+                      {'/day '}
+                    </Typography>
+                    <FlexBox>
+                      <Typography mr="4px" component="span" variant="body2" color="#A0A3BD">
+                        Income estimation
+                      </Typography>
+                      <img width="14px" height="14px" src={greyPrompt} alt="" />
+                    </FlexBox>
+                  </Box>
+                ) : (
+                  <>
+                    <Box ml="36px">
+                      <Typography variant="subtitle2" color="#A0A3BD">
+                        10%
+                      </Typography>
+                      <CenterBox>
+                        <Typography mr="4px" variant="body2" color="#A0A3BD">
+                          Borrow APY
+                        </Typography>
+                      </CenterBox>
+                    </Box>
+                    <Box mr="28px" ml="36px">
+                      <Typography variant="subtitle2" color="#A0A3BD">
+                        25%
+                      </Typography>
+                      <CenterBox>
+                        <Typography mr="4px" variant="body2" color="#A0A3BD">
+                          Earned APY
+                        </Typography>
+                      </CenterBox>
+                    </Box>
+                  </>
+                )}
               </FlexBox>
             </SpaceBetweenBox>
           </MyAssetsBox>

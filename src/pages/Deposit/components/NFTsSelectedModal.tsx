@@ -105,7 +105,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
         .depositNFTs(
           data.map((el) => el.contract.address),
           data.map((el) => el.tokenId),
-          [1],
+          [5],
           address,
           { gasLimit }
         )

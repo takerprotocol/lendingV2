@@ -6,12 +6,15 @@ import addBox from 'assets/images/svg/dashboard/addBox.svg'
 import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
 import CustomizedSlider from 'components/Slider'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import MyLoanModal from './MyLoanModal'
-import { bigNumberToString, RiskLevel, RiskLevelTag } from 'utils'
+import { RiskLevel, RiskLevelTag } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import BigNumber from 'bignumber.js'
-// import { useLendingPool } from 'hooks/useLendingPool'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { useAddress, useNftCollateral, useNftDebt } from 'state/user/hooks'
+// import { useContract } from 'hooks/useContract'
+// import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
 // import { useAddress } from 'state/application/hooks'
 
 const MyLoanBox = styled(Box)`
@@ -29,7 +32,7 @@ const MyLoanBox = styled(Box)`
   }
 `
 const RiskLevelBox = styled(Box)`
-  padding: 10px 14px;
+  padding: 10px 10px 10px 14px;
   width: 100%;
   height: 98px;
   background: #f3f3f8;
@@ -53,12 +56,11 @@ const RiskLevelBox = styled(Box)`
 const FlexEndBox = styled(Box)`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 24px;
-  margin-top: 13px;
 `
 const BottomBox = styled(Box)`
   width: 371px;
   height: 149px;
+  margin-top: 24px;
   padding: 16px 24px 24px 23px;
   background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
   border-radius: 8px;
@@ -74,6 +76,11 @@ const ImgBox = styled('img')`
   width: 18px;
   height: 18px;
 `
+const FlexStartBox = styled(Box)`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+`
 interface MyLoanProps {
   loading: boolean
   type: number
@@ -84,17 +91,30 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
   const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
   const [datatype] = useState<boolean>(true)
   const [riskLevelType] = useState<number>(120)
+  const [myDebt] = useState<number>(23)
   const MyLoanRiskLevel = RiskLevel(riskLevelType)
   const MyLoanRiskLevelTag = RiskLevelTag(riskLevelType)
-  // const contract = useLendingPool()
-  // const address = useAddress()
-  // useEffect(() => {
-  //   if (contract && address) {
-  //     contract.deposit(address, 1, address, { gasLimit: 50000 }).then((res: Array<BigNumber>) => {
-  //       console.log(res)
-  //     })
-  //   }
-  // }, [contract, address])
+  const contract = useLendingPool()
+  const address = useAddress()
+  const nftDebt = useNftDebt()
+  const NftCollateral = useNftCollateral()
+
+  useEffect(() => {
+    if (contract && address) {
+      // contract.deposit(address, 1, address, { gasLimit: 50000 }).then((res: Array<BigNumber>) => {
+      // console.log(res)
+      contract.getPoolValues().then((res: Array<BigNumber>) => {
+        console.log('getPoolValues', res)
+        // contract.getAssetValues(address).then((res: Array<BigNumber>) => {
+        //   console.log('getAssetValues', res)
+      })
+    }
+    // if (AddressesProviderAbi) {
+    //   AddressesProviderAbi.getAddress('T_Token').then((res: any) => {
+    //     console.log(res)
+    //   })
+    // }
+  }, [contract, address, nftDebt])
   return (
     <MyLoanBox className={loading ? 'SkeletonBg' : ''}>
       {loading ? (
@@ -110,7 +130,9 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
               <CenterBox>
                 <img src={blackEthLogo} alt="" />
                 <Typography ml="13px" variant="h3" fontSize="32px" lineHeight="51px">
-                  {bigNumberToString(assets)}
+                  {/* {bigNumberToString(assets)} */}
+                  {/* {nftDebt} */}
+                  {myDebt}
                 </Typography>
               </CenterBox>
             </Box>
@@ -129,28 +151,42 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
           <RiskLevelBox className={datatype ? 'before' : ''}>
             {datatype ? (
               <>
-                <Box mb="16px" height="14px" mt="14px">
-                  <Typography component="span" lineHeight="14px" fontWeight="600" variant="body1">
-                    Risk Level
-                  </Typography>
-                  <Typography component="span" lineHeight="14px" ml="8px" variant="body1" color="#9A96A2">
-                    180%
-                  </Typography>
-                </Box>
-                <FlexBox>
-                  <Typography fontSize="22px" className={MyLoanRiskLevelTag} lineHeight="24px" fontWeight="700">
-                    {MyLoanRiskLevel}
-                  </Typography>
-                  <Box ml="8px" width="16px" height="16px">
-                    <img src={greyPrompt} alt="" />
+                <FlexStartBox ml="10px">
+                  <Box width="220px" mt="14px">
+                    <Typography mb="12px" lineHeight="14px" fontWeight="600" variant="body1">
+                      Risk Level
+                    </Typography>
+                    <Typography fontSize="22px" className={MyLoanRiskLevelTag} lineHeight="24px" fontWeight="700">
+                      {MyLoanRiskLevel}
+                    </Typography>
                   </Box>
-                </FlexBox>
+                  <Box>
+                    <Box>
+                      <FlexEndBox>
+                        <img src={greyPrompt} alt="" />
+                      </FlexEndBox>
+                      <Box mr="24px">
+                        <Typography component="p" variant="subtitle2" color="#6E7191">
+                          {NftCollateral}%
+                        </Typography>
+                        <Typography component="p" variant="body2" color="#A0A3BD">
+                          Collateralization
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                </FlexStartBox>
               </>
             ) : (
-              <Box ml="10px" mt="4px">
-                <Typography mb="4px" variant="subtitle1" fontWeight="700">
-                  No loan amount
-                </Typography>
+              <Box ml="10px">
+                <FlexStartBox mb="4px">
+                  <Typography mt="4px" variant="subtitle1" fontWeight="700">
+                    No loan amount
+                  </Typography>
+                  <Box width="16px" height="16px" mt="2px">
+                    <img src={greyPrompt} alt="" />
+                  </Box>
+                </FlexStartBox>
                 <Typography variant="body2" color="#A0A3BD">
                   You can try to mortgage some NFT or ETH
                 </Typography>
@@ -229,7 +265,12 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
           </BottomBox>
         </>
       )}
-      <MyLoanModal open={open} repayRoBorrow={repayRoBorrow} onClose={() => setOpen(false)}></MyLoanModal>
+      <MyLoanModal
+        myDebt={myDebt}
+        open={open}
+        repayRoBorrow={repayRoBorrow}
+        onClose={() => setOpen(false)}
+      ></MyLoanModal>
     </MyLoanBox>
   )
 }

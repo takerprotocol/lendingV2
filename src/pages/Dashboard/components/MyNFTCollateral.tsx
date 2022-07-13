@@ -1,4 +1,4 @@
-import { Box, Button, styled, Typography } from '@mui/material'
+import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
 import NFT1 from 'assets/images/svg/dashboard/NFT1.svg'
 import MyNFTCollateralBg from 'assets/images/svg/dashboard/MyNFTCollateralBg.svg'
 import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
@@ -11,12 +11,12 @@ const MyNFTCollateralBox = styled(Box)`
   width: 322px;
   height: 333px;
   position: relative;
-  z-index: 1;
 `
 const TopBox = styled(Box)`
   width: 322px;
   padding: 24px 24px;
   height: 98px;
+  position: absolute;
   top: 0px;
   background-image: url(${MyNFTCollateralBg});
   background-repeat: no-repeat;
@@ -42,7 +42,6 @@ const BottomBox = styled(Box)`
   padding: 36px 16px;
   width: 322px;
   top: 86px;
-  z-index: -1;
   height: 247px;
   position: absolute;
   background: linear-gradient(180deg, #ffffff 49.8%, rgba(255, 255, 255, 0) 100%);
@@ -78,26 +77,6 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const collateral = useNftCollateral()
   return (
     <MyNFTCollateralBox>
-      <TopBox>
-        <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
-          My NFT Collateral
-        </Typography>
-        <SpaceBetweenBox>
-          <FlexBox>
-            <Typography variant="h5" fontWeight="600" color="#ffffff" lineHeight="22px">
-              {collateral}
-            </Typography>
-            <Typography ml="8px" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
-              ETH
-            </Typography>
-          </FlexBox>
-          {dataType && (
-            <ButtonBox>
-              <TypographyButton>{nftConfig} NFTs</TypographyButton>
-            </ButtonBox>
-          )}
-        </SpaceBetweenBox>
-      </TopBox>
       <BottomBox>
         <BottomTopBox>
           {dataType ? (
@@ -130,9 +109,11 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
           <FlexBox mt="12px">
             {[0, 1, 2, 3, 4, 5, 6, 7].map((el: any) => {
               return (
-                <ImgBox key={`ImgBox${el}`}>
-                  <img width="24px" height="24px" src={NFT1} alt="" />
-                </ImgBox>
+                <Tooltip key={`ImgBox${el}`} title="Add" arrow placement="top">
+                  <ImgBox>
+                    <img width="24px" height="24px" src={NFT1} alt="" />
+                  </ImgBox>
+                </Tooltip>
               )
             })}
           </FlexBox>
@@ -146,6 +127,26 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
           <img className="left" src={ButtonDeposit} alt="" />
         </Button>
       </BottomBox>
+      <TopBox>
+        <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
+          My NFT Collateral
+        </Typography>
+        <SpaceBetweenBox>
+          <FlexBox>
+            <Typography variant="h5" fontWeight="600" color="#ffffff" lineHeight="22px">
+              {collateral}
+            </Typography>
+            <Typography ml="8px" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
+              ETH
+            </Typography>
+          </FlexBox>
+          {dataType && (
+            <ButtonBox>
+              <TypographyButton>{nftConfig} NFTs</TypographyButton>
+            </ButtonBox>
+          )}
+        </SpaceBetweenBox>
+      </TopBox>
     </MyNFTCollateralBox>
   )
 }

@@ -85,7 +85,7 @@ export function fixedFormat(value?: string | number): string {
       return new BigNumber(value).toFormat(2, 1)
     }
   }
-  return ''
+  return '0.00'
 }
 
 export function decimalFormat(value?: number | string, decimal = 18, thousandSeparated = true, precision = 2) {
@@ -189,4 +189,7 @@ export const RiskLevelTag = (value: string | number) => {
     default:
       return 'Healthy'
   }
+}
+export const percent = (Dividend: number, Divisor: number) => {
+  return Math.round((Dividend / Divisor) * 10000) / 100 + '%'
 }

@@ -12,6 +12,7 @@ import * as React from 'react'
 import { PopperPlacementType } from '@mui/material/Popper'
 import HeaderPopper from './components/HeaderPopper'
 import theme from 'theme'
+import DashboardPopper from './components/DashboardPopper'
 
 const HeaderBox = styled(Box, {
   shouldForwardProp: (prop) => true,
@@ -78,6 +79,12 @@ export const Header = () => {
     setOpen((prev) => placement !== newPlacement || !prev)
     setPlacement(newPlacement)
   }
+  const [dashboardOpen, setDashboardOpen] = React.useState(false)
+  const dashboardHandleClick = (newPlacement: PopperPlacementType) => (event: React.MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget)
+    setDashboardOpen((prev) => placement !== newPlacement || !prev)
+    setPlacement(newPlacement)
+  }
   const navigate = useNavigate()
   const location = useLocation()
   const lightBackground = ['/deposit', '/liquidate'].includes(location.pathname)
@@ -99,6 +106,8 @@ export const Header = () => {
             color={String(location.pathname === '/dashboard' ? theme.palette.primary.main : theme.palette.text)}
             variant="button"
             marginRight="49px"
+            onMouseLeave={dashboardHandleClick('bottom')}
+            onMouseOver={dashboardHandleClick('bottom')}
           >
             Dashboard
           </StyledLinkText>
@@ -139,6 +148,7 @@ export const Header = () => {
         )}
       </FlexBox>
       <WalletModal></WalletModal>
+      <DashboardPopper open={dashboardOpen} anchorEl={anchorEl} placement={placement}></DashboardPopper>
       <HeaderPopper open={open} anchorEl={anchorEl} placement={placement}></HeaderPopper>
     </HeaderBox>
   )
