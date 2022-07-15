@@ -285,7 +285,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 <>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
                     <Typography variant="body1" component="span" color={'#A0A3BD'}>
-                      {fixedFormat(supplyLimit)} {'>'}
+                      20% {'>'}
                     </Typography>
                     <Typography
                       ml="6px"
@@ -294,7 +294,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       fontWeight="700"
                       color={withdrawalMax ? '#E1536C' : '#14142A'}
                     >
-                      {fixedFormat(supplyLimit - supplyAmount)}
+                      20%
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
@@ -395,6 +395,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
           <Button
             disabled={!supplyAmount || supplyAmount > supplyLimit}
             variant="contained"
+            color={withdrawalMax ? 'error' : 'primary'}
             sx={{ width: '372px', height: '54px' }}
           >
             Withdraw

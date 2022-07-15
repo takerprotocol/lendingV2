@@ -1,5 +1,6 @@
 import { Box, Button, Modal, styled, Typography } from '@mui/material'
 import addIcon from 'assets/images/svg/common/add.svg'
+import redPrompt from 'assets/images/svg/common/redPrompt.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds/index'
@@ -55,8 +56,17 @@ interface NFTsSelectedType {
   data: NftTokenModel[]
   setOpenSelectedModal: Function
   type: string
+  checkedIndex: string[]
+  withdrawLargeAmount?: boolean
 }
-export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedModal, data, type }: NFTsSelectedType) {
+export default function NFTsSelectedModal({
+  openSelectedModal,
+  setOpenSelectedModal,
+  data,
+  type,
+  checkedIndex,
+  withdrawLargeAmount,
+}: NFTsSelectedType) {
   const contract = useLendingPool()
   const address = useAddress()
   // const lendingPoolContract = useContract('0x5b44a299fbd133146E68d8C04AFa7b5d35F5828f', ILendingPoolConfigurator)
@@ -165,13 +175,21 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
               <BodyTypography>20% {'>'}</BodyTypography>
-              <BodyTypography ml="6px !important" fontWeight="700" color="#14142A !important">
+              <BodyTypography
+                ml="6px !important"
+                fontWeight="700 !important"
+                color={withdrawLargeAmount ? '#E1536C !important' : '#14142A !important'}
+              >
                 20%
               </BodyTypography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
               <BodyTypography>20% {'>'}</BodyTypography>
-              <BodyTypography ml="6px" fontWeight="700 !important" color="#14142A !important">
+              <BodyTypography
+                ml="6px"
+                fontWeight="700 !important"
+                color={withdrawLargeAmount ? '#E1536C !important' : '#14142A !important'}
+              >
                 20%
               </BodyTypography>
             </Box>
@@ -191,12 +209,16 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <BodyTypography>186% {'>'}</BodyTypography>
-            <BodyTypography ml="6px" fontWeight="700 !important" color="#14142A !important">
+            <BodyTypography
+              ml="6px"
+              fontWeight="700 !important"
+              color={withdrawLargeAmount ? '#E1536C !important' : '#14142A !important'}
+            >
               186%
             </BodyTypography>
           </Box>
         </SpaceBetweenBox>
-        <RightFlexBox>
+        <RightFlexBox mb="24px">
           <FlexBox>
             <Box width={'65px'}>
               <Typography component="p" variant="subtitle2" lineHeight="16px" color="#4BC8B1">
@@ -254,9 +276,20 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             </Box>
           </FlexBox>
         </RightFlexBox>
+        <Box mb="16px" display={withdrawLargeAmount ? '' : 'none'}>
+          <FlexBox>
+            <Box mr="8px" pt="1px" height="38px">
+              <img src={redPrompt} alt="" />
+            </Box>
+            <Typography color="#E1536C" fontWeight="600" variant="body2">
+              If you withdraw the maximum amount of collateral ETH, your collateral will be easily liquidated
+            </Typography>
+          </FlexBox>
+        </Box>
         <Button
           variant="contained"
-          sx={{ width: '372px', height: '54px', marginTop: '24px' }}
+          sx={{ width: '372px', height: '54px' }}
+          color={withdrawLargeAmount ? 'error' : 'primary'}
           onClick={() => {
             if (type === 'Withdraw') {
               withdraw()

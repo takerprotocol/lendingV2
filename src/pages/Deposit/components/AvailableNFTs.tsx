@@ -18,6 +18,7 @@ const AvailableNFTsBox = styled(Box)`
   padding: 24px 0 0 24px;
   margin-top: 24px;
   margin-bottom: 42px;
+  background: linear-gradient(180deg, #ffffff 12.77%, rgba(255, 255, 255, 0) 33.61%);
 `
 const AvailableNFTsStyleBox = styled(Box)``
 const FlexBox = styled(Box)`
@@ -83,79 +84,83 @@ export default function AvailableNFTs({
     () => list.filter((el) => el.contract.address === '0xf7a9e50baa8023fc2a4ba6e555967b9555ebe952'),
     [list]
   )
-
   const amount = useMemo(() => {
     return nfts.reduce((total: string, current: NftTokenModel) => {
       return new BigNumber(total).plus(current.balance || '0').toString()
     }, '0')
   }, [nfts])
-
   return (
-    <AvailableNFTsStyleBox>
-      <AvailableNFTsBox
-        sx={{
-          background: `${
-            loading ? '' : `${list ? 'linear-gradient(180deg, #ffffff 12.77%, rgba(255, 255, 255, 0) 33.61%)' : ''}`
-          } `,
-          opacity: `${withdrawType === 'open' ? '0.7' : '1'}`,
-        }}
-      >
-        {loading ? (
-          <AvailableAndDepositedSkeleton />
-        ) : (
-          <FlexBox sx={{ marginBottom: '30px' }}>
-            <Box>
-              <Typography component="span" variant="h5" fontSize=" 24px" lineHeight="38px">
-                You can deposit
-              </Typography>
-              <Typography ml={'16px'} component="span" variant="subtitle1" lineHeight="18px" color="#6E7191">
-                {nfts.length} NFTs / {amount} ETH
-              </Typography>
-            </Box>
-            <Box mr="24px">
-              {depositType === 'shut' ? (
-                <Button sx={{ display: `${!list && 'none'}` }} variant="contained" onClick={ButtonDeposit}>
-                  Deposit
-                </Button>
-              ) : (
-                <Box>
-                  <FlexBox width={'268px'}>
-                    <XButtonBox onClick={() => setOpenSureModal(true)}>
-                      <img width={'14px'} height={'14px'} src={XIcon} alt="" />
-                    </XButtonBox>
-                    <RefreshButtonBox
-                      onClick={() => {
-                        setCheckedIndex([])
-                        setDepositType('shut')
-                      }}
-                    >
-                      <img src={RefreshIcon} alt="" />
-                    </RefreshButtonBox>
-                    <DepositButtonBox onClick={() => setOpenSelectedModal(true)}>
-                      <Typography variant="body1" component="h1" fontWeight="700" color="#14142A">
-                        Deposit {checkedIndex.length} NFTs
-                      </Typography>
-                    </DepositButtonBox>
-                  </FlexBox>
-                </Box>
-              )}
-            </Box>
-          </FlexBox>
-        )}
-        <NFTsList
-          depositType={depositType}
-          TypeKey={Available}
-          loading={loading}
-          list={list}
-          checked={checkedIndex}
-          onChange={(data: Array<string>) => {
-            setCheckedIndex(data)
-          }}
-        ></NFTsList>
-        <Pager TypeKey={Available} list={list}></Pager>
-      </AvailableNFTsBox>
+    <AvailableNFTsStyleBox sx={{ opacity: `${withdrawType === 'open' ? '0.7' : '1'}` }}>
+      {list.length !== 0 ? (
+        <Typography m="48px 24px" variant="h5" fontWeight="700" fontSize=" 24px">
+          0 NFT you can deposit
+        </Typography>
+      ) : (
+        <AvailableNFTsBox>
+          {loading ? (
+            <AvailableAndDepositedSkeleton />
+          ) : (
+            <FlexBox sx={{ marginBottom: '30px' }}>
+              <Box>
+                <Typography component="span" variant="h5" fontSize=" 24px" lineHeight="38px">
+                  You can deposit
+                </Typography>
+                <Typography ml={'16px'} component="span" variant="subtitle1" lineHeight="18px" color="#6E7191">
+                  {nfts.length} NFTs / {amount} ETH
+                </Typography>
+              </Box>
+              <Box mr="24px">
+                {depositType === 'shut' ? (
+                  <Button variant="contained" onClick={ButtonDeposit}>
+                    Choose
+                  </Button>
+                ) : (
+                  <Box>
+                    <FlexBox width={'268px'}>
+                      <XButtonBox onClick={() => setOpenSureModal(true)}>
+                        <img width={'14px'} height={'14px'} src={XIcon} alt="" />
+                      </XButtonBox>
+                      <RefreshButtonBox
+                        onClick={() => {
+                          setCheckedIndex([])
+                          setDepositType('shut')
+                        }}
+                      >
+                        <img src={RefreshIcon} alt="" />
+                      </RefreshButtonBox>
+                      <DepositButtonBox
+                        onClick={() => {
+                          if (checkedIndex.length === 0) {
+                            setOpenSelectedModal(true)
+                          }
+                        }}
+                      >
+                        <Typography variant="body1" component="h1" fontWeight="700" color="#14142A">
+                          Deposit {checkedIndex.length} NFTs
+                        </Typography>
+                      </DepositButtonBox>
+                    </FlexBox>
+                  </Box>
+                )}
+              </Box>
+            </FlexBox>
+          )}
+          <NFTsList
+            depositType={depositType}
+            TypeKey={Available}
+            loading={loading}
+            list={list}
+            checked={checkedIndex}
+            onChange={(data: Array<string>) => {
+              setCheckedIndex(data)
+            }}
+          ></NFTsList>
+          <Pager TypeKey={Available} list={list}></Pager>
+        </AvailableNFTsBox>
+      )}
       <NFTsSelectedModal
-        type="Deposit"
+        type={Available}
+        checkedIndex={checkedIndex}
         data={list.filter((el) => checkedIndex.includes(el.tokenId))}
         openSelectedModal={openSelectedModal}
         setOpenSelectedModal={setOpenSelectedModal}

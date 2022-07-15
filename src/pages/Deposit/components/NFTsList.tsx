@@ -45,7 +45,7 @@ const MaxBox = styled(Box)`
 
 const NftImage = styled('img')<{ loaded: boolean }>(({ loaded }) => ({
   borderRadius: 6,
-  widht: 74,
+  width: 74,
   height: 74,
   zIndex: loaded ? 1 : -1,
   position: loaded ? 'relative' : 'absolute',
@@ -56,7 +56,6 @@ const NftImageLoading = styled(Skeleton)`
   height: 74px;
   border-radius: 6px;
 `
-
 const Image = (props: any) => {
   const [imageLoaded, setImageLoaded] = useState(false)
   return (
@@ -66,7 +65,6 @@ const Image = (props: any) => {
     </>
   )
 }
-
 interface NFTsLisProps {
   list: NftTokenModel[]
   loading: boolean
@@ -82,11 +80,9 @@ export default function NFTsList({ list, loading, depositType, onChange, TypeKey
     () => [0, 1, 2, 3, 4, 5].slice(0, 6).map((_collateral, index) => <NftListSkeleton key={`${TypeKey}-${index}`} />),
     [TypeKey]
   )
-
   useEffect(() => {
     setCheckboxType(checked)
   }, [checked])
-
   return (
     <>
       <ListBox>

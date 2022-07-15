@@ -251,6 +251,10 @@ export const theme = createTheme({
             background: linear-gradient(0deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), linear-gradient(82.67deg, #C3A5FF -12.69%, #A8A6FF 31.8%, #A8C5FF 80.81%, #BAE3F4 113.32%);
             color: rgba(255, 255, 255, 0.7);
           }
+          &.MuiButton-containedError{
+            background: #F9E7EA;
+            color: #E1536C;
+          }
         `,
       },
     },

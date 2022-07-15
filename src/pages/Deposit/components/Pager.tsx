@@ -35,7 +35,7 @@ export default function Pager({ list, TypeKey }: NFTsListType) {
   const totalPage = useMemo(() => Math.ceil(list.length / 9), [list])
   const [pageType, setPageType] = useState<number>(1) //page
   return (
-    <Box display={list.length > 9 ? 'none' : ''}>
+    <Box display={list.length > 9 ? '' : 'none'}>
       <PagerBox>
         <PageBox
           sx={{ left: '-3rem', transform: 'rotate(180deg)' }}
