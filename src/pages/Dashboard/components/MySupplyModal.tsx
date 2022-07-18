@@ -7,6 +7,12 @@ import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { fixedFormat } from 'utils'
+import BigNumber from 'bignumber.js'
+import { toast } from 'react-toastify'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { useAddress } from 'state/user/hooks'
+import { gasLimit } from 'config'
+
 const style = {
   width: '420px',
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -103,6 +109,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const [supplyAmount, setSupplyAmount] = useState<number>(0)
   const [state, setState] = useState<boolean>(false)
   const [withdrawalMax, setWithdrawalMax] = useState<boolean>(false)
+  const contract = useLendingPool()
+  const address = useAddress()
   function textFieldChange(event?: any) {
     if (event) {
       setTextFieldValue(
@@ -132,6 +140,26 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   useEffect(() => {
     setBorrowOrRepay(type)
   }, [type])
+
+  const supplySubmit = () => {
+    if (new BigNumber(supplyAmount).lte(0)) {
+      toast.error('Minimum supply 0')
+      return
+    }
+    if (contract && address) {
+      contract
+        .deposit('0xAbf8816742d96d8c5D5Fd45f7651963f3AA8aB88', supplyAmount, address, { gasLimit })
+        .then((res: any) => {
+          toast.success(res.hash)
+          console.log(res)
+        })
+        .catch((error: any) => {
+          console.log(error.message)
+          toast.error(error.message)
+        })
+    }
+  }
+
   return (
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -397,8 +425,15 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             variant="contained"
             color={withdrawalMax ? 'error' : 'primary'}
             sx={{ width: '372px', height: '54px' }}
+            onClick={() => {
+              // supply
+              if (borrowOrRepay === 1) {
+                supplySubmit()
+              }
+              // submit()
+            }}
           >
-            Withdraw
+            {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}
           </Button>
         </BottomBox>
       </Box>

@@ -81,7 +81,7 @@ export default function AvailableNFTs({
   const [Available] = useState<string>('Available')
 
   const nfts = useMemo(
-    () => list.filter((el) => el.contract.address === '0xf7a9e50baa8023fc2a4ba6e555967b9555ebe952'),
+    () => list.filter((el) => el.contract.address === '0xc023600dd707860f6521e1d5cb02c66ca90996aa'),
     [list]
   )
   const amount = useMemo(() => {
@@ -91,7 +91,7 @@ export default function AvailableNFTs({
   }, [nfts])
   return (
     <AvailableNFTsStyleBox sx={{ opacity: `${withdrawType === 'open' ? '0.7' : '1'}` }}>
-      {list.length !== 0 ? (
+      {nfts.length === 0 ? (
         <Typography m="48px 24px" variant="h5" fontWeight="700" fontSize=" 24px">
           0 NFT you can deposit
         </Typography>
@@ -130,7 +130,7 @@ export default function AvailableNFTs({
                       </RefreshButtonBox>
                       <DepositButtonBox
                         onClick={() => {
-                          if (checkedIndex.length === 0) {
+                          if (checkedIndex.length !== 0) {
                             setOpenSelectedModal(true)
                           }
                         }}
@@ -149,19 +149,19 @@ export default function AvailableNFTs({
             depositType={depositType}
             TypeKey={Available}
             loading={loading}
-            list={list}
+            list={nfts}
             checked={checkedIndex}
             onChange={(data: Array<string>) => {
               setCheckedIndex(data)
             }}
           ></NFTsList>
-          <Pager TypeKey={Available} list={list}></Pager>
+          <Pager TypeKey={Available} list={nfts}></Pager>
         </AvailableNFTsBox>
       )}
       <NFTsSelectedModal
         type={Available}
         checkedIndex={checkedIndex}
-        data={list.filter((el) => checkedIndex.includes(el.tokenId))}
+        data={nfts.filter((el) => checkedIndex.includes(el.tokenId))}
         openSelectedModal={openSelectedModal}
         setOpenSelectedModal={setOpenSelectedModal}
       ></NFTsSelectedModal>
