@@ -6,12 +6,12 @@ import { useEffect, useState } from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { fixedFormat } from 'utils'
+import { fixedFormat, minus, plus } from 'utils'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress, useDepositRate } from 'state/user/hooks'
-import { gasLimit } from 'config'
+import { ERC20_ADDRESS, gasLimit } from 'config'
 
 const style = {
   width: '420px',
@@ -98,7 +98,7 @@ interface MySupplyModalProps {
   openMySupplyModal: boolean
   setOpenMySupplyModal: Function
   type: number
-  mySupply: number
+  mySupply: string
 }
 export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal, type, mySupply }: MySupplyModalProps) {
   const [borrowOrRepay, setBorrowOrRepay] = useState<number>(type)
@@ -149,10 +149,11 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
     }
     if (contract && address) {
       contract
-        .deposit('0xAbf8816742d96d8c5D5Fd45f7651963f3AA8aB88', supplyAmount, address, { gasLimit })
+        .deposit(ERC20_ADDRESS, supplyAmount, address, { gasLimit })
         .then((res: any) => {
           toast.success(res.hash)
-          console.log(res)
+          setTextFieldValue('')
+          setOpenMySupplyModal(false)
         })
         .catch((error: any) => {
           console.log(error.message)
@@ -192,7 +193,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               <FlexBox mt="43px">
                 <Typography mr="6px" variant="body1" component="p" color="#FFFFFF">
                   {borrowOrRepay === 1
-                    ? supplyAmount + mySupply < supplyLimit && withdrawal
+                    ? new BigNumber(supplyAmount).plus(mySupply).lt(supplyLimit) && withdrawal
                       ? 'Used as Collateral'
                       : 'Non-collateral'
                     : supplyAmount >= supplyLimit
@@ -267,10 +268,10 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 <Box
                   sx={{ display: 'flex', justifyContent: 'flex-end' }}
                   onClick={() => {
-                    setTextFieldValue(`${supplyLimit - mySupply}`)
+                    setTextFieldValue(`${minus(supplyLimit, mySupply)}`)
                   }}
                 >
-                  <MAXBox className={supplyAmount >= supplyLimit - mySupply ? 'max' : ''}>
+                  <MAXBox className={new BigNumber(supplyAmount).gte(minus(supplyLimit, mySupply)) ? 'max' : ''}>
                     <Typography variant="body2" component="p" fontWeight="700">
                       MAX
                     </Typography>
@@ -290,7 +291,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               <Typography variant="body1" component="p" color="#A0A3BD">
                 Supply Amount (ETH)
               </Typography>
-              {((mySupply + supplyAmount <= supplyLimit && withdrawal && borrowOrRepay === 1) || withdrawalMax) && (
+              {((new BigNumber(plus(mySupply, supplyAmount)).lte(supplyLimit) && withdrawal && borrowOrRepay === 1) ||
+                withdrawalMax) && (
                 <>
                   <Typography mt="16px" variant="body1" component="p" color="#A0A3BD">
                     Borrow Limited (ETH)
@@ -310,7 +312,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                   {fixedFormat(mySupply + supplyAmount)}
                 </Typography>
               </Box>
-              {((mySupply + supplyAmount <= supplyLimit && withdrawal && borrowOrRepay === 1) || withdrawalMax) && (
+              {((new BigNumber(plus(mySupply, supplyAmount)).lte(supplyLimit) && withdrawal && borrowOrRepay === 1) ||
+                withdrawalMax) && (
                 <>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
                     <Typography variant="body1" component="span" color={'#A0A3BD'}>
@@ -344,7 +347,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               )}
             </Box>
           </SpaceBetweenBox>
-          {((mySupply + supplyAmount <= supplyLimit && withdrawal && borrowOrRepay === 1) || withdrawalMax) && (
+          {((new BigNumber(plus(mySupply, supplyAmount)).lte(supplyLimit) && withdrawal && borrowOrRepay === 1) ||
+            withdrawalMax) && (
             <SpaceBetweenBox mt="16px">
               <Box>
                 <Typography variant="body1" component="span" color="#A0A3BD">

@@ -48,3 +48,6 @@ export function useRiskLevel(): string {
 export function useDebtIndex(): string {
   return useAppSelector((state: AppState) => state.user.debtIndex)
 }
+export function useEthCollateral(): string {
+  return useAppSelector((state: AppState) => state.user.ethCollateral)
+}

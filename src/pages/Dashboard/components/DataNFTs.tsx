@@ -36,7 +36,6 @@ export default function DataNFTs({ type }: DataNFTsProps) {
       contract
         .getUserAssetValues(address, '0xA8FD6E4736FDad7989b79b60a1ad5EddDEaEA637')
         .then((res: Array<BigNumber>) => {
-          console.log(res)
           setLoading(false)
           setUserValues(res)
         })

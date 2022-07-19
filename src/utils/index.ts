@@ -112,6 +112,42 @@ export function div(value1: number | string | BigNumber, value2: number | string
   }
 }
 
+export function times(value1: number | string | BigNumber, value2: number | string | BigNumber) {
+  if (value1) {
+    if (BigNumber.isBigNumber(value1)) {
+      return value1.times(value2).toFormat(2, 1)
+    } else {
+      return new BigNumber(value1).times(value2).toFormat(2, 1)
+    }
+  } else {
+    return '0'
+  }
+}
+
+export function plus(value1: number | string | BigNumber, value2: number | string | BigNumber) {
+  if (value1) {
+    if (BigNumber.isBigNumber(value1)) {
+      return value1.plus(value2).toFormat(2, 1)
+    } else {
+      return new BigNumber(value1).plus(value2).toFormat(2, 1)
+    }
+  } else {
+    return '0'
+  }
+}
+
+export function minus(value1: number | string | BigNumber, value2: number | string | BigNumber) {
+  if (value1) {
+    if (BigNumber.isBigNumber(value1)) {
+      return value1.minus(value2).toFormat(2, 1)
+    } else {
+      return new BigNumber(value1).minus(value2).toFormat(2, 1)
+    }
+  } else {
+    return '0'
+  }
+}
+
 export function timestampFormat(diff: number): [number, number, number, number] {
   if (diff > 0) {
     const diffd = Math.floor(diff / (24 * 3600 * 1000))
@@ -160,6 +196,18 @@ export function bigNumberToString(value: BigNumber, thousandSeparated = true): s
       return new BigNumber(value.toString()).toFormat(2, 1)
     } else {
       return new BigNumber(value.toString()).toFixed(2, 1).toString()
+    }
+  } else {
+    return '0'
+  }
+}
+
+export function stringFormat(value: string, thousandSeparated = true): string {
+  if (value) {
+    if (thousandSeparated) {
+      return new BigNumber(value).toFormat(2, 1)
+    } else {
+      return new BigNumber(value).toFixed(2, 1).toString()
     }
   } else {
     return '0'

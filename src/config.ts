@@ -1,4 +1,6 @@
 // const gasLimit = 23000000
 const gasLimit = 5000000
+const ERC20_ADDRESS = '0xAbf8816742d96d8c5D5Fd45f7651963f3AA8aB88'
+const ERC721_ADDRESS = '0xc023600dd707860f6521e1d5cb02c66ca90996aa'
 
-export { gasLimit }
+export { gasLimit, ERC20_ADDRESS, ERC721_ADDRESS }

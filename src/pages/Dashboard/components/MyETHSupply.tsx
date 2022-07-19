@@ -9,7 +9,10 @@ import { useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
 import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
-import { useDepositRate } from 'state/user/hooks'
+import { useDepositRate, useEthCollateral } from 'state/user/hooks'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { toast } from 'react-toastify'
+import { ERC20_ADDRESS, gasLimit } from 'config'
 // import { useWalletBalance } from 'state/user/hooks'
 
 const MyETHSupplyBox = styled(Box)`
@@ -80,8 +83,6 @@ interface MyETHSupplyProps {
 export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const [openMySupplyModal, setOpenMySupplyModal] = useState(false)
   const [dataType] = useState<boolean>(true)
-  // const balance = useWalletBalance()
-  const [mySupply] = useState<number>(6)
   const [typeModal, setTypeModal] = useState<number>(1) // MySupplyModal State Supply(1) ro Withdraw(0)
   const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
   const [openMySupplySwitchModal, setOpenMySupplySwitchModal] = useState<boolean>(false)
@@ -90,6 +91,16 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const [loanType] = useState<number>(0) //1=有
   const [switchType, setSwitchType] = useState<number>(0) //1
   const depositRate = useDepositRate()
+  const contract = useLendingPool()
+  const ethCollateral = useEthCollateral()
+  const changeUsedAsCollateral = (flag: boolean) => {
+    if (contract) {
+      contract.setUserUsingAsCollateral(ERC20_ADDRESS, true, { gasLimit }).then(() => {
+        toast.success('success')
+      })
+    }
+  }
+
   return (
     <MyETHSupplyBox>
       <BottomBox>
@@ -105,6 +116,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
               disabled={!dataType}
               defaultChecked
               onClick={(event: any) => {
+                changeUsedAsCollateral(event.target.checked)
                 if (event.target.checked) {
                   setOpenMySupplySwitchModal(true)
                   setETHCollateralType(1)
@@ -178,7 +190,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
         <SpaceBetweenBox>
           <FlexBox>
             <Typography variant="h5" fontWeight="600" color="#ffffff" lineHeight="22px">
-              {mySupply} ETH
+              {ethCollateral}
             </Typography>
             <Typography ml="8px" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
               ETH
@@ -200,7 +212,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
         openMySupplyModal={openMySupplyModal}
         setOpenMySupplyModal={setOpenMySupplyModal}
         type={typeModal}
-        mySupply={mySupply}
+        mySupply={ethCollateral}
       ></MySupplyModal>
       <MySupplySwitchModal
         loanType={loanType}

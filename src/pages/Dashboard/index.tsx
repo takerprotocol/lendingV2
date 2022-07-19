@@ -15,8 +15,10 @@ import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress } from 'state/user/hooks'
 import BigNumber from 'bignumber.js'
 import { useAppDispatch } from 'state'
-import { setReserveData, setRiskLevel, setUserNftConfig, setUserNftValues } from 'state/user/reducer'
-import { bigNumberToString } from 'utils'
+import { setReserveData, setRiskLevel, setUserEthAsset, setUserNftConfig, setUserNftValues } from 'state/user/reducer'
+import { bigNumberToString, stringFormat } from 'utils'
+import { ERC20_ADDRESS, ERC721_ADDRESS } from 'config'
+import { fromWei } from 'web3-utils'
 // import { getClient } from 'apollo/client'
 // import { SupportedChainId } from 'constants/chains'
 // import { TEST1 } from 'apollo/queries'
@@ -39,23 +41,18 @@ export default function Dashboard() {
   const address = useAddress()
   useEffect(() => {
     if (contract && address) {
-      contract
-        .getUserAssetValues(address, '0xA8FD6E4736FDad7989b79b60a1ad5EddDEaEA637')
-        .then((res: Array<BigNumber>) => {
-          setLoading(false)
-          dispatch(
-            setUserNftValues(
-              res.map((el) => {
-                return bigNumberToString(el)
-              })
-            )
+      contract.getUserAssetValues(address, ERC721_ADDRESS).then((res: Array<BigNumber>) => {
+        setLoading(false)
+        dispatch(
+          setUserNftValues(
+            res.map((el) => {
+              return stringFormat(fromWei(el.toString()))
+            })
           )
-        })
-      // contract.getUserValues(address).then((res: BigNumber) => {
-      //   setLoading(false)
-      //   console.log(res)
-      // })
+        )
+      })
       contract.getReserveData(address).then((res: any) => {
+        console.log(res)
         dispatch(
           setReserveData([
             bigNumberToString(res.borrowRate),
@@ -74,9 +71,12 @@ export default function Dashboard() {
       contract.getReserveNormalizedDebtScale(address).then((res: any) => {
         dispatch(setRiskLevel(bigNumberToString(res)))
       })
-      contract.getReserveConfig('0x6310098a56F9dd4D1F2a8A0Ab0E82565415054D8').then((res: any) => {
-        console.log('getReserveConfig', res)
+      contract.getUserAssetValues(address, ERC20_ADDRESS).then((res: Array<BigNumber>) => {
+        dispatch(setUserEthAsset([bigNumberToString(res[0]), bigNumberToString(res[1]), bigNumberToString(res[2])]))
       })
+      // contract.getReserveConfig('0x6310098a56F9dd4D1F2a8A0Ab0E82565415054D8').then((res: any) => {
+      //   console.log('getReserveConfig', res)
+      // })
       contract.getUserConfig(address).then((res: BigNumber) => {
         setLoading(false)
         dispatch(setUserNftConfig(bigNumberToString(res)))
