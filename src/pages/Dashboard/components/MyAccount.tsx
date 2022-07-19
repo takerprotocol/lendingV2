@@ -39,7 +39,7 @@ export default function MyAccount({ type }: MyAccountProps) {
   const balance = useWalletBalance()
   const [loading, setLoading] = useState(true)
   const address = useAddress()
-  const [userValues, setUserValues] = useState<BigNumber>(new BigNumber(0))
+  // const [userValues, setUserValues] = useState<BigNumber>(new BigNumber(0))
   const [data] = useState<boolean>(true)
   const contract = useLendingPool()
   useEffect(() => {
@@ -47,8 +47,9 @@ export default function MyAccount({ type }: MyAccountProps) {
       contract
         .getUserConfig(address)
         .then((res: BigNumber) => {
+          console.log(res.toString())
           setLoading(false)
-          setUserValues(res)
+          // setUserValues(res)
         })
         .catch(() => {
           setLoading(false)
@@ -69,7 +70,7 @@ export default function MyAccount({ type }: MyAccountProps) {
               </Typography>
               <img src={OverviewIcon} alt="" />
               <Typography ml="4px" variant="subtitle2">
-                <>16.84{userValues.toString()}</>
+                <>16.84</>
               </Typography>
               <Typography ml="16px" variant="body1" fontWeight="700">
                 Claim{' >'}

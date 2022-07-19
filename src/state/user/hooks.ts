@@ -51,3 +51,7 @@ export function useDebtIndex(): string {
 export function useEthCollateral(): string {
   return useAppSelector((state: AppState) => state.user.ethCollateral)
 }
+
+export function useUsedCollateral(): boolean {
+  return useAppSelector((state: AppState) => state.user.usedCollateral)
+}

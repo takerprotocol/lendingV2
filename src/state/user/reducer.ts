@@ -35,6 +35,7 @@ export interface ApplicationState {
   readonly ethLiquidity: string
   readonly ethDebt: string
   readonly ethCollateral: string
+  readonly usedCollateral: boolean
 }
 // ReserveConfiguration configuration;
 // //the liquidity index in ray. Liquidity = corresponding tToken balance * liquidity index
@@ -89,6 +90,7 @@ const initialState: ApplicationState = {
   ethLiquidity: '0',
   ethDebt: '0',
   ethCollateral: '0',
+  usedCollateral: false,
 }
 
 const applicationSlice = createSlice({
@@ -143,6 +145,9 @@ const applicationSlice = createSlice({
         state.ethCollateral = action.payload[2]
       }
     },
+    setUsedCollateral(state, action) {
+      state.usedCollateral = action.payload
+    },
   },
 })
 
@@ -155,5 +160,6 @@ export const {
   setReserveData,
   setRiskLevel,
   setUserEthAsset,
+  setUsedCollateral,
 } = applicationSlice.actions
 export default applicationSlice.reducer

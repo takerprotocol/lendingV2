@@ -9,10 +9,12 @@ import { useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
 import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
-import { useDepositRate, useEthCollateral } from 'state/user/hooks'
+import { useDepositRate, useEthCollateral, useUsedCollateral } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { toast } from 'react-toastify'
 import { ERC20_ADDRESS, gasLimit } from 'config'
+import { useAppDispatch } from 'state'
+import { setUsedCollateral } from 'state/user/reducer'
 // import { useWalletBalance } from 'state/user/hooks'
 
 const MyETHSupplyBox = styled(Box)`
@@ -93,10 +95,13 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const depositRate = useDepositRate()
   const contract = useLendingPool()
   const ethCollateral = useEthCollateral()
+  const usedCollateral = useUsedCollateral()
+  const dispatch = useAppDispatch()
   const changeUsedAsCollateral = (flag: boolean) => {
     if (contract) {
-      contract.setUserUsingAsCollateral(ERC20_ADDRESS, true, { gasLimit }).then(() => {
+      contract.setUserUsingAsCollateral(ERC20_ADDRESS, flag, { gasLimit }).then(() => {
         toast.success('success')
+        dispatch(setUsedCollateral(flag))
       })
     }
   }
@@ -114,7 +119,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
             </FlexBox>
             <Switch
               disabled={!dataType}
-              defaultChecked
+              checked={usedCollateral}
               onClick={(event: any) => {
                 changeUsedAsCollateral(event.target.checked)
                 if (event.target.checked) {

@@ -156,7 +156,25 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
           setOpenMySupplyModal(false)
         })
         .catch((error: any) => {
-          console.log(error.message)
+          toast.error(error.message)
+        })
+    }
+  }
+
+  const withdrawSubmit = () => {
+    if (new BigNumber(supplyAmount).lte(0)) {
+      toast.error('Minimum supply 0')
+      return
+    }
+    if (contract && address) {
+      contract
+        .withdraw(ERC20_ADDRESS, supplyAmount, address, { gasLimit })
+        .then((res: any) => {
+          toast.success(res.hash)
+          setTextFieldValue('')
+          setOpenMySupplyModal(false)
+        })
+        .catch((error: any) => {
           toast.error(error.message)
         })
     }
@@ -434,8 +452,9 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               // supply
               if (borrowOrRepay === 1) {
                 supplySubmit()
+              } else {
+                withdrawSubmit()
               }
-              // submit()
             }}
           >
             {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}

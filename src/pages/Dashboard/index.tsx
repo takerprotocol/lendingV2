@@ -15,7 +15,14 @@ import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress } from 'state/user/hooks'
 import BigNumber from 'bignumber.js'
 import { useAppDispatch } from 'state'
-import { setReserveData, setRiskLevel, setUserEthAsset, setUserNftConfig, setUserNftValues } from 'state/user/reducer'
+import {
+  setReserveData,
+  setRiskLevel,
+  setUsedCollateral,
+  setUserEthAsset,
+  setUserNftConfig,
+  setUserNftValues,
+} from 'state/user/reducer'
 import { bigNumberToString, stringFormat } from 'utils'
 import { ERC20_ADDRESS, ERC721_ADDRESS } from 'config'
 import { fromWei } from 'web3-utils'
@@ -51,7 +58,10 @@ export default function Dashboard() {
           )
         )
       })
-      contract.getReserveData(address).then((res: any) => {
+      contract.getUserConfig(address).then((res: any) => {
+        dispatch(setUsedCollateral(res.toString() !== '0'))
+      })
+      contract.getReserveData(ERC20_ADDRESS).then((res: any) => {
         console.log(res)
         dispatch(
           setReserveData([
