@@ -61,6 +61,9 @@ export default function Dashboard() {
       contract.getUserConfig(address).then((res: any) => {
         dispatch(setUsedCollateral(res.toString() !== '0'))
       })
+      contract.getReserveConfig(ERC20_ADDRESS).then((res: any) => {
+        console.log(res.toString())
+      })
       contract.getReserveData(ERC20_ADDRESS).then((res: any) => {
         console.log(res)
         dispatch(

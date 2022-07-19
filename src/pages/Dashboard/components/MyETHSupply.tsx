@@ -217,7 +217,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
         openMySupplyModal={openMySupplyModal}
         setOpenMySupplyModal={setOpenMySupplyModal}
         type={typeModal}
-        mySupply={ethCollateral}
+        mySupply={ethCollateral.replace(/,/g, '')}
       ></MySupplyModal>
       <MySupplySwitchModal
         loanType={loanType}

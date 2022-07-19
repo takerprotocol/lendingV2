@@ -4,6 +4,7 @@ import shutOff from 'assets/images/svg/common/shutOff.svg'
 import whiteRight from 'assets/images/svg/common/whiteRight.svg'
 import Right from 'assets/images/svg/common/right.svg'
 import { CenterBox, SpaceBetweenBox } from 'styleds/index'
+import { useMemo } from 'react'
 const style = {
   position: 'relative',
   width: '420px',
@@ -57,6 +58,11 @@ export default function MySupplySwitchModal({
   setNFTCollateralType,
   switchType,
 }: MySupplySwitchModalProps) {
+  const modalType = useMemo(() => {
+    return (
+      !(loanType === 0 && ETHCollateralType === 1 && NFTCollateralType === 0 && switchType === 1) || switchType === 1
+    )
+  }, [ETHCollateralType, NFTCollateralType, loanType, switchType])
   return (
     <Modal
       open={openMySupplySwitchModal}
@@ -132,12 +138,7 @@ export default function MySupplySwitchModal({
                 : 'Use your Supply ETH as collateral to get a higher Borrow limit amount'}
             </Typography>
             <Typography
-              display={
-                !(loanType === 0 && ETHCollateralType === 1 && NFTCollateralType === 0 && switchType === 1) ||
-                switchType === 1
-                  ? 'none'
-                  : ''
-              }
+              display={modalType ? 'none' : ''}
               mt="4px"
               variant="subtitle2"
               component="span"
@@ -147,12 +148,7 @@ export default function MySupplySwitchModal({
               and{' '}
             </Typography>
             <Typography
-              display={
-                !(loanType === 0 && ETHCollateralType === 1 && NFTCollateralType === 0 && switchType === 1) ||
-                switchType === 1
-                  ? 'none'
-                  : ''
-              }
+              display={modalType ? 'none' : ''}
               variant="subtitle2"
               component="span"
               color="#E1536C"

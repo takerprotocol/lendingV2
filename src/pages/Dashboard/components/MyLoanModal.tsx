@@ -6,7 +6,7 @@ import rightIcon from 'assets/images/svg/common/right.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
-import { fixedFormat, percent, RiskLevel, RiskLevelTag } from 'utils'
+import { fixedFormat, percent, getRiskLevel, getRiskLevelTag } from 'utils'
 import { useBorrowRate, useDebtIndex } from 'state/user/hooks'
 const style = {
   width: '420px',
@@ -129,8 +129,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
   const [check, setCheck] = useState<number>(repayRoBorrow)
   const [borrowAmount, setBorrowAmount] = useState<number>(0)
   const [textFieldValue, setTextFieldValue] = useState<string>('')
-  const TypographyRiskLevel = RiskLevel(borrowAmount)
-  const ColorClass = RiskLevelTag(borrowAmount)
+  const TypographyRiskLevel = getRiskLevel(borrowAmount)
+  const ColorClass = getRiskLevelTag(borrowAmount)
   const borrowRate = useBorrowRate()
   const borrowLimit = useDebtIndex()
   function textFieldChange(event?: any) {

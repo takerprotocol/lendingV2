@@ -6,13 +6,12 @@ import addBox from 'assets/images/svg/dashboard/addBox.svg'
 import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
 import CustomizedSlider from 'components/Slider'
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 import MyLoanModal from './MyLoanModal'
-import { RiskLevel, RiskLevelTag } from 'utils'
+import { getRiskLevel, getRiskLevelTag } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import BigNumber from 'bignumber.js'
-import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress, useBorrowRate, useDebtIndex, useNftDebt, useRiskLevel } from 'state/user/hooks'
+import { useBorrowRate, useDebtIndex, useEthDebt, useRiskLevel } from 'state/user/hooks'
 // import { useContract } from 'hooks/useContract'
 // import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
 // import { useAddress } from 'state/application/hooks'
@@ -90,33 +89,20 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
   const [datatype] = useState<boolean>(true)
-  const [riskLevelType] = useState<number>(120)
   const [myDebt] = useState<number>(23)
-  const MyLoanRiskLevel = RiskLevel(riskLevelType)
-  const MyLoanRiskLevelTag = RiskLevelTag(riskLevelType)
-  const contract = useLendingPool()
-  const address = useAddress()
-  const nftDebt = useNftDebt()
-  // const NftCollateral = useNftCollateral()
   const riskLevel = useRiskLevel()
   const borrowRate = useBorrowRate()
   const debtIndex = useDebtIndex()
+  const ethDebt = useEthDebt()
 
-  useEffect(() => {
-    if (contract && address) {
-      // contract.deposit(address, 1, address, { gasLimit: 50000 }).then((res: Array<BigNumber>) => {
-      // console.log(res)
-      contract.getPoolValues().then((res: Array<BigNumber>) => {
-        // contract.getAssetValues(address).then((res: Array<BigNumber>) => {
-        //   console.log('getAssetValues', res)
-      })
-    }
-    // if (AddressesProviderAbi) {
-    //   AddressesProviderAbi.getAddress('T_Token').then((res: any) => {
-    //     console.log(res)
-    //   })
-    // }
-  }, [contract, address, nftDebt])
+  const myLoanRiskLevel = useMemo(() => {
+    return getRiskLevel(riskLevel)
+  }, [riskLevel])
+
+  const myLoanRiskLevelTag = useMemo(() => {
+    return getRiskLevelTag(riskLevel)
+  }, [riskLevel])
+
   return (
     <MyLoanBox className={loading ? 'SkeletonBg' : ''}>
       {loading ? (
@@ -132,9 +118,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
               <CenterBox>
                 <img src={blackEthLogo} alt="" />
                 <Typography ml="13px" variant="h3" fontSize="32px" lineHeight="51px">
-                  {/* {bigNumberToString(assets)} */}
-                  {/* {nftDebt} */}
-                  {myDebt}
+                  {ethDebt}
                 </Typography>
               </CenterBox>
             </Box>
@@ -158,8 +142,8 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
                     <Typography mb="12px" lineHeight="14px" fontWeight="600" variant="body1">
                       Risk Level
                     </Typography>
-                    <Typography fontSize="22px" className={MyLoanRiskLevelTag} lineHeight="24px" fontWeight="700">
-                      {MyLoanRiskLevel}
+                    <Typography fontSize="22px" className={myLoanRiskLevelTag} lineHeight="24px" fontWeight="700">
+                      {myLoanRiskLevel}
                     </Typography>
                   </Box>
                   <Box>
@@ -198,7 +182,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
               </Box>
             )}
           </RiskLevelBox>
-          <CustomizedSlider colorClass={MyLoanRiskLevelTag}></CustomizedSlider>
+          <CustomizedSlider colorClass={myLoanRiskLevelTag}></CustomizedSlider>
           <FlexEndBox>
             <Typography variant="body1" color="#4E4B66">
               Borrow Limit {debtIndex} ETH
