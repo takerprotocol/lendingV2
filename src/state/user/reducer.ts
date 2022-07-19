@@ -19,8 +19,42 @@ export interface ApplicationState {
   readonly nftCollateral: string
   readonly userNftConfig: string
   readonly ownedNfts: OwnedNftsResponse | any
-}
 
+  readonly borrowRate: string
+  readonly configuration: string
+  readonly debtIndex: string
+  readonly debtTokenAddress: string
+  readonly depositRate: string
+  readonly interestRateCalculatorAddress: string
+  readonly tTokenAddress: string
+  readonly treasury: string
+  readonly lastUpdateTimestamp: number
+  readonly liquidityIndex: string
+
+  readonly riskLevel: string
+}
+// ReserveConfiguration configuration;
+// //the liquidity index in ray. Liquidity = corresponding tToken balance * liquidity index
+// uint128 liquidityIndex;
+// //the debt index in ray. Debt = corresponding debtToken balance * debt index
+// uint128 debtIndex;
+// //interest rate for liquidity providers in ray
+// //TODO: depositRate? lendingRate?
+// uint128 depositRate;
+// //interest rate for borrow
+// uint128 borrowRate;
+// //last timestamp when reserve state was updated
+// uint40 lastUpdateTimestamp;
+// //corresponding tToken address
+// address tTokenAddress;
+// // corresponding debt token address
+// address debtTokenAddress;
+// //address of the interest rate calculator
+// address interestRateCalculatorAddress;
+// //the address of the treasury
+// address treasury;
+// //the id of the reserve. Represents the position in the list of the active reserves
+// uint8 id;
 export interface TokenDecimals {
   symbol: string
   decimals: number
@@ -36,6 +70,19 @@ const initialState: ApplicationState = {
   userNftConfig: '0',
   nftCollateral: '0',
   ownedNfts: [],
+
+  borrowRate: '0',
+  configuration: '0',
+  debtIndex: '0',
+  debtTokenAddress: '0',
+  depositRate: '0',
+  interestRateCalculatorAddress: '0',
+  tTokenAddress: '0',
+  treasury: '0',
+  lastUpdateTimestamp: 0,
+  liquidityIndex: '0',
+
+  riskLevel: '0',
 }
 
 const applicationSlice = createSlice({
@@ -59,6 +106,25 @@ const applicationSlice = createSlice({
         state.nftCollateral = action.payload[2]
       }
     },
+    setReserveData(state, action) {
+      if (action.payload) {
+        state.borrowRate = action.payload[0]
+        state.configuration = action.payload[1]
+        state.debtIndex = action.payload[2]
+        state.debtTokenAddress = action.payload[3]
+        state.depositRate = action.payload[4]
+        state.interestRateCalculatorAddress = action.payload[5]
+        state.tTokenAddress = action.payload[6]
+        state.treasury = action.payload[7]
+        state.lastUpdateTimestamp = action.payload[8]
+        state.liquidityIndex = action.payload[9]
+      }
+    },
+    setRiskLevel(state, action) {
+      if (action.payload) {
+        state.riskLevel = action.payload
+      }
+    },
     setUserNftConfig(state, action) {
       if (action.payload) {
         state.userNftConfig = action.payload
@@ -67,6 +133,13 @@ const applicationSlice = createSlice({
   },
 })
 
-export const { setAddress, setAccountBalance, setAccountNfts, setUserNftValues, setUserNftConfig } =
-  applicationSlice.actions
+export const {
+  setAddress,
+  setAccountBalance,
+  setAccountNfts,
+  setUserNftValues,
+  setUserNftConfig,
+  setReserveData,
+  setRiskLevel,
+} = applicationSlice.actions
 export default applicationSlice.reducer

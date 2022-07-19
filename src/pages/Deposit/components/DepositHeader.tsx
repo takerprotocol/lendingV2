@@ -5,6 +5,8 @@ import myCollateralIcon from 'assets/images/svg/dashboard/myCollateral-icon.svg'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import DepositHeaderSkeleton from './depositSkeleton/DepositHeaderSkeleton'
+import { useDepositRate } from 'state/user/hooks'
+// import { percent } from 'utils'
 const HeaderBox = styled(Box)`
   width: 1012px;
   height: 308px;
@@ -64,6 +66,7 @@ interface DepositHeaderProps {
 }
 
 export default function DepositHeader({ loading }: DepositHeaderProps) {
+  const depositRate = useDepositRate()
   return (
     <Box>
       {loading ? (
@@ -134,7 +137,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 </Box>
                 <Box width={'86px'}>
                   <BigTypography variant="h1" color="#6E7191 !important">
-                    -10%
+                    {depositRate}%
                   </BigTypography>
                 </Box>
                 <Box width="60px">

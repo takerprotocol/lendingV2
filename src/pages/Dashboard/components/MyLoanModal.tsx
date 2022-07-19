@@ -7,6 +7,7 @@ import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
 import { fixedFormat, percent, RiskLevel, RiskLevelTag } from 'utils'
+import { useBorrowRate, useDebtIndex } from 'state/user/hooks'
 const style = {
   width: '420px',
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -128,9 +129,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
   const [check, setCheck] = useState<number>(repayRoBorrow)
   const [borrowAmount, setBorrowAmount] = useState<number>(0)
   const [textFieldValue, setTextFieldValue] = useState<string>('')
-  const [borrowLimit] = useState<number>(100)
   const TypographyRiskLevel = RiskLevel(borrowAmount)
   const ColorClass = RiskLevelTag(borrowAmount)
+  const borrowRate = useBorrowRate()
+  const borrowLimit = useDebtIndex()
   function textFieldChange(event?: any) {
     if (event) {
       setTextFieldValue(
@@ -142,8 +144,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
       )
       if (textFieldValue) {
         if (check === 1) {
-          if (+textFieldValue > borrowLimit - myDebt) {
-            setTextFieldValue(`${borrowLimit - myDebt}`)
+          if (+textFieldValue > +borrowLimit - myDebt) {
+            setTextFieldValue(`${+borrowLimit - myDebt}`)
           }
         } else {
           if (+textFieldValue > myDebt) {
@@ -347,10 +349,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
             </Box>
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
-                {percent(myDebt, borrowLimit)} {'>'}
+                {percent(myDebt, +borrowLimit)} {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                {percent(borrowAmount + myDebt, borrowLimit)}
+                {percent(borrowAmount + myDebt, +borrowLimit)}
               </Typography>
             </Box>
           </SpaceBetweenBox>
@@ -368,7 +370,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
               </Box>
               <Box width={'66px'}>
                 <Typography component="p" variant="subtitle2" lineHeight="16px" color="#6E7191">
-                  -10%
+                  {borrowRate}%
                 </Typography>
               </Box>
               <Box width="50px">

@@ -10,7 +10,7 @@ import { fixedFormat } from 'utils'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress } from 'state/user/hooks'
+import { useAddress, useDepositRate } from 'state/user/hooks'
 import { gasLimit } from 'config'
 
 const style = {
@@ -111,6 +111,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const [withdrawalMax, setWithdrawalMax] = useState<boolean>(false)
   const contract = useLendingPool()
   const address = useAddress()
+  const depositRate = useDepositRate()
   function textFieldChange(event?: any) {
     if (event) {
       setTextFieldValue(
@@ -377,7 +378,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Box>
               <Box width={'66px'}>
                 <Typography component="p" variant="subtitle2" lineHeight="16px" color="#6E7191">
-                  -10%
+                  {depositRate}%
                 </Typography>
               </Box>
               <Box width="50px">

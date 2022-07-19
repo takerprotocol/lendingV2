@@ -74,15 +74,25 @@ interface NFTsLisProps {
   checked: Array<string>
 }
 export default function NFTsList({ list, loading, depositType, onChange, TypeKey, checked }: NFTsLisProps) {
-  const [type] = useState<string>('721')
   const [checkboxType, setCheckboxType] = useState<Array<string>>([])
+  // const [nftName, setNftName] = useState<string>('')
+  // const [image, setImage] = useState<string>('')
   const LoadingNftListSkeleton = useMemo(
     () => [0, 1, 2, 3, 4, 5].slice(0, 6).map((_collateral, index) => <NftListSkeleton key={`${TypeKey}-${index}`} />),
     [TypeKey]
   )
   useEffect(() => {
     setCheckboxType(checked)
-  }, [checked])
+    // if (list) {
+    //   const listArray: any = list[0].tokenUri.gateway.split('json;utf8,')
+    //   const listData: any = JSON.parse(listArray[1])
+    //   const image = listData.image
+    //   const name = listData.name
+    //   setImage(image)
+    //   setNftName(name)
+    //   console.log(nftName)
+    // }
+  }, [checked, list])
   return (
     <>
       <ListBox>
@@ -90,8 +100,11 @@ export default function NFTsList({ list, loading, depositType, onChange, TypeKey
           LoadingNftListSkeleton
         ) : (
           <>
-            {list.slice(0, 10).map((el: NftTokenModel, index: number) => (
-              <NftBox className={checkboxType.includes(el.tokenId) ? 'isCheck' : ' '} key={`nft${TypeKey}-${index}`}>
+            {list.slice(0, 10).map((el: NftTokenModel) => (
+              <NftBox
+                className={checkboxType.includes(el.tokenId) ? 'isCheck' : ' '}
+                key={`nft${TypeKey}-${el.tokenId}`}
+              >
                 <FlexBox>
                   <StyledCheckbox
                     checked={checkboxType.includes(el.tokenId)}
@@ -114,7 +127,7 @@ export default function NFTsList({ list, loading, depositType, onChange, TypeKey
                         {el.title}
                       </Typography>
                     </Box>
-                    {type === '1155' && (
+                    {el.tokenType === 'ERC1155' && (
                       <Box mt={'16px'} display="flex" justifyContent="flex-start">
                         <Box
                           sx={{

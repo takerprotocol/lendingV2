@@ -35,7 +35,6 @@ export default function Deposit() {
   const [depositType, setDepositType] = useState<string>('shut')
   const [withdrawType, setWithdrawType] = useState<string>('shut')
   const { list, loading } = useDepositableNfts(address)
-
   return (
     <Body className="header-padding">
       <HeaderBg />

@@ -36,3 +36,15 @@ export function useNftCollateral(): string {
 export function useUserNftConfig(): string {
   return useAppSelector((state: AppState) => state.user.userNftConfig)
 }
+export function useBorrowRate(): string {
+  return useAppSelector((state: AppState) => state.user.borrowRate)
+}
+export function useDepositRate(): string {
+  return useAppSelector((state: AppState) => state.user.depositRate)
+}
+export function useRiskLevel(): string {
+  return useAppSelector((state: AppState) => state.user.riskLevel)
+}
+export function useDebtIndex(): string {
+  return useAppSelector((state: AppState) => state.user.debtIndex)
+}

@@ -79,9 +79,8 @@ export default function AvailableNFTs({
     }
   }
   const [Available] = useState<string>('Available')
-
   const nfts = useMemo(
-    () => list.filter((el) => el.contract.address === '0xc023600dd707860f6521e1d5cb02c66ca90996aa'),
+    () => list.filter((el) => el.contract.address === '0x779bed28c5c2992b24baa4d21bea555b2deebeba'),
     [list]
   )
   const amount = useMemo(() => {

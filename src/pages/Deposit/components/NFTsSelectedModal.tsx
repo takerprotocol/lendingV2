@@ -5,13 +5,13 @@ import rightIcon from 'assets/images/svg/common/right.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds/index'
 import { NftTokenModel } from 'services/type/nft'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import BigNumber from 'bignumber.js'
-// import ILendingPoolConfigurator from 'abis/ILendingPoolConfigurator.json'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress } from 'state/user/hooks'
 import { gasLimit } from 'config'
 import { toast } from 'react-toastify'
+// import { useContract } from 'hooks/useContract'
 // import { useContract } from 'hooks/useContract'
 // import { useContract } from 'hooks/useContract'
 
@@ -69,25 +69,21 @@ export default function NFTsSelectedModal({
 }: NFTsSelectedType) {
   const contract = useLendingPool()
   const address = useAddress()
-  // const lendingPoolContract = useContract('0x5b44a299fbd133146E68d8C04AFa7b5d35F5828f', ILendingPoolConfigurator)
-
   const amount = useMemo(() => {
     return data.reduce((total: string, current: NftTokenModel) => {
       return new BigNumber(total).plus(current.balance || '0').toString()
     }, '0')
   }, [data])
   const withdraw = () => {
-    console.log('withdraw')
+    // console.log('withdraw')
   }
-  // useEffect(() => {
-  //   if (lendingPoolContract) {
-  //     lendingPoolContract
-  //       .setAdmin('0x87FB26034477ebe07f7EDC62c4A617E0a1b8d077', { gasLimit: 30000000 })
-  //       .then((res: any) => {
-  //         console.log(res)
-  //       })
-  //   }
-  // }, [lendingPoolContract])
+  useEffect(() => {
+    if (contract) {
+      contract.getReserveData(address).then((res: any) => {
+        // console.log('getReserveData', res)
+      })
+    }
+  }, [address, contract, data])
   const deposit = async () => {
     // if (contract) {
     //   contract.estimateGas

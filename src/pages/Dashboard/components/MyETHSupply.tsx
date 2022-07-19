@@ -9,6 +9,7 @@ import { useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
 import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
+import { useDepositRate } from 'state/user/hooks'
 // import { useWalletBalance } from 'state/user/hooks'
 
 const MyETHSupplyBox = styled(Box)`
@@ -88,6 +89,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const [NFTCollateralType, setNFTCollateralType] = useState<number>(1) //1=有
   const [loanType] = useState<number>(0) //1=有
   const [switchType, setSwitchType] = useState<number>(0) //1
+  const depositRate = useDepositRate()
   return (
     <MyETHSupplyBox>
       <BottomBox>
@@ -129,7 +131,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
             <ImgBox src={addBox} alt="" />
             <Box ml="22px" width="51px">
               <Typography variant="subtitle2" color="#6E7191">
-                10%
+                {depositRate}%
               </Typography>
             </Box>
             <ImgBox src={rightBox} alt="" />

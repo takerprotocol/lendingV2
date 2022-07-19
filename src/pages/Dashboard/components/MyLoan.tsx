@@ -12,7 +12,7 @@ import { RiskLevel, RiskLevelTag } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress, useNftCollateral, useNftDebt } from 'state/user/hooks'
+import { useAddress, useBorrowRate, useDebtIndex, useNftDebt, useRiskLevel } from 'state/user/hooks'
 // import { useContract } from 'hooks/useContract'
 // import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
 // import { useAddress } from 'state/application/hooks'
@@ -97,14 +97,16 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
   const contract = useLendingPool()
   const address = useAddress()
   const nftDebt = useNftDebt()
-  const NftCollateral = useNftCollateral()
+  // const NftCollateral = useNftCollateral()
+  const riskLevel = useRiskLevel()
+  const borrowRate = useBorrowRate()
+  const debtIndex = useDebtIndex()
 
   useEffect(() => {
     if (contract && address) {
       // contract.deposit(address, 1, address, { gasLimit: 50000 }).then((res: Array<BigNumber>) => {
       // console.log(res)
       contract.getPoolValues().then((res: Array<BigNumber>) => {
-        console.log('getPoolValues', res)
         // contract.getAssetValues(address).then((res: Array<BigNumber>) => {
         //   console.log('getAssetValues', res)
       })
@@ -167,7 +169,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
                       </FlexEndBox>
                       <Box mr="24px">
                         <Typography component="p" variant="subtitle2" color="#6E7191">
-                          {NftCollateral}%
+                          {riskLevel}%
                         </Typography>
                         <Typography component="p" variant="body2" color="#A0A3BD">
                           Collateralization
@@ -199,7 +201,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
           <CustomizedSlider colorClass={MyLoanRiskLevelTag}></CustomizedSlider>
           <FlexEndBox>
             <Typography variant="body1" color="#4E4B66">
-              Borrow Limit 18.09 ETH
+              Borrow Limit {debtIndex} ETH
             </Typography>
           </FlexEndBox>
           <BottomBox>
@@ -213,7 +215,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
                 <ImgBox src={addBox} alt="" />
                 <Box ml="33px" width="67px">
                   <Typography variant="subtitle2" color="#6E7191">
-                    10%
+                    {borrowRate}%
                   </Typography>
                 </Box>
                 <ImgBox src={rightBox} alt="" />

@@ -15,7 +15,7 @@ import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress } from 'state/user/hooks'
 import BigNumber from 'bignumber.js'
 import { useAppDispatch } from 'state'
-import { setUserNftConfig, setUserNftValues } from 'state/user/reducer'
+import { setReserveData, setRiskLevel, setUserNftConfig, setUserNftValues } from 'state/user/reducer'
 import { bigNumberToString } from 'utils'
 // import { getClient } from 'apollo/client'
 // import { SupportedChainId } from 'constants/chains'
@@ -55,6 +55,28 @@ export default function Dashboard() {
       //   setLoading(false)
       //   console.log(res)
       // })
+      contract.getReserveData(address).then((res: any) => {
+        dispatch(
+          setReserveData([
+            bigNumberToString(res.borrowRate),
+            bigNumberToString(res.configuration),
+            bigNumberToString(res.debtIndex),
+            bigNumberToString(res.debtTokenAddress),
+            bigNumberToString(res.depositRate),
+            bigNumberToString(res.interestRateCalculatorAddress),
+            res.lastUpdateTimestamp,
+            bigNumberToString(res.liquidityIndex),
+            bigNumberToString(res.tTokenAddress),
+            bigNumberToString(res.treasury),
+          ])
+        )
+      })
+      contract.getReserveNormalizedDebtScale(address).then((res: any) => {
+        dispatch(setRiskLevel(bigNumberToString(res)))
+      })
+      contract.getReserveConfig('0x6310098a56F9dd4D1F2a8A0Ab0E82565415054D8').then((res: any) => {
+        console.log('getReserveConfig', res)
+      })
       contract.getUserConfig(address).then((res: BigNumber) => {
         setLoading(false)
         dispatch(setUserNftConfig(bigNumberToString(res)))
