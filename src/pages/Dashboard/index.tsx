@@ -13,7 +13,6 @@ import { useEffect, useState } from 'react'
 import DataNFTs from './components/DataNFTs'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress } from 'state/user/hooks'
-import BigNumber from 'bignumber.js'
 import { useAppDispatch } from 'state'
 import {
   setReserveData,
@@ -24,8 +23,11 @@ import {
   setUserNftValues,
 } from 'state/user/reducer'
 import { bigNumberToString, stringFormat } from 'utils'
-import { ERC20_ADDRESS, ERC721_ADDRESS } from 'config'
+import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK } from 'config'
 import { fromWei } from 'web3-utils'
+import BigNumber from 'bignumber.js'
+import BN from 'bn.js'
+
 // import { getClient } from 'apollo/client'
 // import { SupportedChainId } from 'constants/chains'
 // import { TEST1 } from 'apollo/queries'
@@ -62,10 +64,11 @@ export default function Dashboard() {
         dispatch(setUsedCollateral(res.toString() !== '0'))
       })
       contract.getReserveConfig(ERC20_ADDRESS).then((res: any) => {
-        console.log(res.toString())
+        console.log(new BigNumber('0x000000000000000000000000000000000000000000000000000000ff00000000'))
+        console.log(new BN(res.toString()).and(new BN(DECIMALS_MASK, 16)).shrn(32).toNumber())
+        // console.log(new BN(res.toString()).shrn(0).toString())
       })
       contract.getReserveData(ERC20_ADDRESS).then((res: any) => {
-        console.log(res)
         dispatch(
           setReserveData([
             bigNumberToString(res.borrowRate),

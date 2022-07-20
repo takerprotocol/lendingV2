@@ -1,0 +1,431 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			}
+		],
+		"name": "getActive",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			}
+		],
+		"name": "getBorrowingEnabled",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			}
+		],
+		"name": "getDecimals",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			}
+		],
+		"name": "getFlags",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			},
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			}
+		],
+		"name": "getFrozen",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			}
+		],
+		"name": "getLiquidationThreshold",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			}
+		],
+		"name": "getLtv",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			}
+		],
+		"name": "getReserveFactor",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			}
+		],
+		"name": "getTokenType",
+		"outputs": [
+			{
+				"internalType": "enum ReserveConfigurator.TokenType",
+				"name": "",
+				"type": "uint8"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "MAX_NUMBER_NFT_RESERVES",
+		"outputs": [
+			{
+				"internalType": "uint16",
+				"name": "",
+				"type": "uint16"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "MAX_NUMBER_RESERVES",
+		"outputs": [
+			{
+				"internalType": "uint16",
+				"name": "",
+				"type": "uint16"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "active",
+				"type": "bool"
+			}
+		],
+		"name": "setActive",
+		"outputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "enabled",
+				"type": "bool"
+			}
+		],
+		"name": "setBorrowingEnabled",
+		"outputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "decimals",
+				"type": "uint256"
+			}
+		],
+		"name": "setDecimals",
+		"outputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "frozen",
+				"type": "bool"
+			}
+		],
+		"name": "setFrozen",
+		"outputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "threshold",
+				"type": "uint256"
+			}
+		],
+		"name": "setLiquidationThreshold",
+		"outputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "ltv",
+				"type": "uint256"
+			}
+		],
+		"name": "setLtv",
+		"outputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "reserveFactor",
+				"type": "uint256"
+			}
+		],
+		"name": "setReserveFactor",
+		"outputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "configuration",
+				"type": "uint256"
+			},
+			{
+				"internalType": "enum ReserveConfigurator.TokenType",
+				"name": "tokenType",
+				"type": "uint8"
+			}
+		],
+		"name": "setTokenType",
+		"outputs": [
+			{
+				"internalType": "ReserveConfiguration",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	}
+]
