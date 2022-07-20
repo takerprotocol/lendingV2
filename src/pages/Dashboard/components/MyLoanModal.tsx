@@ -6,8 +6,11 @@ import rightIcon from 'assets/images/svg/common/right.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
-import { fixedFormat, percent, getRiskLevel, getRiskLevelTag } from 'utils'
-import { useBorrowRate, useDebtIndex } from 'state/user/hooks'
+import { fixedFormat, percent, getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
+import { useAddress, useBorrowRate, useDebtIndex } from 'state/user/hooks'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { ERC20_ADDRESS, gasLimit } from 'config'
+import BigNumber from 'bignumber.js'
 const style = {
   width: '420px',
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -127,45 +130,25 @@ interface MyLoanModalProps {
 }
 export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: MyLoanModalProps) {
   const [check, setCheck] = useState<number>(repayRoBorrow)
-  const [borrowAmount, setBorrowAmount] = useState<number>(0)
-  const [textFieldValue, setTextFieldValue] = useState<string>('')
-  const TypographyRiskLevel = getRiskLevel(borrowAmount)
-  const ColorClass = getRiskLevelTag(borrowAmount)
+  const [amount, setAmount] = useState('')
+  const TypographyRiskLevel = getRiskLevel(amount)
+  const ColorClass = getRiskLevelTag(amount)
+  const contract = useLendingPool()
   const borrowRate = useBorrowRate()
   const borrowLimit = useDebtIndex()
-  function textFieldChange(event?: any) {
-    if (event) {
-      setTextFieldValue(
-        event.target.value
-          .replace(/[^\d^\\.?]+/g, '')
-          .replace(/^0+(\d)/, '$1')
-          .replace(/^\./, '0.')
-          .match(/^\d*(\.?\d{0,4})/g)[0]
-      )
-      if (textFieldValue) {
-        if (check === 1) {
-          if (+textFieldValue > +borrowLimit - myDebt) {
-            setTextFieldValue(`${+borrowLimit - myDebt}`)
-          }
-        } else {
-          if (+textFieldValue > myDebt) {
-            setTextFieldValue(`${myDebt}`)
-          }
-        }
-      }
-    }
-  }
+  const address = useAddress()
+
   useEffect(() => {
     setCheck(repayRoBorrow)
   }, [repayRoBorrow])
-  useEffect(() => {
-    if (check === 1) {
-      setBorrowAmount(+textFieldValue)
-    } else {
-      setBorrowAmount(-textFieldValue)
-    }
-  }, [check, textFieldValue])
 
+  const borrowSubmit = () => {
+    if (contract) {
+      contract.borrow(ERC20_ADDRESS, amount, address, { gasLimit }).then((res: any) => {
+        console.log(res)
+      })
+    }
+  }
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -194,13 +177,13 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
               >
                 <img src={greyShutOff} alt="" />
               </Box>
-              {borrowAmount >= 100 && borrowAmount <= 110 ? (
+              {new BigNumber(amount).gte(100) && new BigNumber(amount).lte(110) ? (
                 <HighRiskButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
                     {TypographyRiskLevel}
                   </Typography>
                 </HighRiskButton>
-              ) : borrowAmount > 110 && borrowAmount <= 130 ? (
+              ) : new BigNumber(amount).gt(110) && new BigNumber(amount).lte(130) ? (
                 <RiskyButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
                     {TypographyRiskLevel}
@@ -222,7 +205,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
                 color={check === 1 ? '#FFFFFF' : '#A0A3BD'}
                 onClick={() => {
                   setCheck(1)
-                  setTextFieldValue('')
+                  setAmount('')
                 }}
               >
                 Borrow
@@ -238,7 +221,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
                 color={check === 2 ? '#FFFFFF' : '#A0A3BD'}
                 onClick={() => {
                   setCheck(2)
-                  setTextFieldValue('')
+                  setAmount('')
                 }}
               >
                 Repay
@@ -263,9 +246,11 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
                     autoFocus={true}
                     sx={{ marginLeft: '7px' }}
                     placeholder="0.00"
-                    value={textFieldValue}
-                    onChange={textFieldChange}
-                    onKeyUp={textFieldChange}
+                    value={amount}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      event.target.value = event.target.value.replace(/^\D*(\d*(?:\.\d{0,10})?).*$/g, '$1')
+                      setAmount(event.target.value)
+                    }}
                   />
                 </CenterBox>
               </Box>
@@ -287,7 +272,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <MAXBox
                       onClick={() => {
-                        setTextFieldValue(`${myDebt}`)
+                        setAmount(`${myDebt}`)
                       }}
                     >
                       <Typography variant="body2" component="p">
@@ -337,7 +322,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
                 {fixedFormat(myDebt)} {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                {fixedFormat(borrowAmount + myDebt)}
+                {fixedFormat(plus(myDebt, times(amount, check === 1 ? 1 : -1)))}
               </Typography>
             </Box>
           </SpaceBetweenBox>
@@ -352,7 +337,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
                 {percent(myDebt, +borrowLimit)} {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                {percent(borrowAmount + myDebt, +borrowLimit)}
+                {percent(new BigNumber(amount).plus(myDebt).toString(), +borrowLimit)}
               </Typography>
             </Box>
           </SpaceBetweenBox>
@@ -403,8 +388,14 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
               </Box>
             </FlexBox>
           </RightFlexBox>
-          <Button disabled variant="contained" sx={{ width: '372px', height: '54px', marginTop: '24px' }}>
-            Borrow
+          <Button
+            variant="contained"
+            sx={{ width: '372px', height: '54px', marginTop: '24px' }}
+            onClick={() => {
+              borrowSubmit()
+            }}
+          >
+            {check === 1 ? 'Borrow' : 'Repay'}
           </Button>
         </BottomBox>
       </Box>

@@ -1,4 +1,5 @@
 import { OwnedNftsResponse } from '@alch/alchemy-sdk'
+import BigNumber from 'bignumber.js'
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from '../index'
@@ -56,4 +57,20 @@ export function useEthDebt(): string {
 }
 export function useUsedCollateral(): boolean {
   return useAppSelector((state: AppState) => state.user.usedCollateral)
+}
+
+export function useErc20Ltv(): string {
+  return useAppSelector((state: AppState) => state.user.erc20Ltv)
+}
+export function useErc721Ltv(): string {
+  return useAppSelector((state: AppState) => state.user.erc721Ltv)
+}
+export function useDecimal(): string {
+  return useAppSelector((state: AppState) => state.user.decimal)
+}
+export function useBorrowLimit(): string {
+  return new BigNumber(useErc20Ltv())
+    .times(useEthCollateral())
+    .plus(new BigNumber(useErc721Ltv()).times(useNftCollateral()))
+    .toString()
 }

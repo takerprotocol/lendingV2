@@ -242,6 +242,6 @@ export const getRiskLevelTag = (value: string | number) => {
       return 'Healthy'
   }
 }
-export const percent = (Dividend: number, Divisor: number) => {
-  return Math.round((Dividend / Divisor) * 10000) / 100 + '%'
+export const percent = (dividend: number | string, divisor: number | string) => {
+  return new BigNumber(dividend).div(divisor).times(100).toFixed(2, 1) + '%'
 }

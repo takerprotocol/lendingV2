@@ -15,15 +15,18 @@ import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress } from 'state/user/hooks'
 import { useAppDispatch } from 'state'
 import {
+  setDecimal,
+  setErc20Ltv,
+  setErc721Ltv,
   setReserveData,
-  setRiskLevel,
+  // setRiskLevel,
   setUsedCollateral,
   setUserEthAsset,
   setUserNftConfig,
   setUserNftValues,
 } from 'state/user/reducer'
 import { bigNumberToString, stringFormat } from 'utils'
-import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK } from 'config'
+import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK } from 'config'
 import { fromWei } from 'web3-utils'
 import BigNumber from 'bignumber.js'
 import BN from 'bn.js'
@@ -64,9 +67,11 @@ export default function Dashboard() {
         dispatch(setUsedCollateral(res.toString() !== '0'))
       })
       contract.getReserveConfig(ERC20_ADDRESS).then((res: any) => {
-        console.log(new BigNumber('0x000000000000000000000000000000000000000000000000000000ff00000000'))
-        console.log(new BN(res.toString()).and(new BN(DECIMALS_MASK, 16)).shrn(32).toNumber())
-        // console.log(new BN(res.toString()).shrn(0).toString())
+        dispatch(setDecimal(new BN(res.toString()).and(new BN(DECIMALS_MASK, 16)).shrn(32).toString()))
+        dispatch(setErc20Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
+      })
+      contract.getReserveConfig(ERC721_ADDRESS).then((res: any) => {
+        dispatch(setErc721Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
       })
       contract.getReserveData(ERC20_ADDRESS).then((res: any) => {
         dispatch(
@@ -84,8 +89,9 @@ export default function Dashboard() {
           ])
         )
       })
-      contract.getReserveNormalizedDebtScale(address).then((res: any) => {
-        dispatch(setRiskLevel(bigNumberToString(res)))
+      contract.getUserState(address).then((res: Array<BigNumber>) => {
+        console.log(res[1].toString())
+        // dispatch(setRiskLevel(bigNumberToString(res)))
       })
       contract.getUserAssetValues(address, ERC20_ADDRESS).then((res: Array<BigNumber>) => {
         dispatch(setUserEthAsset([bigNumberToString(res[0]), bigNumberToString(res[1]), bigNumberToString(res[2])]))
