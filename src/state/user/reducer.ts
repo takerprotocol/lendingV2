@@ -1,5 +1,7 @@
 import { OwnedNftsResponse } from '@alch/alchemy-sdk'
 import { createSlice } from '@reduxjs/toolkit'
+import BigNumber from 'bignumber.js'
+import { UserValues } from 'state/types'
 
 export type PopupContent = {
   txn: {
@@ -39,8 +41,8 @@ export interface ApplicationState {
   readonly erc20Ltv: string
   readonly erc721Ltv: string
   readonly decimal: string
-
   readonly dashboardType: number
+  readonly userValues: UserValues
 }
 export interface TokenDecimals {
   symbol: string
@@ -79,6 +81,12 @@ const initialState: ApplicationState = {
   decimal: '18',
 
   dashboardType: 1,
+  userValues: {
+    borrowLiquidity: new BigNumber(0),
+    NFTLiquidity: new BigNumber(0),
+    totalDebt: new BigNumber(0),
+    totalCollateral: new BigNumber(0),
+  },
 }
 
 const applicationSlice = createSlice({
@@ -148,6 +156,12 @@ const applicationSlice = createSlice({
     setDashboardType(state, action) {
       state.dashboardType = action.payload
     },
+    setUserValues(state, action) {
+      state.userValues.borrowLiquidity = action.payload[0]
+      state.userValues.NFTLiquidity = action.payload[1]
+      state.userValues.totalDebt = action.payload[2]
+      state.userValues.totalCollateral = action.payload[3]
+    },
   },
 })
 
@@ -165,5 +179,6 @@ export const {
   setErc721Ltv,
   setDecimal,
   setDashboardType,
+  setUserValues,
 } = applicationSlice.actions
 export default applicationSlice.reducer

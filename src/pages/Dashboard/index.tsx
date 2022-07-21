@@ -25,6 +25,7 @@ import {
   setUserEthAsset,
   setUserNftConfig,
   setUserNftValues,
+  setUserValues,
 } from 'state/user/reducer'
 import { bigNumberToString, stringFormat } from 'utils'
 import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK } from 'config'
@@ -94,8 +95,7 @@ export default function Dashboard() {
         // dispatch(setRiskLevel(bigNumberToString(res)))
       })
       contract.getUserValues(address).then((res: Array<BigNumber>) => {
-        console.log('getUserValues', res[3].toString())
-        // dispatch(setRiskLevel(bigNumberToString(res)))
+        dispatch(setUserValues(res))
       })
       contract.getUserAssetValues(address, ERC20_ADDRESS).then((res: Array<BigNumber>) => {
         dispatch(setUserEthAsset([bigNumberToString(res[0]), bigNumberToString(res[1]), bigNumberToString(res[2])]))

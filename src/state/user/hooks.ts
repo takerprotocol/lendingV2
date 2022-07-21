@@ -1,6 +1,7 @@
 import { OwnedNftsResponse } from '@alch/alchemy-sdk'
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { UserValues } from 'state/types'
 import { div, plus, times } from 'utils'
 import { AppState } from '../index'
 import { setAddress } from './reducer'
@@ -78,4 +79,8 @@ export function useBorrowLimit(): string {
 }
 export function useDashboardType(): number {
   return useAppSelector((state: AppState) => state.user.dashboardType)
+}
+
+export function useUserValue(): UserValues {
+  return useAppSelector((state: AppState) => state.user.userValues)
 }
