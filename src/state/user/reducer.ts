@@ -39,29 +39,9 @@ export interface ApplicationState {
   readonly erc20Ltv: string
   readonly erc721Ltv: string
   readonly decimal: string
+
+  readonly dashboardType: number
 }
-// ReserveConfiguration configuration;
-// //the liquidity index in ray. Liquidity = corresponding tToken balance * liquidity index
-// uint128 liquidityIndex;
-// //the debt index in ray. Debt = corresponding debtToken balance * debt index
-// uint128 debtIndex;
-// //interest rate for liquidity providers in ray
-// //TODO: depositRate? lendingRate?
-// uint128 depositRate;
-// //interest rate for borrow
-// uint128 borrowRate;
-// //last timestamp when reserve state was updated
-// uint40 lastUpdateTimestamp;
-// //corresponding tToken address
-// address tTokenAddress;
-// // corresponding debt token address
-// address debtTokenAddress;
-// //address of the interest rate calculator
-// address interestRateCalculatorAddress;
-// //the address of the treasury
-// address treasury;
-// //the id of the reserve. Represents the position in the list of the active reserves
-// uint8 id;
 export interface TokenDecimals {
   symbol: string
   decimals: number
@@ -97,6 +77,8 @@ const initialState: ApplicationState = {
   erc20Ltv: '0',
   erc721Ltv: '0',
   decimal: '18',
+
+  dashboardType: 1,
 }
 
 const applicationSlice = createSlice({
@@ -163,6 +145,9 @@ const applicationSlice = createSlice({
     setDecimal(state, action) {
       state.decimal = action.payload
     },
+    setDashboardType(state, action) {
+      state.dashboardType = action.payload
+    },
   },
 })
 
@@ -179,5 +164,6 @@ export const {
   setErc20Ltv,
   setErc721Ltv,
   setDecimal,
+  setDashboardType,
 } = applicationSlice.actions
 export default applicationSlice.reducer

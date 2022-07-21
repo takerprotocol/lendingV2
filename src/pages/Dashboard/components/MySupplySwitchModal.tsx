@@ -2,9 +2,10 @@ import { Button, styled, Modal, Box, Typography } from '@mui/material'
 import whiteShutOff from 'assets/images/svg/common/whiteShutOff.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import whiteRight from 'assets/images/svg/common/whiteRight.svg'
+import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
 import Right from 'assets/images/svg/common/right.svg'
 import { CenterBox, SpaceBetweenBox } from 'styleds/index'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 const style = {
   position: 'relative',
   width: '420px',
@@ -41,11 +42,9 @@ export const RightBgBox = styled(Box)`
 interface MySupplySwitchModalProps {
   openMySupplySwitchModal: boolean
   loanType: number
-  setOpenMySupplySwitchModal: Function
-  ETHCollateralType: number
-  setETHCollateralType: Function
-  NFTCollateralType: number
-  setNFTCollateralType: Function
+  handle: Function
+  ETHCollateralType: string
+  NFTCollateralType: string
   switchType: number
 }
 export default function MySupplySwitchModal({
@@ -53,15 +52,12 @@ export default function MySupplySwitchModal({
   loanType,
   NFTCollateralType,
   ETHCollateralType,
-  setOpenMySupplySwitchModal,
-  setETHCollateralType,
-  setNFTCollateralType,
+  handle,
   switchType,
 }: MySupplySwitchModalProps) {
+  const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
   const modalType = useMemo(() => {
-    return (
-      !(loanType === 0 && ETHCollateralType === 1 && NFTCollateralType === 0 && switchType === 1) || switchType === 1
-    )
+    return !(loanType === 1 && +ETHCollateralType === 0 && +NFTCollateralType === 0 && switchType === 1)
   }, [ETHCollateralType, NFTCollateralType, loanType, switchType])
   return (
     <Modal
@@ -72,15 +68,17 @@ export default function MySupplySwitchModal({
       <Box sx={style}>
         <TopBox
           sx={{
-            background: `${
-              switchType === 1 ? '#eff0f6' : 'linear-gradient(81.09deg, #688ff2 0.64%, #7a81f9 50.49%, #9272eb 100.5%)'
-            }`,
+            background: `${switchType === 1 ? '#eff0f6' : 'linear-gradient(249.47deg, #6AA2F7 0%, #627EEA 100%)'}`,
           }}
         >
           <CenterBox
             sx={{ justifyContent: 'flex-end', cursor: 'pointer' }}
             onClick={() => {
-              setOpenMySupplySwitchModal(false)
+              if (loanType === 0) {
+                handle('unable')
+              } else {
+                setSwitchUnableOffModal(true)
+              }
             }}
           >
             <img src={switchType === 1 ? shutOff : whiteShutOff} alt="" />
@@ -157,7 +155,7 @@ export default function MySupplySwitchModal({
               increase your account risk level
             </Typography>
           </Box>
-          {!(loanType === 0 && ETHCollateralType === 1 && NFTCollateralType === 0 && switchType === 1) && (
+          {(switchType === 0 || (loanType === 1 && +NFTCollateralType === 0)) && (
             <DataBox>
               <SpaceBetweenBox>
                 <Box>
@@ -174,7 +172,7 @@ export default function MySupplySwitchModal({
                   </Typography>
                 </Box>
               </SpaceBetweenBox>
-              {!(ETHCollateralType === 1 && NFTCollateralType === 0) && (
+              {(!(+ETHCollateralType === 0 && +NFTCollateralType === 0) || loanType === 1) && (
                 <>
                   <SpaceBetweenBox marginY="16px">
                     <Box>
@@ -196,13 +194,8 @@ export default function MySupplySwitchModal({
                       <Typography mr="8px" variant="body1" component="span" color="#A0A3BD">
                         Risk level
                       </Typography>
-                      <Typography
-                        variant="body1"
-                        fontWeight="700"
-                        component="span"
-                        color={switchType === 1 ? '#EF884F' : '#4BC8B1'}
-                      >
-                        {switchType === 1 ? 'RISKY' : 'HEALTHY'}
+                      <Typography variant="body1" fontWeight="700" component="span" color="#EF884F">
+                        HEALTHY
                       </Typography>
                     </Box>
                     <Box>
@@ -228,11 +221,22 @@ export default function MySupplySwitchModal({
               </Button>
             </SpaceBetweenBox>
           ) : (
-            <Button sx={{ marginTop: '48px', width: '372px', height: '54px' }} variant="contained">
+            <Button
+              sx={{ marginTop: '48px', width: '372px', height: '54px' }}
+              variant="contained"
+              onClick={() => {
+                handle('enable')
+              }}
+            >
               Enable
             </Button>
           )}
         </BottomBox>
+        <MySupplySwitchUnableOffModal
+          switchUnableOffModal={switchUnableOffModal}
+          setOpenMySupplySwitchModal={handle}
+          setSwitchUnableOffModal={setSwitchUnableOffModal}
+        ></MySupplySwitchUnableOffModal>
       </Box>
     </Modal>
   )

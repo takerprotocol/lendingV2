@@ -8,8 +8,7 @@ import { FlexBox, SpaceBetweenBox } from 'styleds'
 import { useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
-import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
-import { useDepositRate, useEthCollateral, useUsedCollateral } from 'state/user/hooks'
+import { useDepositRate, useEthCollateral, useNftCollateral, useUsedCollateral } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { toast } from 'react-toastify'
 import { ERC20_ADDRESS, gasLimit } from 'config'
@@ -86,22 +85,20 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const [openMySupplyModal, setOpenMySupplyModal] = useState(false)
   const [dataType] = useState<boolean>(true)
   const [typeModal, setTypeModal] = useState<number>(1) // MySupplyModal State Supply(1) ro Withdraw(0)
-  const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
   const [openMySupplySwitchModal, setOpenMySupplySwitchModal] = useState<boolean>(false)
-  const [ETHCollateralType, setETHCollateralType] = useState<number>(1) //1=有
-  const [NFTCollateralType, setNFTCollateralType] = useState<number>(1) //1=有
+  const [switchType, setSwitchType] = useState<number>(0) //1›
   const [loanType] = useState<number>(0) //1=有
-  const [switchType, setSwitchType] = useState<number>(0) //1
   const depositRate = useDepositRate()
   const contract = useLendingPool()
   const ethCollateral = useEthCollateral()
+  const nftCollateral = useNftCollateral()
   const usedCollateral = useUsedCollateral()
   const dispatch = useAppDispatch()
-  const changeUsedAsCollateral = (flag: boolean) => {
+  const changeUsedAsCollateral = () => {
     if (contract) {
-      contract.setUserUsingAsCollateral(ERC20_ADDRESS, flag, { gasLimit }).then(() => {
+      contract.setUserUsingAsCollateral(ERC20_ADDRESS, !usedCollateral, { gasLimit }).then(() => {
         toast.success('success')
-        dispatch(setUsedCollateral(flag))
+        dispatch(setUsedCollateral(!usedCollateral))
       })
     }
   }
@@ -121,18 +118,12 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
               disabled={!dataType}
               checked={usedCollateral}
               onClick={(event: any) => {
-                changeUsedAsCollateral(event.target.checked)
                 if (event.target.checked) {
                   setOpenMySupplySwitchModal(true)
-                  setETHCollateralType(1)
                   setSwitchType(0)
                 } else {
-                  if (loanType === 0) {
-                    setOpenMySupplySwitchModal(true)
-                    setSwitchType(1)
-                  } else {
-                    setSwitchUnableOffModal(true)
-                  }
+                  setOpenMySupplySwitchModal(true)
+                  setSwitchType(1)
                 }
               }}
             />
@@ -221,19 +212,17 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
       ></MySupplyModal>
       <MySupplySwitchModal
         loanType={loanType}
-        ETHCollateralType={ETHCollateralType}
-        setETHCollateralType={setETHCollateralType}
-        NFTCollateralType={NFTCollateralType}
+        ETHCollateralType={ethCollateral}
+        NFTCollateralType={nftCollateral}
         switchType={switchType}
-        setNFTCollateralType={setNFTCollateralType}
         openMySupplySwitchModal={openMySupplySwitchModal}
-        setOpenMySupplySwitchModal={setOpenMySupplySwitchModal}
+        handle={(type: string) => {
+          setOpenMySupplySwitchModal(!openMySupplyModal)
+          if (type === 'enable') {
+            changeUsedAsCollateral()
+          }
+        }}
       ></MySupplySwitchModal>
-      <MySupplySwitchUnableOffModal
-        switchUnableOffModal={switchUnableOffModal}
-        setOpenMySupplySwitchModal={setOpenMySupplySwitchModal}
-        setSwitchUnableOffModal={setSwitchUnableOffModal}
-      ></MySupplySwitchUnableOffModal>
     </MyETHSupplyBox>
   )
 }

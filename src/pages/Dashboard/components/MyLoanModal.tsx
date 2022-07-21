@@ -7,7 +7,7 @@ import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
 import { fixedFormat, percent, getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
-import { useAddress, useBorrowRate, useDebtIndex } from 'state/user/hooks'
+import { useAddress, useBorrowRate, useDebtIndex, useEthDebt } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { ERC20_ADDRESS, gasLimit } from 'config'
 import BigNumber from 'bignumber.js'
@@ -128,7 +128,7 @@ interface MyLoanModalProps {
   myDebt: number
   onClose: Function
 }
-export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: MyLoanModalProps) {
+export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModalProps) {
   const [check, setCheck] = useState<number>(repayRoBorrow)
   const [amount, setAmount] = useState('')
   const TypographyRiskLevel = getRiskLevel(amount)
@@ -137,7 +137,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
   const borrowRate = useBorrowRate()
   const borrowLimit = useDebtIndex()
   const address = useAddress()
-
+  const ethDebt = useEthDebt()
   useEffect(() => {
     setCheck(repayRoBorrow)
   }, [repayRoBorrow])
@@ -160,7 +160,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
               </Typography>
               <Box mt="4px">
                 <Typography variant="h4" component="span" fontWeight="600" color="#EFF0F6">
-                  {fixedFormat(myDebt)}
+                  {fixedFormat(ethDebt)}
                 </Typography>
                 <Typography ml="6px" variant="subtitle1" component="span" fontWeight="600" color="#EFF0F6">
                   ETH
@@ -272,7 +272,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <MAXBox
                       onClick={() => {
-                        setAmount(`${myDebt}`)
+                        setAmount(ethDebt)
                       }}
                     >
                       <Typography variant="body2" component="p">
@@ -319,10 +319,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
             </Box>
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
-                {fixedFormat(myDebt)} {'>'}
+                {fixedFormat(ethDebt)} {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                {fixedFormat(plus(myDebt, times(amount, check === 1 ? 1 : -1)))}
+                {fixedFormat(plus(ethDebt, times(amount, check === 1 ? 1 : -1)))}
               </Typography>
             </Box>
           </SpaceBetweenBox>
@@ -334,10 +334,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose, myDebt }: My
             </Box>
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
-                {percent(myDebt, +borrowLimit)} {'>'}
+                {percent(ethDebt, +borrowLimit)} {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                {percent(new BigNumber(amount).plus(myDebt).toString(), +borrowLimit)}
+                {percent(new BigNumber(amount).plus(ethDebt).toString(), +borrowLimit)}
               </Typography>
             </Box>
           </SpaceBetweenBox>

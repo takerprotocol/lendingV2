@@ -58,8 +58,8 @@ const BottomTopBox = styled(Box)`
   margin-bottom: 31px;
 `
 const ImgBox = styled(Box)`
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   margin-right: 4px;
 `
 const NftListBox = styled(Box)`
@@ -90,7 +90,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                 {[0, 1].map((el: any) => {
                   return (
                     <ImgBox key={`ImgBox${el}`}>
-                      <img width="24px" height="24px" src={NFT1} alt="" />
+                      <img width="22px" height="22px" src={NFT1} alt="" />
                     </ImgBox>
                   )
                 })}

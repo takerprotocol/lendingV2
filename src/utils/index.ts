@@ -103,9 +103,9 @@ export function decimalFormat(value?: number | string, decimal = 18, thousandSep
 export function div(value1: number | string | BigNumber, value2: number | string | BigNumber) {
   if (value1) {
     if (BigNumber.isBigNumber(value1)) {
-      return value1.div(value2).toFormat()
+      return value1.div(value2).toString()
     } else {
-      return new BigNumber(value1).div(value2).toFormat()
+      return new BigNumber(value1).div(value2).toString()
     }
   } else {
     return '0'
@@ -115,9 +115,9 @@ export function div(value1: number | string | BigNumber, value2: number | string
 export function times(value1: number | string | BigNumber, value2: number | string | BigNumber) {
   if (value1) {
     if (BigNumber.isBigNumber(value1)) {
-      return value1.times(value2).toFormat(2, 1)
+      return value1.times(value2).toString()
     } else {
-      return new BigNumber(value1).times(value2).toFormat(2, 1)
+      return new BigNumber(value1).times(value2).toString()
     }
   } else {
     return '0'
@@ -127,9 +127,9 @@ export function times(value1: number | string | BigNumber, value2: number | stri
 export function plus(value1: number | string | BigNumber, value2: number | string | BigNumber) {
   if (value1) {
     if (BigNumber.isBigNumber(value1)) {
-      return value1.plus(value2).toFormat(2, 1)
+      return value1.plus(value2).toString()
     } else {
-      return new BigNumber(value1).plus(value2).toFormat(2, 1)
+      return new BigNumber(value1).plus(value2).toString()
     }
   } else {
     return '0'
@@ -139,9 +139,9 @@ export function plus(value1: number | string | BigNumber, value2: number | strin
 export function minus(value1: number | string | BigNumber, value2: number | string | BigNumber) {
   if (value1) {
     if (BigNumber.isBigNumber(value1)) {
-      return value1.minus(value2).toFormat(2, 1)
+      return value1.minus(value2).toString()
     } else {
-      return new BigNumber(value1).minus(value2).toFormat(2, 1)
+      return new BigNumber(value1).minus(value2).toString()
     }
   } else {
     return '0'

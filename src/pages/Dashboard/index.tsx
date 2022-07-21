@@ -12,7 +12,8 @@ import { useEffect, useState } from 'react'
 // import { TEST } from 'apollo/queries'
 import DataNFTs from './components/DataNFTs'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress } from 'state/user/hooks'
+import { useAddress, useDashboardType } from 'state/user/hooks'
+import BigNumber from 'bignumber.js'
 import { useAppDispatch } from 'state'
 import {
   setDecimal,
@@ -28,7 +29,6 @@ import {
 import { bigNumberToString, stringFormat } from 'utils'
 import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK } from 'config'
 import { fromWei } from 'web3-utils'
-import BigNumber from 'bignumber.js'
 import BN from 'bn.js'
 
 // import { getClient } from 'apollo/client'
@@ -46,7 +46,7 @@ const Main = styled(Box)`
   margin: 0 auto;
 `
 export default function Dashboard() {
-  const [type, setType] = useState<number>(1)
+  const type = useDashboardType()
   const [loading, setLoading] = useState<boolean>(true)
   const dispatch = useAppDispatch()
   const contract = useLendingPool()
@@ -90,7 +90,11 @@ export default function Dashboard() {
         )
       })
       contract.getUserState(address).then((res: Array<BigNumber>) => {
-        console.log(res[1].toString())
+        console.log(res)
+        // dispatch(setRiskLevel(bigNumberToString(res)))
+      })
+      contract.getUserValues(address).then((res: Array<BigNumber>) => {
+        console.log('getUserValues', res[3].toString())
         // dispatch(setRiskLevel(bigNumberToString(res)))
       })
       contract.getUserAssetValues(address, ERC20_ADDRESS).then((res: Array<BigNumber>) => {
@@ -105,9 +109,6 @@ export default function Dashboard() {
       })
     }
   }, [contract, address, dispatch])
-  const changeCheck = (a: number) => {
-    setType(a)
-  }
   // const client = getClient()[SupportedChainId.MAINNET]
   // client
   //   .query({
@@ -118,7 +119,7 @@ export default function Dashboard() {
   //   })
   return (
     <Body className="header-padding">
-      <BlueChipNFTs type={type} changeCheck={changeCheck}></BlueChipNFTs>
+      <BlueChipNFTs type={type}></BlueChipNFTs>
       <Main>
         <DataNFTs type={type}></DataNFTs>
         <Collection loading={loading} type={type}></Collection>

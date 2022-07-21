@@ -2,6 +2,8 @@ import { Box, styled, Fade, Popper, Typography } from '@mui/material'
 import { useState } from 'react'
 import blueChip from 'assets/images/svg/common/blueChip.svg'
 import growth from 'assets/images/svg/common/growth.svg'
+import { useAppDispatch } from 'state/hooks'
+import { setDashboardType } from 'state/user/reducer'
 
 const PopperBox = styled(Box)`
   z-index: 4;
@@ -30,6 +32,7 @@ const StyledPopper = styled(Popper)`
 `
 export default function HeaderPopper({ open, anchorEl, placement }: { open: boolean; anchorEl: any; placement: any }) {
   const [open1, setOpen] = useState<boolean>(false)
+  const dispatch = useAppDispatch()
   return (
     <StyledPopper
       open={open1 || open}
@@ -47,13 +50,22 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
       {({ TransitionProps }) => (
         <Fade {...TransitionProps}>
           <PopperBox>
-            <ButtonBox>
+            <ButtonBox
+              onClick={() => {
+                dispatch(setDashboardType(1))
+              }}
+            >
               <img src={blueChip} alt="" />
               <Typography component="span" ml="12px" variant="subtitle2">
                 Blue Chip NFTs
               </Typography>
             </ButtonBox>
-            <ButtonBox mt="12px">
+            <ButtonBox
+              mt="12px"
+              onClick={() => {
+                dispatch(setDashboardType(2))
+              }}
+            >
               <img src={growth} alt="" />
               <Typography component="span" ml="12px" variant="subtitle2">
                 Growth NFTs

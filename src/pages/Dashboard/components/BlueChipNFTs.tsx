@@ -2,6 +2,8 @@ import { styled } from '@mui/material/styles'
 import { Box, Typography } from '@mui/material'
 import blueChipNFTs from 'assets/images/svg/dashboard/blueChipNFTs.svg'
 import growthNFTs from 'assets/images/svg/dashboard/growthNFTs.svg'
+import { setDashboardType } from 'state/user/reducer'
+import { useAppDispatch } from 'state/hooks'
 const FlexBox = styled(Box)`
   display: flex;
   align-items: center;
@@ -59,17 +61,17 @@ const GrowthNFTs = styled(Box)`
   }
 `
 interface BlueChipGrowthNFTs {
-  changeCheck: Function
   type: number
 }
-export default function ChipNFTs({ changeCheck, type }: BlueChipGrowthNFTs) {
+export default function ChipNFTs({ type }: BlueChipGrowthNFTs) {
+  const dispatch = useAppDispatch()
   return (
     <FlexBox>
       <BlueChipNFTs
         className={type === 1 ? 'open' : ''}
         onClick={() => {
           if (type !== 1) {
-            changeCheck(1)
+            dispatch(setDashboardType(1))
           }
         }}
       >
@@ -84,7 +86,7 @@ export default function ChipNFTs({ changeCheck, type }: BlueChipGrowthNFTs) {
         className={type === 2 ? 'open' : ''}
         onClick={() => {
           if (type !== 2) {
-            changeCheck(2)
+            dispatch(setDashboardType(2))
           }
         }}
       >

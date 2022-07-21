@@ -6,11 +6,11 @@ import { useEffect, useMemo, useState } from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { fixedFormat, minus, plus } from 'utils'
+import { fixedFormat, minus, plus, times } from 'utils'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress, useDepositRate } from 'state/user/hooks'
+import { useAddress, useDepositRate, useUsedCollateral, useWalletBalance } from 'state/user/hooks'
 import { ERC20_ADDRESS, gasLimit } from 'config'
 
 const style = {
@@ -102,57 +102,27 @@ interface MySupplyModalProps {
 }
 export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal, type, mySupply }: MySupplyModalProps) {
   const [borrowOrRepay, setBorrowOrRepay] = useState<number>(type)
-  const [supplyLimit] = useState<number>(20)
-  const [withdrawal] = useState<boolean>(true)
-  const [supply] = useState<boolean>(true)
-  const [textFieldValue, setTextFieldValue] = useState<string>('')
-  const [supplyAmount, setSupplyAmount] = useState<number>(0)
-  const [state, setState] = useState<boolean>(false)
-  const [withdrawalMax, setWithdrawalMax] = useState<boolean>(false)
+  const supplyLimit = useWalletBalance()
+  const [amount, setAmount] = useState('')
   const contract = useLendingPool()
   const address = useAddress()
+  const usedCollateral = useUsedCollateral()
   const depositRate = useDepositRate()
-  function textFieldChange(event?: any) {
-    if (event) {
-      setTextFieldValue(
-        event.target.value
-          .replace(/[^\d^\\.?]+/g, '')
-          .replace(/^0+(\d)/, '$1')
-          .replace(/^\./, '0.')
-          .match(/^\d*(\.?\d{0,4})/g)[0]
-      )
-      if (borrowOrRepay === 1) {
-        setSupplyAmount(+textFieldValue)
-      } else {
-        setSupplyAmount(-textFieldValue)
-      }
-    }
-  }
-  // console.log(mySupply + supplyAmount <= supplyLimit && withdrawal && borrowOrRepay === 1)
-  useEffect(() => {
-    if (borrowOrRepay === 1) {
-      setSupplyAmount(+textFieldValue)
-    } else {
-      setSupplyAmount(-textFieldValue)
-    }
-    setState(withdrawal && supply)
-    setWithdrawalMax(borrowOrRepay === 2 && +textFieldValue >= supplyLimit)
-  }, [borrowOrRepay, supply, supplyLimit, textFieldValue, withdrawal])
   useEffect(() => {
     setBorrowOrRepay(type)
   }, [type])
 
   const supplySubmit = () => {
-    if (new BigNumber(supplyAmount).lte(0)) {
+    if (new BigNumber(amount).lte(0)) {
       toast.error('Minimum supply 0')
       return
     }
     if (contract && address) {
       contract
-        .deposit(ERC20_ADDRESS, supplyAmount, address, { gasLimit })
+        .deposit(ERC20_ADDRESS, amount, address, { gasLimit })
         .then((res: any) => {
           toast.success(res.hash)
-          setTextFieldValue('')
+          setAmount('')
           setOpenMySupplyModal(false)
         })
         .catch((error: any) => {
@@ -160,18 +130,17 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
         })
     }
   }
-
   const withdrawSubmit = () => {
-    if (new BigNumber(supplyAmount).lte(0)) {
+    if (new BigNumber(amount).lte(0)) {
       toast.error('Minimum supply 0')
       return
     }
     if (contract && address) {
       contract
-        .withdraw(ERC20_ADDRESS, supplyAmount, address, { gasLimit })
+        .withdraw(ERC20_ADDRESS, amount, address, { gasLimit })
         .then((res: any) => {
           toast.success(res.hash)
-          setTextFieldValue('')
+          setAmount('')
           setOpenMySupplyModal(false)
         })
         .catch((error: any) => {
@@ -180,26 +149,21 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
     }
   }
   const nonCollateral = useMemo(() => {
-    if (borrowOrRepay === 1) {
-      if (new BigNumber(supplyAmount).plus(mySupply).lt(supplyLimit) && withdrawal) {
-        return 'Used as Collateral'
-      } else {
-        return 'Non-collateral'
-      }
+    if (usedCollateral) {
+      return 'Used as Collateral'
     } else {
-      if (new BigNumber(Math.abs(supplyAmount)).gte(supplyLimit)) {
-        return 'Used as Collateral'
-      } else {
-        return 'Non-collateral'
-      }
+      return 'Non-collateral'
     }
-  }, [borrowOrRepay, mySupply, supplyAmount, supplyLimit, withdrawal])
+  }, [usedCollateral])
+
   const ModalType = useMemo(() => {
-    return (
-      (new BigNumber(plus(mySupply, supplyAmount)).lte(supplyLimit) && withdrawal && borrowOrRepay === 1) ||
-      withdrawalMax
-    )
-  }, [borrowOrRepay, mySupply, supplyAmount, supplyLimit, withdrawal, withdrawalMax])
+    return amount !== ''
+  }, [amount])
+
+  const overSupply = useMemo(() => {
+    return new BigNumber(mySupply).lte(amount)
+  }, [amount, mySupply])
+
   return (
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -237,7 +201,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             </Box>
           </SpaceBetweenBox>
           <SpaceBetweenBox mt="28px">
-            <Box display={state ? '' : 'none'} ml="80px">
+            <Box display={supplyLimit !== '0' ? '' : 'none'} ml="80px">
               <Typography
                 variant="subtitle1"
                 fontWeight="700"
@@ -246,7 +210,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 color={borrowOrRepay === 1 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
                 onClick={() => {
                   setBorrowOrRepay(1)
-                  setTextFieldValue('')
+                  setAmount('')
                 }}
               >
                 Supply
@@ -256,7 +220,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '13px' }}
               ></Box>
             </Box>
-            <Box display={state ? '' : 'none'} mr="73px">
+            <Box display={supplyLimit !== '0' ? '' : 'none'} mr="73px">
               <Typography
                 variant="subtitle1"
                 fontWeight="700"
@@ -265,7 +229,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 color={borrowOrRepay === 2 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
                 onClick={() => {
                   setBorrowOrRepay(2)
-                  setTextFieldValue('')
+                  setAmount('')
                 }}
               >
                 Withdraw
@@ -290,9 +254,11 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                     autoFocus={true}
                     sx={{ marginLeft: '7px', fontSize: '28px' }}
                     placeholder="0.00"
-                    onChange={textFieldChange}
-                    value={textFieldValue}
-                    onKeyUp={textFieldChange}
+                    value={amount}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                      event.target.value = event.target.value.replace(/^\D*(\d*(?:\.\d{0,10})?).*$/g, '$1')
+                      setAmount(event.target.value)
+                    }}
                   />
                 </CenterBox>
               </Box>
@@ -301,13 +267,13 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                   sx={{ display: 'flex', justifyContent: 'flex-end' }}
                   onClick={() => {
                     if (borrowOrRepay === 1) {
-                      setTextFieldValue(`${minus(supplyLimit, mySupply)}`)
+                      setAmount(supplyLimit)
                     } else {
-                      setTextFieldValue(mySupply)
+                      setAmount(mySupply)
                     }
                   }}
                 >
-                  <MAXBox className={new BigNumber(supplyAmount).gte(minus(supplyLimit, mySupply)) ? 'max' : ''}>
+                  <MAXBox className={new BigNumber(amount).gte(minus(supplyLimit, mySupply)) ? 'max' : ''}>
                     <Typography variant="body2" component="p" fontWeight="700">
                       MAX
                     </Typography>
@@ -344,7 +310,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                   {fixedFormat(mySupply)} {'>'}
                 </Typography>
                 <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                  {fixedFormat(+mySupply + supplyAmount)}
+                  {fixedFormat(plus(mySupply, amount ? (borrowOrRepay === 1 ? amount : times(amount, -1)) : 0))}
                 </Typography>
               </Box>
               {ModalType && (
@@ -358,7 +324,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       variant="body1"
                       component="span"
                       fontWeight="700"
-                      color={withdrawalMax ? '#E1536C' : '#14142A'}
+                      color={overSupply ? '#E1536C' : '#14142A'}
                     >
                       20%
                     </Typography>
@@ -372,7 +338,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       variant="body1"
                       component="span"
                       fontWeight="700"
-                      color={withdrawalMax ? '#E1536C' : '#14142A'}
+                      color={overSupply ? '#E1536C' : '#14142A'}
                     >
                       20%
                     </Typography>
@@ -448,7 +414,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Box>
             </FlexBox>
           </RightFlexBox>
-          <Box mb="16px" display={withdrawalMax ? '' : 'none'}>
+          <Box mb="16px" display={overSupply ? '' : 'none'}>
             <FlexBox>
               <Box mr="8px" pt="1px" height="38px">
                 <img src={redPrompt} alt="" />
@@ -459,9 +425,9 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             </FlexBox>
           </Box>
           <Button
-            disabled={!supplyAmount || supplyAmount > supplyLimit}
+            disabled={!amount || new BigNumber(amount).gt(supplyLimit)}
             variant="contained"
-            color={withdrawalMax ? 'error' : 'primary'}
+            color={overSupply ? 'error' : 'primary'}
             sx={{ width: '372px', height: '54px' }}
             onClick={() => {
               // supply
