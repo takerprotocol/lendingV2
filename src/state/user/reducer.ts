@@ -1,7 +1,6 @@
 import { OwnedNftsResponse } from '@alch/alchemy-sdk'
 import { createSlice } from '@reduxjs/toolkit'
-import BigNumber from 'bignumber.js'
-import { UserValues } from 'state/types'
+import { erc20ReserveData, UserValues } from 'state/types'
 
 export type PopupContent = {
   txn: {
@@ -22,17 +21,6 @@ export interface ApplicationState {
   readonly userNftConfig: string
   readonly ownedNfts: OwnedNftsResponse | any
 
-  readonly borrowRate: string
-  readonly configuration: string
-  readonly debtIndex: string
-  readonly debtTokenAddress: string
-  readonly depositRate: string
-  readonly interestRateCalculatorAddress: string
-  readonly tTokenAddress: string
-  readonly treasury: string
-  readonly lastUpdateTimestamp: number
-  readonly liquidityIndex: string
-
   readonly riskLevel: string
   readonly ethLiquidity: string
   readonly ethDebt: string
@@ -43,6 +31,7 @@ export interface ApplicationState {
   readonly decimal: string
   readonly dashboardType: number
   readonly userValues: UserValues
+  readonly erc20ReserveData: erc20ReserveData
 }
 export interface TokenDecimals {
   symbol: string
@@ -60,17 +49,6 @@ const initialState: ApplicationState = {
   nftCollateral: '0',
   ownedNfts: [],
 
-  borrowRate: '0',
-  configuration: '0',
-  debtIndex: '0',
-  debtTokenAddress: '0',
-  depositRate: '0',
-  interestRateCalculatorAddress: '0',
-  tTokenAddress: '0',
-  treasury: '0',
-  lastUpdateTimestamp: 0,
-  liquidityIndex: '0',
-
   riskLevel: '0',
   ethLiquidity: '0',
   ethDebt: '0',
@@ -82,10 +60,22 @@ const initialState: ApplicationState = {
 
   dashboardType: 1,
   userValues: {
-    borrowLiquidity: new BigNumber(0),
-    NFTLiquidity: new BigNumber(0),
-    totalDebt: new BigNumber(0),
-    totalCollateral: new BigNumber(0),
+    borrowLiquidity: '0',
+    NFTLiquidity: '0',
+    totalDebt: '0',
+    totalCollateral: '0',
+  },
+  erc20ReserveData: {
+    borrowRate: '0',
+    configuration: '0',
+    debtIndex: '0',
+    debtTokenAddress: '0',
+    depositRate: '0',
+    interestRateCalculatorAddress: '0',
+    tTokenAddress: '0',
+    treasury: '0',
+    lastUpdateTimestamp: '0',
+    liquidityIndex: '0',
   },
 }
 
@@ -112,16 +102,7 @@ const applicationSlice = createSlice({
     },
     setReserveData(state, action) {
       if (action.payload) {
-        state.borrowRate = action.payload[0]
-        state.configuration = action.payload[1]
-        state.debtIndex = action.payload[2]
-        state.debtTokenAddress = action.payload[3]
-        state.depositRate = action.payload[4]
-        state.interestRateCalculatorAddress = action.payload[5]
-        state.tTokenAddress = action.payload[6]
-        state.treasury = action.payload[7]
-        state.lastUpdateTimestamp = action.payload[8]
-        state.liquidityIndex = action.payload[9]
+        state.erc20ReserveData = action.payload
       }
     },
     setRiskLevel(state, action) {
@@ -157,10 +138,13 @@ const applicationSlice = createSlice({
       state.dashboardType = action.payload
     },
     setUserValues(state, action) {
-      state.userValues.borrowLiquidity = action.payload[0]
-      state.userValues.NFTLiquidity = action.payload[1]
-      state.userValues.totalDebt = action.payload[2]
-      state.userValues.totalCollateral = action.payload[3]
+      if (action.payload) {
+        state.userValues = action.payload
+        // state.userValues.borrowLiquidity = new BigNumber(action.payload[0].toString())
+        // state.userValues.NFTLiquidity = new BigNumber(action.payload[1].toString())
+        // state.userValues.totalDebt = new BigNumber(action.payload[2].toString())
+        // state.userValues.totalCollateral = new BigNumber(action.payload[3].toString())
+      }
     },
   },
 })

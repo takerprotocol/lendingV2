@@ -11,7 +11,7 @@ import MyLoanModal from './MyLoanModal'
 import { getRiskLevel, getRiskLevelTag } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import BigNumber from 'bignumber.js'
-import { useBorrowRate, useDebtIndex, useEthDebt, useRiskLevel } from 'state/user/hooks'
+import { useBorrowLimit, useErc20ReserveData, useEthDebt, useRiskLevel } from 'state/user/hooks'
 // import { useContract } from 'hooks/useContract'
 // import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
 // import { useAddress } from 'state/application/hooks'
@@ -91,9 +91,9 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
   const [datatype] = useState<boolean>(true)
   const [myDebt] = useState<number>(23)
   const riskLevel = useRiskLevel()
-  const borrowRate = useBorrowRate()
-  const debtIndex = useDebtIndex()
+  const erc20ReserveData = useErc20ReserveData()
   const ethDebt = useEthDebt()
+  const borrowLimit = useBorrowLimit()
 
   const myLoanRiskLevel = useMemo(() => {
     return getRiskLevel(riskLevel)
@@ -185,7 +185,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
           <CustomizedSlider colorClass={myLoanRiskLevelTag}></CustomizedSlider>
           <FlexEndBox>
             <Typography variant="body1" color="#4E4B66">
-              Borrow Limit {debtIndex} ETH
+              Borrow Limit {borrowLimit} ETH
             </Typography>
           </FlexEndBox>
           <BottomBox>
@@ -199,7 +199,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
                 <ImgBox src={addBox} alt="" />
                 <Box ml="33px" width="67px">
                   <Typography variant="subtitle2" color="#6E7191">
-                    {borrowRate}%
+                    {erc20ReserveData.borrowRate}%
                   </Typography>
                 </Box>
                 <ImgBox src={rightBox} alt="" />

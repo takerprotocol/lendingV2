@@ -9,7 +9,7 @@ const Container = styled('div')`
   cursor: pointer;
 `
 
-const Copy = ({ text = '' }: { text: string }) => {
+const Copy = ({ text = '', color = '#6E7191' }: { text: string; color?: string }) => {
   const [copied, setCopied] = useState(false)
   const handleCopy = useCallback(async () => {
     try {
@@ -53,14 +53,14 @@ const Copy = ({ text = '' }: { text: string }) => {
         >
           <path
             d="M13.5 7.3125H8.4375C7.81618 7.3125 7.3125 7.81618 7.3125 8.4375V13.5C7.3125 14.1213 7.81618 14.625 8.4375 14.625H13.5C14.1213 14.625 14.625 14.1213 14.625 13.5V8.4375C14.625 7.81618 14.1213 7.3125 13.5 7.3125Z"
-            stroke="#6E7191"
+            stroke={color}
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
           <path
             d="M5.0625 10.6875H4.5C4.20163 10.6875 3.91548 10.569 3.7045 10.358C3.49353 10.147 3.375 9.86087 3.375 9.5625V4.5C3.375 4.20163 3.49353 3.91548 3.7045 3.7045C3.91548 3.49353 4.20163 3.375 4.5 3.375H9.5625C9.86087 3.375 10.147 3.49353 10.358 3.7045C10.569 3.91548 10.6875 4.20163 10.6875 4.5V5.0625"
-            stroke="#6E7191"
+            stroke={color}
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"

@@ -8,7 +8,7 @@ import { FlexBox, SpaceBetweenBox } from 'styleds'
 import { useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
-import { useDepositRate, useEthCollateral, useNftCollateral, useUsedCollateral } from 'state/user/hooks'
+import { useErc20ReserveData, useEthCollateral, useNftCollateral, useUsedCollateral } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { toast } from 'react-toastify'
 import { ERC20_ADDRESS, gasLimit } from 'config'
@@ -86,9 +86,9 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const [dataType] = useState<boolean>(true)
   const [typeModal, setTypeModal] = useState<number>(1) // MySupplyModal State Supply(1) ro Withdraw(0)
   const [openMySupplySwitchModal, setOpenMySupplySwitchModal] = useState<boolean>(false)
-  const [switchType, setSwitchType] = useState<number>(0) //1›
-  const [loanType] = useState<number>(0) //1=有
-  const depositRate = useDepositRate()
+  const [switchType, setSwitchType] = useState<number>(0) // SwitchModal 关->开 ro 开->关
+  const [loanType] = useState<number>(0) //有没借款1=有0=无
+  const erc20ReserveData = useErc20ReserveData()
   const contract = useLendingPool()
   const ethCollateral = useEthCollateral()
   const nftCollateral = useNftCollateral()
@@ -139,7 +139,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
             <ImgBox src={addBox} alt="" />
             <Box ml="22px" width="51px">
               <Typography variant="subtitle2" color="#6E7191">
-                {depositRate}%
+                {erc20ReserveData.depositRate}%
               </Typography>
             </Box>
             <ImgBox src={rightBox} alt="" />
@@ -217,7 +217,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
         switchType={switchType}
         openMySupplySwitchModal={openMySupplySwitchModal}
         handle={(type: string) => {
-          setOpenMySupplySwitchModal(!openMySupplyModal)
+          setOpenMySupplySwitchModal(!openMySupplySwitchModal)
           if (type === 'enable') {
             changeUsedAsCollateral()
           }

@@ -6,6 +6,7 @@ import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
 import Right from 'assets/images/svg/common/right.svg'
 import { CenterBox, SpaceBetweenBox } from 'styleds/index'
 import { useMemo, useState } from 'react'
+import { useEthCollateral, useEthLiquidity, useUsedCollateral } from 'state/user/hooks'
 const style = {
   position: 'relative',
   width: '420px',
@@ -56,6 +57,9 @@ export default function MySupplySwitchModal({
   switchType,
 }: MySupplySwitchModalProps) {
   const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
+  const ethCollateral = useEthCollateral()
+  const ethLiquidity = useEthLiquidity()
+  const usedCollateral = useUsedCollateral()
   const modalType = useMemo(() => {
     return !(loanType === 1 && +ETHCollateralType === 0 && +NFTCollateralType === 0 && switchType === 1)
   }, [ETHCollateralType, NFTCollateralType, loanType, switchType])
@@ -165,10 +169,10 @@ export default function MySupplySwitchModal({
                 </Box>
                 <Box>
                   <Typography variant="body1" fontWeight="600" component="span" color="#A0A3BD">
-                    12.3465 {'>'}
+                    {ethCollateral} {'>'}
                   </Typography>
                   <Typography ml="6px" variant="body1" fontWeight="700" component="span">
-                    22.6836
+                    {usedCollateral ? ethLiquidity : 0}
                   </Typography>
                 </Box>
               </SpaceBetweenBox>
@@ -213,10 +217,23 @@ export default function MySupplySwitchModal({
           )}
           {switchType === 1 ? (
             <SpaceBetweenBox mt="48px">
-              <Button sx={{ width: '50%', height: '48px' }} color="secondary" variant="contained">
+              <Button
+                sx={{ width: '50%', height: '48px' }}
+                color="secondary"
+                variant="contained"
+                onClick={() => {
+                  handle('enable')
+                }}
+              >
                 Unable
               </Button>
-              <Button sx={{ width: '50%', height: '48px', marginLeft: '24px' }} variant="contained">
+              <Button
+                sx={{ width: '50%', height: '48px', marginLeft: '24px' }}
+                variant="contained"
+                onClick={() => {
+                  handle('unable')
+                }}
+              >
                 Think about it
               </Button>
             </SpaceBetweenBox>

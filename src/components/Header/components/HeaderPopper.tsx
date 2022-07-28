@@ -22,6 +22,7 @@ import { useAppDispatch } from 'state/hooks'
 import { setAddress } from 'state/user/reducer'
 import Copy from 'components/Copy'
 import Blockies from 'react-blockies'
+import { useAllTransactions } from 'state/transactions/hooks'
 
 const PopperBox = styled(Box)`
   z-index: 4;
@@ -66,6 +67,8 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
   const balance = useWalletBalance()
   const dispatch = useAppDispatch()
   const { deactivate } = useWeb3React()
+  const transactions = useAllTransactions()
+  console.log(transactions)
   const [open1, setOpen] = useState<boolean>(false)
   //  useEffect(() => {if (library) {
   //     // const web3 = new Web3(library.provider)

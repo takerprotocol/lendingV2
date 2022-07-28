@@ -7,7 +7,7 @@ import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
 import { fixedFormat, percent, getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
-import { useAddress, useBorrowRate, useDebtIndex, useEthDebt } from 'state/user/hooks'
+import { useAddress, useBorrowLimit, useErc20ReserveData, useEthDebt } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { ERC20_ADDRESS, gasLimit } from 'config'
 import BigNumber from 'bignumber.js'
@@ -134,8 +134,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const TypographyRiskLevel = getRiskLevel(amount)
   const ColorClass = getRiskLevelTag(amount)
   const contract = useLendingPool()
-  const borrowRate = useBorrowRate()
-  const borrowLimit = useDebtIndex()
+  const erc20ReserveData = useErc20ReserveData()
+  const borrowLimit = useBorrowLimit()
   const address = useAddress()
   const ethDebt = useEthDebt()
   useEffect(() => {
@@ -145,6 +145,13 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const borrowSubmit = () => {
     if (contract) {
       contract.borrow(ERC20_ADDRESS, amount, address, { gasLimit }).then((res: any) => {
+        console.log(res)
+      })
+    }
+  }
+  const repaySubmit = () => {
+    if (contract) {
+      contract.repay(ERC20_ADDRESS, amount, address, { gasLimit }).then((res: any) => {
         console.log(res)
       })
     }
@@ -355,7 +362,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               </Box>
               <Box width={'66px'}>
                 <Typography component="p" variant="subtitle2" lineHeight="16px" color="#6E7191">
-                  {borrowRate}%
+                  {erc20ReserveData.borrowRate}%
                 </Typography>
               </Box>
               <Box width="50px">
@@ -392,7 +399,11 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             variant="contained"
             sx={{ width: '372px', height: '54px', marginTop: '24px' }}
             onClick={() => {
-              borrowSubmit()
+              if (check === 1) {
+                borrowSubmit()
+              } else {
+                repaySubmit()
+              }
             }}
           >
             {check === 1 ? 'Borrow' : 'Repay'}

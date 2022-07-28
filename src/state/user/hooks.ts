@@ -1,7 +1,7 @@
 import { OwnedNftsResponse } from '@alch/alchemy-sdk'
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { UserValues } from 'state/types'
+import { erc20ReserveData, UserValues } from 'state/types'
 import { div, plus, times } from 'utils'
 import { AppState } from '../index'
 import { setAddress } from './reducer'
@@ -38,20 +38,14 @@ export function useNftCollateral(): string {
 export function useUserNftConfig(): string {
   return useAppSelector((state: AppState) => state.user.userNftConfig)
 }
-export function useBorrowRate(): string {
-  return useAppSelector((state: AppState) => state.user.borrowRate)
-}
-export function useDepositRate(): string {
-  return useAppSelector((state: AppState) => state.user.depositRate)
-}
 export function useRiskLevel(): string {
   return useAppSelector((state: AppState) => state.user.riskLevel)
 }
-export function useDebtIndex(): string {
-  return useAppSelector((state: AppState) => state.user.debtIndex)
-}
 export function useEthCollateral(): string {
   return useAppSelector((state: AppState) => state.user.ethCollateral)
+}
+export function useEthLiquidity(): string {
+  return useAppSelector((state: AppState) => state.user.ethLiquidity)
 }
 export function useEthDebt(): string {
   return useAppSelector((state: AppState) => state.user.ethDebt)
@@ -83,4 +77,7 @@ export function useDashboardType(): number {
 
 export function useUserValue(): UserValues {
   return useAppSelector((state: AppState) => state.user.userValues)
+}
+export function useErc20ReserveData(): erc20ReserveData {
+  return useAppSelector((state: AppState) => state.user.erc20ReserveData)
 }

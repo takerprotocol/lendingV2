@@ -5,7 +5,7 @@ import myCollateralIcon from 'assets/images/svg/dashboard/myCollateral-icon.svg'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import DepositHeaderSkeleton from './depositSkeleton/DepositHeaderSkeleton'
-import { useDepositRate } from 'state/user/hooks'
+import { useErc20ReserveData } from 'state/user/hooks'
 // import { percent } from 'utils'
 const HeaderBox = styled(Box)`
   width: 1012px;
@@ -66,7 +66,8 @@ interface DepositHeaderProps {
 }
 
 export default function DepositHeader({ loading }: DepositHeaderProps) {
-  const depositRate = useDepositRate()
+  const erc20ReserveData = useErc20ReserveData()
+
   return (
     <Box>
       {loading ? (
@@ -137,7 +138,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 </Box>
                 <Box width={'86px'}>
                   <BigTypography variant="h1" color="#6E7191 !important">
-                    {depositRate}%
+                    {erc20ReserveData.depositRate}%
                   </BigTypography>
                 </Box>
                 <Box width="60px">

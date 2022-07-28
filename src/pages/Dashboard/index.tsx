@@ -76,18 +76,18 @@ export default function Dashboard() {
       })
       contract.getReserveData(ERC20_ADDRESS).then((res: any) => {
         dispatch(
-          setReserveData([
-            bigNumberToString(res.borrowRate),
-            bigNumberToString(res.configuration),
-            bigNumberToString(res.debtIndex),
-            bigNumberToString(res.debtTokenAddress),
-            bigNumberToString(res.depositRate),
-            bigNumberToString(res.interestRateCalculatorAddress),
-            res.lastUpdateTimestamp,
-            bigNumberToString(res.liquidityIndex),
-            bigNumberToString(res.tTokenAddress),
-            bigNumberToString(res.treasury),
-          ])
+          setReserveData({
+            borrowRate: res.borrowRate.toString(),
+            configuration: res.configuration.toString(),
+            debtIndex: res.debtIndex.toString(),
+            debtTokenAddress: res.debtTokenAddress.toString(),
+            depositRate: res.depositRate.toString(),
+            interestRateCalculatorAddress: res.interestRateCalculatorAddress.toString(),
+            tTokenAddress: res.tTokenAddress.toString(),
+            treasury: res.treasury.toString(),
+            lastUpdateTimestamp: res.lastUpdateTimestamp.toString(),
+            liquidityIndex: res.liquidityIndex.toString(),
+          })
         )
       })
       contract.getUserState(address).then((res: Array<BigNumber>) => {
@@ -95,7 +95,14 @@ export default function Dashboard() {
         // dispatch(setRiskLevel(bigNumberToString(res)))
       })
       contract.getUserValues(address).then((res: Array<BigNumber>) => {
-        dispatch(setUserValues(res))
+        dispatch(
+          setUserValues({
+            borrowLiquidity: res[0].toString(),
+            NFTLiquidity: res[0].toString(),
+            totalDebt: res[0].toString(),
+            totalCollateral: res[0].toString(),
+          })
+        )
       })
       contract.getUserAssetValues(address, ERC20_ADDRESS).then((res: Array<BigNumber>) => {
         dispatch(setUserEthAsset([bigNumberToString(res[0]), bigNumberToString(res[1]), bigNumberToString(res[2])]))

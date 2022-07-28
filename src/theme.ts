@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles'
 import { red } from '@mui/material/colors'
+// eslint-disable-next-line no-restricted-imports
+import 'react-toastify/dist/ReactToastify.css'
 
 interface COLOR {
   barBackground: string
@@ -307,6 +309,58 @@ export const theme = createTheme({
         a {
           text-decoration: none;
           color: unset;
+        }
+        .Toastify {
+          .Toastify__toast-container {
+            width: 480px;
+            top: 78px;
+          }
+          .Toastify__toast {
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.9);            
+            border: 1px solid #EFF0F6;
+            box-shadow: 0px 10px 20px rgba(20, 20, 42, 0.05);
+            backdrop-filter: blur(80px);            
+            border-radius: 12px;
+            .error, .success {
+              width: 38px;
+              margin-right: 24px;
+            }
+            .toast-close {
+              width: 24px;
+            }
+          }
+          .Toastify__toast-icon {
+            width: 38px;
+            margin-right: 24px;
+            svg {
+              width: 28px;
+              height: 28px;
+              background: #fff;
+              border-radius: 50%;
+            }
+          }
+          .Toastify__toast-body {
+            padding: 0 30px 0 0;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 160%;
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.02em;
+            color: #14142A;
+          }
+          .Toastify__toast--error {
+            .success {
+              display: none;
+            }
+          }
+          .Toastify__toast--success {
+            .error {
+              display: none;
+            }
+            
+          }
         }
         .MuiMenu-paper {
           box-shadow: 0px 0px 32px rgb(0 0 0 / 10%) !important;

@@ -6,13 +6,17 @@ import { useEffect, useMemo, useState } from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { fixedFormat, minus, plus, times } from 'utils'
+import { desensitization, fixedFormat, minus, plus, times } from 'utils'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress, useDepositRate, useUsedCollateral, useWalletBalance } from 'state/user/hooks'
+import { SpaceBetweenBox } from 'styleds'
+import { useAddress, useErc20ReserveData, useUsedCollateral, useWalletBalance } from 'state/user/hooks'
 import { ERC20_ADDRESS, gasLimit } from 'config'
-
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
+// import { useContract } from 'hooks/useContract'
+// import a from 'abis/ILendingPoolConfigurator.json'
 const style = {
   width: '420px',
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -44,10 +48,6 @@ const CenterBox = styled(Box)`
   .MuiInputBase-input {
     font-size: 28px;
   }
-`
-const SpaceBetweenBox = styled(Box)`
-  display: flex;
-  justify-content: space-between;
 `
 const FlexBox = styled(Box)`
   display: flex;
@@ -107,10 +107,20 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const contract = useLendingPool()
   const address = useAddress()
   const usedCollateral = useUsedCollateral()
-  const depositRate = useDepositRate()
+  const erc20ReserveData = useErc20ReserveData()
+  const addTransaction = useTransactionAdder()
+  // const abc = useContract('0x084A0DFec27496dc6f54b585FD21C8CeCd996193', a)
+
   useEffect(() => {
     setBorrowOrRepay(type)
   }, [type])
+
+  // useEffect(() => {
+  //   if (abc) {
+  //     abc.setAdmin(address)
+  //   }
+  //   console.log(abc)
+  // }, [abc, address])
 
   const supplySubmit = () => {
     if (new BigNumber(amount).lte(0)) {
@@ -118,10 +128,30 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
       return
     }
     if (contract && address) {
+      // contract.initReserve(
+      //   '0xC7FE0Ff4084b9c85618F8598fa95990Fe68e29F3',
+      //   '0x3e8000051227100000',
+      //   '0xc65e7e8cDd0475dAb9B2e636aff5F652Dce25459',
+      //   '0x62281730bF9f365124a8c00786fb3BB5081b84Ef',
+      //   '0xa06481B39b67AfF6b472E144c3F5AD4D45461933',
+      //   { gasLimit }
+      // )
+      // console.log([
+      //   ERC20_ADDRESS,
+      //   new BigNumber(amount).times(new BigNumber(10).pow(18).toString()),
+      //   address,
+      //   { gasLimit },
+      // ])
       contract
-        .deposit(ERC20_ADDRESS, amount, address, { gasLimit })
+        .deposit(ERC20_ADDRESS, amount, address, {
+          gasLimit,
+        })
         .then((res: any) => {
-          toast.success(res.hash)
+          addTransaction(res, {
+            type: TransactionType.DEPOSIT,
+            recipient: address,
+          })
+          toast.success(desensitization(res.hash))
           setAmount('')
           setOpenMySupplyModal(false)
         })
@@ -161,8 +191,12 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   }, [amount])
 
   const overSupply = useMemo(() => {
-    return new BigNumber(mySupply).lte(amount)
-  }, [amount, mySupply])
+    if (borrowOrRepay === 2) {
+      return new BigNumber(mySupply).lte(amount)
+    } else {
+      return false
+    }
+  }, [amount, mySupply, borrowOrRepay])
 
   return (
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -217,7 +251,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Typography>
               <Box
                 className={borrowOrRepay === 1 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '13px' }}
+                sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '14px' }}
               ></Box>
             </Box>
             <Box display={supplyLimit !== '0' ? '' : 'none'} mr="73px">
@@ -236,7 +270,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Typography>
               <Box
                 className={borrowOrRepay === 2 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '13px' }}
+                sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '14px' }}
               ></Box>
             </Box>
           </SpaceBetweenBox>
@@ -287,35 +321,27 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Box>
             </SpaceBetweenBox>
           </BorrowAmountBox>
-          <Box mb="15px" mt="17px" width="372px"></Box>
-          <SpaceBetweenBox mt="16.5px">
-            <Box>
-              <Typography variant="body1" component="p" color="#A0A3BD">
-                Supply Amount (ETH)
-              </Typography>
-              {ModalType && (
-                <>
-                  <Typography mt="16px" variant="body1" component="p" color="#A0A3BD">
+          <Box mt="16px">
+            {ModalType && (
+              <Box>
+                <SpaceBetweenBox>
+                  <Typography variant="body1" color="#A0A3BD">
+                    Supply Amount (ETH)
+                  </Typography>
+                  <Box>
+                    <Typography variant="body1" component="span" color="#A0A3BD">
+                      {fixedFormat(mySupply)} {'>'}
+                    </Typography>
+                    <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+                      {fixedFormat(plus(mySupply, amount ? (borrowOrRepay === 1 ? amount : times(amount, -1)) : 0))}
+                    </Typography>
+                  </Box>
+                </SpaceBetweenBox>
+                <SpaceBetweenBox mt="16px">
+                  <Typography variant="body1" color="#A0A3BD">
                     Borrow Limited (ETH)
                   </Typography>
-                  <Typography mt="16px" variant="body1" component="p" color="#A0A3BD">
-                    Borrow Limit Used
-                  </Typography>
-                </>
-              )}
-            </Box>
-            <Box>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Typography variant="body1" component="span" color="#A0A3BD">
-                  {fixedFormat(mySupply)} {'>'}
-                </Typography>
-                <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                  {fixedFormat(plus(mySupply, amount ? (borrowOrRepay === 1 ? amount : times(amount, -1)) : 0))}
-                </Typography>
-              </Box>
-              {ModalType && (
-                <>
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
+                  <Box>
                     <Typography variant="body1" component="span" color={'#A0A3BD'}>
                       20% {'>'}
                     </Typography>
@@ -329,7 +355,12 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       20%
                     </Typography>
                   </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
+                </SpaceBetweenBox>
+                <SpaceBetweenBox mt="16px">
+                  <Typography variant="body1" color="#A0A3BD">
+                    Borrow Limit Used
+                  </Typography>
+                  <Box>
                     <Typography variant="body1" component="span" color="#A0A3BD">
                       20% {'>'}
                     </Typography>
@@ -343,11 +374,9 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       20%
                     </Typography>
                   </Box>
-                </>
-              )}
-            </Box>
-          </SpaceBetweenBox>
-          {ModalType && (
+                </SpaceBetweenBox>
+              </Box>
+            )}
             <SpaceBetweenBox mt="16px">
               <Box>
                 <Typography variant="body1" component="span" color="#A0A3BD">
@@ -366,7 +395,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 </Typography>
               </Box>
             </SpaceBetweenBox>
-          )}
+          </Box>
           <RightFlexBox>
             <FlexBox>
               <Box width={'65px'}>
@@ -381,7 +410,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Box>
               <Box width={'66px'}>
                 <Typography component="p" variant="subtitle2" lineHeight="16px" color="#6E7191">
-                  {depositRate}%
+                  {erc20ReserveData.depositRate}%
                 </Typography>
               </Box>
               <Box width="50px">
@@ -425,7 +454,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             </FlexBox>
           </Box>
           <Button
-            disabled={!amount || new BigNumber(amount).gt(supplyLimit)}
+            // disabled={!amount || new BigNumber(amount).gt(supplyLimit)}
             variant="contained"
             color={overSupply ? 'error' : 'primary'}
             sx={{ width: '372px', height: '54px' }}
