@@ -8,7 +8,7 @@ import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
 import CustomizedSlider from 'components/Slider'
 import { useMemo, useState } from 'react'
 import MyLoanModal from './MyLoanModal'
-import { getRiskLevel, getRiskLevelTag } from 'utils'
+import { fixedFormat, getRiskLevel, getRiskLevelTag } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import BigNumber from 'bignumber.js'
 import { useBorrowLimit, useErc20ReserveData, useEthDebt, useRiskLevel } from 'state/user/hooks'
@@ -89,7 +89,6 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
   const [datatype] = useState<boolean>(true)
-  const [myDebt] = useState<number>(23)
   const riskLevel = useRiskLevel()
   const erc20ReserveData = useErc20ReserveData()
   const ethDebt = useEthDebt()
@@ -118,7 +117,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
               <CenterBox>
                 <img src={blackEthLogo} alt="" />
                 <Typography ml="13px" variant="h3" fontSize="32px" lineHeight="51px">
-                  {ethDebt}
+                  {fixedFormat(ethDebt)}
                 </Typography>
               </CenterBox>
             </Box>
@@ -252,7 +251,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
         </>
       )}
       <MyLoanModal
-        myDebt={myDebt}
+        myDebt={+ethDebt}
         open={open}
         repayRoBorrow={repayRoBorrow}
         onClose={() => setOpen(false)}

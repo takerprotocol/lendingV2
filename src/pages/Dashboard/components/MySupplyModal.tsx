@@ -6,12 +6,12 @@ import { useEffect, useMemo, useState } from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { desensitization, fixedFormat, minus, plus, times } from 'utils'
+import { desensitization, fixedFormat, minus, percent, plus, times } from 'utils'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { SpaceBetweenBox } from 'styleds'
-import { useAddress, useErc20ReserveData, useUsedCollateral, useWalletBalance } from 'state/user/hooks'
+import { useAddress, useBorrowLimit, useErc20ReserveData, useUsedCollateral, useWalletBalance } from 'state/user/hooks'
 import { ERC20_ADDRESS, gasLimit } from 'config'
 import { useTransactionAdder } from 'state/transactions/hooks'
 // import { TransactionType } from 'state/transactions/types'
@@ -109,6 +109,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const [amount, setAmount] = useState('')
   const contract = useLendingPool()
   const address = useAddress()
+  const borrowLimit = useBorrowLimit()
   const usedCollateral = useUsedCollateral()
   const erc20ReserveData = useErc20ReserveData()
   const addTransaction = useTransactionAdder()
@@ -316,28 +317,28 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             </SpaceBetweenBox>
           </BorrowAmountBox>
           <Box mt="16px">
+            <SpaceBetweenBox>
+              <Typography variant="body1" color="#A0A3BD">
+                Supply Amount (ETH)
+              </Typography>
+              <Box>
+                <Typography variant="body1" component="span" color="#A0A3BD">
+                  {fixedFormat(mySupply)} {'>'}
+                </Typography>
+                <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+                  {fixedFormat(plus(mySupply, amount ? (borrowOrRepay === 1 ? amount : times(amount, -1)) : 0))}
+                </Typography>
+              </Box>
+            </SpaceBetweenBox>
             {ModalType && (
               <Box>
-                <SpaceBetweenBox>
-                  <Typography variant="body1" color="#A0A3BD">
-                    Supply Amount (ETH)
-                  </Typography>
-                  <Box>
-                    <Typography variant="body1" component="span" color="#A0A3BD">
-                      {fixedFormat(mySupply)} {'>'}
-                    </Typography>
-                    <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                      {fixedFormat(plus(mySupply, amount ? (borrowOrRepay === 1 ? amount : times(amount, -1)) : 0))}
-                    </Typography>
-                  </Box>
-                </SpaceBetweenBox>
                 <SpaceBetweenBox mt="16px">
                   <Typography variant="body1" color="#A0A3BD">
                     Borrow Limited (ETH)
                   </Typography>
                   <Box>
                     <Typography variant="body1" component="span" color={'#A0A3BD'}>
-                      20% {'>'}
+                      {amount} {'>'}
                     </Typography>
                     <Typography
                       ml="6px"
@@ -346,7 +347,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       fontWeight="700"
                       color={overSupply ? '#E1536C' : '#14142A'}
                     >
-                      20%
+                      {minus(borrowLimit, amount)}
                     </Typography>
                   </Box>
                 </SpaceBetweenBox>
@@ -356,7 +357,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                   </Typography>
                   <Box>
                     <Typography variant="body1" component="span" color="#A0A3BD">
-                      20% {'>'}
+                      {percent(1, 1)} {'>'}
                     </Typography>
                     <Typography
                       ml="6px"
@@ -365,30 +366,30 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       fontWeight="700"
                       color={overSupply ? '#E1536C' : '#14142A'}
                     >
-                      20%
+                      {percent(1, 1)}
+                    </Typography>
+                  </Box>
+                </SpaceBetweenBox>
+                <SpaceBetweenBox mt="16px">
+                  <Box>
+                    <Typography variant="body1" component="span" color="#A0A3BD">
+                      Risk level
+                    </Typography>
+                    <Typography ml="8px" variant="body1" component="span" fontWeight="700" color="#4BC8B1">
+                      HEALTHY
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Typography variant="body1" component="span" color="#A0A3BD">
+                      186% {'>'}
+                    </Typography>
+                    <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+                      186%
                     </Typography>
                   </Box>
                 </SpaceBetweenBox>
               </Box>
             )}
-            <SpaceBetweenBox mt="16px">
-              <Box>
-                <Typography variant="body1" component="span" color="#A0A3BD">
-                  Risk level
-                </Typography>
-                <Typography ml="8px" variant="body1" component="span" fontWeight="700" color="#4BC8B1">
-                  HEALTHY
-                </Typography>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Typography variant="body1" component="span" color="#A0A3BD">
-                  186% {'>'}
-                </Typography>
-                <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                  186%
-                </Typography>
-              </Box>
-            </SpaceBetweenBox>
           </Box>
           <RightFlexBox>
             <FlexBox>

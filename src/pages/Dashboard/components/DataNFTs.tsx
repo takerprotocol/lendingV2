@@ -40,7 +40,6 @@ export default function DataNFTs({ type }: DataNFTsProps) {
           setUserValues(res)
         })
         .catch((e: any) => {
-          console.log(e)
           setLoading(false)
         })
     }

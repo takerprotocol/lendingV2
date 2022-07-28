@@ -6,7 +6,8 @@ import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
 import Right from 'assets/images/svg/common/right.svg'
 import { CenterBox, SpaceBetweenBox } from 'styleds/index'
 import { useMemo, useState } from 'react'
-import { useEthCollateral, useEthLiquidity, useUsedCollateral } from 'state/user/hooks'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, plus } from 'utils'
+import { useRiskLevel } from 'state/user/hooks'
 const style = {
   position: 'relative',
   width: '420px',
@@ -42,7 +43,7 @@ export const RightBgBox = styled(Box)`
 `
 interface MySupplySwitchModalProps {
   openMySupplySwitchModal: boolean
-  loanType: number
+  loanType: boolean
   handle: Function
   ETHCollateralType: string
   NFTCollateralType: string
@@ -57,12 +58,12 @@ export default function MySupplySwitchModal({
   switchType,
 }: MySupplySwitchModalProps) {
   const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
-  const ethCollateral = useEthCollateral()
-  const ethLiquidity = useEthLiquidity()
-  const usedCollateral = useUsedCollateral()
+  const riskLevel = useRiskLevel()
+  const TypographyRiskLevel = getRiskLevel(riskLevel)
+  const ColorClass = getRiskLevelTag(riskLevel)
   const modalType = useMemo(() => {
-    return !(loanType === 1 && +ETHCollateralType === 0 && +NFTCollateralType === 0 && switchType === 1)
-  }, [ETHCollateralType, NFTCollateralType, loanType, switchType])
+    return !loanType && +NFTCollateralType === 0 && switchType === 0
+  }, [NFTCollateralType, loanType, switchType])
   return (
     <Modal
       open={openMySupplySwitchModal}
@@ -72,27 +73,27 @@ export default function MySupplySwitchModal({
       <Box sx={style}>
         <TopBox
           sx={{
-            background: `${switchType === 1 ? '#eff0f6' : 'linear-gradient(249.47deg, #6AA2F7 0%, #627EEA 100%)'}`,
+            background: `${switchType === 0 ? '#eff0f6' : 'linear-gradient(249.47deg, #6AA2F7 0%, #627EEA 100%)'}`,
           }}
         >
           <CenterBox
             sx={{ justifyContent: 'flex-end', cursor: 'pointer' }}
             onClick={() => {
-              if (loanType === 0) {
+              if (loanType) {
                 handle('unable')
               } else {
                 setSwitchUnableOffModal(true)
               }
             }}
           >
-            <img src={switchType === 1 ? shutOff : whiteShutOff} alt="" />
+            <img src={switchType === 0 ? shutOff : whiteShutOff} alt="" />
           </CenterBox>
           <Box>
             <CenterBox>
               <Typography
                 variant="body1"
                 component="h1"
-                color={switchType === 1 ? '#A0A3BD' : 'rgba(255, 255, 255, 0.7)'}
+                color={switchType === 0 ? '#A0A3BD' : 'rgba(255, 255, 255, 0.7)'}
               >
                 Borrow Limit
               </Typography>
@@ -101,19 +102,19 @@ export default function MySupplySwitchModal({
               <Typography
                 mr="12px"
                 variant="h4"
-                color={switchType === 1 ? '#A0A3BD' : 'rgba(239, 240, 246, 0.6)'}
+                color={switchType === 0 ? '#A0A3BD' : 'rgba(239, 240, 246, 0.6)'}
                 fontWeight="600"
               >
                 0.00
               </Typography>
-              <RightBgBox sx={{ background: `${switchType === 1 ? '#D9DBE9' : 'rgba(255, 255, 255, 0.2)'}` }}>
-                <img src={switchType === 1 ? Right : whiteRight} alt="" />
+              <RightBgBox sx={{ background: `${switchType === 0 ? '#D9DBE9' : 'rgba(255, 255, 255, 0.2)'}` }}>
+                <img src={switchType === 0 ? Right : whiteRight} alt="" />
               </RightBgBox>
               <Typography
                 mr="6px"
                 variant="h4"
                 fontWeight="600"
-                color={switchType === 1 ? '#4E4B66' : 'rgba(239, 240, 246)'}
+                color={switchType === 0 ? '#4E4B66' : 'rgba(239, 240, 246)'}
               >
                 18.0918
               </Typography>
@@ -121,7 +122,7 @@ export default function MySupplySwitchModal({
                 <Typography
                   variant="subtitle1"
                   fontWeight="700"
-                  color={switchType === 1 ? '#4E4B66' : 'rgba(239, 240, 246)'}
+                  color={switchType === 0 ? '#4E4B66' : 'rgba(239, 240, 246)'}
                 >
                   ETH
                 </Typography>
@@ -132,15 +133,15 @@ export default function MySupplySwitchModal({
         <BottomBox>
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="h5" component="h1">
-              {switchType === 1 ? 'Sure to unable ?' : 'Enable Collateral Mode'}
+              {switchType === 0 ? 'Sure to unable ?' : 'Enable Collateral Mode'}
             </Typography>
             <Typography mt="4px" variant="subtitle2" component="span" color="#6E7191" fontWeight="500">
-              {switchType === 1
+              {switchType === 0
                 ? 'If you unable the collateral mode will reduce the borrow limit '
                 : 'Use your Supply ETH as collateral to get a higher Borrow limit amount'}
             </Typography>
             <Typography
-              display={modalType ? 'none' : ''}
+              display={modalType ? '' : 'none'}
               mt="4px"
               variant="subtitle2"
               component="span"
@@ -150,7 +151,7 @@ export default function MySupplySwitchModal({
               and{' '}
             </Typography>
             <Typography
-              display={modalType ? 'none' : ''}
+              display={modalType ? '' : 'none'}
               variant="subtitle2"
               component="span"
               color="#E1536C"
@@ -159,7 +160,7 @@ export default function MySupplySwitchModal({
               increase your account risk level
             </Typography>
           </Box>
-          {(switchType === 0 || (loanType === 1 && +NFTCollateralType === 0)) && (
+          {!(switchType === 0 && loanType) && (
             <DataBox>
               <SpaceBetweenBox>
                 <Box>
@@ -169,14 +170,15 @@ export default function MySupplySwitchModal({
                 </Box>
                 <Box>
                   <Typography variant="body1" fontWeight="600" component="span" color="#A0A3BD">
-                    {ethCollateral} {'>'}
+                    {fixedFormat(switchType === 1 ? NFTCollateralType : plus(ETHCollateralType, NFTCollateralType))}
+                    {'>'}
                   </Typography>
                   <Typography ml="6px" variant="body1" fontWeight="700" component="span">
-                    {usedCollateral ? ethLiquidity : 0}
+                    {fixedFormat(switchType === 1 ? plus(ETHCollateralType, NFTCollateralType) : NFTCollateralType)}
                   </Typography>
                 </Box>
               </SpaceBetweenBox>
-              {(!(+ETHCollateralType === 0 && +NFTCollateralType === 0) || loanType === 1) && (
+              {!(switchType === 1 && (+NFTCollateralType === 0 || loanType)) && (
                 <>
                   <SpaceBetweenBox marginY="16px">
                     <Box>
@@ -198,8 +200,8 @@ export default function MySupplySwitchModal({
                       <Typography mr="8px" variant="body1" component="span" color="#A0A3BD">
                         Risk level
                       </Typography>
-                      <Typography variant="body1" fontWeight="700" component="span" color="#EF884F">
-                        HEALTHY
+                      <Typography className={ColorClass} ml="8px" variant="body1" component="span" fontWeight="700">
+                        {TypographyRiskLevel}
                       </Typography>
                     </Box>
                     <Box>
@@ -215,7 +217,7 @@ export default function MySupplySwitchModal({
               )}
             </DataBox>
           )}
-          {switchType === 1 ? (
+          {switchType === 0 ? (
             <SpaceBetweenBox mt="48px">
               <Button
                 sx={{ width: '50%', height: '48px' }}

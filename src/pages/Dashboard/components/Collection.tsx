@@ -231,15 +231,9 @@ export default function Collection({ type, loading }: CollectionType) {
                     </CollectionFlexBox>
                     {address ? (
                       <Box mt="48px">
-                        {type === 1 ? (
-                          <Button onClick={() => navigate('/deposit')} variant="contained">
-                            Deposit
-                          </Button>
-                        ) : (
-                          <Button variant="contained" color="success">
-                            Deposit
-                          </Button>
-                        )}
+                        <Button onClick={() => navigate('/deposit')} variant="contained">
+                          Deposit
+                        </Button>
                       </Box>
                     ) : (
                       <Box mt="48px">

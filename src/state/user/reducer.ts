@@ -1,6 +1,6 @@
 import { OwnedNftsResponse } from '@alch/alchemy-sdk'
 import { createSlice } from '@reduxjs/toolkit'
-import { erc20ReserveData, UserValues } from 'state/types'
+import { UserValues, erc20ReserveData } from 'state/types'
 
 export type PopupContent = {
   txn: {

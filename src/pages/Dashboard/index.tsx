@@ -28,9 +28,11 @@ import {
   setUserValues,
 } from 'state/user/reducer'
 import { bigNumberToString } from 'utils'
-import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK } from 'config'
+import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK, CHAIN_ID } from 'config'
 // import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
+import { useActiveWeb3React } from 'hooks/web3'
+import { toast } from 'react-toastify'
 
 // import { getClient } from 'apollo/client'
 // import { SupportedChainId } from 'constants/chains'
@@ -47,13 +49,19 @@ const Main = styled(Box)`
   margin: 0 auto;
 `
 export default function Dashboard() {
+  const { chainId } = useActiveWeb3React()
   const type = useDashboardType()
   const [loading, setLoading] = useState<boolean>(true)
   const dispatch = useAppDispatch()
   const contract = useLendingPool()
   const address = useAddress()
   useEffect(() => {
-    if (contract && address) {
+    if (chainId && CHAIN_ID && chainId !== CHAIN_ID) {
+      toast.error('Please switch network')
+    }
+  }, [chainId])
+  useEffect(() => {
+    if (contract && address && chainId === CHAIN_ID) {
       // contract.getUserAssetValues(address, ERC721_ADDRESS).then((res: Array<BigNumber>) => {
       //   setLoading(false)
       //   dispatch(
@@ -91,21 +99,20 @@ export default function Dashboard() {
         )
       })
       contract.getUserState(address).then((res: Array<BigNumber>) => {
-        console.log(res)
         // dispatch(setRiskLevel(bigNumberToString(res)))
       })
       contract.getUserValues(address).then((res: Array<BigNumber>) => {
         dispatch(
           setUserValues({
             borrowLiquidity: res[0].toString(),
-            NFTLiquidity: res[0].toString(),
-            totalDebt: res[0].toString(),
-            totalCollateral: res[0].toString(),
+            NFTLiquidity: res[1].toString(),
+            totalDebt: res[2].toString(),
+            totalCollateral: res[3].toString(),
           })
         )
       })
       contract.getUserAssetValues(address, ERC20_ADDRESS).then((res: Array<BigNumber>) => {
-        dispatch(setUserEthAsset([bigNumberToString(res[0]), bigNumberToString(res[1]), bigNumberToString(res[2])]))
+        dispatch(setUserEthAsset([res[0].toString(), res[1].toString(), res[2].toString()]))
       })
       // contract.getReserveConfig('0x6310098a56F9dd4D1F2a8A0Ab0E82565415054D8').then((res: any) => {
       //   console.log('getReserveConfig', res)
@@ -115,7 +122,7 @@ export default function Dashboard() {
         dispatch(setUserNftConfig(bigNumberToString(res)))
       })
     }
-  }, [contract, address, dispatch])
+  }, [contract, address, dispatch, chainId])
   // const client = getClient()[SupportedChainId.MAINNET]
   // client
   //   .query({

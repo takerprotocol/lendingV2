@@ -16,7 +16,6 @@ import NFT8 from 'assets/images/svg/wallet/NFT8.svg'
 import NFT9 from 'assets/images/svg/wallet/NFT9.svg'
 import NFT10 from 'assets/images/svg/wallet/NFT10.svg'
 import { useAddress, useWalletBalance } from 'state/user/hooks'
-import { useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { useAppDispatch } from 'state/hooks'
 import { setAddress } from 'state/user/reducer'
@@ -61,15 +60,19 @@ const StyledPopper = styled(Popper)`
 const StyledBlockie = styled(Blockies)`
   border-radius: 50%;
 `
-
-export default function HeaderPopper({ open, anchorEl, placement }: { open: boolean; anchorEl: any; placement: any }) {
+interface HeaderPopperProps {
+  open: boolean
+  anchorEl: any
+  placement: any
+  setOpen: Function
+}
+export default function HeaderPopper({ open, anchorEl, placement, setOpen }: HeaderPopperProps) {
   const address = useAddress()
   const balance = useWalletBalance()
   const dispatch = useAppDispatch()
   const { deactivate } = useWeb3React()
   const transactions = useAllTransactions()
   console.log(transactions)
-  const [open1, setOpen] = useState<boolean>(false)
   //  useEffect(() => {if (library) {
   //     // const web3 = new Web3(library.provider)
   //     // console.log(web3)
@@ -78,14 +81,13 @@ export default function HeaderPopper({ open, anchorEl, placement }: { open: bool
 
   return (
     <StyledPopper
-      open={open1 || open}
+      open={open}
       onMouseLeave={() => {
         setOpen(false)
       }}
       onMouseOver={() => {
         setOpen(true)
       }}
-      className="account-popper"
       anchorEl={anchorEl}
       placement={placement}
       transition

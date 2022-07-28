@@ -1,5 +1,4 @@
 import { Box, styled, Fade, Popper, Typography } from '@mui/material'
-import { useState } from 'react'
 import blueChip from 'assets/images/svg/common/blueChip.svg'
 import growth from 'assets/images/svg/common/growth.svg'
 import { useAppDispatch } from 'state/hooks'
@@ -30,19 +29,23 @@ const ButtonBox = styled(Box)`
 const StyledPopper = styled(Popper)`
   z-index: 10;
 `
-export default function HeaderPopper({ open, anchorEl, placement }: { open: boolean; anchorEl: any; placement: any }) {
-  const [open1, setOpen] = useState<boolean>(false)
+interface headerProps {
+  open: boolean
+  anchorEl: any
+  placement: any
+  setDashboardOpen: Function
+}
+export default function HeaderPopper({ open, anchorEl, placement, setDashboardOpen }: headerProps) {
   const dispatch = useAppDispatch()
   return (
     <StyledPopper
-      open={open1 || open}
+      open={open}
       onMouseLeave={() => {
-        setOpen(false)
+        setDashboardOpen(false)
       }}
       onMouseOver={() => {
-        setOpen(true)
+        setDashboardOpen(true)
       }}
-      className="account-popper"
       anchorEl={anchorEl}
       placement={placement}
       transition

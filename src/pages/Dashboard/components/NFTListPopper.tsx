@@ -28,7 +28,12 @@ const BeforeBox = styled(Box)`
     border-color: #ffffff transparent transparent transparent;
   }
 `
-export default function NFTListPopper({ open, anchorEl, placement }: { open: boolean; anchorEl: any; placement: any }) {
+interface NFTListPopperProps {
+  open: boolean
+  anchorEl: any
+  placement: any
+}
+export default function NFTListPopper({ open, anchorEl, placement }: NFTListPopperProps) {
   const [openMouseOve, setOpenMouseOve] = useState<boolean>(false)
   return (
     <Popper

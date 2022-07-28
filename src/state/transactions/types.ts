@@ -16,6 +16,8 @@ interface SerializableTransactionReceipt {
 export enum TransactionType {
   APPROVAL = 0,
   DEPOSIT,
+  BORROW,
+  REPAY,
 }
 
 export interface BaseTransactionInfo {
@@ -27,6 +29,16 @@ export interface DepositTransactionInfo extends BaseTransactionInfo {
   recipient: string
   amount: string
 }
+export interface BorrowTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.BORROW
+  recipient: string
+  amount: string
+}
+export interface RepayTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.REPAY
+  recipient: string
+  amount: string
+}
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.APPROVAL
   tokenAddress: string
@@ -34,7 +46,11 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   amount: string
 }
 
-export type TransactionInfo = ApproveTransactionInfo | DepositTransactionInfo
+export type TransactionInfo =
+  | ApproveTransactionInfo
+  | DepositTransactionInfo
+  | BorrowTransactionInfo
+  | RepayTransactionInfo
 
 export interface TransactionDetails {
   hash: string

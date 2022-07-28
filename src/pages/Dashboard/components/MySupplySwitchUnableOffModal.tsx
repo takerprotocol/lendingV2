@@ -2,6 +2,7 @@ import { styled, Modal, Box, Typography, Button } from '@mui/material'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import redWarning from 'assets/images/svg/common/redWarning.svg'
 import { CenterBox } from 'styleds/index'
+import { useEthCollateral } from 'state/user/hooks'
 const style = {
   width: '420px',
   background: '#FFFFFF',
@@ -25,6 +26,7 @@ export default function MySupplySwitchUnableOffModal({
   setOpenMySupplySwitchModal,
   setSwitchUnableOffModal,
 }: MySupplySwitchUnableOffModalProps) {
+  const EthCollateral = useEthCollateral()
   return (
     <Modal open={switchUnableOffModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -48,7 +50,7 @@ export default function MySupplySwitchUnableOffModal({
           <Typography mt="4px" variant="subtitle2" component="span" color="#6E7191" fontWeight="500">
             Repayment of at least{' '}
             <Typography variant="subtitle2" component="span" color="rgba(20, 20, 42, 1)" fontWeight="600">
-              10.687 ETH
+              {EthCollateral} ETH
             </Typography>{' '}
             is required to turn off collateral mode
           </Typography>

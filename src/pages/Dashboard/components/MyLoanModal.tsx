@@ -11,6 +11,9 @@ import { useAddress, useBorrowLimit, useErc20ReserveData, useEthDebt } from 'sta
 import { useLendingPool } from 'hooks/useLendingPool'
 import { ERC20_ADDRESS, gasLimit } from 'config'
 import BigNumber from 'bignumber.js'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
+import { toast } from 'react-toastify'
 const style = {
   width: '420px',
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -138,15 +141,42 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const borrowLimit = useBorrowLimit()
   const address = useAddress()
   const ethDebt = useEthDebt()
+  const addTransaction = useTransactionAdder()
   useEffect(() => {
     setCheck(repayRoBorrow)
   }, [repayRoBorrow])
 
   const borrowSubmit = () => {
     if (contract) {
-      contract.borrow(ERC20_ADDRESS, amount, address, { gasLimit }).then((res: any) => {
-        console.log(res)
-      })
+      if (check === 1) {
+        contract
+          .borrow(ERC20_ADDRESS, amount, address, { gasLimit })
+          .then((res: any) => {
+            addTransaction(res, {
+              type: TransactionType.BORROW,
+              recipient: address,
+              amount,
+            })
+            // setOpenMySupplyModal(false)
+          })
+          .catch((error: any) => {
+            toast.error(error.message)
+          })
+      } else {
+        contract
+          .repay(ERC20_ADDRESS, amount, address, { gasLimit })
+          .then((res: any) => {
+            addTransaction(res, {
+              type: TransactionType.REPAY,
+              recipient: address,
+              amount,
+            })
+            // setOpenMySupplyModal(false)
+          })
+          .catch((error: any) => {
+            toast.error(error.message)
+          })
+      }
     }
   }
   const repaySubmit = () => {
@@ -341,10 +371,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </Box>
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
-                {percent(ethDebt, +borrowLimit)} {'>'}
+                {percent(1, 1)} {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                {percent(new BigNumber(amount).plus(ethDebt).toString(), +borrowLimit)}
+                {percent(1, 1)}
               </Typography>
             </Box>
           </SpaceBetweenBox>

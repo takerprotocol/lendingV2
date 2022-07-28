@@ -6,6 +6,9 @@ import { FlexBox, SpaceBetweenBox } from 'styleds'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useNftCollateral, useUserNftConfig } from 'state/user/hooks'
+// import ILendingPoolAddressesProviderAbi from 'abis/MockERC721.json'
+// import { useContract } from 'hooks/useContract'
+// import { ERC721_ADDRESS } from 'config'
 
 const MyNFTCollateralBox = styled(Box)`
   width: 322px;
@@ -75,6 +78,16 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const nftConfig = useUserNftConfig()
   const [dataType] = useState<boolean>(true)
   const collateral = useNftCollateral()
+  // const address = useAddress()
+  // const contract = useContract(ERC721_ADDRESS, ILendingPoolAddressesProviderAbi)
+  // const a = () => {
+  //   if (contract) {
+  //     console.log(contract)
+  //     contract.mint().then((res: any) => {
+  //       console.log(res)
+  //     })
+  //   }
+  // }
   return (
     <MyNFTCollateralBox>
       <BottomBox>

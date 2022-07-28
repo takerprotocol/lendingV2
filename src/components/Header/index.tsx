@@ -148,8 +148,13 @@ export const Header = () => {
         )}
       </FlexBox>
       <WalletModal></WalletModal>
-      <DashboardPopper open={dashboardOpen} anchorEl={anchorEl} placement={placement}></DashboardPopper>
-      <HeaderPopper open={open} anchorEl={anchorEl} placement={placement}></HeaderPopper>
+      <DashboardPopper
+        open={dashboardOpen}
+        anchorEl={anchorEl}
+        placement={placement}
+        setDashboardOpen={setDashboardOpen}
+      ></DashboardPopper>
+      <HeaderPopper open={open} anchorEl={anchorEl} placement={placement} setOpen={setOpen}></HeaderPopper>
     </HeaderBox>
   )
 }

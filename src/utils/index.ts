@@ -77,12 +77,12 @@ export function numFormat(value?: string | number, thousandSeparated = true): st
   return ''
 }
 
-export function fixedFormat(value?: string | number): string {
+export function fixedFormat(value?: string | number, value1 = 2): string {
   if (value) {
     if (value.toString().split('.')[1] && value.toString().split('.')[1].length > 8) {
-      return new BigNumber(value).dp(8).toFormat(2, 1)
+      return new BigNumber(value).dp(8).toFormat(value1, 1)
     } else {
-      return new BigNumber(value).toFormat(2, 1)
+      return new BigNumber(value).toFormat(value1, 1)
     }
   }
   return '0.00'
@@ -217,12 +217,12 @@ export function stringFormat(value: string, thousandSeparated = true): string {
 export const getRiskLevel = (value: string | number) => {
   switch (true) {
     case new BigNumber(value).eq(0):
-      return 'Healthy'
-    case value < 100:
+      return 'HEALTHY'
+    case new BigNumber(value).lt(100):
       return 'In liquidation...'
-    case value <= 110 && value >= 100:
+    case new BigNumber(value).lte(110) && new BigNumber(value).gte(100):
       return 'HIGH RISK'
-    case value <= 130 && value > 110:
+    case new BigNumber(value).lte(130) && new BigNumber(value).gt(110):
       return 'RISKY'
     default:
       return 'HEALTHY'
@@ -232,11 +232,11 @@ export const getRiskLevelTag = (value: string | number) => {
   switch (true) {
     case new BigNumber(value).eq(0):
       return 'Healthy'
-    case value < 100:
+    case new BigNumber(value).lt(100):
       return 'In-liquidation'
-    case value < 110 && value >= 100:
+    case new BigNumber(value).lte(110) && new BigNumber(value).gte(100):
       return 'High-Risk'
-    case value <= 130 && value > 110:
+    case new BigNumber(value).lte(130) && new BigNumber(value).gt(110):
       return 'Risky'
     default:
       return 'Healthy'

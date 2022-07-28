@@ -8,6 +8,7 @@ const FlexBox = styled(Box)`
   display: flex;
   align-items: center;
   margin-left: 116px;
+  margin-top: 38px;
 `
 const BlueChipNFTs = styled(Box)`
   padding: 12px 24px 12px 17px;
