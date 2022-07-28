@@ -27,7 +27,7 @@ export function useApproval(
   const address = useAddress()
   const hasPendingApproval = useHasPendingApproval(ERC20_ADDRESS, spender)
   useEffect(() => {
-    if (tokenContract) {
+    if (tokenContract && address && spender) {
       tokenContract.allowance(address, spender).then((allowance: BigNumber) => {
         if (new BigNumber(amount).lte(allowance.toString())) {
           setApprovalState(ApprovalState.APPROVED)
