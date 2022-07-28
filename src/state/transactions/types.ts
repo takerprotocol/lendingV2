@@ -25,11 +25,13 @@ export interface BaseTransactionInfo {
 export interface DepositTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.DEPOSIT
   recipient: string
+  amount: string
 }
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.APPROVAL
   tokenAddress: string
   spender: string
+  amount: string
 }
 
 export type TransactionInfo = ApproveTransactionInfo | DepositTransactionInfo

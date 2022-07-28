@@ -24,12 +24,12 @@ import {
   setUsedCollateral,
   setUserEthAsset,
   setUserNftConfig,
-  setUserNftValues,
+  // setUserNftValues,
   setUserValues,
 } from 'state/user/reducer'
-import { bigNumberToString, stringFormat } from 'utils'
+import { bigNumberToString } from 'utils'
 import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK } from 'config'
-import { fromWei } from 'web3-utils'
+// import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
 
 // import { getClient } from 'apollo/client'
@@ -54,16 +54,16 @@ export default function Dashboard() {
   const address = useAddress()
   useEffect(() => {
     if (contract && address) {
-      contract.getUserAssetValues(address, ERC721_ADDRESS).then((res: Array<BigNumber>) => {
-        setLoading(false)
-        dispatch(
-          setUserNftValues(
-            res.map((el) => {
-              return stringFormat(fromWei(el.toString()))
-            })
-          )
-        )
-      })
+      // contract.getUserAssetValues(address, ERC721_ADDRESS).then((res: Array<BigNumber>) => {
+      //   setLoading(false)
+      //   dispatch(
+      //     setUserNftValues(
+      //       res.map((el) => {
+      //         return stringFormat(fromWei(el.toString()))
+      //       })
+      //     )
+      //   )
+      // })
       contract.getUserConfig(address).then((res: any) => {
         dispatch(setUsedCollateral(res.toString() !== '0'))
       })

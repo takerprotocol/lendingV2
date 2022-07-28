@@ -4,9 +4,16 @@ import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 import { checkedTransaction, finalizeTransaction } from './reducer'
+// import { toast } from 'react-toastify'
+// import Toast from 'components/Toast'
+import { useAllTransactions } from './hooks'
+import { TransactionType } from './types'
+import { toast } from 'react-toastify'
+import Toast from 'components/Toast'
 
 export default function Updater() {
   const { chainId } = useActiveWeb3React()
+  const transactions = useAllTransactions()
   // speed up popup dismisall time if on L2
 
   const dispatch = useAppDispatch()
@@ -16,7 +23,6 @@ export default function Updater() {
   )
   const onReceipt = useCallback(
     ({ chainId, hash, receipt }: any) => {
-      debugger
       dispatch(
         finalizeTransaction({
           chainId,
@@ -34,14 +40,26 @@ export default function Updater() {
         })
       )
       // 弹窗
-      console.log(
-        {
-          txn: { hash },
-        },
-        hash
-      )
+      const tx = transactions[hash]
+      if (tx) {
+        if (receipt.status === 1) {
+          if (tx.info.type === TransactionType.APPROVAL) {
+            toast.success(<Toast title="APPROVAL" message={`Approval ${tx.info.amount} ETH`} txId={hash}></Toast>)
+          } else if (tx.info.type === TransactionType.DEPOSIT) {
+            toast.success(<Toast title="DEPOSIT" message={`Deposit ${tx.info.amount} ETH`} txId={hash}></Toast>)
+          }
+        } else {
+          if (receipt.status === 1) {
+            if (tx.info.type === TransactionType.APPROVAL) {
+              toast.error(<Toast title="APPROVAL" message={`Approval ${tx.info.amount} ETH`} txId={hash}></Toast>)
+            } else if (tx.info.type === TransactionType.DEPOSIT) {
+              toast.error(<Toast title="DEPOSIT" message={`Deposit ${tx.info.amount} ETH`} txId={hash}></Toast>)
+            }
+          }
+        }
+      }
     },
-    [dispatch]
+    [dispatch, transactions]
   )
 
   const state = useAppSelector((state) => state.transactions)

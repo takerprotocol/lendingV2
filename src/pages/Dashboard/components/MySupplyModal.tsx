@@ -14,6 +14,9 @@ import { SpaceBetweenBox } from 'styleds'
 import { useAddress, useErc20ReserveData, useUsedCollateral, useWalletBalance } from 'state/user/hooks'
 import { ERC20_ADDRESS, gasLimit } from 'config'
 import { useTransactionAdder } from 'state/transactions/hooks'
+// import { TransactionType } from 'state/transactions/types'
+import { useApproveCallback } from 'hooks/transactions/useApproveCallback'
+import { ApprovalState } from 'hooks/transactions/useApproval'
 import { TransactionType } from 'state/transactions/types'
 // import { useContract } from 'hooks/useContract'
 // import a from 'abis/ILendingPoolConfigurator.json'
@@ -109,8 +112,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const usedCollateral = useUsedCollateral()
   const erc20ReserveData = useErc20ReserveData()
   const addTransaction = useTransactionAdder()
+  const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
   // const abc = useContract('0x084A0DFec27496dc6f54b585FD21C8CeCd996193', a)
-
   useEffect(() => {
     setBorrowOrRepay(type)
   }, [type])
@@ -122,42 +125,33 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   //   console.log(abc)
   // }, [abc, address])
 
-  const supplySubmit = () => {
+  const supplySubmit = async () => {
     if (new BigNumber(amount).lte(0)) {
       toast.error('Minimum supply 0')
       return
     }
     if (contract && address) {
-      // contract.initReserve(
-      //   '0xC7FE0Ff4084b9c85618F8598fa95990Fe68e29F3',
-      //   '0x3e8000051227100000',
-      //   '0xc65e7e8cDd0475dAb9B2e636aff5F652Dce25459',
-      //   '0x62281730bF9f365124a8c00786fb3BB5081b84Ef',
-      //   '0xa06481B39b67AfF6b472E144c3F5AD4D45461933',
-      //   { gasLimit }
-      // )
-      // console.log([
-      //   ERC20_ADDRESS,
-      //   new BigNumber(amount).times(new BigNumber(10).pow(18).toString()),
-      //   address,
-      //   { gasLimit },
-      // ])
-      contract
-        .deposit(ERC20_ADDRESS, amount, address, {
-          gasLimit,
-        })
-        .then((res: any) => {
-          addTransaction(res, {
-            type: TransactionType.DEPOSIT,
-            recipient: address,
+      if (approval !== ApprovalState.APPROVED) {
+        await approveCallback()
+      } else {
+        contract
+          .deposit(ERC20_ADDRESS, amount, address, {
+            gasLimit,
           })
-          toast.success(desensitization(res.hash))
-          setAmount('')
-          setOpenMySupplyModal(false)
-        })
-        .catch((error: any) => {
-          toast.error(error.message)
-        })
+          .then((res: any) => {
+            addTransaction(res, {
+              type: TransactionType.DEPOSIT,
+              recipient: address,
+              amount,
+            })
+            toast.success(desensitization(res.hash))
+            setAmount('')
+            setOpenMySupplyModal(false)
+          })
+          .catch((error: any) => {
+            toast.error(error.message)
+          })
+      }
     }
   }
   const withdrawSubmit = () => {
@@ -467,7 +461,11 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               }
             }}
           >
-            {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}
+            {borrowOrRepay === 1
+              ? approval === ApprovalState.APPROVED || !amount
+                ? 'Supply'
+                : 'Approval'
+              : 'Withdraw'}
           </Button>
         </BottomBox>
       </Box>

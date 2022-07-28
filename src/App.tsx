@@ -49,7 +49,7 @@ export default function App() {
                     <img className="toast-close" src={CloseIcon} alt="" onClick={closeToast}></img>
                   )}
                   hideProgressBar={true}
-                  autoClose={false}
+                  autoClose={2500}
                 />
                 <Router>
                   <Updaters />
