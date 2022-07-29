@@ -119,13 +119,6 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
     setBorrowOrRepay(type)
   }, [type])
 
-  // useEffect(() => {
-  //   if (abc) {
-  //     abc.setAdmin(address)
-  //   }
-  //   console.log(abc)
-  // }, [abc, address])
-
   const supplySubmit = async () => {
     if (new BigNumber(amount).lte(0)) {
       toast.error('Minimum supply 0')
@@ -165,6 +158,11 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
         .withdraw(ERC20_ADDRESS, amount, address, { gasLimit })
         .then((res: any) => {
           toast.success(res.hash)
+          addTransaction(res, {
+            type: TransactionType.WITHDRAW,
+            recipient: address,
+            amount,
+          })
           setAmount('')
           setOpenMySupplyModal(false)
         })

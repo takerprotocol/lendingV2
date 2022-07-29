@@ -16,6 +16,7 @@ interface SerializableTransactionReceipt {
 export enum TransactionType {
   APPROVAL = 0,
   DEPOSIT,
+  WITHDRAW,
   BORROW,
   REPAY,
 }
@@ -25,7 +26,7 @@ export interface BaseTransactionInfo {
 }
 
 export interface DepositTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.DEPOSIT
+  type: TransactionType.DEPOSIT | TransactionType.WITHDRAW
   recipient: string
   amount: string
 }

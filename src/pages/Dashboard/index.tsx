@@ -4,7 +4,7 @@ import Box from '@mui/material/Box'
 import BgIcon from 'assets/images/png/dashboard/bg.png'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 // import lendingPoolAbi from 'abis/ILendingPoolAddressesProvider.json'
 
 // import { getClient } from 'apollo/client'
@@ -20,19 +20,21 @@ import {
   setErc20Ltv,
   setErc721Ltv,
   setReserveData,
-  // setRiskLevel,
+  setRiskLevel,
   setUsedCollateral,
   setUserEthAsset,
   setUserNftConfig,
-  // setUserNftValues,
+  setUserNftValues,
   setUserValues,
 } from 'state/user/reducer'
-import { bigNumberToString } from 'utils'
+import { bigNumberToString, stringFormat } from 'utils'
 import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK, CHAIN_ID } from 'config'
-// import { fromWei } from 'web3-utils'
+import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
 import { useActiveWeb3React } from 'hooks/web3'
 import { toast } from 'react-toastify'
+import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 
 // import { getClient } from 'apollo/client'
 // import { SupportedChainId } from 'constants/chains'
@@ -55,6 +57,19 @@ export default function Dashboard() {
   const dispatch = useAppDispatch()
   const contract = useLendingPool()
   const address = useAddress()
+  const transactions = useAllTransactions()
+  const flag = useMemo(() => {
+    if (transactions) {
+      Object.keys(transactions).some((hash) => {
+        const tx = transactions[hash]
+        if (tx && tx.receipt && tx.info.type !== TransactionType.APPROVAL && isTransactionRecent(tx)) {
+          return true
+        }
+        return false
+      })
+    }
+    return false
+  }, [transactions])
   useEffect(() => {
     if (chainId && CHAIN_ID && chainId !== CHAIN_ID) {
       toast.error('Please switch network')
@@ -62,16 +77,21 @@ export default function Dashboard() {
   }, [chainId])
   useEffect(() => {
     if (contract && address && chainId === CHAIN_ID) {
-      // contract.getUserAssetValues(address, ERC721_ADDRESS).then((res: Array<BigNumber>) => {
-      //   setLoading(false)
-      //   dispatch(
-      //     setUserNftValues(
-      //       res.map((el) => {
-      //         return stringFormat(fromWei(el.toString()))
-      //       })
-      //     )
-      //   )
-      // })
+      contract
+        .getUserAssetValues(address, ERC721_ADDRESS)
+        .then((res: Array<BigNumber>) => {
+          setLoading(false)
+          dispatch(
+            setUserNftValues(
+              res.map((el) => {
+                return stringFormat(fromWei(el.toString()))
+              })
+            )
+          )
+        })
+        .catch((err: any) => {
+          console.log(err)
+        })
       contract.getUserConfig(address).then((res: any) => {
         dispatch(setUsedCollateral(res.toString() !== '0'))
       })
@@ -99,7 +119,7 @@ export default function Dashboard() {
         )
       })
       contract.getUserState(address).then((res: Array<BigNumber>) => {
-        // dispatch(setRiskLevel(bigNumberToString(res)))
+        dispatch(setRiskLevel(res[2].toString()))
       })
       contract.getUserValues(address).then((res: Array<BigNumber>) => {
         dispatch(
@@ -122,7 +142,7 @@ export default function Dashboard() {
         dispatch(setUserNftConfig(bigNumberToString(res)))
       })
     }
-  }, [contract, address, dispatch, chainId])
+  }, [contract, address, dispatch, chainId, flag])
   // const client = getClient()[SupportedChainId.MAINNET]
   // client
   //   .query({

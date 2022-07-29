@@ -2,7 +2,7 @@ import { OwnedNftsResponse } from '@alch/alchemy-sdk'
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { erc20ReserveData, UserValues } from 'state/types'
-import { div, plus, times } from 'utils'
+import { decimalFormat, div, plus, times } from 'utils'
 import { AppState } from '../index'
 import { setAddress } from './reducer'
 
@@ -40,6 +40,9 @@ export function useUserNftConfig(): string {
 }
 export function useRiskLevel(): string {
   return useAppSelector((state: AppState) => state.user.riskLevel)
+}
+export function useHeath(): string {
+  return decimalFormat(useRiskLevel(), Number(useDecimal()), false)
 }
 export function useEthCollateral(): string {
   return useAppSelector((state: AppState) => state.user.ethCollateral)

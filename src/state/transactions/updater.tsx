@@ -47,6 +47,8 @@ export default function Updater() {
             toast.success(<Toast title="APPROVAL" message={`Approval ${tx.info.amount} ETH`} txId={hash}></Toast>)
           } else if (tx.info.type === TransactionType.DEPOSIT) {
             toast.success(<Toast title="DEPOSIT" message={`Deposit ${tx.info.amount} ETH`} txId={hash}></Toast>)
+          } else if (tx.info.type === TransactionType.WITHDRAW) {
+            toast.success(<Toast title="WITHDRAW" message={`Withdraw ${tx.info.amount} ETH`} txId={hash}></Toast>)
           } else if (tx.info.type === TransactionType.BORROW) {
             toast.success(<Toast title="BORROW" message={`Borrow ${tx.info.amount} ETH`} txId={hash}></Toast>)
           } else if (tx.info.type === TransactionType.REPAY) {
@@ -57,6 +59,8 @@ export default function Updater() {
             toast.error(<Toast title="APPROVAL" message={`Approval ${tx.info.amount} ETH`} txId={hash}></Toast>)
           } else if (tx.info.type === TransactionType.DEPOSIT) {
             toast.error(<Toast title="DEPOSIT" message={`Deposit ${tx.info.amount} ETH`} txId={hash}></Toast>)
+          } else if (tx.info.type === TransactionType.WITHDRAW) {
+            toast.error(<Toast title="WITHDRAW" message={`Withdraw ${tx.info.amount} ETH`} txId={hash}></Toast>)
           } else if (tx.info.type === TransactionType.BORROW) {
             toast.error(<Toast title="BORROW" message={`Borrow ${tx.info.amount} ETH`} txId={hash}></Toast>)
           } else if (tx.info.type === TransactionType.REPAY) {
