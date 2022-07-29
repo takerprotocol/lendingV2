@@ -77,8 +77,9 @@ export default function Dashboard() {
   }, [chainId])
   useEffect(() => {
     if (contract && address && chainId === CHAIN_ID) {
+      console.log(address, ERC20_ADDRESS)
       contract
-        .getUserAssetValues(address, ERC721_ADDRESS)
+        .getUserAssetValues(address, ERC20_ADDRESS)
         .then((res: Array<BigNumber>) => {
           setLoading(false)
           dispatch(
