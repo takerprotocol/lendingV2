@@ -19,6 +19,7 @@ import {
   setDecimal,
   setErc20Ltv,
   setErc721Ltv,
+  setLiquidationThreshold,
   setReserveData,
   setRiskLevel,
   setUsedCollateral,
@@ -77,7 +78,6 @@ export default function Dashboard() {
   }, [chainId])
   useEffect(() => {
     if (contract && address && chainId === CHAIN_ID) {
-      console.log(address, ERC20_ADDRESS)
       contract
         .getUserAssetValues(address, ERC20_ADDRESS)
         .then((res: Array<BigNumber>) => {
@@ -121,6 +121,7 @@ export default function Dashboard() {
       })
       contract.getUserState(address).then((res: Array<BigNumber>) => {
         dispatch(setRiskLevel(res[2].toString()))
+        dispatch(setLiquidationThreshold(res[1].toString()))
       })
       contract.getUserValues(address).then((res: Array<BigNumber>) => {
         dispatch(

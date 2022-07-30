@@ -41,6 +41,9 @@ export function useUserNftConfig(): string {
 export function useRiskLevel(): string {
   return useAppSelector((state: AppState) => state.user.riskLevel)
 }
+export function useLiquidationThreshold(): string {
+  return useAppSelector((state: AppState) => state.user.liquidationThreshold)
+}
 export function useHeath(): string {
   return decimalFormat(useRiskLevel(), Number(useDecimal()), false)
 }

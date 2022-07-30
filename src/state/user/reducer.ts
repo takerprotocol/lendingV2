@@ -22,6 +22,7 @@ export interface ApplicationState {
   readonly ownedNfts: OwnedNftsResponse | any
 
   readonly riskLevel: string
+  readonly liquidationThreshold: string
   readonly ethLiquidity: string
   readonly ethDebt: string
   readonly ethCollateral: string
@@ -50,6 +51,7 @@ const initialState: ApplicationState = {
   ownedNfts: [],
 
   riskLevel: '0',
+  liquidationThreshold: '0',
   ethLiquidity: '0',
   ethDebt: '0',
   ethCollateral: '0',
@@ -110,6 +112,11 @@ const applicationSlice = createSlice({
         state.riskLevel = action.payload
       }
     },
+    setLiquidationThreshold(state, action) {
+      if (action.payload) {
+        state.liquidationThreshold = action.payload
+      }
+    },
     setUserNftConfig(state, action) {
       if (action.payload) {
         state.userNftConfig = action.payload
@@ -157,6 +164,7 @@ export const {
   setUserNftConfig,
   setReserveData,
   setRiskLevel,
+  setLiquidationThreshold,
   setUserEthAsset,
   setUsedCollateral,
   setErc20Ltv,
