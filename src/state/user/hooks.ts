@@ -38,14 +38,8 @@ export function useNftCollateral(): string {
 export function useUserNftConfig(): string {
   return useAppSelector((state: AppState) => state.user.userNftConfig)
 }
-export function useRiskLevel(): string {
-  return useAppSelector((state: AppState) => state.user.riskLevel)
-}
 export function useHeath(): string {
-  return decimalFormat(useRiskLevel(), Number(useDecimal()), false)
-}
-export function useLiquidationThreshold(): string {
-  return useAppSelector((state: AppState) => state.user.liquidationThreshold)
+  return decimalFormat(useUserState().heathFactor, Number(useDecimal()), false)
 }
 export function useEthCollateral(): string {
   return useAppSelector((state: AppState) => state.user.ethCollateral)
@@ -90,8 +84,8 @@ export function useCollateralBorrowLimitUsed(value?: string | number): string {
   return div(useEthDebt(), useBorrowLimit(value || 0))
 }
 export function useDebtRiskLevel(value?: string | number): string {
-  return div(times(useUserValue().totalCollateral, useLiquidationThreshold()), plus(useEthDebt(), value || 0))
+  return div(times(useUserValue().totalCollateral, useUserState().liquidationThreshold), plus(useEthDebt(), value || 0))
 }
 export function useCollateralRiskLevel(value?: string | number): string {
-  return times(plus(useUserValue().totalCollateral, value || 0), div(useLiquidationThreshold(), useEthDebt()))
+  return times(plus(useUserValue().totalCollateral, value || 0), div(useUserState().liquidationThreshold, useEthDebt()))
 }

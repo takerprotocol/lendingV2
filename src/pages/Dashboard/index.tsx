@@ -19,13 +19,12 @@ import {
   setDecimal,
   setErc20Ltv,
   setErc721Ltv,
-  setLiquidationThreshold,
   setReserveData,
-  setRiskLevel,
   setUsedCollateral,
   setUserEthAsset,
   setUserNftConfig,
   setUserNftValues,
+  setUserState,
   setUserValues,
 } from 'state/user/reducer'
 import { bigNumberToString, stringFormat } from 'utils'
@@ -120,8 +119,13 @@ export default function Dashboard() {
         )
       })
       contract.getUserState(address).then((res: Array<BigNumber>) => {
-        dispatch(setRiskLevel(res[2].toString()))
-        dispatch(setLiquidationThreshold(res[1].toString()))
+        dispatch(
+          setUserState({
+            loanToValue: res[0].toString(),
+            liquidationThreshold: res[1].toString(),
+            heathFactor: res[2].toString(),
+          })
+        )
       })
       contract.getUserValues(address).then((res: Array<BigNumber>) => {
         dispatch(

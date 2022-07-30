@@ -47,7 +47,6 @@ export default function MyAccount({ type }: MyAccountProps) {
       contract
         .getUserConfig(address)
         .then((res: BigNumber) => {
-          console.log(res.toString())
           setLoading(false)
           // setUserValues(res)
         })
