@@ -7,7 +7,15 @@ import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
 import { fixedFormat, percent, getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
-import { useAddress, useBorrowLimit, useErc20ReserveData, useEthDebt } from 'state/user/hooks'
+import {
+  useAddress,
+  useBorrowLimit,
+  useDebtBorrowLimitUsed,
+  useDebtRiskLevel,
+  useErc20ReserveData,
+  useEthDebt,
+  useHeath,
+} from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { ERC20_ADDRESS, gasLimit } from 'config'
 import BigNumber from 'bignumber.js'
@@ -134,8 +142,12 @@ interface MyLoanModalProps {
 export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModalProps) {
   const [check, setCheck] = useState<number>(repayRoBorrow)
   const [amount, setAmount] = useState('')
-  const TypographyRiskLevel = getRiskLevel(amount)
-  const ColorClass = getRiskLevelTag(amount)
+  const heath = useHeath()
+  const debtRiskLevel = useDebtRiskLevel(times(amount, check === 1 ? 1 : -1))
+  const borrowUsed = useDebtBorrowLimitUsed() //操作前的borrowLimitUsed
+  const borrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
+  const TypographyRiskLevel = getRiskLevel(debtRiskLevel)
+  const riskLevelTag = getRiskLevelTag(debtRiskLevel)
   const contract = useLendingPool()
   const erc20ReserveData = useErc20ReserveData()
   const borrowLimit = useBorrowLimit()
@@ -145,7 +157,6 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   useEffect(() => {
     setCheck(repayRoBorrow)
   }, [repayRoBorrow])
-
   const borrowSubmit = () => {
     if (contract) {
       if (check === 1) {
@@ -214,13 +225,13 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               >
                 <img src={greyShutOff} alt="" />
               </Box>
-              {new BigNumber(amount).gte(100) && new BigNumber(amount).lte(110) ? (
+              {new BigNumber(debtRiskLevel).gte(100) && new BigNumber(debtRiskLevel).lte(110) ? (
                 <HighRiskButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
                     {TypographyRiskLevel}
                   </Typography>
                 </HighRiskButton>
-              ) : new BigNumber(amount).gt(110) && new BigNumber(amount).lte(130) ? (
+              ) : new BigNumber(debtRiskLevel).gt(110) && new BigNumber(debtRiskLevel).lte(130) ? (
                 <RiskyButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
                     {TypographyRiskLevel}
@@ -327,23 +338,23 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </SpaceBetweenBox>
           </BorrowAmountBox>
           <Box mb="15px" mt="12px" height="8px" width="372px">
-            <CustomizedSlider colorClass={ColorClass}></CustomizedSlider>
+            <CustomizedSlider riskLevelTag={riskLevelTag}></CustomizedSlider>
           </Box>
           <SpaceBetweenBox mb="16.5px">
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
                 Risk level
               </Typography>
-              <Typography className={ColorClass} ml="8px" variant="body1" component="span" fontWeight="700">
+              <Typography className={riskLevelTag} ml="8px" variant="body1" component="span" fontWeight="700">
                 {TypographyRiskLevel}
               </Typography>
             </Box>
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
-                186% {'>'}
+                {heath}% {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                186%
+                {debtRiskLevel}%
               </Typography>
             </Box>
           </SpaceBetweenBox>
@@ -371,10 +382,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </Box>
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
-                {percent(1, 1)} {'>'}
+                {percent(borrowUsed, 1)} {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                {percent(1, 1)}
+                {percent(borrowLimitUsed, 1)}
               </Typography>
             </Box>
           </SpaceBetweenBox>

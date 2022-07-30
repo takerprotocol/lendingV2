@@ -8,9 +8,19 @@ import { NftTokenModel } from 'services/type/nft'
 import { useEffect, useMemo } from 'react'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress } from 'state/user/hooks'
+import {
+  useAddress,
+  useBorrowLimit,
+  useCollateralBorrowLimitUsed,
+  useCollateralRiskLevel,
+  useEthCollateral,
+  useEthDebt,
+  useHeath,
+  useNftCollateral,
+} from 'state/user/hooks'
 import { gasLimit } from 'config'
 import { toast } from 'react-toastify'
+import { div, getRiskLevel, getRiskLevelTag, percent, plus, times } from 'utils'
 // import { useContract } from 'hooks/useContract'
 // import { useContract } from 'hooks/useContract'
 // import { useContract } from 'hooks/useContract'
@@ -69,6 +79,13 @@ export default function NFTsSelectedModal({
 }: NFTsSelectedType) {
   const contract = useLendingPool()
   const address = useAddress()
+  const ethCollateral = useEthCollateral()
+  const nftCollateral = useNftCollateral()
+  const heath = useHeath()
+  const collateralRiskLevel = useCollateralRiskLevel()
+  const ethDebt = useEthDebt()
+  const TypographyRiskLevel = getRiskLevel(heath)
+  const riskLevelTag = getRiskLevelTag(heath)
   const amount = useMemo(() => {
     return data.reduce((total: string, current: NftTokenModel) => {
       return new BigNumber(total).plus(current.balance || '0').toString()
@@ -77,6 +94,9 @@ export default function NFTsSelectedModal({
   const withdraw = () => {
     // console.log('withdraw')
   }
+  const borrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, type === 'Deposited' ? 1 : -1))
+  const borrowLimit = useBorrowLimit() //操作前的borrowLimit
+  const upBorrowLimit = useBorrowLimit(times(amount, type === 'Deposited' ? 1 : -1)) //操作后的borrowLimit
   useEffect(() => {
     if (contract) {
       contract.getReserveData(address).then((res: any) => {
@@ -164,29 +184,37 @@ export default function NFTsSelectedModal({
           </Box>
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <BodyTypography>3.0918 {'>'}</BodyTypography>
+              <BodyTypography>
+                {nftCollateral}
+                {'>'}
+              </BodyTypography>
               <BodyTypography ml="6px" fontWeight="700 !important" color="#14142A !important">
-                3.0918
+                {plus(ethCollateral, nftCollateral)}
               </BodyTypography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
-              <BodyTypography>20% {'>'}</BodyTypography>
+              <BodyTypography>
+                {borrowLimit}
+                {'>'}
+              </BodyTypography>
               <BodyTypography
                 ml="6px !important"
                 fontWeight="700 !important"
                 color={withdrawLargeAmount ? '#E1536C !important' : '#14142A !important'}
               >
-                20%
+                {upBorrowLimit}
               </BodyTypography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
-              <BodyTypography>20% {'>'}</BodyTypography>
+              <BodyTypography>
+                {percent(div(ethDebt, borrowLimit), 1)} {'>'}
+              </BodyTypography>
               <BodyTypography
                 ml="6px"
                 fontWeight="700 !important"
                 color={withdrawLargeAmount ? '#E1536C !important' : '#14142A !important'}
               >
-                20%
+                {borrowLimitUsed}
               </BodyTypography>
             </Box>
           </Box>
@@ -194,23 +222,20 @@ export default function NFTsSelectedModal({
         <SpaceBetweenBox mt="16px">
           <Box>
             <BodyTypography sx={{ display: 'inline-block' }}>Risk level</BodyTypography>
-            <BodyTypography
-              sx={{ display: 'inline-block' }}
-              ml="8px"
-              fontWeight="700 !important"
-              color="#4BC8B1 !important"
-            >
-              HEALTHY
-            </BodyTypography>
+            <Typography className={riskLevelTag} ml="8px" variant="body1" component="span" fontWeight="700">
+              {TypographyRiskLevel}
+            </Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <BodyTypography>186% {'>'}</BodyTypography>
+            <BodyTypography>
+              {heath}% {'>'}
+            </BodyTypography>
             <BodyTypography
               ml="6px"
               fontWeight="700 !important"
               color={withdrawLargeAmount ? '#E1536C !important' : '#14142A !important'}
             >
-              186%
+              {collateralRiskLevel}%
             </BodyTypography>
           </Box>
         </SpaceBetweenBox>

@@ -6,12 +6,22 @@ import { useEffect, useMemo, useState } from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { desensitization, fixedFormat, minus, percent, plus, times } from 'utils'
+import { desensitization, div, fixedFormat, getRiskLevel, getRiskLevelTag, minus, percent, plus, times } from 'utils'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { SpaceBetweenBox } from 'styleds'
-import { useAddress, useBorrowLimit, useErc20ReserveData, useUsedCollateral, useWalletBalance } from 'state/user/hooks'
+import {
+  useAddress,
+  useBorrowLimit,
+  useCollateralBorrowLimitUsed,
+  useCollateralRiskLevel,
+  useErc20ReserveData,
+  useEthDebt,
+  useHeath,
+  useUsedCollateral,
+  useWalletBalance,
+} from 'state/user/hooks'
 import { ERC20_ADDRESS, gasLimit } from 'config'
 import { useTransactionAdder } from 'state/transactions/hooks'
 // import { TransactionType } from 'state/transactions/types'
@@ -109,7 +119,14 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const [amount, setAmount] = useState('')
   const contract = useLendingPool()
   const address = useAddress()
-  const borrowLimit = useBorrowLimit()
+  const heath = useHeath()
+  const collateralRiskLevel = useCollateralRiskLevel(times(amount, borrowOrRepay === 1 ? 1 : -1))
+  const TypographyRiskLevel = getRiskLevel(collateralRiskLevel)
+  const riskLevelTag = getRiskLevelTag(collateralRiskLevel)
+  const ethDebt = useEthDebt()
+  const borrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, borrowOrRepay === 1 ? 1 : -1))
+  const borrowLimit = useBorrowLimit() //操作前的borrowLimit
+  const upBorrowLimit = useBorrowLimit(times(amount, borrowOrRepay === 1 ? 1 : -1)) //操作后的borrowLimit
   const usedCollateral = useUsedCollateral()
   const erc20ReserveData = useErc20ReserveData()
   const addTransaction = useTransactionAdder()
@@ -118,7 +135,6 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   useEffect(() => {
     setBorrowOrRepay(type)
   }, [type])
-
   const supplySubmit = async () => {
     if (new BigNumber(amount).lte(0)) {
       toast.error('Minimum supply 0')
@@ -336,7 +352,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                   </Typography>
                   <Box>
                     <Typography variant="body1" component="span" color={'#A0A3BD'}>
-                      {amount} {'>'}
+                      {borrowLimit} {'>'}
                     </Typography>
                     <Typography
                       ml="6px"
@@ -345,7 +361,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       fontWeight="700"
                       color={overSupply ? '#E1536C' : '#14142A'}
                     >
-                      {minus(borrowLimit, amount)}
+                      {upBorrowLimit}
                     </Typography>
                   </Box>
                 </SpaceBetweenBox>
@@ -355,7 +371,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                   </Typography>
                   <Box>
                     <Typography variant="body1" component="span" color="#A0A3BD">
-                      {percent(1, 1)} {'>'}
+                      {percent(div(ethDebt, borrowLimit), 1)} {'>'}
                     </Typography>
                     <Typography
                       ml="6px"
@@ -364,7 +380,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       fontWeight="700"
                       color={overSupply ? '#E1536C' : '#14142A'}
                     >
-                      {percent(1, 1)}
+                      {percent(borrowLimitUsed, 1)}
                     </Typography>
                   </Box>
                 </SpaceBetweenBox>
@@ -373,16 +389,16 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                     <Typography variant="body1" component="span" color="#A0A3BD">
                       Risk level
                     </Typography>
-                    <Typography ml="8px" variant="body1" component="span" fontWeight="700" color="#4BC8B1">
-                      HEALTHY
+                    <Typography className={riskLevelTag} ml="8px" variant="body1" component="span" fontWeight="700">
+                      {TypographyRiskLevel}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Typography variant="body1" component="span" color="#A0A3BD">
-                      186% {'>'}
+                      {heath}% {'>'}
                     </Typography>
                     <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                      186%
+                      {collateralRiskLevel}%
                     </Typography>
                   </Box>
                 </SpaceBetweenBox>

@@ -11,7 +11,7 @@ import MyLoanModal from './MyLoanModal'
 import { fixedFormat, getRiskLevel, getRiskLevelTag } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import BigNumber from 'bignumber.js'
-import { useBorrowLimit, useErc20ReserveData, useEthDebt, useRiskLevel } from 'state/user/hooks'
+import { useBorrowLimit, useErc20ReserveData, useEthDebt, useHeath } from 'state/user/hooks'
 // import { useContract } from 'hooks/useContract'
 // import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
 // import { useAddress } from 'state/application/hooks'
@@ -89,18 +89,18 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
   const [datatype] = useState<boolean>(true)
-  const riskLevel = useRiskLevel()
   const erc20ReserveData = useErc20ReserveData()
   const ethDebt = useEthDebt()
   const borrowLimit = useBorrowLimit()
+  const heath = useHeath()
 
   const myLoanRiskLevel = useMemo(() => {
-    return getRiskLevel(riskLevel)
-  }, [riskLevel])
+    return getRiskLevel(heath)
+  }, [heath])
 
   const myLoanRiskLevelTag = useMemo(() => {
-    return getRiskLevelTag(riskLevel)
-  }, [riskLevel])
+    return getRiskLevelTag(heath)
+  }, [heath])
 
   return (
     <MyLoanBox className={loading ? 'SkeletonBg' : ''}>
@@ -152,7 +152,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
                       </FlexEndBox>
                       <Box mr="24px">
                         <Typography component="p" variant="subtitle2" color="#6E7191">
-                          {riskLevel}%
+                          {heath}%
                         </Typography>
                         <Typography component="p" variant="body2" color="#A0A3BD">
                           Collateralization
@@ -181,7 +181,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
               </Box>
             )}
           </RiskLevelBox>
-          <CustomizedSlider colorClass={myLoanRiskLevelTag}></CustomizedSlider>
+          <CustomizedSlider riskLevelTag={myLoanRiskLevelTag}></CustomizedSlider>
           <FlexEndBox>
             <Typography variant="body1" color="#4E4B66">
               Borrow Limit {borrowLimit} ETH

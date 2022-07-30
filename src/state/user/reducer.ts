@@ -1,6 +1,6 @@
 import { OwnedNftsResponse } from '@alch/alchemy-sdk'
 import { createSlice } from '@reduxjs/toolkit'
-import { UserValues, erc20ReserveData } from 'state/types'
+import { UserValues, erc20ReserveData, userState } from 'state/types'
 
 export type PopupContent = {
   txn: {
@@ -33,6 +33,7 @@ export interface ApplicationState {
   readonly dashboardType: number
   readonly userValues: UserValues
   readonly erc20ReserveData: erc20ReserveData
+  readonly userState: userState
 }
 export interface TokenDecimals {
   symbol: string
@@ -78,6 +79,11 @@ const initialState: ApplicationState = {
     treasury: '0',
     lastUpdateTimestamp: '0',
     liquidityIndex: '0',
+  },
+  userState: {
+    loanToValue: '0',
+    liquidationThreshold: '0',
+    heathFactor: '0',
   },
 }
 
@@ -144,6 +150,9 @@ const applicationSlice = createSlice({
     setDashboardType(state, action) {
       state.dashboardType = action.payload
     },
+    setUserState(state, action) {
+      state.userState = action.payload
+    },
     setUserValues(state, action) {
       if (action.payload) {
         state.userValues = action.payload
@@ -164,6 +173,7 @@ export const {
   setUserNftConfig,
   setReserveData,
   setRiskLevel,
+  setUserState,
   setLiquidationThreshold,
   setUserEthAsset,
   setUsedCollateral,

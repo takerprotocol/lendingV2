@@ -21,3 +21,8 @@ export interface erc20ReserveData {
   lastUpdateTimestamp: string
   liquidityIndex: string
 }
+export interface userState {
+  loanToValue: string
+  liquidationThreshold: string
+  heathFactor: string
+}

@@ -6,8 +6,8 @@ import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
 import Right from 'assets/images/svg/common/right.svg'
 import { CenterBox, SpaceBetweenBox } from 'styleds/index'
 import { useMemo, useState } from 'react'
-import { fixedFormat, getRiskLevel, getRiskLevelTag, plus } from 'utils'
-import { useRiskLevel } from 'state/user/hooks'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, percent, plus } from 'utils'
+import { useCollateralBorrowLimitUsed, useCollateralRiskLevel, useHeath } from 'state/user/hooks'
 const style = {
   position: 'relative',
   width: '420px',
@@ -58,9 +58,11 @@ export default function MySupplySwitchModal({
   switchType,
 }: MySupplySwitchModalProps) {
   const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
-  const riskLevel = useRiskLevel()
-  const TypographyRiskLevel = getRiskLevel(riskLevel)
-  const ColorClass = getRiskLevelTag(riskLevel)
+  const heath = useHeath()
+  const collateralRiskLevel = useCollateralRiskLevel()
+  const TypographyRiskLevel = getRiskLevel(heath)
+  const borrowLimitUsed = useCollateralBorrowLimitUsed()
+  const ColorClass = getRiskLevelTag(heath)
   const modalType = useMemo(() => {
     return !loanType && +NFTCollateralType === 0 && switchType === 0
   }, [NFTCollateralType, loanType, switchType])
@@ -188,7 +190,8 @@ export default function MySupplySwitchModal({
                     </Box>
                     <Box>
                       <Typography variant="body1" fontWeight="600" component="span" color="#A0A3BD">
-                        20% {'>'}
+                        {percent(borrowLimitUsed, 1)}
+                        {'>'}
                       </Typography>
                       <Typography ml="6px" variant="body1" fontWeight="700" component="span">
                         14%
@@ -206,10 +209,10 @@ export default function MySupplySwitchModal({
                     </Box>
                     <Box>
                       <Typography variant="body1" fontWeight="600" component="span" color="#A0A3BD">
-                        12.3465 {'>'}
+                        {heath} {'>'}
                       </Typography>
                       <Typography ml="6px" variant="body1" fontWeight="700" component="span">
-                        22.6836
+                        {collateralRiskLevel}%
                       </Typography>
                     </Box>
                   </SpaceBetweenBox>
