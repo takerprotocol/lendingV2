@@ -14,6 +14,7 @@ export interface Call {
 const multiCall = async (abi: any[], calls: Call[], library?: Web3Provider) => {
   const ethCallProvider = new Provider()
   const provider = getDefaultProvider()
+  // @ts-ignore
   if (provider) {
     await ethCallProvider.init(library ? library : provider)
   }

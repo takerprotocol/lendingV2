@@ -26,7 +26,7 @@ export interface ApplicationState {
   readonly usedCollateral: boolean
   readonly erc20Ltv: string
   readonly erc721Ltv: string
-  readonly decimal: string
+  readonly decimal: number
   readonly dashboardType: number
   readonly userValues: UserValues
   readonly erc20ReserveData: erc20ReserveData
@@ -53,8 +53,7 @@ const initialState: ApplicationState = {
   usedCollateral: false,
   erc20Ltv: '0',
   erc721Ltv: '0',
-  decimal: '18',
-
+  decimal: 18,
   dashboardType: 1,
   userValues: {
     borrowLiquidity: '0',

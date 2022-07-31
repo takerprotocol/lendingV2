@@ -13,7 +13,7 @@ export default function CustomizeRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
-      <Route path="/deposit" element={<Deposit />} />
+      <Route path="/deposit/:id" element={<Deposit />} />
       <Route path="/liquidate" element={<Liquidate />} />
       <Route path="/liquidation" element={<Liquidation />} />
       <Route path="/liquidation/:page" element={<Liquidation />} />

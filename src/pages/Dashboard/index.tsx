@@ -1,15 +1,9 @@
-// import logo from './logo.svg';
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import BgIcon from 'assets/images/png/dashboard/bg.png'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
 import { useEffect, useMemo, useState } from 'react'
-// import lendingPoolAbi from 'abis/ILendingPoolAddressesProvider.json'
-
-// import { getClient } from 'apollo/client'
-// import { SupportedChainId } from 'constants/chains'
-// import { TEST } from 'apollo/queries'
 import DataNFTs from './components/DataNFTs'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress, useDashboardType } from 'state/user/hooks'
@@ -59,16 +53,13 @@ export default function Dashboard() {
   const address = useAddress()
   const transactions = useAllTransactions()
   const flag = useMemo(() => {
-    if (transactions) {
+    return (
+      transactions &&
       Object.keys(transactions).some((hash) => {
         const tx = transactions[hash]
-        if (tx && tx.receipt && tx.info.type !== TransactionType.APPROVAL && isTransactionRecent(tx)) {
-          return true
-        }
-        return false
+        return tx && tx.receipt && tx.info.type !== TransactionType.APPROVAL && isTransactionRecent(tx)
       })
-    }
-    return false
+    )
   }, [transactions])
   useEffect(() => {
     if (chainId && CHAIN_ID && chainId !== CHAIN_ID) {
@@ -149,14 +140,7 @@ export default function Dashboard() {
       })
     }
   }, [contract, address, dispatch, chainId, flag])
-  // const client = getClient()[SupportedChainId.MAINNET]
-  // client
-  //   .query({
-  //     query: TEST1('0xD7B4eC7c65fBFa64607017CfA1114257F03E19ab'),
-  //   })
-  //   .then((res) => {
-  //     console.log(res)
-  //   })
+
   return (
     <Body className="header-padding">
       <BlueChipNFTs type={type}></BlueChipNFTs>

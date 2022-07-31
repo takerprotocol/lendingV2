@@ -5,9 +5,10 @@ import rightIcon from 'assets/images/svg/common/right.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds/index'
 import { NftTokenModel } from 'services/type/nft'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
+import MockERC721Abi from 'abis/MockERC721.json'
 import {
   useAddress,
   useBorrowLimit,
@@ -21,9 +22,10 @@ import {
 import { gasLimit } from 'config'
 import { toast } from 'react-toastify'
 import { div, getRiskLevel, getRiskLevelTag, percent, plus, times } from 'utils'
-// import { useContract } from 'hooks/useContract'
-// import { useContract } from 'hooks/useContract'
-// import { useContract } from 'hooks/useContract'
+import { useContract } from 'hooks/useContract'
+import { useParams } from 'react-router-dom'
+import { isTransactionRecent, useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -74,9 +76,9 @@ export default function NFTsSelectedModal({
   setOpenSelectedModal,
   data,
   type,
-  checkedIndex,
   withdrawLargeAmount,
 }: NFTsSelectedType) {
+  const { id } = useParams()
   const contract = useLendingPool()
   const address = useAddress()
   const ethCollateral = useEthCollateral()
@@ -86,60 +88,71 @@ export default function NFTsSelectedModal({
   const ethDebt = useEthDebt()
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
+  const ercContract = useContract(id, MockERC721Abi)
+  const [isApproved, setIsApproved] = useState(false)
+  const addTransaction = useTransactionAdder()
+  const transactions = useAllTransactions()
+  const flag = useMemo(() => {
+    return (
+      transactions &&
+      Object.keys(transactions).some((hash) => {
+        const tx = transactions[hash]
+        return tx && tx.receipt && tx.info.type === TransactionType.APPROVAL_NFT && isTransactionRecent(tx)
+      })
+    )
+  }, [transactions])
   const amount = useMemo(() => {
     return data.reduce((total: string, current: NftTokenModel) => {
       return new BigNumber(total).plus(current.balance || '0').toString()
     }, '0')
   }, [data])
+
+  useEffect(() => {
+    if (contract && ercContract && address) {
+      ercContract.isApprovedForAll(address, contract.address).then((res: boolean) => {
+        setIsApproved(res)
+      })
+    }
+  }, [contract, address, ercContract, flag])
+
   const withdraw = () => {
     // console.log('withdraw')
   }
   const borrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, type === 'Deposited' ? 1 : -1))
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
   const upBorrowLimit = useBorrowLimit(times(amount, type === 'Deposited' ? 1 : -1)) //操作后的borrowLimit
-  useEffect(() => {
-    if (contract) {
-      contract.getReserveData(address).then((res: any) => {
-        // console.log('getReserveData', res)
-      })
-    }
-  }, [address, contract, data])
+
   const deposit = async () => {
-    // if (contract) {
-    //   contract.estimateGas
-    //     .depositNFTs(
-    //       data.map((el) => el.contract.address),
-    //       data.map((el) => el.tokenId),
-    //       [1],
-    //       address,
-    //       { gasLimit: 10000 }
-    //     )
-    //     .then((res) => {
-    //       console.log(res)
-    //     })
-    // }
-    if (contract && address) {
-      // contract
-      //   .getNftReserveConfig('0xa8fd6e4736fdad7989b79b60a1ad5edddeaea637', { gasLimit: 23000000 })
-      //   .then((res: any) => {
-      //     toast.success('success')
-      //     console.log(new BigNumber('0x8000011223281770').toString())
-      //     console.log(res)
-      //   })
-      console.log([data.map((el) => el.contract.address), data.map((el) => el.tokenId), [1], address])
-      contract
-        .depositNFTs(
-          data.map((el) => el.contract.address),
-          data.map((el) => el.tokenId),
-          [5],
-          address,
-          { gasLimit }
-        )
-        .then((res: any) => {
-          if (res && res.hash) {
-            toast.success('success')
-          }
+    if (contract && address && ercContract) {
+      if (isApproved) {
+        contract
+          .depositNFTs(
+            data.map((el) => el.contract.address),
+            data.map((el) => el.tokenId),
+            [amount],
+            address,
+            { gasLimit }
+          )
+          .then((res: any) => {
+            if (res && res.hash) {
+              addTransaction(res, {
+                type: TransactionType.DEPOSIT,
+                recipient: address,
+                amount,
+              })
+              toast.success('success')
+            }
+          })
+      } else {
+        ercContract.setApprovalForAll(contract.address, true).then((res: any) => {
+          addTransaction(res, {
+            type: TransactionType.APPROVAL_NFT,
+            spender: contract.address,
+            amount,
+            message: 'Approve all NFT',
+          })
         })
+      }
     }
   }
   return (
@@ -319,7 +332,7 @@ export default function NFTsSelectedModal({
             }
           }}
         >
-          {type}
+          {type === 'Withdraw' ? type : isApproved ? 'Deposit' : 'Approve'}
         </Button>
       </Box>
     </Modal>

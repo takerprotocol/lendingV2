@@ -7,6 +7,7 @@ import { useState } from 'react'
 import DepositedNFT from './components/DepositedNFT'
 import { useDepositableNfts } from 'services/module/deposit'
 import { useAddress } from 'state/user/hooks'
+import { useParams } from 'react-router-dom'
 
 const Body = styled(Box)`
   padding-top: 233px;
@@ -32,9 +33,10 @@ const HeaderBg = styled(Box)`
 `
 export default function Deposit() {
   const address = useAddress()
+  const { id } = useParams()
   const [depositType, setDepositType] = useState<string>('shut')
   const [withdrawType, setWithdrawType] = useState<string>('shut')
-  const { list, loading } = useDepositableNfts(address)
+  const { list, loading } = useDepositableNfts(address, id)
   return (
     <Body className="header-padding">
       <HeaderBg />

@@ -59,7 +59,7 @@ export function useErc20Ltv(): string {
 export function useErc721Ltv(): string {
   return useAppSelector((state: AppState) => state.user.erc721Ltv)
 }
-export function useDecimal(): string {
+export function useDecimal(): number {
   return useAppSelector((state: AppState) => state.user.decimal)
 }
 export function useBorrowLimit(value?: string | number): string {

@@ -79,18 +79,14 @@ export default function AvailableNFTs({
     }
   }
   const [Available] = useState<string>('Available')
-  const nfts = useMemo(
-    () => list.filter((el) => el.contract.address === '0x779bed28c5c2992b24baa4d21bea555b2deebeba'),
-    [list]
-  )
   const amount = useMemo(() => {
-    return nfts.reduce((total: string, current: NftTokenModel) => {
+    return list.reduce((total: string, current: NftTokenModel) => {
       return new BigNumber(total).plus(current.balance || '0').toString()
     }, '0')
-  }, [nfts])
+  }, [list])
   return (
     <AvailableNFTsStyleBox sx={{ opacity: `${withdrawType === 'open' ? '0.7' : '1'}` }}>
-      {nfts.length === 0 ? (
+      {list.length === 0 ? (
         <Typography m="48px 24px" variant="h5" fontWeight="700" fontSize=" 24px">
           0 NFT you can deposit
         </Typography>
@@ -105,7 +101,7 @@ export default function AvailableNFTs({
                   You can deposit
                 </Typography>
                 <Typography ml={'16px'} component="span" variant="subtitle1" lineHeight="18px" color="#6E7191">
-                  {nfts.length} NFTs / {amount} ETH
+                  {list.length} NFTs / {amount} ETH
                 </Typography>
               </Box>
               <Box mr="24px">
@@ -148,19 +144,19 @@ export default function AvailableNFTs({
             depositType={depositType}
             TypeKey={Available}
             loading={loading}
-            list={nfts}
+            list={list}
             checked={checkedIndex}
             onChange={(data: Array<string>) => {
               setCheckedIndex(data)
             }}
           ></NFTsList>
-          <Pager TypeKey={Available} list={nfts}></Pager>
+          <Pager TypeKey={Available} list={list}></Pager>
         </AvailableNFTsBox>
       )}
       <NFTsSelectedModal
         type={Available}
         checkedIndex={checkedIndex}
-        data={nfts.filter((el) => checkedIndex.includes(el.tokenId))}
+        data={list.filter((el) => checkedIndex.includes(el.tokenId))}
         openSelectedModal={openSelectedModal}
         setOpenSelectedModal={setOpenSelectedModal}
       ></NFTsSelectedModal>

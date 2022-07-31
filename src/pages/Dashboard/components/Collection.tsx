@@ -5,12 +5,17 @@ import tokenUp from 'assets/images/svg/dashboard/tokenUp.svg'
 import ButtonUp from 'assets/images/svg/dashboard/button-up.svg'
 import ButtonDown from 'assets/images/svg/dashboard/button-down.svg'
 import minMyCollateralIcon from 'assets/images/svg/dashboard/minMyCollateral-icon.svg'
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { SpaceBetweenBox, FlexBox } from 'styleds'
 import { useAddress } from 'state/user/hooks'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useNavigate } from 'react-router-dom'
+import { LendingPool } from 'apollo/queries'
+import { getClient } from 'apollo/client'
+import { SupportedChainId } from 'constants/chains'
 import CollectionSkeleton from './DashboardSkeleton/CollectionSkeleton'
+import { div } from 'utils'
+
 const CollectionBox = styled(Box)`
   border-radius: 12px;
   &.open {
@@ -65,11 +70,34 @@ interface CollectionType {
 }
 export default function Collection({ type, loading }: CollectionType) {
   const [check, setCheck] = useState<number | null>(1)
-  const [list] = useState([1, 2])
   const [dataType] = useState<boolean>(true) //有没有数据
+  const [collection, setCollection] = useState([])
   const address = useAddress()
   const toggleModal = useWalletModalToggle()
+  const client = getClient()[SupportedChainId.MAINNET]
   const navigate = useNavigate()
+
+  const getCollection = useCallback(async () => {
+    if (client && address) {
+      const lendingPoolRes = await client.query({
+        query: LendingPool('0x64d25dd7239e50c727ddaf67fc64ccdbe12548d3'),
+      })
+      if (lendingPoolRes.data && lendingPoolRes.data.lendingPool) {
+        setCollection(lendingPoolRes.data.lendingPool.nfts)
+        // const nftRes = await client.query({
+        //   query: UserNftCollection(
+        //     `${address}-${lendingPoolRes.data.lendingPool.nfts[0].id}-${lendingPoolRes.data.lendingPool.nfts[0].tNFT}`
+        //   ),
+        // })
+        // console.log(nftRes)
+      }
+    }
+  }, [client, address])
+
+  useEffect(() => {
+    getCollection()
+  }, [getCollection])
+
   return (
     <Box ml="24px" width="1160px">
       {loading ? (
@@ -131,8 +159,8 @@ export default function Collection({ type, loading }: CollectionType) {
               </Box>
             </CollectionFlexBox>
           </CollectionHeader>
-          {list.map((el) => (
-            <CollectionBox key={`${el}collection`} className={el === check ? 'open' : ''}>
+          {collection.map((el: any) => (
+            <CollectionBox key={`${el.id}collection`} className={el === check ? 'open' : ''}>
               <Box padding="28px 24px 24px 24px">
                 <CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '272px' }}>
@@ -152,7 +180,7 @@ export default function Collection({ type, loading }: CollectionType) {
                     <Typography ml="6px" mr="8px" component="span" variant="body1" fontWeight="700">
                       67.83
                     </Typography>
-                    <TitleTypography>70%</TitleTypography>
+                    <TitleTypography>{div(el.ltv, 100)}%</TitleTypography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '246px' }}>
                     <img src={minMyCollateralIcon} alt="" />
@@ -193,7 +221,7 @@ export default function Collection({ type, loading }: CollectionType) {
                           Liquidation Threshold
                         </Typography>
                         <Typography ml="24px" variant="subtitle2">
-                          70%
+                          {div(el.liqThreshold, 100)}%
                         </Typography>
                         <Typography ml="63px" fontWeight="600" color="#A0A3BD" variant="body1">
                           Liquidation Profit
@@ -231,7 +259,7 @@ export default function Collection({ type, loading }: CollectionType) {
                     </CollectionFlexBox>
                     {address ? (
                       <Box mt="48px">
-                        <Button onClick={() => navigate('/deposit')} variant="contained">
+                        <Button onClick={() => navigate(`/deposit/${el.id}`)} variant="contained">
                           Deposit
                         </Button>
                       </Box>

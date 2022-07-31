@@ -53,6 +53,8 @@ export default function Updater() {
             toast.success(<Toast title="BORROW" message={`Borrow ${tx.info.amount} ETH`} txId={hash}></Toast>)
           } else if (tx.info.type === TransactionType.REPAY) {
             toast.success(<Toast title="REPAY" message={`Repay ${tx.info.amount} ETH`} txId={hash}></Toast>)
+          } else if (tx.info.type === TransactionType.APPROVAL_NFT) {
+            toast.success(<Toast title="APPROVAL NFT" message={tx.info.message} txId={hash}></Toast>)
           }
         } else {
           if (tx.info.type === TransactionType.APPROVAL) {
@@ -65,6 +67,8 @@ export default function Updater() {
             toast.error(<Toast title="BORROW" message={`Borrow ${tx.info.amount} ETH`} txId={hash}></Toast>)
           } else if (tx.info.type === TransactionType.REPAY) {
             toast.error(<Toast title="REPAY" message={`Repay ${tx.info.amount} ETH`} txId={hash}></Toast>)
+          } else if (tx.info.type === TransactionType.APPROVAL_NFT) {
+            toast.error(<Toast title="APPROVAL NFT" message={tx.info.message} txId={hash}></Toast>)
           }
         }
       }

@@ -10,7 +10,8 @@ import DashboardTotalSkeleton from './DashboardSkeleton/TotalSkeleton'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
-import { bigNumberToString } from 'utils'
+import { decimalFormat } from 'utils'
+import { useDecimal } from 'state/user/hooks'
 
 const FlexBox = styled(Box)`
   height: 62px;
@@ -26,6 +27,7 @@ interface DashboardTotalType {
 }
 export default function DashboardTotal({ type }: DashboardTotalType) {
   const [loading, setLoading] = useState(true)
+  const decimal = useDecimal()
   const [poolValues, setPoolValues] = useState<Array<BigNumber>>([new BigNumber(0), new BigNumber(0), new BigNumber(0)])
   const contract = useLendingPool()
   useEffect(() => {
@@ -76,7 +78,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
               <Box marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
                 <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">
-                  {bigNumberToString(poolValues[1])}
+                  {decimalFormat(poolValues[1].toString(), decimal)}
                 </Typography>
               </Box>
             </Box>
@@ -90,10 +92,10 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
             </Box>
             <Box sx={{ marginLeft: '10px' }}>
               <Typography component="p" variant="subtitle2" color="#262338">
-                {bigNumberToString(poolValues[0])} ETH
+                {decimalFormat(poolValues[0].toString(), decimal)} ETH
               </Typography>
               <Typography component="p" marginTop="10px" variant="subtitle2" color="#262338">
-                {bigNumberToString(poolValues[1])} ETH
+                {decimalFormat(poolValues[1].toString(), decimal)} ETH
               </Typography>
             </Box>
           </FlexBox>
@@ -124,7 +126,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
               <Box marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
                 <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">
-                  {bigNumberToString(poolValues[0])}
+                  {decimalFormat(poolValues[0].toString(), decimal)}
                 </Typography>
               </Box>
             </Box>
