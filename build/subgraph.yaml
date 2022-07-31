@@ -1,6 +1,6 @@
 specVersion: 0.0.4
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: LendingPool
@@ -20,7 +20,7 @@ dataSources:
         - UserNftCollection
       abis:
         - name: LendingPool
-          file: ./abis/LendingPool.json
+          file: LendingPool/abis/LendingPool.json
       eventHandlers:
         - event: Borrowed(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleBorrowed
@@ -34,7 +34,8 @@ dataSources:
           handler: handleLiquidated
         - event: NFTsDeposited(indexed address[],address,indexed address,uint256[],uint256[])
           handler: handleNFTsDeposited
-        - event: NFTsWithdrawn(indexed address[],indexed address,indexed address,uint256[],uint256[])
+        - event: NFTsWithdrawn(indexed address[],indexed address,indexed
+            address,uint256[],uint256[])
           handler: handleNFTsWithdrawn
         - event: Paused(address)
           handler: handlePaused
@@ -46,8 +47,7 @@ dataSources:
           handler: handleUnpaused
         - event: Withdrawn(indexed address,indexed address,indexed address,uint256)
           handler: handleWithdrawn
-      file: ./src/lending-pool.ts
-
+      file: LendingPool/LendingPool.wasm
   - kind: ethereum
     name: PoolConfigurator
     network: rinkeby
@@ -66,10 +66,10 @@ dataSources:
         - UserNftCollection
       abis:
         - name: PoolConfigurator
-          file: ./abis/PoolConfigurator.json
+          file: PoolConfigurator/abis/PoolConfigurator.json
       eventHandlers:
         - event: NftReserveInitialized(indexed address,indexed address,uint8,uint256,uint256)
           handler: handleNftReserveInitialized
         - event: ReserveInitialized(indexed address,indexed address,address,address)
           handler: handleReserveInitialized
-      file: ./src/lending-pool.ts
+      file: LendingPool/LendingPool.wasm
