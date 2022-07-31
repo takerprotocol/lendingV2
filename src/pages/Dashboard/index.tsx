@@ -119,6 +119,8 @@ export default function Dashboard() {
         )
       })
       contract.getUserValues(address).then((res: Array<BigNumber>) => {
+        console.log('totalCollateral', res[3].toString())
+
         dispatch(
           setUserValues({
             borrowLiquidity: res[0].toString(),

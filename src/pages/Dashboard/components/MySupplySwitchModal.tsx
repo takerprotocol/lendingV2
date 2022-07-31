@@ -2,11 +2,10 @@ import { Button, styled, Modal, Box, Typography } from '@mui/material'
 import whiteShutOff from 'assets/images/svg/common/whiteShutOff.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import whiteRight from 'assets/images/svg/common/whiteRight.svg'
-import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
 import Right from 'assets/images/svg/common/right.svg'
 import { CenterBox, SpaceBetweenBox } from 'styleds/index'
-import { useMemo, useState } from 'react'
-import { div, fixedFormat, getRiskLevel, getRiskLevelTag, percent, plus, times } from 'utils'
+import { useMemo } from 'react'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, percent, plus, times } from 'utils'
 import { useBorrowLimit, useCollateralBorrowLimitUsed, useCollateralRiskLevel, useHeath } from 'state/user/hooks'
 import BigNumber from 'bignumber.js'
 const style = {
@@ -58,15 +57,14 @@ export default function MySupplySwitchModal({
   handle,
   switchType,
 }: MySupplySwitchModalProps) {
-  const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
   const heath = useHeath()
-  const collateralRiskLevel = useCollateralRiskLevel()
+  const collateralRiskLevel = useCollateralRiskLevel(times(ETHCollateralType, switchType === 1 ? 1 : -1))
   const TypographyRiskLevel = getRiskLevel(collateralRiskLevel)
   const ColorClass = getRiskLevelTag(collateralRiskLevel)
   const borrowLimitUsed = useCollateralBorrowLimitUsed()
   const borrowLimit = useBorrowLimit()
+  const upBorrowLimit = useBorrowLimit(times(ETHCollateralType, -1))
   const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(ETHCollateralType, switchType === 1 ? 1 : -1))
-
   const modalType = useMemo(() => {
     return !loanType && +NFTCollateralType === 0 && new BigNumber(upBorrowLimitUsed).lte(150) && switchType === 0
   }, [NFTCollateralType, loanType, switchType, upBorrowLimitUsed])
@@ -85,11 +83,7 @@ export default function MySupplySwitchModal({
           <CenterBox
             sx={{ justifyContent: 'flex-end', cursor: 'pointer' }}
             onClick={() => {
-              if (loanType && (+NFTCollateralType === 0 || new BigNumber(upBorrowLimitUsed).lte(150))) {
-                handle('unable')
-              } else {
-                setSwitchUnableOffModal(true)
-              }
+              handle('unable')
             }}
           >
             <img src={switchType === 0 ? shutOff : whiteShutOff} alt="" />
@@ -111,7 +105,7 @@ export default function MySupplySwitchModal({
                 color={switchType === 0 ? '#A0A3BD' : 'rgba(239, 240, 246, 0.6)'}
                 fontWeight="600"
               >
-                {switchType === 0 ? plus(borrowLimit, ETHCollateralType) : div(borrowLimit, ETHCollateralType)}
+                {switchType === 0 ? borrowLimit : upBorrowLimit}
               </Typography>
               <RightBgBox sx={{ background: `${switchType === 0 ? '#D9DBE9' : 'rgba(255, 255, 255, 0.2)'}` }}>
                 <img src={switchType === 0 ? Right : whiteRight} alt="" />
@@ -122,7 +116,7 @@ export default function MySupplySwitchModal({
                 fontWeight="600"
                 color={switchType === 0 ? '#4E4B66' : 'rgba(239, 240, 246)'}
               >
-                {switchType === 1 ? plus(borrowLimit, ETHCollateralType) : div(borrowLimit, ETHCollateralType)}
+                {switchType === 1 ? borrowLimit : upBorrowLimit}
               </Typography>
               <Box paddingTop="8px">
                 <Typography
@@ -257,13 +251,6 @@ export default function MySupplySwitchModal({
             </Button>
           )}
         </BottomBox>
-        <MySupplySwitchUnableOffModal
-          switchUnableOffModal={switchUnableOffModal}
-          setOpenMySupplySwitchModal={handle}
-          NFTCollateralType={NFTCollateralType}
-          upBorrowLimitUsed={upBorrowLimitUsed}
-          setSwitchUnableOffModal={setSwitchUnableOffModal}
-        ></MySupplySwitchUnableOffModal>
       </Box>
     </Modal>
   )

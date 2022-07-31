@@ -146,11 +146,12 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const debtRiskLevel = useDebtRiskLevel(times(amount, check === 1 ? 1 : -1))
   const borrowUsed = useDebtBorrowLimitUsed() //操作前的borrowLimitUsed
   const borrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
-  const TypographyRiskLevel = getRiskLevel(debtRiskLevel)
-  const riskLevelTag = getRiskLevelTag(debtRiskLevel)
+  const TypographyRiskLevel = getRiskLevel(amount ? debtRiskLevel : heath)
+  const riskLevelTag = getRiskLevelTag(amount ? debtRiskLevel : heath)
   const contract = useLendingPool()
   const erc20ReserveData = useErc20ReserveData()
   const borrowLimit = useBorrowLimit()
+
   const address = useAddress()
   const ethDebt = useEthDebt()
   const addTransaction = useTransactionAdder()
@@ -225,22 +226,30 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               >
                 <img src={greyShutOff} alt="" />
               </Box>
-              {new BigNumber(debtRiskLevel).gte(100) && new BigNumber(debtRiskLevel).lte(110) ? (
+              {new BigNumber(amount ? debtRiskLevel : heath).lt(100) ? (
                 <HighRiskButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
-                    {TypographyRiskLevel}
+                    In liquidation...
                   </Typography>
                 </HighRiskButton>
-              ) : new BigNumber(debtRiskLevel).gt(110) && new BigNumber(debtRiskLevel).lte(130) ? (
+              ) : new BigNumber(amount ? debtRiskLevel : heath).gte(100) &&
+                new BigNumber(amount ? debtRiskLevel : heath).lte(110) ? (
+                <HighRiskButton>
+                  <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
+                    HIGH RISK
+                  </Typography>
+                </HighRiskButton>
+              ) : new BigNumber(amount ? debtRiskLevel : heath).gt(110) &&
+                new BigNumber(amount ? debtRiskLevel : heath).lte(130) ? (
                 <RiskyButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
-                    {TypographyRiskLevel}
+                    RISKY
                   </Typography>
                 </RiskyButton>
               ) : (
                 <HealthyButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
-                    {TypographyRiskLevel}
+                    HEALTHY
                   </Typography>
                 </HealthyButton>
               )}
@@ -354,7 +363,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 {heath}% {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                {debtRiskLevel}%
+                {amount ? debtRiskLevel : heath}%
               </Typography>
             </Box>
           </SpaceBetweenBox>

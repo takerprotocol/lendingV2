@@ -2,6 +2,7 @@ import { Box, Button, styled, Switch, Typography } from '@mui/material'
 import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import MyETHSupplyBg from 'assets/images/svg/dashboard/MyETHSupplyBg.svg'
 import rightBox from 'assets/images/svg/dashboard/rightBox.svg'
+import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
 import addBox from 'assets/images/svg/dashboard/addBox.svg'
 import ButtonSupply from 'assets/images/svg/dashboard/Button-Supply.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
@@ -12,6 +13,7 @@ import {
   useErc20ReserveData,
   useEthCollateral,
   useEthDebt,
+  useHeath,
   useNftCollateral,
   useUsedCollateral,
 } from 'state/user/hooks'
@@ -21,6 +23,7 @@ import { ERC20_ADDRESS, gasLimit } from 'config'
 import { useAppDispatch } from 'state'
 import { setUsedCollateral } from 'state/user/reducer'
 import { fixedFormat } from 'utils'
+import BigNumber from 'bignumber.js'
 // import { useWalletBalance } from 'state/user/hooks'
 
 const MyETHSupplyBox = styled(Box)`
@@ -89,6 +92,7 @@ interface MyETHSupplyProps {
   loading: boolean
 }
 export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
+  const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
   const [openMySupplyModal, setOpenMySupplyModal] = useState(false)
   const [dataType] = useState<boolean>(true)
   const [typeModal, setTypeModal] = useState<number>(1) // MySupplyModal State Supply(1) ro Withdraw(0)
@@ -97,6 +101,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const erc20ReserveData = useErc20ReserveData()
   const contract = useLendingPool()
   const ethDebt = useEthDebt()
+  const heath = useHeath()
   const ethCollateral = useEthCollateral()
   const nftCollateral = useNftCollateral()
   const usedCollateral = useUsedCollateral()
@@ -131,8 +136,12 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
                   setOpenMySupplySwitchModal(true)
                   setSwitchType(1)
                 } else {
-                  setOpenMySupplySwitchModal(true)
-                  setSwitchType(0)
+                  if (!loanType && (+nftCollateral === 0 || new BigNumber(heath).lte(150))) {
+                    setSwitchUnableOffModal(true)
+                    setSwitchType(0)
+                  } else {
+                    setOpenMySupplySwitchModal(true)
+                  }
                 }
               }}
             />
@@ -232,6 +241,11 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
           }
         }}
       ></MySupplySwitchModal>
+      <MySupplySwitchUnableOffModal
+        switchUnableOffModal={switchUnableOffModal}
+        NFTCollateralType={nftCollateral}
+        setSwitchUnableOffModal={setSwitchUnableOffModal}
+      ></MySupplySwitchUnableOffModal>
     </MyETHSupplyBox>
   )
 }

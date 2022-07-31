@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { desensitization, div, fixedFormat, getRiskLevel, getRiskLevelTag, minus, percent, plus, times } from 'utils'
+import { desensitization, div, fixedFormat, getRiskLevel, getRiskLevelTag, percent, plus, times } from 'utils'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import { useLendingPool } from 'hooks/useLendingPool'
@@ -316,7 +316,9 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                     }
                   }}
                 >
-                  <MAXBox className={new BigNumber(amount).gte(minus(supplyLimit, mySupply)) ? 'max' : ''}>
+                  <MAXBox
+                    className={new BigNumber(amount).gte(borrowOrRepay === 1 ? supplyLimit : mySupply) ? 'max' : ''}
+                  >
                     <Typography variant="body2" component="p" fontWeight="700">
                       MAX
                     </Typography>
@@ -398,7 +400,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       {heath}% {'>'}
                     </Typography>
                     <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                      {collateralRiskLevel}%
+                      {amount ? collateralRiskLevel : heath}%
                     </Typography>
                   </Box>
                 </SpaceBetweenBox>

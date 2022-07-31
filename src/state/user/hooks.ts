@@ -1,4 +1,5 @@
 import { OwnedNftsResponse } from '@alch/alchemy-sdk'
+import BigNumber from 'bignumber.js'
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { erc20ReserveData, userState, UserValues } from 'state/types'
@@ -39,7 +40,12 @@ export function useUserNftConfig(): string {
   return useAppSelector((state: AppState) => state.user.userNftConfig)
 }
 export function useHeath(): string {
-  return decimalFormat(useUserState().heathFactor, Number(useDecimal()), false)
+  const value = decimalFormat(useUserState().heathFactor, Number(useDecimal()), false)
+  if (new BigNumber(value).gt(200)) {
+    return '200'
+  } else {
+    return value
+  }
 }
 export function useEthCollateral(): string {
   return useAppSelector((state: AppState) => state.user.ethCollateral)
@@ -63,7 +69,7 @@ export function useDecimal(): number {
   return useAppSelector((state: AppState) => state.user.decimal)
 }
 export function useBorrowLimit(value?: string | number): string {
-  return times(useUserState().loanToValue, plus(useUserValue().totalCollateral, value || 0))
+  return times(useUserState().loanToValue, plus(useUserValue().totalCollateral.toString(), value || 0))
 }
 export function useDashboardType(): number {
   return useAppSelector((state: AppState) => state.user.dashboardType)
@@ -78,14 +84,31 @@ export function useUserState(): userState {
   return useAppSelector((state: AppState) => state.user.userState)
 }
 export function useDebtBorrowLimitUsed(value?: string | number): string {
-  return div(plus(useEthDebt(), value || 0), useBorrowLimit())
+  return div(new BigNumber(useEthDebt()).plus(value || 0).toNumber(), useBorrowLimit())
 }
 export function useCollateralBorrowLimitUsed(value?: string | number): string {
-  return div(useEthDebt(), useBorrowLimit(value || 0))
+  return new BigNumber(useEthDebt()).div(useBorrowLimit(value || 0)).toString()
 }
 export function useDebtRiskLevel(value?: string | number): string {
-  return div(times(useUserValue().totalCollateral, useUserState().liquidationThreshold), plus(useEthDebt(), value || 0))
+  const DebtRiskLevel = div(
+    times(useUserValue().totalCollateral, useUserState().liquidationThreshold),
+    plus(useEthDebt(), value || 0)
+  )
+  if (new BigNumber(DebtRiskLevel).gt(200)) {
+    return '200'
+  } else {
+    return DebtRiskLevel
+  }
 }
 export function useCollateralRiskLevel(value?: string | number): string {
-  return times(plus(useUserValue().totalCollateral, value || 0), div(useUserState().liquidationThreshold, useEthDebt()))
+  console.log('useEthDebt()', useEthDebt())
+  const CollateralRiskLevel = times(
+    plus(useUserValue().totalCollateral, value || 0),
+    div(useUserState().liquidationThreshold, useEthDebt())
+  )
+  if (new BigNumber(CollateralRiskLevel).gt(200)) {
+    return '200'
+  } else {
+    return CollateralRiskLevel
+  }
 }

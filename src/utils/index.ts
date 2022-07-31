@@ -101,11 +101,15 @@ export function decimalFormat(value?: number | string, decimal = 18, thousandSep
 }
 
 export function div(value1: number | string | BigNumber, value2: number | string | BigNumber) {
-  if (value1) {
-    if (BigNumber.isBigNumber(value1)) {
-      return value1.div(value2).toString()
+  if (!(+value1 === 0 || +value2 === 0)) {
+    if (value1) {
+      if (BigNumber.isBigNumber(value1)) {
+        return value1.div(value2).toString()
+      } else {
+        return new BigNumber(value1).div(value2).toString()
+      }
     } else {
-      return new BigNumber(value1).div(value2).toString()
+      return '0'
     }
   } else {
     return '0'

@@ -172,7 +172,6 @@ export default function DepositedNFT({ depositType, withdrawType, setWithdrawTyp
       <NFTsSelectedModal
         type={Deposited}
         checkedIndex={checkedIndex}
-        withdrawLargeAmount={withdrawLargeAmount}
         data={list.filter((el) => checkedIndex.includes(el.tokenId))}
         openSelectedModal={openSelectedModal}
         setOpenSelectedModal={setOpenSelectedModal}

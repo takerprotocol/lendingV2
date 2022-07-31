@@ -15,13 +15,12 @@ import {
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
   useEthCollateral,
-  useEthDebt,
   useHeath,
   useNftCollateral,
 } from 'state/user/hooks'
 import { gasLimit } from 'config'
 import { toast } from 'react-toastify'
-import { div, getRiskLevel, getRiskLevelTag, percent, plus, times } from 'utils'
+import { getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
 import { useContract } from 'hooks/useContract'
 import { useParams } from 'react-router-dom'
 import { isTransactionRecent, useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
@@ -69,15 +68,8 @@ interface NFTsSelectedType {
   setOpenSelectedModal: Function
   type: string
   checkedIndex: string[]
-  withdrawLargeAmount?: boolean
 }
-export default function NFTsSelectedModal({
-  openSelectedModal,
-  setOpenSelectedModal,
-  data,
-  type,
-  withdrawLargeAmount,
-}: NFTsSelectedType) {
+export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedModal, data, type }: NFTsSelectedType) {
   const { id } = useParams()
   const contract = useLendingPool()
   const address = useAddress()
@@ -85,7 +77,6 @@ export default function NFTsSelectedModal({
   const nftCollateral = useNftCollateral()
   const heath = useHeath()
   const collateralRiskLevel = useCollateralRiskLevel()
-  const ethDebt = useEthDebt()
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
   const ercContract = useContract(id, MockERC721Abi)
@@ -106,7 +97,6 @@ export default function NFTsSelectedModal({
       return new BigNumber(total).plus(current.balance || '0').toString()
     }, '0')
   }, [data])
-
   useEffect(() => {
     if (contract && ercContract && address) {
       ercContract.isApprovedForAll(address, contract.address).then((res: boolean) => {
@@ -114,7 +104,6 @@ export default function NFTsSelectedModal({
       })
     }
   }, [contract, address, ercContract, flag])
-
   const withdraw = () => {
     // console.log('withdraw')
   }
@@ -213,21 +202,21 @@ export default function NFTsSelectedModal({
               <BodyTypography
                 ml="6px !important"
                 fontWeight="700 !important"
-                color={withdrawLargeAmount ? '#E1536C !important' : '#14142A !important'}
+                color={new BigNumber(collateralRiskLevel).lt(150) ? '#E1536C !important' : '#14142A !important'}
               >
                 {upBorrowLimit}
               </BodyTypography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
               <BodyTypography>
-                {percent(div(ethDebt, borrowLimit), 1)} {'>'}
+                {heath}% {'>'}
               </BodyTypography>
               <BodyTypography
                 ml="6px"
                 fontWeight="700 !important"
-                color={withdrawLargeAmount ? '#E1536C !important' : '#14142A !important'}
+                color={new BigNumber(collateralRiskLevel).lt(150) ? '#E1536C !important' : '#14142A !important'}
               >
-                {borrowLimitUsed}
+                {borrowLimitUsed}%
               </BodyTypography>
             </Box>
           </Box>
@@ -246,7 +235,7 @@ export default function NFTsSelectedModal({
             <BodyTypography
               ml="6px"
               fontWeight="700 !important"
-              color={withdrawLargeAmount ? '#E1536C !important' : '#14142A !important'}
+              color={new BigNumber(collateralRiskLevel).lt(150) ? '#E1536C !important' : '#14142A !important'}
             >
               {collateralRiskLevel}%
             </BodyTypography>
@@ -310,7 +299,7 @@ export default function NFTsSelectedModal({
             </Box>
           </FlexBox>
         </RightFlexBox>
-        <Box mb="16px" display={withdrawLargeAmount ? '' : 'none'}>
+        <Box mb="16px" display={new BigNumber(collateralRiskLevel).lt(150) ? '' : 'none'}>
           <FlexBox>
             <Box mr="8px" pt="1px" height="38px">
               <img src={redPrompt} alt="" />
@@ -323,7 +312,7 @@ export default function NFTsSelectedModal({
         <Button
           variant="contained"
           sx={{ width: '372px', height: '54px' }}
-          color={withdrawLargeAmount ? 'error' : 'primary'}
+          color={new BigNumber(collateralRiskLevel).lt(150) ? 'error' : 'primary'}
           onClick={() => {
             if (type === 'Withdraw') {
               withdraw()
