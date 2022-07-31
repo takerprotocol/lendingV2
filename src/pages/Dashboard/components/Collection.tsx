@@ -15,6 +15,7 @@ import { getClient } from 'apollo/client'
 import { SupportedChainId } from 'constants/chains'
 import CollectionSkeleton from './DashboardSkeleton/CollectionSkeleton'
 import { div } from 'utils'
+import { useLendingPool } from 'hooks/useLendingPool'
 
 const CollectionBox = styled(Box)`
   border-radius: 12px;
@@ -76,9 +77,9 @@ export default function Collection({ type, loading }: CollectionType) {
   const toggleModal = useWalletModalToggle()
   const client = getClient()[SupportedChainId.MAINNET]
   const navigate = useNavigate()
-
+  const lendingPoolContract = useLendingPool()
   const getCollection = useCallback(async () => {
-    if (client && address) {
+    if (client && address && lendingPoolContract) {
       const lendingPoolRes = await client.query({
         query: LendingPool('0x64d25dd7239e50c727ddaf67fc64ccdbe12548d3'),
       })
@@ -92,7 +93,7 @@ export default function Collection({ type, loading }: CollectionType) {
         // console.log(nftRes)
       }
     }
-  }, [client, address])
+  }, [client, address, lendingPoolContract])
 
   useEffect(() => {
     getCollection()
