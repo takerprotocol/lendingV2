@@ -1,15 +1,5 @@
-type Registry @entity {
-  id: ID!
-  lendingPools: [LendingPool!]!
-}
-
 type LendingPool @entity {
   id: ID! # proxy
-  addressProvider: Bytes! #address
-  lendingPoolConfigurator: Bytes! # proxy
-  poolAdmin: Bytes!
-  emergencyAdmin: Bytes!
-  priceOracle: Bytes!
   reserves: [Reserve!]! @derivedFrom(field: "pool")
   nfts: [NftCollection!]! @derivedFrom(field: "pool")
 }
@@ -18,20 +8,9 @@ type Reserve @entity {
   id: ID! # underlying address, ETH = 0
   pool: LendingPool!
 
-  configuration: BigInt!
-  liquidityIndex: BigInt!
-  debtIndex: BigInt!
-  depositRate: BigInt!
-  borrowRate: BigInt!
-  lastUpdateTimestamp: BigInt!
-  tToken: TToken! # proxy
-  debtToken: DebtToken! # proxy
+  tToken: Bytes! # proxy
+  debtToken: Bytes! # pr1.1oxy
   interestRateCalculator: Bytes! #library
-  treasury: Bytes! #address
-  reserveId: BigInt!
-
-  totalLiquidity: BigInt! # tToken.totalSupply() * liquidityIndex
-  totalDebt: BigInt! # debtToken.totalSupply() * debtIndex
 
   users: [UserReserve!]! @derivedFrom(field: "reserve")
 }
@@ -40,20 +19,16 @@ type NftCollection @entity {
   id: ID!  # underlying address
   pool: LendingPool!
 
-  configuration: BigInt!
-  tNFT: TNft! # proxy
-  ercType: ERCType!
-
-  totalLiquidity: BigInt! # tNFT.totalSupply()
-  floorPrice: BigInt!
+  tNFT: Bytes! # proxy
+  ercType: BigInt!
+  liqThreshold: BigInt!
+  ltv: BigInt!
 
   users: [UserNftCollection!]! @derivedFrom(field: "collection")
 }
 
 type User @entity {
   id: ID! # address
-  reserveConfig: BigInt!
-  nftConfig: BigInt!
   reserves: [UserReserve!]! @derivedFrom(field: "user")
   collections: [UserNftCollection!]! @derivedFrom(field: "user")
 }
@@ -75,38 +50,3 @@ type UserNftCollection  @entity {
   amounts: [BigInt!]!
 }
 
-enum ERCType {
-  ERC20
-  ERC721
-  ERC1155
-}
-
-type TToken @entity {
-  id: ID! # address
-  pool: LendingPool!
-  reserve: Reserve!
-  incentivesController: Bytes! # address
-  decimals: BigInt!
-  name: String!
-  symbol: String!
-}
-
-type DebtToken @entity {
-  id: ID! # address
-  pool: LendingPool!
-  reserve: Reserve!
-  incentivesController: Bytes! # address
-  decimals: BigInt!
-  name: String!
-  symbol: String!
-}
-
-type TNft @entity {
-  id: ID! # address
-  pool: LendingPool!
-  nftCollection: NftCollection!
-  incentivesController: Bytes! # address
-  name: String!
-  symbol: String!
-  ercType: ERCType!
-}

@@ -118,6 +118,52 @@ export class Initialized__Params {
   }
 }
 
+export class Liquidated extends ethereum.Event {
+  get params(): Liquidated__Params {
+    return new Liquidated__Params(this);
+  }
+}
+
+export class Liquidated__Params {
+  _event: Liquidated;
+
+  constructor(event: Liquidated) {
+    this._event = event;
+  }
+
+  get nfts(): Array<Address> {
+    return this._event.parameters[0].value.toAddressArray();
+  }
+
+  get tokenIds(): Array<BigInt> {
+    return this._event.parameters[1].value.toBigIntArray();
+  }
+
+  get amounts(): Array<BigInt> {
+    return this._event.parameters[2].value.toBigIntArray();
+  }
+
+  get debt(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
+
+  get user(): Address {
+    return this._event.parameters[4].value.toAddress();
+  }
+
+  get debtCovered(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
+  }
+
+  get liquidator(): Address {
+    return this._event.parameters[6].value.toAddress();
+  }
+
+  get receiveTNFT(): boolean {
+    return this._event.parameters[7].value.toBoolean();
+  }
+}
+
 export class NFTsDeposited extends ethereum.Event {
   get params(): NFTsDeposited__Params {
     return new NFTsDeposited__Params(this);
@@ -625,6 +671,21 @@ export class LendingPool extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
+  WETHGateway(): Address {
+    let result = super.call("WETHGateway", "WETHGateway():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_WETHGateway(): ethereum.CallResult<Address> {
+    let result = super.tryCall("WETHGateway", "WETHGateway():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   getAssetValues(asset: Address): LendingPool__getAssetValuesResult {
     let result = super.call(
       "getAssetValues",
@@ -1099,6 +1160,36 @@ export class BorrowCall__Outputs {
   }
 }
 
+export class DeleteReserveCall extends ethereum.Call {
+  get inputs(): DeleteReserveCall__Inputs {
+    return new DeleteReserveCall__Inputs(this);
+  }
+
+  get outputs(): DeleteReserveCall__Outputs {
+    return new DeleteReserveCall__Outputs(this);
+  }
+}
+
+export class DeleteReserveCall__Inputs {
+  _call: DeleteReserveCall;
+
+  constructor(call: DeleteReserveCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class DeleteReserveCall__Outputs {
+  _call: DeleteReserveCall;
+
+  constructor(call: DeleteReserveCall) {
+    this._call = call;
+  }
+}
+
 export class DepositCall extends ethereum.Call {
   get inputs(): DepositCall__Inputs {
     return new DepositCall__Inputs(this);
@@ -1293,6 +1384,56 @@ export class InitializeCall__Outputs {
   }
 }
 
+export class LiquidateCall extends ethereum.Call {
+  get inputs(): LiquidateCall__Inputs {
+    return new LiquidateCall__Inputs(this);
+  }
+
+  get outputs(): LiquidateCall__Outputs {
+    return new LiquidateCall__Outputs(this);
+  }
+}
+
+export class LiquidateCall__Inputs {
+  _call: LiquidateCall;
+
+  constructor(call: LiquidateCall) {
+    this._call = call;
+  }
+
+  get nfts(): Array<Address> {
+    return this._call.inputValues[0].value.toAddressArray();
+  }
+
+  get tokenIds(): Array<BigInt> {
+    return this._call.inputValues[1].value.toBigIntArray();
+  }
+
+  get amounts(): Array<BigInt> {
+    return this._call.inputValues[2].value.toBigIntArray();
+  }
+
+  get debt(): Address {
+    return this._call.inputValues[3].value.toAddress();
+  }
+
+  get user(): Address {
+    return this._call.inputValues[4].value.toAddress();
+  }
+
+  get receiveTNFT(): boolean {
+    return this._call.inputValues[5].value.toBoolean();
+  }
+}
+
+export class LiquidateCall__Outputs {
+  _call: LiquidateCall;
+
+  constructor(call: LiquidateCall) {
+    this._call = call;
+  }
+}
+
 export class RepayCall extends ethereum.Call {
   get inputs(): RepayCall__Inputs {
     return new RepayCall__Inputs(this);
@@ -1471,6 +1612,36 @@ export class SetUserUsingAsCollateralCall__Outputs {
   }
 }
 
+export class SetWETHGatewayCall extends ethereum.Call {
+  get inputs(): SetWETHGatewayCall__Inputs {
+    return new SetWETHGatewayCall__Inputs(this);
+  }
+
+  get outputs(): SetWETHGatewayCall__Outputs {
+    return new SetWETHGatewayCall__Outputs(this);
+  }
+}
+
+export class SetWETHGatewayCall__Inputs {
+  _call: SetWETHGatewayCall;
+
+  constructor(call: SetWETHGatewayCall) {
+    this._call = call;
+  }
+
+  get wETHGateway(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SetWETHGatewayCall__Outputs {
+  _call: SetWETHGatewayCall;
+
+  constructor(call: SetWETHGatewayCall) {
+    this._call = call;
+  }
+}
+
 export class WithdrawCall extends ethereum.Call {
   get inputs(): WithdrawCall__Inputs {
     return new WithdrawCall__Inputs(this);
@@ -1496,8 +1667,12 @@ export class WithdrawCall__Inputs {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get to(): Address {
+  get from(): Address {
     return this._call.inputValues[2].value.toAddress();
+  }
+
+  get to(): Address {
+    return this._call.inputValues[3].value.toAddress();
   }
 }
 

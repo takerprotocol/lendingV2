@@ -101,6 +101,19 @@
         "internalType": "address",
         "name": "asset",
         "type": "address"
+      }
+    ],
+    "name": "ReserveDeleted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "asset",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -336,6 +349,19 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "asset",
+        "type": "address"
+      }
+    ],
+    "name": "deleteReserve",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "role",
         "type": "bytes32"
@@ -519,6 +545,16 @@
             "type": "address"
           },
           {
+            "internalType": "uint256",
+            "name": "ltv",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "liqThreshold",
+            "type": "uint256"
+          },
+          {
             "internalType": "uint16",
             "name": "reserveFactor",
             "type": "uint16"
@@ -592,6 +628,19 @@
       }
     ],
     "name": "setAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "WETHGateway",
+        "type": "address"
+      }
+    ],
+    "name": "setWETHGateway",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

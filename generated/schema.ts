@@ -11,47 +11,6 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class Registry extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save Registry entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Registry must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("Registry", id.toString(), this);
-    }
-  }
-
-  static load(id: string): Registry | null {
-    return changetype<Registry | null>(store.get("Registry", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get lendingPools(): Array<string> {
-    let value = this.get("lendingPools");
-    return value!.toStringArray();
-  }
-
-  set lendingPools(value: Array<string>) {
-    this.set("lendingPools", Value.fromStringArray(value));
-  }
-}
-
 export class LendingPool extends Entity {
   constructor(id: string) {
     super();
@@ -81,51 +40,6 @@ export class LendingPool extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
-  }
-
-  get addressProvider(): Bytes {
-    let value = this.get("addressProvider");
-    return value!.toBytes();
-  }
-
-  set addressProvider(value: Bytes) {
-    this.set("addressProvider", Value.fromBytes(value));
-  }
-
-  get lendingPoolConfigurator(): Bytes {
-    let value = this.get("lendingPoolConfigurator");
-    return value!.toBytes();
-  }
-
-  set lendingPoolConfigurator(value: Bytes) {
-    this.set("lendingPoolConfigurator", Value.fromBytes(value));
-  }
-
-  get poolAdmin(): Bytes {
-    let value = this.get("poolAdmin");
-    return value!.toBytes();
-  }
-
-  set poolAdmin(value: Bytes) {
-    this.set("poolAdmin", Value.fromBytes(value));
-  }
-
-  get emergencyAdmin(): Bytes {
-    let value = this.get("emergencyAdmin");
-    return value!.toBytes();
-  }
-
-  set emergencyAdmin(value: Bytes) {
-    this.set("emergencyAdmin", Value.fromBytes(value));
-  }
-
-  get priceOracle(): Bytes {
-    let value = this.get("priceOracle");
-    return value!.toBytes();
-  }
-
-  set priceOracle(value: Bytes) {
-    this.set("priceOracle", Value.fromBytes(value));
   }
 
   get reserves(): Array<string> {
@@ -187,76 +101,22 @@ export class Reserve extends Entity {
     this.set("pool", Value.fromString(value));
   }
 
-  get configuration(): BigInt {
-    let value = this.get("configuration");
-    return value!.toBigInt();
-  }
-
-  set configuration(value: BigInt) {
-    this.set("configuration", Value.fromBigInt(value));
-  }
-
-  get liquidityIndex(): BigInt {
-    let value = this.get("liquidityIndex");
-    return value!.toBigInt();
-  }
-
-  set liquidityIndex(value: BigInt) {
-    this.set("liquidityIndex", Value.fromBigInt(value));
-  }
-
-  get debtIndex(): BigInt {
-    let value = this.get("debtIndex");
-    return value!.toBigInt();
-  }
-
-  set debtIndex(value: BigInt) {
-    this.set("debtIndex", Value.fromBigInt(value));
-  }
-
-  get depositRate(): BigInt {
-    let value = this.get("depositRate");
-    return value!.toBigInt();
-  }
-
-  set depositRate(value: BigInt) {
-    this.set("depositRate", Value.fromBigInt(value));
-  }
-
-  get borrowRate(): BigInt {
-    let value = this.get("borrowRate");
-    return value!.toBigInt();
-  }
-
-  set borrowRate(value: BigInt) {
-    this.set("borrowRate", Value.fromBigInt(value));
-  }
-
-  get lastUpdateTimestamp(): BigInt {
-    let value = this.get("lastUpdateTimestamp");
-    return value!.toBigInt();
-  }
-
-  set lastUpdateTimestamp(value: BigInt) {
-    this.set("lastUpdateTimestamp", Value.fromBigInt(value));
-  }
-
-  get tToken(): string {
+  get tToken(): Bytes {
     let value = this.get("tToken");
-    return value!.toString();
+    return value!.toBytes();
   }
 
-  set tToken(value: string) {
-    this.set("tToken", Value.fromString(value));
+  set tToken(value: Bytes) {
+    this.set("tToken", Value.fromBytes(value));
   }
 
-  get debtToken(): string {
+  get debtToken(): Bytes {
     let value = this.get("debtToken");
-    return value!.toString();
+    return value!.toBytes();
   }
 
-  set debtToken(value: string) {
-    this.set("debtToken", Value.fromString(value));
+  set debtToken(value: Bytes) {
+    this.set("debtToken", Value.fromBytes(value));
   }
 
   get interestRateCalculator(): Bytes {
@@ -266,42 +126,6 @@ export class Reserve extends Entity {
 
   set interestRateCalculator(value: Bytes) {
     this.set("interestRateCalculator", Value.fromBytes(value));
-  }
-
-  get treasury(): Bytes {
-    let value = this.get("treasury");
-    return value!.toBytes();
-  }
-
-  set treasury(value: Bytes) {
-    this.set("treasury", Value.fromBytes(value));
-  }
-
-  get reserveId(): BigInt {
-    let value = this.get("reserveId");
-    return value!.toBigInt();
-  }
-
-  set reserveId(value: BigInt) {
-    this.set("reserveId", Value.fromBigInt(value));
-  }
-
-  get totalLiquidity(): BigInt {
-    let value = this.get("totalLiquidity");
-    return value!.toBigInt();
-  }
-
-  set totalLiquidity(value: BigInt) {
-    this.set("totalLiquidity", Value.fromBigInt(value));
-  }
-
-  get totalDebt(): BigInt {
-    let value = this.get("totalDebt");
-    return value!.toBigInt();
-  }
-
-  set totalDebt(value: BigInt) {
-    this.set("totalDebt", Value.fromBigInt(value));
   }
 
   get users(): Array<string> {
@@ -354,49 +178,40 @@ export class NftCollection extends Entity {
     this.set("pool", Value.fromString(value));
   }
 
-  get configuration(): BigInt {
-    let value = this.get("configuration");
-    return value!.toBigInt();
-  }
-
-  set configuration(value: BigInt) {
-    this.set("configuration", Value.fromBigInt(value));
-  }
-
-  get tNFT(): string {
+  get tNFT(): Bytes {
     let value = this.get("tNFT");
-    return value!.toString();
+    return value!.toBytes();
   }
 
-  set tNFT(value: string) {
-    this.set("tNFT", Value.fromString(value));
+  set tNFT(value: Bytes) {
+    this.set("tNFT", Value.fromBytes(value));
   }
 
-  get ercType(): string {
+  get ercType(): BigInt {
     let value = this.get("ercType");
-    return value!.toString();
-  }
-
-  set ercType(value: string) {
-    this.set("ercType", Value.fromString(value));
-  }
-
-  get totalLiquidity(): BigInt {
-    let value = this.get("totalLiquidity");
     return value!.toBigInt();
   }
 
-  set totalLiquidity(value: BigInt) {
-    this.set("totalLiquidity", Value.fromBigInt(value));
+  set ercType(value: BigInt) {
+    this.set("ercType", Value.fromBigInt(value));
   }
 
-  get floorPrice(): BigInt {
-    let value = this.get("floorPrice");
+  get liqThreshold(): BigInt {
+    let value = this.get("liqThreshold");
     return value!.toBigInt();
   }
 
-  set floorPrice(value: BigInt) {
-    this.set("floorPrice", Value.fromBigInt(value));
+  set liqThreshold(value: BigInt) {
+    this.set("liqThreshold", Value.fromBigInt(value));
+  }
+
+  get ltv(): BigInt {
+    let value = this.get("ltv");
+    return value!.toBigInt();
+  }
+
+  set ltv(value: BigInt) {
+    this.set("ltv", Value.fromBigInt(value));
   }
 
   get users(): Array<string> {
@@ -438,24 +253,6 @@ export class User extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
-  }
-
-  get reserveConfig(): BigInt {
-    let value = this.get("reserveConfig");
-    return value!.toBigInt();
-  }
-
-  set reserveConfig(value: BigInt) {
-    this.set("reserveConfig", Value.fromBigInt(value));
-  }
-
-  get nftConfig(): BigInt {
-    let value = this.get("nftConfig");
-    return value!.toBigInt();
-  }
-
-  set nftConfig(value: BigInt) {
-    this.set("nftConfig", Value.fromBigInt(value));
   }
 
   get reserves(): Array<string> {
@@ -621,263 +418,5 @@ export class UserNftCollection extends Entity {
 
   set amounts(value: Array<BigInt>) {
     this.set("amounts", Value.fromBigIntArray(value));
-  }
-}
-
-export class TToken extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save TToken entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type TToken must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("TToken", id.toString(), this);
-    }
-  }
-
-  static load(id: string): TToken | null {
-    return changetype<TToken | null>(store.get("TToken", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get pool(): string {
-    let value = this.get("pool");
-    return value!.toString();
-  }
-
-  set pool(value: string) {
-    this.set("pool", Value.fromString(value));
-  }
-
-  get reserve(): string {
-    let value = this.get("reserve");
-    return value!.toString();
-  }
-
-  set reserve(value: string) {
-    this.set("reserve", Value.fromString(value));
-  }
-
-  get incentivesController(): Bytes {
-    let value = this.get("incentivesController");
-    return value!.toBytes();
-  }
-
-  set incentivesController(value: Bytes) {
-    this.set("incentivesController", Value.fromBytes(value));
-  }
-
-  get decimals(): BigInt {
-    let value = this.get("decimals");
-    return value!.toBigInt();
-  }
-
-  set decimals(value: BigInt) {
-    this.set("decimals", Value.fromBigInt(value));
-  }
-
-  get name(): string {
-    let value = this.get("name");
-    return value!.toString();
-  }
-
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
-  }
-
-  get symbol(): string {
-    let value = this.get("symbol");
-    return value!.toString();
-  }
-
-  set symbol(value: string) {
-    this.set("symbol", Value.fromString(value));
-  }
-}
-
-export class DebtToken extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save DebtToken entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type DebtToken must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("DebtToken", id.toString(), this);
-    }
-  }
-
-  static load(id: string): DebtToken | null {
-    return changetype<DebtToken | null>(store.get("DebtToken", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get pool(): string {
-    let value = this.get("pool");
-    return value!.toString();
-  }
-
-  set pool(value: string) {
-    this.set("pool", Value.fromString(value));
-  }
-
-  get reserve(): string {
-    let value = this.get("reserve");
-    return value!.toString();
-  }
-
-  set reserve(value: string) {
-    this.set("reserve", Value.fromString(value));
-  }
-
-  get incentivesController(): Bytes {
-    let value = this.get("incentivesController");
-    return value!.toBytes();
-  }
-
-  set incentivesController(value: Bytes) {
-    this.set("incentivesController", Value.fromBytes(value));
-  }
-
-  get decimals(): BigInt {
-    let value = this.get("decimals");
-    return value!.toBigInt();
-  }
-
-  set decimals(value: BigInt) {
-    this.set("decimals", Value.fromBigInt(value));
-  }
-
-  get name(): string {
-    let value = this.get("name");
-    return value!.toString();
-  }
-
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
-  }
-
-  get symbol(): string {
-    let value = this.get("symbol");
-    return value!.toString();
-  }
-
-  set symbol(value: string) {
-    this.set("symbol", Value.fromString(value));
-  }
-}
-
-export class TNft extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save TNft entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type TNft must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("TNft", id.toString(), this);
-    }
-  }
-
-  static load(id: string): TNft | null {
-    return changetype<TNft | null>(store.get("TNft", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get pool(): string {
-    let value = this.get("pool");
-    return value!.toString();
-  }
-
-  set pool(value: string) {
-    this.set("pool", Value.fromString(value));
-  }
-
-  get nftCollection(): string {
-    let value = this.get("nftCollection");
-    return value!.toString();
-  }
-
-  set nftCollection(value: string) {
-    this.set("nftCollection", Value.fromString(value));
-  }
-
-  get incentivesController(): Bytes {
-    let value = this.get("incentivesController");
-    return value!.toBytes();
-  }
-
-  set incentivesController(value: Bytes) {
-    this.set("incentivesController", Value.fromBytes(value));
-  }
-
-  get name(): string {
-    let value = this.get("name");
-    return value!.toString();
-  }
-
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
-  }
-
-  get symbol(): string {
-    let value = this.get("symbol");
-    return value!.toString();
-  }
-
-  set symbol(value: string) {
-    this.set("symbol", Value.fromString(value));
-  }
-
-  get ercType(): string {
-    let value = this.get("ercType");
-    return value!.toString();
-  }
-
-  set ercType(value: string) {
-    this.set("ercType", Value.fromString(value));
   }
 }

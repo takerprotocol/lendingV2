@@ -109,6 +109,61 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "nfts",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "tokenIds",
+        "type": "uint256[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "amounts",
+        "type": "uint256[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "debt",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "debtCovered",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "liquidator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "receiveTNFT",
+        "type": "bool"
+      }
+    ],
+    "name": "Liquidated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address[]",
         "name": "nfts",
@@ -320,59 +375,36 @@
   {
     "inputs": [],
     "name": "MAX_NUMBER_NFT_RESERVES",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "MAX_NUMBER_RESERVES",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "NAME",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "WETHGateway",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "from",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "asset", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "address", "name": "from", "type": "address" }
     ],
     "name": "borrow",
     "outputs": [],
@@ -381,21 +413,18 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "asset", "type": "address" }
+    ],
+    "name": "deleteReserve",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "asset", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "address", "name": "to", "type": "address" }
     ],
     "name": "deposit",
     "outputs": [],
@@ -404,26 +433,10 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "nfts",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "tokenIds",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "amounts",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      }
+      { "internalType": "address[]", "name": "nfts", "type": "address[]" },
+      { "internalType": "uint256[]", "name": "tokenIds", "type": "uint256[]" },
+      { "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" },
+      { "internalType": "address", "name": "to", "type": "address" }
     ],
     "name": "depositNFTs",
     "outputs": [],
@@ -432,54 +445,30 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "asset", "type": "address" }
     ],
     "name": "getAssetValues",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "asset", "type": "address" }
     ],
     "name": "getNftReserveConfig",
     "outputs": [
-      {
-        "internalType": "ReserveConfiguration",
-        "name": "",
-        "type": "uint256"
-      }
+      { "internalType": "ReserveConfiguration", "name": "", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "asset", "type": "address" }
     ],
     "name": "getNftReserveData",
     "outputs": [
@@ -495,11 +484,7 @@
             "name": "tNFTAddress",
             "type": "address"
           },
-          {
-            "internalType": "uint8",
-            "name": "id",
-            "type": "uint8"
-          }
+          { "internalType": "uint8", "name": "id", "type": "uint8" }
         ],
         "internalType": "struct NFTReserve.ReserveData",
         "name": "",
@@ -513,51 +498,27 @@
     "inputs": [],
     "name": "getPoolValues",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "asset", "type": "address" }
     ],
     "name": "getReserveConfig",
     "outputs": [
-      {
-        "internalType": "ReserveConfiguration",
-        "name": "",
-        "type": "uint256"
-      }
+      { "internalType": "ReserveConfiguration", "name": "", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "asset", "type": "address" }
     ],
     "name": "getReserveData",
     "outputs": [
@@ -573,11 +534,7 @@
             "name": "liquidityIndex",
             "type": "uint128"
           },
-          {
-            "internalType": "uint128",
-            "name": "debtIndex",
-            "type": "uint128"
-          },
+          { "internalType": "uint128", "name": "debtIndex", "type": "uint128" },
           {
             "internalType": "uint128",
             "name": "depositRate",
@@ -608,16 +565,8 @@
             "name": "interestRateCalculatorAddress",
             "type": "address"
           },
-          {
-            "internalType": "address",
-            "name": "treasury",
-            "type": "address"
-          },
-          {
-            "internalType": "uint8",
-            "name": "id",
-            "type": "uint8"
-          }
+          { "internalType": "address", "name": "treasury", "type": "address" },
+          { "internalType": "uint8", "name": "id", "type": "uint8" }
         ],
         "internalType": "struct Reserve.ReserveData",
         "name": "",
@@ -629,194 +578,94 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "asset", "type": "address" }
     ],
     "name": "getReserveNormalizedDebtScale",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "asset", "type": "address" }
     ],
     "name": "getReserveNormalizedLiquidityScale",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "user", "type": "address" },
+      { "internalType": "address", "name": "asset", "type": "address" }
     ],
     "name": "getUserAssetValues",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "user", "type": "address" }
     ],
     "name": "getUserConfig",
     "outputs": [
-      {
-        "internalType": "UserConfiguration",
-        "name": "",
-        "type": "uint256"
-      }
+      { "internalType": "UserConfiguration", "name": "", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "user", "type": "address" }
     ],
     "name": "getUserNftConfig",
     "outputs": [
-      {
-        "internalType": "UserConfiguration",
-        "name": "",
-        "type": "uint256"
-      }
+      { "internalType": "UserNftConfiguration", "name": "", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "user", "type": "address" }
     ],
     "name": "getUserState",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "user", "type": "address" }
     ],
     "name": "getUserValues",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "uint256", "name": "", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "asset", "type": "address" },
       {
         "internalType": "ReserveConfiguration",
         "name": "configuration",
         "type": "uint256"
       },
-      {
-        "internalType": "address",
-        "name": "tNFTAddress",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "tNFTAddress", "type": "address" }
     ],
     "name": "initNFTReserve",
     "outputs": [],
@@ -825,26 +674,14 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "asset", "type": "address" },
       {
         "internalType": "ReserveConfiguration",
         "name": "configuration",
         "type": "uint256"
       },
-      {
-        "internalType": "address",
-        "name": "tTokenAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "debtAddress",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "tTokenAddress", "type": "address" },
+      { "internalType": "address", "name": "debtAddress", "type": "address" },
       {
         "internalType": "address",
         "name": "interestRateStrategyAddress",
@@ -870,54 +707,40 @@
     "type": "function"
   },
   {
+    "inputs": [
+      { "internalType": "address[]", "name": "nfts", "type": "address[]" },
+      { "internalType": "uint256[]", "name": "tokenIds", "type": "uint256[]" },
+      { "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" },
+      { "internalType": "address", "name": "debt", "type": "address" },
+      { "internalType": "address", "name": "user", "type": "address" },
+      { "internalType": "bool", "name": "receiveTNFT", "type": "bool" }
+    ],
+    "name": "liquidate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "paused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "asset", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "address", "name": "to", "type": "address" }
     ],
     "name": "repay",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "asset", "type": "address" },
       {
         "internalType": "ReserveConfiguration",
         "name": "configuration",
@@ -931,11 +754,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "asset", "type": "address" },
       {
         "internalType": "ReserveConfiguration",
         "name": "configuration",
@@ -949,11 +768,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "asset", "type": "address" },
       {
         "internalType": "address",
         "name": "interestRateCalculatorAddress",
@@ -967,16 +782,8 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      },
-      {
-        "internalType": "bool",
-        "name": "usingAsCollateral",
-        "type": "bool"
-      }
+      { "internalType": "address", "name": "asset", "type": "address" },
+      { "internalType": "bool", "name": "usingAsCollateral", "type": "bool" }
     ],
     "name": "setUserUsingAsCollateral",
     "outputs": [],
@@ -985,21 +792,19 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "asset",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "wETHGateway", "type": "address" }
+    ],
+    "name": "setWETHGateway",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "asset", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" }
     ],
     "name": "withdraw",
     "outputs": [],
@@ -1008,26 +813,10 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address[]",
-        "name": "nfts",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "tokenIds",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "amounts",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      }
+      { "internalType": "address[]", "name": "nfts", "type": "address[]" },
+      { "internalType": "uint256[]", "name": "tokenIds", "type": "uint256[]" },
+      { "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" },
+      { "internalType": "address", "name": "to", "type": "address" }
     ],
     "name": "withdrawNFTs",
     "outputs": [],

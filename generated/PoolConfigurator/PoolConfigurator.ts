@@ -110,6 +110,24 @@ export class ReserveActiveUpdated__Params {
   }
 }
 
+export class ReserveDeleted extends ethereum.Event {
+  get params(): ReserveDeleted__Params {
+    return new ReserveDeleted__Params(this);
+  }
+}
+
+export class ReserveDeleted__Params {
+  _event: ReserveDeleted;
+
+  constructor(event: ReserveDeleted) {
+    this._event = event;
+  }
+
+  get asset(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class ReserveFactorUpdated extends ethereum.Event {
   get params(): ReserveFactorUpdated__Params {
     return new ReserveFactorUpdated__Params(this);
@@ -465,6 +483,36 @@ export class PoolConfigurator extends ethereum.SmartContract {
   }
 }
 
+export class DeleteReserveCall extends ethereum.Call {
+  get inputs(): DeleteReserveCall__Inputs {
+    return new DeleteReserveCall__Inputs(this);
+  }
+
+  get outputs(): DeleteReserveCall__Outputs {
+    return new DeleteReserveCall__Outputs(this);
+  }
+}
+
+export class DeleteReserveCall__Inputs {
+  _call: DeleteReserveCall;
+
+  constructor(call: DeleteReserveCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class DeleteReserveCall__Outputs {
+  _call: DeleteReserveCall;
+
+  constructor(call: DeleteReserveCall) {
+    this._call = call;
+  }
+}
+
 export class GrantRoleCall extends ethereum.Call {
   get inputs(): GrantRoleCall__Inputs {
     return new GrantRoleCall__Inputs(this);
@@ -650,8 +698,16 @@ export class InitReservesCallParamsListStruct extends ethereum.Tuple {
     return this[10].toAddress();
   }
 
+  get ltv(): BigInt {
+    return this[11].toBigInt();
+  }
+
+  get liqThreshold(): BigInt {
+    return this[12].toBigInt();
+  }
+
   get reserveFactor(): i32 {
-    return this[11].toI32();
+    return this[13].toI32();
   }
 }
 
@@ -779,6 +835,36 @@ export class SetAdminCall__Outputs {
   _call: SetAdminCall;
 
   constructor(call: SetAdminCall) {
+    this._call = call;
+  }
+}
+
+export class SetWETHGatewayCall extends ethereum.Call {
+  get inputs(): SetWETHGatewayCall__Inputs {
+    return new SetWETHGatewayCall__Inputs(this);
+  }
+
+  get outputs(): SetWETHGatewayCall__Outputs {
+    return new SetWETHGatewayCall__Outputs(this);
+  }
+}
+
+export class SetWETHGatewayCall__Inputs {
+  _call: SetWETHGatewayCall;
+
+  constructor(call: SetWETHGatewayCall) {
+    this._call = call;
+  }
+
+  get WETHGateway(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SetWETHGatewayCall__Outputs {
+  _call: SetWETHGatewayCall;
+
+  constructor(call: SetWETHGatewayCall) {
     this._call = call;
   }
 }
