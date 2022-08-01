@@ -101,7 +101,6 @@ export function useDebtRiskLevel(value?: string | number): string {
   }
 }
 export function useCollateralRiskLevel(value?: string | number): string {
-  console.log('useEthDebt()', useEthDebt())
   const CollateralRiskLevel = times(
     plus(useUserValue().totalCollateral, value || 0),
     div(useUserState().liquidationThreshold, useEthDebt())

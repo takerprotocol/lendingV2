@@ -118,12 +118,13 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           .depositNFTs(
             data.map((el) => el.contract.address),
             data.map((el) => el.tokenId),
-            [amount],
+            data.map((el) => el.balance),
             address,
             { gasLimit }
           )
           .then((res: any) => {
             if (res && res.hash) {
+              setOpenSelectedModal(false)
               addTransaction(res, {
                 type: TransactionType.DEPOSIT,
                 recipient: address,
@@ -144,6 +145,11 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
       }
     }
   }
+
+  const riskLevelWarning = useMemo(() => {
+    return new BigNumber(collateralRiskLevel).lt(150) && type === 'Deposit'
+  }, [collateralRiskLevel, type])
+
   return (
     <Modal open={openSelectedModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -202,7 +208,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
               <BodyTypography
                 ml="6px !important"
                 fontWeight="700 !important"
-                color={new BigNumber(collateralRiskLevel).lt(150) ? '#E1536C !important' : '#14142A !important'}
+                color={riskLevelWarning ? '#E1536C !important' : '#14142A !important'}
               >
                 {upBorrowLimit}
               </BodyTypography>
@@ -214,7 +220,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
               <BodyTypography
                 ml="6px"
                 fontWeight="700 !important"
-                color={new BigNumber(collateralRiskLevel).lt(150) ? '#E1536C !important' : '#14142A !important'}
+                color={riskLevelWarning ? '#E1536C !important' : '#14142A !important'}
               >
                 {borrowLimitUsed}%
               </BodyTypography>
@@ -235,7 +241,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             <BodyTypography
               ml="6px"
               fontWeight="700 !important"
-              color={new BigNumber(collateralRiskLevel).lt(150) ? '#E1536C !important' : '#14142A !important'}
+              color={riskLevelWarning ? '#E1536C !important' : '#14142A !important'}
             >
               {collateralRiskLevel}%
             </BodyTypography>
@@ -299,7 +305,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             </Box>
           </FlexBox>
         </RightFlexBox>
-        <Box mb="16px" display={new BigNumber(collateralRiskLevel).lt(150) ? '' : 'none'}>
+        <Box mb="16px" display={riskLevelWarning ? '' : 'none'}>
           <FlexBox>
             <Box mr="8px" pt="1px" height="38px">
               <img src={redPrompt} alt="" />
@@ -312,7 +318,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
         <Button
           variant="contained"
           sx={{ width: '372px', height: '54px' }}
-          color={new BigNumber(collateralRiskLevel).lt(150) ? 'error' : 'primary'}
+          color={riskLevelWarning ? 'error' : 'primary'}
           onClick={() => {
             if (type === 'Withdraw') {
               withdraw()
