@@ -83,6 +83,7 @@ export default function Collection({ type, loading }: CollectionType) {
       const lendingPoolRes = await client.query({
         query: LendingPool('0x64d25dd7239e50c727ddaf67fc64ccdbe12548d3'),
       })
+      console.log(lendingPoolRes)
       // console.log(lendingPoolRes)
       // console.log(
       //   `${address} - ${lendingPoolRes.data.lendingPool.nfts[0].id} - ${lendingPoolRes.data.lendingPool.nfts[0].tNFT}`
