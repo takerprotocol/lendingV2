@@ -17,12 +17,12 @@ import {
   NftReserveInitialized, ReserveDeleted, ReserveInitialized
 } from "../generated/PoolConfigurator/PoolConfigurator"
 import {
-  LendingPool, Reserve, NftCollection, User, UserReserve, UserNftCollection
+  LendingPool, Reserve, NftCollection, User, UserReserve, UserNftCollection, NftToken
 } from "../generated/schema";
 import * as utils from "./utils";
 import { log } from '@graphprotocol/graph-ts';
 
-const POOLID = "0x94099942864EA81cCF197E9D71ac53310b1468D8"
+const POOLID = "0x68172cAc7A9c00C972f27E279A5d47424d84a731"
 
 export function handleNftReserveInitialized(event: NftReserveInitialized): void{
   let poolId = POOLID;
@@ -170,16 +170,6 @@ export function handleRepaid(event: Repaid): void {
   userReserve.save();
 }
 
-///  event Liquidated(
-//     address[] nfts,
-//     uint256[] tokenIds,
-//     uint256[] amounts,
-//     address debt,
-//     address indexed user,
-//     uint256 debtCovered,
-//     address indexed liquidator,
-//     bool receiveTNFT
-//   );
 
 export function handleLiquidated(event: Liquidated): void {
   let userId = event.params.user.toHex();
@@ -247,25 +237,12 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
     if (!userNftCollection) {
       userNftCollection = utils.newUserNftCollection(userNftCollectionId);
       userNftCollection.user = userId;
-      userNftCollection.collection = userNftCollectionId;
+      userNftCollection.collection = collectionId;
+      userNftCollection.save();
     }
     // saved inside for each collection
     addNft(userNftCollection, event.params.tokenIds[i], event.params.amounts[i]);
   }
-}
-
-export function addNft(userNftCollection: UserNftCollection, tokenId: BigInt, amount: BigInt): void {
-  let idx = userNftCollection.tokenIds.indexOf(tokenId);
-  if (idx != -1) {
-    userNftCollection.amounts[idx] = userNftCollection.amounts[idx].plus(amount);
-  } else {
-    userNftCollection.tokenIds[0] = tokenId;
-    userNftCollection.amounts.push(amount);
-    log.info("New tokenId {}", [tokenId.toString()]);
-
-    // log.info("userNftCollection.tokenIds {}", [userNftCollection.tokenIds.at(0).toString()]);
-  }
-  userNftCollection.save();
 }
 
 export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
@@ -291,31 +268,48 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
       log.warning('Found withdraw event for unknown userNftCollection - {}', [userNftCollectionId]);
       userNftCollection = utils.newUserNftCollection(userNftCollectionId);
       userNftCollection.user = userId;
-      userNftCollection.collection = userNftCollectionId;
+      userNftCollection.collection = collectionId;
+      userNftCollection.save();
     }
     // saved inside for each collection
     removeNft(userNftCollection, event.params.tokenIds[i], event.params.amounts[i]);
   }
 }
 
-function removeNft(userNftCollection: UserNftCollection, tokenId: BigInt, amount: BigInt): void {
-  let idx = userNftCollection.tokenIds.indexOf(tokenId);
-  if (idx != -1) {
-    userNftCollection.amounts[idx] = userNftCollection.amounts[idx].minus(amount);
-    if (userNftCollection.amounts[idx] == BigInt.zero()) {
-      // Todo remove tokenId
-    }
+export function addNft(userNftCollection: UserNftCollection, tokenId: BigInt, amount: BigInt): void {
+  let nftTokenId = userNftCollection.id + '-' + tokenId.toString();
+  let nftToken = NftToken.load(nftTokenId);
+  if (nftToken) {
+    nftToken.amount = nftToken.amount.plus(amount);
   } else {
-    log.warning('Found withdraw event for unknown tokenId {} for UserNftCollection - {}', [tokenId.toString(), UserNftCollection.toString()]);
-    userNftCollection.tokenIds.push(tokenId);
-    userNftCollection.amounts.push(amount.neg());
+    nftToken = new NftToken(nftTokenId);
+    nftToken.userCollection = userNftCollection.id;
+    nftToken.amount = amount;
+    log.info("New nftToken {}", [nftTokenId.toString()]);
+
+    // log.info("userNftCollection.tokenIds {}", [userNftCollection.tokenIds.at(0).toString()]);
   }
-  userNftCollection.save();
+  nftToken.save();
+}
+
+function removeNft(userNftCollection: UserNftCollection, tokenId: BigInt, amount: BigInt): void {
+  let nftTokenId = userNftCollection.id + '-' + tokenId.toString();
+  let nftToken = NftToken.load(nftTokenId);
+  if (nftToken) {
+    nftToken.amount = nftToken.amount.minus(amount);
+    // TODO: remove if amount == 0
+  } else {
+    log.warning('Found withdraw event for unknown nftToken - {}', [nftTokenId]);
+    nftToken = new NftToken(nftTokenId);
+    nftToken.userCollection = userNftCollection.id;
+    nftToken.amount = amount.neg();
+  }
+  nftToken.save();
 }
 
 
-export function handleCollateralStatusUpdated(
-    event: CollateralStatusUpdated
-): void {}
-
-export function handleReserveDataUpdated(event: ReserveDataUpdated): void {}
+// export function handleCollateralStatusUpdated(
+//     event: CollateralStatusUpdated
+// ): void {}
+//
+// export function handleReserveDataUpdated(event: ReserveDataUpdated): void {}

@@ -23,14 +23,6 @@ export function newUserNftCollection(Id: string): UserNftCollection {
 
     userNftCollection.user = "";
     userNftCollection.collection = "";
-    userNftCollection.tokenIds = new Array<BigInt>();
-    userNftCollection.amounts = new Array<BigInt>();
-
-    // log.info("len {}", [userNftCollection.tokenIds.length.toString()]);
-    // userNftCollection.tokenIds.push(BigInt.fromI32(6));
-    // userNftCollection.save();
-    // log.info("len {}", [userNftCollection.tokenIds.length.toString()]);
-
 
     return userNftCollection;
 }

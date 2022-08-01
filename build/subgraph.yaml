@@ -4,9 +4,9 @@ schema:
 dataSources:
   - kind: ethereum
     name: LendingPool
-    network: localhost
+    network: rinkeby
     source:
-      address: "0x94099942864EA81cCF197E9D71ac53310b1468D8"
+      address: "0x68172cAc7A9c00C972f27E279A5d47424d84a731"
       abi: LendingPool
     mapping:
       kind: ethereum/events
@@ -18,14 +18,13 @@ dataSources:
         - User
         - UserReserve
         - UserNftCollection
+        - NftToken
       abis:
         - name: LendingPool
           file: LendingPool/abis/LendingPool.json
       eventHandlers:
         - event: Borrowed(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleBorrowed
-        - event: CollateralStatusUpdated(indexed address,indexed address,bool)
-          handler: handleCollateralStatusUpdated
         - event: Deposited(indexed address,address,indexed address,uint256)
           handler: handleDeposited
         - event: Liquidated(address[],uint256[],uint256[],address,address,uint256,address,bool)
@@ -36,16 +35,14 @@ dataSources:
           handler: handleNFTsWithdrawn
         - event: Repaid(indexed address,indexed address,indexed address,uint256)
           handler: handleRepaid
-        - event: ReserveDataUpdated(indexed address,uint256,uint256,uint256,uint256)
-          handler: handleReserveDataUpdated
         - event: Withdrawn(indexed address,indexed address,indexed address,uint256)
           handler: handleWithdrawn
       file: LendingPool/LendingPool.wasm
   - kind: ethereum
     name: PoolConfigurator
-    network: localhost
+    network: rinkeby
     source:
-      address: "0x06B1D212B8da92b83AF328De5eef4E211Da02097"
+      address: "0x64d25Dd7239e50C727Ddaf67fc64CCDbE12548D3"
       abi: PoolConfigurator
     mapping:
       kind: ethereum/events
@@ -57,6 +54,7 @@ dataSources:
         - User
         - UserReserve
         - UserNftCollection
+        - NftToken
       abis:
         - name: PoolConfigurator
           file: PoolConfigurator/abis/PoolConfigurator.json

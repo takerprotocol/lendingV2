@@ -48,7 +48,12 @@ type UserNftCollection  @entity {
   id: ID! # user - collection - tokenId
   user: User!
   collection: NftCollection!
-  tokenIds: [BigInt!]!
-  amounts: [BigInt!]!
+  tokens: [NftToken!]! @derivedFrom(field: "userCollection")
+}
+
+type NftToken @entity {
+  id: ID! # UserNftCollection - tokenId
+  userCollection: UserNftCollection!
+  amount: BigInt!
 }
 
