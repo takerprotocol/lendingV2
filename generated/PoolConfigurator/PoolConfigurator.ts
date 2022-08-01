@@ -200,6 +200,14 @@ export class ReserveInitialized__Params {
   get interestRateStrategyAddress(): Address {
     return this._event.parameters[3].value.toAddress();
   }
+
+  get liqThreshold(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
+  }
+
+  get ltv(): BigInt {
+    return this._event.parameters[5].value.toBigInt();
+  }
 }
 
 export class ReserveInterestRateCalculatorUpdated extends ethereum.Event {

@@ -177,8 +177,8 @@ export class NFTsDeposited__Params {
     this._event = event;
   }
 
-  get nfts(): Bytes {
-    return this._event.parameters[0].value.toBytes();
+  get nfts(): Array<Address> {
+    return this._event.parameters[0].value.toAddressArray();
   }
 
   get user(): Address {
@@ -211,8 +211,8 @@ export class NFTsWithdrawn__Params {
     this._event = event;
   }
 
-  get nfts(): Bytes {
-    return this._event.parameters[0].value.toBytes();
+  get nfts(): Array<Address> {
+    return this._event.parameters[0].value.toAddressArray();
   }
 
   get user(): Address {

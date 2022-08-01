@@ -164,7 +164,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address[]",
         "name": "nfts",
         "type": "address[]"
@@ -201,7 +201,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "address[]",
         "name": "nfts",
         "type": "address[]"

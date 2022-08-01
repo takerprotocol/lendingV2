@@ -170,6 +170,18 @@
         "internalType": "address",
         "name": "interestRateStrategyAddress",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "liqThreshold",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "ltv",
+        "type": "uint256"
       }
     ],
     "name": "ReserveInitialized",

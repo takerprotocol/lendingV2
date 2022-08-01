@@ -11,6 +11,8 @@ type Reserve @entity {
   tToken: Bytes! # proxy
   debtToken: Bytes! # pr1.1oxy
   interestRateCalculator: Bytes! #library
+  liqThreshold: BigInt!
+  ltv: BigInt!
 
   users: [UserReserve!]! @derivedFrom(field: "reserve")
 }
