@@ -128,6 +128,24 @@ export class Reserve extends Entity {
     this.set("interestRateCalculator", Value.fromBytes(value));
   }
 
+  get liqThreshold(): BigInt {
+    let value = this.get("liqThreshold");
+    return value!.toBigInt();
+  }
+
+  set liqThreshold(value: BigInt) {
+    this.set("liqThreshold", Value.fromBigInt(value));
+  }
+
+  get ltv(): BigInt {
+    let value = this.get("ltv");
+    return value!.toBigInt();
+  }
+
+  set ltv(value: BigInt) {
+    this.set("ltv", Value.fromBigInt(value));
+  }
+
   get users(): Array<string> {
     let value = this.get("users");
     return value!.toStringArray();

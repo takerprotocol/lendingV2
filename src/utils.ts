@@ -2,6 +2,7 @@ import {
     LendingPool, Reserve, NftCollection, User, UserReserve, UserNftCollection
 } from "../generated/schema";
 import {BigInt} from "@graphprotocol/graph-ts";
+import { log } from '@graphprotocol/graph-ts';
 
 export function newUserReserve(Id: string): UserReserve {
 
@@ -22,8 +23,14 @@ export function newUserNftCollection(Id: string): UserNftCollection {
 
     userNftCollection.user = "";
     userNftCollection.collection = "";
-    userNftCollection.tokenIds = [];
-    userNftCollection.amounts = [];
+    userNftCollection.tokenIds = new Array<BigInt>();
+    userNftCollection.amounts = new Array<BigInt>();
+
+    // log.info("len {}", [userNftCollection.tokenIds.length.toString()]);
+    // userNftCollection.tokenIds.push(BigInt.fromI32(6));
+    // userNftCollection.save();
+    // log.info("len {}", [userNftCollection.tokenIds.length.toString()]);
+
 
     return userNftCollection;
 }
