@@ -6,12 +6,13 @@ import rightIcon from 'assets/images/svg/common/right.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
-import { fixedFormat, percent, getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
+import { fixedFormat, percent, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal } from 'utils'
 import {
   useAddress,
   useBorrowLimit,
   useDebtBorrowLimitUsed,
   useDebtRiskLevel,
+  useDecimal,
   useErc20ReserveData,
   useEthDebt,
   useHeath,
@@ -151,7 +152,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const contract = useLendingPool()
   const erc20ReserveData = useErc20ReserveData()
   const borrowLimit = useBorrowLimit()
-
+  const decimal = useDecimal()
   const address = useAddress()
   const ethDebt = useEthDebt()
   const addTransaction = useTransactionAdder()
@@ -162,7 +163,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
     if (contract) {
       if (check === 1) {
         contract
-          .borrow(ERC20_ADDRESS, amount, address, { gasLimit })
+          .borrow(ERC20_ADDRESS, amountDecimal(amount, decimal), address, { gasLimit })
           .then((res: any) => {
             addTransaction(res, {
               type: TransactionType.BORROW,
@@ -176,7 +177,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
           })
       } else {
         contract
-          .repay(ERC20_ADDRESS, amount, address, { gasLimit })
+          .repay(ERC20_ADDRESS, amountDecimal(amount, decimal), address, { gasLimit })
           .then((res: any) => {
             addTransaction(res, {
               type: TransactionType.REPAY,
@@ -193,7 +194,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   }
   const repaySubmit = () => {
     if (contract) {
-      contract.repay(ERC20_ADDRESS, amount, address, { gasLimit }).then((res: any) => {
+      contract.repay(ERC20_ADDRESS, amountDecimal(amount, decimal), address, { gasLimit }).then((res: any) => {
         console.log(res)
       })
     }

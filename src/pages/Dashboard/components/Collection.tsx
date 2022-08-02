@@ -10,7 +10,7 @@ import { SpaceBetweenBox, FlexBox } from 'styleds'
 import { useAddress } from 'state/user/hooks'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useNavigate } from 'react-router-dom'
-import { LendingPool } from 'apollo/queries'
+import { LendingPool, UserNftCollection } from 'apollo/queries'
 import { getClient } from 'apollo/client'
 import { SupportedChainId } from 'constants/chains'
 import CollectionSkeleton from './DashboardSkeleton/CollectionSkeleton'
@@ -88,12 +88,10 @@ export default function Collection({ type, loading }: CollectionType) {
       // console.log(
       //   `${address} - ${lendingPoolRes.data.lendingPool.nfts[0].id} - ${lendingPoolRes.data.lendingPool.nfts[0].tNFT}`
       // )
-      // const res = await client.query({
-      //   query: UserNftCollection(
-      //     `${address} - ${lendingPoolRes.data.lendingPool.nfts[0].id} - ${lendingPoolRes.data.lendingPool.nfts[0].tNFT}`
-      //   ),
-      // })
-      // console.log(res)
+      const res = await client.query({
+        query: UserNftCollection(`${address.toLocaleLowerCase()}-${lendingPoolRes.data.lendingPool.nfts[0].id}`),
+      })
+      console.log(res)
       if (lendingPoolRes.data && lendingPoolRes.data.lendingPool) {
         setCollection(lendingPoolRes.data.lendingPool.nfts)
         // const nftRes = await client.query({

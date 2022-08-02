@@ -18,8 +18,8 @@ import {
   setUserEthAsset,
   setUserNftConfig,
   setUserNftValues,
-  setUserState,
-  setUserValues,
+  // setUserState,
+  // setUserValues,
 } from 'state/user/reducer'
 import { bigNumberToString, stringFormat } from 'utils'
 import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK, CHAIN_ID } from 'config'
@@ -62,10 +62,10 @@ export default function Dashboard() {
     )
   }, [transactions])
   useEffect(() => {
-    if (chainId && CHAIN_ID && chainId !== CHAIN_ID) {
+    if (address && chainId && CHAIN_ID && chainId !== CHAIN_ID) {
       toast.error('Please switch network')
     }
-  }, [chainId])
+  }, [chainId, address])
   useEffect(() => {
     if (contract && address && chainId === CHAIN_ID) {
       contract
@@ -109,29 +109,33 @@ export default function Dashboard() {
           })
         )
       })
-      contract.getUserState(address).then((res: Array<BigNumber>) => {
-        dispatch(
-          setUserState({
-            loanToValue: res[0].toString(),
-            liquidationThreshold: res[1].toString(),
-            heathFactor: res[2].toString(),
-          })
-        )
-      })
-      contract.getUserValues(address).then((res: Array<BigNumber>) => {
-        console.log('totalCollateral', res[3].toString())
-
-        dispatch(
-          setUserValues({
-            borrowLiquidity: res[0].toString(),
-            NFTLiquidity: res[1].toString(),
-            totalDebt: res[2].toString(),
-            totalCollateral: res[3].toString(),
-          })
-        )
-      })
+      // contract.getUserState(address).then((res: Array<BigNumber>) => {
+      //   dispatch(
+      //     setUserState({
+      //       loanToValue: res[0].toString(),
+      //       liquidationThreshold: res[1].toString(),
+      //       heathFactor: res[2].toString(),
+      //     })
+      //   )
+      // })
+      // contract.getUserValues(address).then((res: Array<BigNumber>) => {
+      //   dispatch(
+      //     setUserValues({
+      //       borrowLiquidity: res[0].toString(),
+      //       NFTLiquidity: res[1].toString(),
+      //       totalDebt: res[2].toString(),
+      //       totalCollateral: res[3].toString(),
+      //     })
+      //   )
+      // })
       contract.getUserAssetValues(address, ERC20_ADDRESS).then((res: Array<BigNumber>) => {
-        dispatch(setUserEthAsset([res[0].toString(), res[1].toString(), res[2].toString()]))
+        dispatch(
+          setUserEthAsset([
+            fromWei(res[0].toString()).toString(),
+            fromWei(res[1].toString()).toString(),
+            fromWei(res[2].toString()).toString(),
+          ])
+        )
       })
       // contract.getReserveConfig('0x6310098a56F9dd4D1F2a8A0Ab0E82565415054D8').then((res: any) => {
       //   console.log('getReserveConfig', res)

@@ -6,7 +6,17 @@ import { useEffect, useMemo, useState } from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { desensitization, div, fixedFormat, getRiskLevel, getRiskLevelTag, percent, plus, times } from 'utils'
+import {
+  amountDecimal,
+  desensitization,
+  div,
+  fixedFormat,
+  getRiskLevel,
+  getRiskLevelTag,
+  percent,
+  plus,
+  times,
+} from 'utils'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import { useLendingPool } from 'hooks/useLendingPool'
@@ -16,11 +26,11 @@ import {
   useBorrowLimit,
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
+  useDecimal,
   useErc20ReserveData,
   useEthDebt,
   useHeath,
   useUsedCollateral,
-  useWalletBalance,
 } from 'state/user/hooks'
 import { ERC20_ADDRESS, gasLimit } from 'config'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -28,8 +38,10 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { useApproveCallback } from 'hooks/transactions/useApproveCallback'
 import { ApprovalState } from 'hooks/transactions/useApproval'
 import { TransactionType } from 'state/transactions/types'
-// import { useContract } from 'hooks/useContract'
-// import a from 'abis/ILendingPoolConfigurator.json'
+import { useContract } from 'hooks/useContract'
+import erc20Abi from 'abis/MockErc20.json'
+import { fromWei } from 'web3-utils'
+
 const style = {
   width: '420px',
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -115,7 +127,7 @@ interface MySupplyModalProps {
 }
 export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal, type, mySupply }: MySupplyModalProps) {
   const [borrowOrRepay, setBorrowOrRepay] = useState<number>(type)
-  const supplyLimit = useWalletBalance()
+  const [supplyLimit, setSupplyLimit] = useState('')
   const [amount, setAmount] = useState('')
   const contract = useLendingPool()
   const address = useAddress()
@@ -131,7 +143,15 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const erc20ReserveData = useErc20ReserveData()
   const addTransaction = useTransactionAdder()
   const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
-  // const abc = useContract('0x084A0DFec27496dc6f54b585FD21C8CeCd996193', a)
+  const erc20Contract = useContract(ERC20_ADDRESS, erc20Abi)
+  const decimal = useDecimal()
+  useEffect(() => {
+    if (erc20Contract && address) {
+      erc20Contract.balanceOf(address).then((res: BigNumber) => {
+        setSupplyLimit(fromWei(res.toString()).toString())
+      })
+    }
+  }, [erc20Contract, address])
   useEffect(() => {
     setBorrowOrRepay(type)
   }, [type])
@@ -145,7 +165,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
         await approveCallback()
       } else {
         contract
-          .deposit(ERC20_ADDRESS, amount, address, {
+          .deposit(ERC20_ADDRESS, amountDecimal(amount, decimal), address, {
             gasLimit,
           })
           .then((res: any) => {
@@ -171,7 +191,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
     }
     if (contract && address) {
       contract
-        .withdraw(ERC20_ADDRESS, amount, address, { gasLimit })
+        .withdraw(ERC20_ADDRESS, amountDecimal(amount, decimal), address, { gasLimit })
         .then((res: any) => {
           toast.success(res.hash)
           addTransaction(res, {
