@@ -63,7 +63,7 @@ export default function Dashboard() {
   }, [transactions])
   useEffect(() => {
     if (address && chainId && CHAIN_ID && chainId !== CHAIN_ID) {
-      toast.error('Please switch network')
+      toast.error('Please switch network to Rinkeby')
     }
   }, [chainId, address])
   useEffect(() => {
