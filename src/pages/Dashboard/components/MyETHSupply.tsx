@@ -1,5 +1,4 @@
 import { Box, Button, styled, Switch, Typography } from '@mui/material'
-import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import MyETHSupplyBg from 'assets/images/svg/dashboard/MyETHSupplyBg.svg'
 import rightBox from 'assets/images/svg/dashboard/rightBox.svg'
 import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
@@ -24,6 +23,7 @@ import { useAppDispatch } from 'state'
 import { setUsedCollateral } from 'state/user/reducer'
 import { fixedFormat } from 'utils'
 import BigNumber from 'bignumber.js'
+import TipsTooltip from './TipsTooltip'
 // import { useWalletBalance } from 'state/user/hooks'
 
 const MyETHSupplyBox = styled(Box)`
@@ -126,7 +126,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
               <Typography variant="body1" mr="8px" fontWeight="700" color="#6E7191">
                 Used as Collateral
               </Typography>
-              <img width="14px" height="14px" src={greyPrompt} alt="" />
+              <TipsTooltip size="14" grey="grey" value={'1111111'}></TipsTooltip>
             </FlexBox>
             <Switch
               disabled={!dataType}

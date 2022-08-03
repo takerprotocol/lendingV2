@@ -7,7 +7,6 @@ import { useAppDispatch } from 'state/hooks'
 const FlexBox = styled(Box)`
   display: flex;
   align-items: center;
-  margin-left: 116px;
   margin-top: 38px;
 `
 const BlueChipNFTs = styled(Box)`

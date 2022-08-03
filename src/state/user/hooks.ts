@@ -87,7 +87,7 @@ export function useDebtBorrowLimitUsed(value?: string | number): string {
   return div(new BigNumber(useEthDebt()).plus(value || 0).toNumber(), useBorrowLimit())
 }
 export function useCollateralBorrowLimitUsed(value?: string | number): string {
-  return new BigNumber(useEthDebt()).div(useBorrowLimit(value || 0)).toString()
+  return div(useEthDebt(), useBorrowLimit(value || 0)).toString()
 }
 export function useDebtRiskLevel(value?: string | number): string {
   const DebtRiskLevel = div(

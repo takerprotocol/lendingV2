@@ -4,7 +4,6 @@ import TotalBorrowedIcon from 'assets/images/svg/dashboard/total-borrowed.svg'
 import TotalLiquidityIcon from 'assets/images/svg/dashboard/total-liquidity.svg'
 import TotalLeft from 'assets/images/svg/dashboard/totalLeft.svg'
 import TotalRight from 'assets/images/svg/dashboard/totalRight.svg'
-import TopLiquidity from 'assets/images/svg/dashboard/Tips-liquidity.svg'
 import BottomLiquidity from 'assets/images/svg/dashboard/bottom-liquidity.svg'
 import DashboardTotalSkeleton from './DashboardSkeleton/TotalSkeleton'
 import { useLendingPool } from 'hooks/useLendingPool'
@@ -12,6 +11,7 @@ import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { decimalFormat } from 'utils'
 import { useDecimal } from 'state/user/hooks'
+import TipsTooltip from './TipsTooltip'
 
 const FlexBox = styled(Box)`
   height: 62px;
@@ -60,21 +60,12 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
               </Box>
             )}
             <Box marginLeft="24px">
-              {type === 1 ? (
-                <CenterBox marginY="0px">
-                  <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px" marginRight="8px">
-                    Total Liquidity
-                  </Typography>
-                  <img src={TopLiquidity} alt="" />
-                </CenterBox>
-              ) : (
-                <CenterBox marginY="0px">
-                  <Typography variant="subtitle1" fontWeight="500" lineHeight="18px" marginRight="8px">
-                    Total Liquidity
-                  </Typography>
-                  <img src={TopLiquidity} alt="" />
-                </CenterBox>
-              )}
+              <CenterBox marginY="0px">
+                <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px" marginRight="8px">
+                  Total Liquidity
+                </Typography>
+                <TipsTooltip size="16" value={'Total Liquidity'}></TipsTooltip>
+              </CenterBox>
               <Box marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
                 <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">
@@ -110,19 +101,11 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
               </Box>
             )}
             <Box sx={{ marginLeft: '24px' }}>
-              {type === 1 ? (
-                <Box>
-                  <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px">
-                    Total Borrowed
-                  </Typography>
-                </Box>
-              ) : (
-                <Box>
-                  <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px">
-                    Total Borrowed
-                  </Typography>
-                </Box>
-              )}
+              <Box>
+                <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px">
+                  Total Borrowed
+                </Typography>
+              </Box>
               <Box marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
                 <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">

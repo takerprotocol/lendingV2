@@ -2,7 +2,6 @@ import { Box, styled, Typography } from '@mui/material'
 import { SpaceBetweenBox, CenterBox, FlexBox } from 'styleds/index'
 import OverviewIcon from 'assets/images/svg/dashboard/overview-icon.svg'
 import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
-import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import MyNFTCollateral from './MyNFTCollateral'
 import MyETHSupply from './MyETHSupply'
 import MyAccountSkeleton from './DashboardSkeleton/MyAccountSkeleton'
@@ -10,6 +9,7 @@ import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress, useWalletBalance } from 'state/user/hooks'
+import TipsTooltip from './TipsTooltip'
 
 const MyAccountBox = styled(Box)`
   width: 716px;
@@ -96,7 +96,7 @@ export default function MyAccount({ type }: MyAccountProps) {
                     <Typography mr="4px" variant="body2" color="#A0A3BD">
                       Net APY
                     </Typography>
-                    <img width="14px" height="14px" src={greyPrompt} alt="" />
+                    <TipsTooltip size="14" grey="grey" value={'1111111'}></TipsTooltip>
                   </CenterBox>
                 </Box>
                 {data ? (
@@ -111,7 +111,7 @@ export default function MyAccount({ type }: MyAccountProps) {
                       <Typography mr="4px" component="span" variant="body2" color="#A0A3BD">
                         Income estimation
                       </Typography>
-                      <img width="14px" height="14px" src={greyPrompt} alt="" />
+                      <TipsTooltip size="14" grey="grey" value={'1111111'}></TipsTooltip>
                     </FlexBox>
                   </Box>
                 ) : (

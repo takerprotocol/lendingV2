@@ -12,6 +12,7 @@ import { fixedFormat, getRiskLevel, getRiskLevelTag } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import BigNumber from 'bignumber.js'
 import { useBorrowLimit, useErc20ReserveData, useEthDebt, useHeath } from 'state/user/hooks'
+import TipsTooltip from './TipsTooltip'
 // import { useContract } from 'hooks/useContract'
 // import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
 // import { useAddress } from 'state/application/hooks'
@@ -148,7 +149,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
                   <Box>
                     <Box>
                       <FlexEndBox>
-                        <img src={greyPrompt} alt="" />
+                        <TipsTooltip size="16" grey="grey" value={'1111111'}></TipsTooltip>
                       </FlexEndBox>
                       <Box mr="24px">
                         <Typography component="p" variant="subtitle2" color="#6E7191">
