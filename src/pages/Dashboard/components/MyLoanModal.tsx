@@ -1,6 +1,6 @@
 import greyShutOff from 'assets/images/svg/common/greyShutOff.svg'
 import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import CustomizedSlider from 'components/Slider'
@@ -199,6 +199,11 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
       })
     }
   }
+
+  const buttonDisabled = useMemo(() => {
+    return check === 1 ? !amount || new BigNumber(amount).gt(borrowLimit) : !amount || new BigNumber(amount).gt(ethDebt)
+  }, [amount, borrowLimit, check, ethDebt])
+
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -447,6 +452,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </FlexBox>
           </RightFlexBox>
           <Button
+            disabled={buttonDisabled}
             variant="contained"
             sx={{ width: '372px', height: '54px', marginTop: '24px' }}
             onClick={() => {

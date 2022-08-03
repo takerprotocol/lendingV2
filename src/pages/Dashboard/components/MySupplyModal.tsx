@@ -28,6 +28,7 @@ import {
   useCollateralRiskLevel,
   useDecimal,
   useErc20ReserveData,
+  useEthCollateral,
   useEthDebt,
   useHeath,
   useUsedCollateral,
@@ -132,6 +133,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const contract = useLendingPool()
   const address = useAddress()
   const heath = useHeath()
+  const ethCollateral = useEthCollateral()
   const collateralRiskLevel = useCollateralRiskLevel(times(amount, borrowOrRepay === 1 ? 1 : -1))
   const TypographyRiskLevel = getRiskLevel(collateralRiskLevel)
   const riskLevelTag = getRiskLevelTag(collateralRiskLevel)
@@ -226,6 +228,12 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
       return false
     }
   }, [amount, mySupply, borrowOrRepay])
+
+  const buttonDisabled = useMemo(() => {
+    return borrowOrRepay === 1
+      ? approval === ApprovalState.APPROVED && (!amount || new BigNumber(amount).gt(supplyLimit))
+      : !amount || new BigNumber(amount).gt(ethCollateral)
+  }, [amount, approval, borrowOrRepay, ethCollateral, supplyLimit])
 
   return (
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -485,7 +493,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             </FlexBox>
           </Box>
           <Button
-            // disabled={!amount || new BigNumber(amount).gt(supplyLimit)}
+            disabled={buttonDisabled}
             variant="contained"
             color={overSupply ? 'error' : 'primary'}
             sx={{ width: '372px', height: '54px' }}
@@ -498,11 +506,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               }
             }}
           >
-            {borrowOrRepay === 1
-              ? approval === ApprovalState.APPROVED || !amount
-                ? 'Supply'
-                : 'Approval'
-              : 'Withdraw'}
+            {borrowOrRepay === 1 ? (approval === ApprovalState.APPROVED || !amount ? 'Supply' : 'Approva') : 'Withdraw'}
           </Button>
         </BottomBox>
       </Box>
