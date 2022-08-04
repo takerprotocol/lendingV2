@@ -9,7 +9,11 @@ export function useDepositableNfts(address: string, id?: string) {
   const getList = useCallback(async () => {
     try {
       const response = await getNftsForOwner(alchemy, address)
-      setList(response.ownedNfts.filter((el) => el.contract.address === id))
+      if (id) {
+        setList(response.ownedNfts.filter((el) => el.contract.address === id))
+      } else {
+        setList(response.ownedNfts)
+      }
       setLoading(false)
     } catch (e: any) {
       setLoading(false)

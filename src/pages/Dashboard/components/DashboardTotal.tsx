@@ -12,6 +12,9 @@ import BigNumber from 'bignumber.js'
 import { decimalFormat } from 'utils'
 import { useDecimal } from 'state/user/hooks'
 import TipsTooltip from './TipsTooltip'
+import { useAppDispatch } from 'state/hooks'
+import { setPoolValues } from 'state/application/reducer'
+import { usePoolValues } from 'state/application/hooks'
 
 const FlexBox = styled(Box)`
   height: 62px;
@@ -26,9 +29,10 @@ interface DashboardTotalType {
   type: number
 }
 export default function DashboardTotal({ type }: DashboardTotalType) {
+  const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(true)
+  const poolValues = usePoolValues()
   const decimal = useDecimal()
-  const [poolValues, setPoolValues] = useState<Array<BigNumber>>([new BigNumber(0), new BigNumber(0), new BigNumber(0)])
   const contract = useLendingPool()
   useEffect(() => {
     if (contract) {
@@ -36,13 +40,13 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
         .getPoolValues()
         .then((res: Array<BigNumber>) => {
           setLoading(false)
-          setPoolValues(res)
+          dispatch(setPoolValues([res[0].toString(), res[1].toString(), res[2].toString()]))
         })
         .catch(() => {
           setLoading(false)
         })
     }
-  }, [contract])
+  }, [contract, dispatch])
   return (
     <Box>
       {loading ? (
@@ -109,7 +113,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
               <Box marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
                 <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">
-                  {decimalFormat(poolValues[0].toString(), decimal)}
+                  {decimalFormat(poolValues[2].toString(), decimal)}
                 </Typography>
               </Box>
             </Box>

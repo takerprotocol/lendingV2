@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import BgIcon from 'assets/images/png/dashboard/bg.png'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import DataNFTs from './components/DataNFTs'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress, useDashboardType } from 'state/user/hooks'
@@ -21,7 +21,7 @@ import {
   setUserState,
   setUserValues,
 } from 'state/user/reducer'
-import { bigNumberToString, div, stringFormat } from 'utils'
+import { bigNumberToString, div, getContract, stringFormat } from 'utils'
 import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK, CHAIN_ID } from 'config'
 import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
@@ -29,6 +29,16 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { toast } from 'react-toastify'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
+import { getClient } from 'apollo/client'
+import { SupportedChainId } from 'constants/chains'
+import { LendingPool, UserNftCollection } from 'apollo/queries'
+import { getCollectionInfo, getCollectionStats } from 'services/module/collection'
+import erc721abi from 'abis/MockERC721.json'
+import { setCollections, setDepositedCollection } from 'state/application/reducer'
+import ERC721 from 'assets/images/png/collection/721.png'
+import Azuki from 'assets/images/png/collection/azuki.png'
+import Bayc from 'assets/images/png/collection/bayc.png'
+import Mayc from 'assets/images/png/collection/mayc.png'
 
 // import { getClient } from 'apollo/client'
 // import { SupportedChainId } from 'constants/chains'
@@ -45,13 +55,14 @@ const Main = styled(Box)`
   margin: 0 auto;
 `
 export default function Dashboard() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, library } = useActiveWeb3React()
   const type = useDashboardType()
   const [loading, setLoading] = useState<boolean>(true)
   const dispatch = useAppDispatch()
   const contract = useLendingPool()
   const address = useAddress()
   const transactions = useAllTransactions()
+  const client = getClient()[SupportedChainId.MAINNET]
   const flag = useMemo(() => {
     return (
       transactions &&
@@ -146,6 +157,75 @@ export default function Dashboard() {
       })
     }
   }, [contract, address, dispatch, chainId, flag])
+
+  const renderImg = (symbol?: string) => {
+    if (symbol) {
+      if (symbol.toLocaleLowerCase().indexOf('mayc') > -1) {
+        return Mayc
+      } else if (symbol.toLocaleLowerCase().indexOf('azuki') > -1) {
+        return Azuki
+      } else if (symbol.toLocaleLowerCase().indexOf('bayc') > -1) {
+        return Bayc
+      }
+    }
+    return ERC721
+  }
+
+  const getCollection = useCallback(async () => {
+    if (client && address && contract && library) {
+      const lendingPoolRes = await client.query({
+        query: LendingPool(contract.address),
+      })
+      // const aaa = await getContract(lendingPoolRes.data.lendingPool.nfts[0].id, erc721abi, library, address)
+      // if (aaa) {
+      //   aaa.mint(address, address, { gasLimit })
+      // }
+      const nfts: Array<any> = []
+      const depositedCollection: Array<any> = []
+
+      if (lendingPoolRes.data && lendingPoolRes.data.lendingPool) {
+        lendingPoolRes.data.lendingPool.nfts.forEach(async (element: any) => {
+          const item: any = {}
+          const ercContract = getContract(element.id, erc721abi, library, address)
+          const res = await client.query({
+            query: UserNftCollection(`${address.toLocaleLowerCase()}-${element.id}`),
+          })
+          if (res.data && res.data.userNftCollection) {
+            depositedCollection.push(res.data)
+          }
+          const balance = await ercContract.balanceOf(element.tNFT)
+          item.totalValue = balance ? fromWei(balance.toString()) : '0'
+          item.symbol = await ercContract.symbol()
+          item.icon = renderImg(item.symbol)
+          const info = await getCollectionInfo(element.id)
+          item.info = info.data
+          const stats = await getCollectionStats(element.id)
+          item.stats = stats.data
+          item.id = element.id
+          item.interestRateCalculator = element.interestRateCalculator
+          item.liqThreshold = element.liqThreshold
+          item.ltv = element.ltv
+          item.tToken = element.tToken
+          nfts.push(item)
+          if (nfts.length === lendingPoolRes.data.lendingPool.nfts.length) {
+            dispatch(setCollections(nfts))
+            dispatch(setDepositedCollection(depositedCollection))
+          }
+        })
+
+        // const nftRes = await client.query({
+        //   query: UserNftCollection(
+        //     `${address}-${lendingPoolRes.data.lendingPool.nfts[0].id}-${lendingPoolRes.data.lendingPool.nfts[0].tNFT}`
+        //   ),
+        // })
+        // console.log(nftRes)
+      }
+    }
+  }, [client, address, contract, library, dispatch])
+
+  useEffect(() => {
+    getCollection()
+  }, [getCollection])
 
   return (
     <Body className="header-padding">

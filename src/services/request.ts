@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelTokenStatic } from 'axios'
 import { ResponseBase } from './responseBase'
-import { toast } from 'react-toastify'
 
 export class Request {
   protected instance: AxiosInstance
@@ -104,23 +103,6 @@ export class Request {
       (response: AxiosResponse) => {
         this.responseLog(response)
         this.removePending(response.config)
-        if (this.successCode.indexOf(response.status) === -1) {
-          return Promise.reject(response.data || 'Error')
-        }
-        if (response.data.code === this.tokenInvalidCode) {
-          localStorage.removeItem('token')
-          return Promise.reject(response.data || 'Error')
-        }
-        if (response.data.code === this.hasExitedCode) {
-          toast.error('Your account has been signed out')
-          setTimeout(() => {
-            document.location.reload()
-          }, 2000)
-          return Promise.reject(response.data || 'Error')
-        }
-        if (response.data.code !== 200) {
-          return Promise.reject(response.data || 'Error')
-        }
         return response.data
       },
       (error: AxiosError) => {

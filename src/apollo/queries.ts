@@ -5,6 +5,14 @@ export const LendingPool = (id: string) => {
     query lendingPool {
       lendingPool(id: "${id}") {
         id
+        reserves {
+          id
+          tToken
+          debtToken
+          interestRateCalculator
+          liqThreshold
+          ltv
+        }
         nfts {
           id
           tNFT
@@ -61,10 +69,30 @@ export const UserNftCollection = (id: string) => {
     query userNftCollection {
       userNftCollection(id: "${id}") {
         id
-        tokenIds
-        amounts
       }
     }
   `
+  return gql(queryString)
+}
+
+export const Reserve = (id: string) => {
+  const queryString = `
+    query reserve {
+      reserve(id: "${id}") {
+        id
+      }
+    }
+  `
+  return gql(queryString)
+}
+
+export const FIRST_COLLECTION = () => {
+  const queryString = `
+    query allNftToken {
+      userNftCollection {
+        tokens
+      }
+    }
+`
   return gql(queryString)
 }

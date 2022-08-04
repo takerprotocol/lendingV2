@@ -12,6 +12,7 @@ import BigNumber from 'bignumber.js'
 
 export enum ApprovalState {
   NOT_APPROVED = 'NOT_APPROVED',
+  PENDING = 'PENDING',
   APPROVED = 'APPROVED',
 }
 
@@ -61,6 +62,7 @@ export function useApproval(
         gasLimit: calculateGasMargin(estimatedGas),
       })
       .then((response: any) => {
+        setApprovalState(ApprovalState.PENDING)
         return {
           response,
           tokenAddress: ERC20_ADDRESS,

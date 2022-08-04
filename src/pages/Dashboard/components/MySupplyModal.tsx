@@ -506,7 +506,13 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               }
             }}
           >
-            {borrowOrRepay === 1 ? (approval === ApprovalState.APPROVED || !amount ? 'Supply' : 'Approva') : 'Withdraw'}
+            {borrowOrRepay === 1
+              ? approval === ApprovalState.APPROVED || !amount
+                ? 'Supply'
+                : approval === ApprovalState.PENDING
+                ? 'Pending'
+                : 'Approve'
+              : 'Withdraw'}
           </Button>
         </BottomBox>
       </Box>

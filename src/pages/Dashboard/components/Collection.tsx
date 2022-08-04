@@ -1,21 +1,21 @@
 import styled from '@emotion/styled'
 import { Box, Button, Typography } from '@mui/material'
-import NFT1 from 'assets/images/svg/dashboard/NFT1.svg'
+
 import tokenUp from 'assets/images/svg/dashboard/tokenUp.svg'
 import ButtonUp from 'assets/images/svg/dashboard/button-up.svg'
 import ButtonDown from 'assets/images/svg/dashboard/button-down.svg'
 import minMyCollateralIcon from 'assets/images/svg/dashboard/minMyCollateral-icon.svg'
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { SpaceBetweenBox, FlexBox } from 'styleds'
-import { useAddress } from 'state/user/hooks'
-import { useWalletModalToggle } from 'state/application/hooks'
+import { useAddress, useDecimal, useUserNftConfig } from 'state/user/hooks'
+import { useCollections, useDepositedCollection, usePoolValues, useWalletModalToggle } from 'state/application/hooks'
 import { useNavigate } from 'react-router-dom'
-import { LendingPool, UserNftCollection } from 'apollo/queries'
-import { getClient } from 'apollo/client'
-import { SupportedChainId } from 'constants/chains'
 import CollectionSkeleton from './DashboardSkeleton/CollectionSkeleton'
-import { div } from 'utils'
-import { useLendingPool } from 'hooks/useLendingPool'
+import { decimalFormat, div, times } from 'utils'
+import { useDepositableNfts } from 'services/module/deposit'
+import { OwnedNft } from '@alch/alchemy-sdk'
+
+// import { gasLimit } from 'config'
 
 const CollectionBox = styled(Box)`
   border-radius: 12px;
@@ -72,41 +72,31 @@ interface CollectionType {
 export default function Collection({ type, loading }: CollectionType) {
   const [check, setCheck] = useState<number | null>(1)
   const [dataType] = useState<boolean>(true) //有没有数据
-  const [collection, setCollection] = useState([])
+  const collection = useCollections()
   const address = useAddress()
   const toggleModal = useWalletModalToggle()
-  const client = getClient()[SupportedChainId.MAINNET]
   const navigate = useNavigate()
-  const lendingPoolContract = useLendingPool()
-  const getCollection = useCallback(async () => {
-    if (client && address && lendingPoolContract) {
-      const lendingPoolRes = await client.query({
-        query: LendingPool('0x64d25dd7239e50c727ddaf67fc64ccdbe12548d3'),
-      })
-      console.log(lendingPoolRes)
-      // console.log(lendingPoolRes)
-      // console.log(
-      //   `${address} - ${lendingPoolRes.data.lendingPool.nfts[0].id} - ${lendingPoolRes.data.lendingPool.nfts[0].tNFT}`
-      // )
-      const res = await client.query({
-        query: UserNftCollection(`${address.toLocaleLowerCase()}-${lendingPoolRes.data.lendingPool.nfts[0].id}`),
-      })
-      console.log(res)
-      if (lendingPoolRes.data && lendingPoolRes.data.lendingPool) {
-        setCollection(lendingPoolRes.data.lendingPool.nfts)
-        // const nftRes = await client.query({
-        //   query: UserNftCollection(
-        //     `${address}-${lendingPoolRes.data.lendingPool.nfts[0].id}-${lendingPoolRes.data.lendingPool.nfts[0].tNFT}`
-        //   ),
-        // })
-        // console.log(nftRes)
-      }
-    }
-  }, [client, address, lendingPoolContract])
+  const poolValues = usePoolValues()
+  const decimal = useDecimal()
+  const depositedCollection = useDepositedCollection()
+  const { list } = useDepositableNfts(address)
+  const nftConfig = useUserNftConfig()
 
-  useEffect(() => {
-    getCollection()
-  }, [getCollection])
+  const deposited = (id: string) => {
+    if (depositedCollection) {
+      const item = depositedCollection.find((el) => el.collection.id.toLocaleLowerCase() === id.toLocaleLowerCase())
+      return item ? item.tokens.length : '0'
+    }
+    return '0'
+  }
+
+  const nftBalance = (id: string) => {
+    if (list) {
+      const item = list.filter((el: OwnedNft) => el.contract.address.toLocaleLowerCase() === id.toLocaleLowerCase())
+      return item ? item.length : '0'
+    }
+    return '0'
+  }
 
   return (
     <Box ml="24px" width="1160px">
@@ -121,10 +111,10 @@ export default function Collection({ type, loading }: CollectionType) {
               </Typography>
               <Box display={dataType ? '' : 'none'}>
                 <Typography mr="16px" fontWeight="500" component="span" color="#6E7191" variant="subtitle2">
-                  30,291 NFT Collaterals
+                  {nftConfig} NFT Collaterals
                 </Typography>
                 <Typography fontWeight="500" component="span" color="#6E7191" variant="subtitle2">
-                  76,046.50 ETH Total value
+                  {decimalFormat(poolValues[1].toString(), decimal)} ETH Total value
                 </Typography>
               </Box>
             </Box>
@@ -174,39 +164,46 @@ export default function Collection({ type, loading }: CollectionType) {
               <Box padding="28px 24px 24px 24px">
                 <CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '272px' }}>
-                    <img src={NFT1} alt="" />
+                    <img
+                      src={el.icon}
+                      alt=""
+                      style={{
+                        width: '48px',
+                        borderRadius: '6px',
+                      }}
+                    />
                     <Typography ml="10px" component="span" variant="body1" fontWeight="700">
-                      Bored Ape Yacht Club
+                      {el?.info?.name}
                     </Typography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '124px' }}>
                     <img src={minMyCollateralIcon} alt="" />
                     <Typography ml="6px" component="span" variant="body1" fontWeight="700">
-                      96.90
+                      {el?.stats?.floorPrice}
                     </Typography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '148px' }}>
                     <img src={minMyCollateralIcon} alt="" />
                     <Typography ml="6px" mr="8px" component="span" variant="body1" fontWeight="700">
-                      67.83
+                      {times(el?.stats?.floorPrice || 0, div(el.ltv, 10000))}
                     </Typography>
                     <TitleTypography>{div(el.ltv, 100)}%</TitleTypography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '246px' }}>
                     <img src={minMyCollateralIcon} alt="" />
                     <Typography ml="6px" mr="8px" component="span" variant="body1" fontWeight="700">
-                      10,287.00
+                      {el.totalValue}
                     </Typography>
                     <TitleTypography>21,001 NFTs</TitleTypography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '148px' }}>
                     <Typography component="span" variant="body1" fontWeight="700">
-                      60
+                      {el?.stats?.countOwners}
                     </Typography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '126px' }}>
                     <Typography component="span" variant="subtitle2" fontWeight="700" color="#4BC8B1">
-                      30%
+                      0
                     </Typography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '48px' }}>
@@ -247,7 +244,7 @@ export default function Collection({ type, loading }: CollectionType) {
                           fontWeight="700"
                           color={dataType ? '#7646FF' : '#A0A3BD'}
                         >
-                          20 NTFs
+                          {deposited(el.id)}
                         </Typography>
                         <Typography component="p" variant="body1" fontWeight="600" color="#A0A3BD">
                           My Deposited
@@ -260,7 +257,7 @@ export default function Collection({ type, loading }: CollectionType) {
                           fontWeight="700"
                           color={dataType ? '#7646FF' : '#A0A3BD'}
                         >
-                          10 NTFs
+                          {nftBalance(el.id)} NTFs
                         </Typography>
                         <Typography component="p" variant="body1" fontWeight="600" color="#A0A3BD">
                           My Balance

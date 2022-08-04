@@ -80,7 +80,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
   const ercContract = useContract(id, MockERC721Abi)
-  const [isApproved, setIsApproved] = useState(false)
+  const [isApproved, setIsApproved] = useState<number>(0)
   const addTransaction = useTransactionAdder()
   const transactions = useAllTransactions()
   const flag = useMemo(() => {
@@ -100,7 +100,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   useEffect(() => {
     if (contract && ercContract && address) {
       ercContract.isApprovedForAll(address, contract.address).then((res: boolean) => {
-        setIsApproved(res)
+        setIsApproved(2)
       })
     }
   }, [contract, address, ercContract, flag])
@@ -135,6 +135,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           })
       } else {
         ercContract.setApprovalForAll(contract.address, true).then((res: any) => {
+          setIsApproved(1)
           addTransaction(res, {
             type: TransactionType.APPROVAL_NFT,
             spender: contract.address,
@@ -327,7 +328,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             }
           }}
         >
-          {type === 'Withdraw' ? type : isApproved ? 'Deposit' : 'Approve'}
+          {type === 'Withdraw' ? type : isApproved === 2 ? 'Deposit' : isApproved === 1 ? 'Pending' : 'Approve'}
         </Button>
       </Box>
     </Modal>

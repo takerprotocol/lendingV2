@@ -17,3 +17,15 @@ export function useToggleModal(modal: ApplicationModal): () => void {
 export function useWalletModalToggle(): () => void {
   return useToggleModal(ApplicationModal.WALLET)
 }
+
+export function usePoolValues() {
+  return useAppSelector((state: AppState) => state.application.poolValues)
+}
+
+export function useCollections() {
+  return useAppSelector((state: AppState) => state.application.collections)
+}
+
+export function useDepositedCollection() {
+  return useAppSelector((state: AppState) => state.application.depositedCollection)
+}

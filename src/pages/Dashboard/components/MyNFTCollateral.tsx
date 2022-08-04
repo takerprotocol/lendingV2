@@ -1,11 +1,13 @@
 import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
-import NFT1 from 'assets/images/svg/dashboard/NFT1.svg'
 import MyNFTCollateralBg from 'assets/images/svg/dashboard/MyNFTCollateralBg.svg'
 import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useNftCollateral, useUserNftConfig } from 'state/user/hooks'
+import { useCollections, useDepositedCollection } from 'state/application/hooks'
+import ERC721 from 'assets/images/png/collection/721.png'
+
 // import ILendingPoolAddressesProviderAbi from 'abis/MockERC721.json'
 // import { useContract } from 'hooks/useContract'
 // import { ERC721_ADDRESS } from 'config'
@@ -64,6 +66,7 @@ const ImgBox = styled(Box)`
   width: 22px;
   height: 22px;
   margin-right: 4px;
+  cursor: pointer;
 `
 const NftListBox = styled(Box)`
   margin-bottom: 16px;
@@ -78,6 +81,8 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const nftConfig = useUserNftConfig()
   const [dataType] = useState<boolean>(true)
   const collateral = useNftCollateral()
+  const collections = useCollections()
+  const depositedCollection = useDepositedCollection()
   // const address = useAddress()
   // const contract = useContract(ERC721_ADDRESS, ILendingPoolAddressesProviderAbi)
   // const a = () => {
@@ -88,6 +93,11 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   //     })
   //   }
   // }
+
+  const renderImg = (id: string) => {
+    const item = collections.find((el) => el.id.toLocaleLowerCase() === id.toLocaleLowerCase())
+    return item ? item.icon : ERC721
+  }
   return (
     <MyNFTCollateralBox>
       <BottomBox>
@@ -100,13 +110,19 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                 </Typography>
               </Box>
               <FlexBox>
-                {[0, 1].map((el: any) => {
-                  return (
-                    <ImgBox key={`ImgBox${el}`}>
-                      <img width="22px" height="22px" src={NFT1} alt="" />
-                    </ImgBox>
-                  )
-                })}
+                {depositedCollection &&
+                  depositedCollection.map((el: any) => {
+                    return (
+                      <ImgBox
+                        key={`ImgBox${el}`}
+                        onClick={() => {
+                          navigate(`/deposit/${el.id}`)
+                        }}
+                      >
+                        <img width="22px" height="22px" src={renderImg(el.id)} alt="" />
+                      </ImgBox>
+                    )
+                  })}
               </FlexBox>
             </SpaceBetweenBox>
           ) : (
@@ -120,21 +136,26 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
             We support these collections
           </Typography>
           <FlexBox mt="12px">
-            {[0, 1, 2, 3, 4, 5, 6, 7].map((el: any) => {
-              return (
-                <Tooltip key={`ImgBox${el}`} title="Add" arrow placement="top">
-                  <ImgBox>
-                    <img width="24px" height="24px" src={NFT1} alt="" />
-                  </ImgBox>
-                </Tooltip>
-              )
-            })}
+            {collections &&
+              collections.map((el: any) => {
+                return (
+                  <Tooltip key={`ImgBox${el}`} title={el.symbol} arrow placement="top">
+                    <ImgBox
+                      onClick={() => {
+                        navigate(`/deposit/${el.id}`)
+                      }}
+                    >
+                      <img width="24px" height="24px" src={el.icon} alt="" />
+                    </ImgBox>
+                  </Tooltip>
+                )
+              })}
           </FlexBox>
         </NftListBox>
         <Button
           sx={{ width: '274px', marginLeft: '8px', height: '48px' }}
           variant="contained"
-          onClick={() => navigate('/deposit')}
+          onClick={() => navigate(`/deposit/${collections.length > 0 ? collections[0].id : ''}`)}
         >
           Deposit
           <img className="left" src={ButtonDeposit} alt="" />
