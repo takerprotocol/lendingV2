@@ -1,11 +1,14 @@
 import styled from '@emotion/styled'
 import { Box, Typography } from '@mui/material'
-import Rectangle from 'assets/images/svg/deposit/Rectangle 853.svg'
 import myCollateralIcon from 'assets/images/svg/dashboard/myCollateral-icon.svg'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import DepositHeaderSkeleton from './depositSkeleton/DepositHeaderSkeleton'
 import { useErc20ReserveData } from 'state/user/hooks'
+import { useCollections } from 'state/application/hooks'
+import { useMemo } from 'react'
+import { useParams } from 'react-router-dom'
+import { div, times } from 'utils'
 // import { percent } from 'utils'
 const HeaderBox = styled(Box)`
   width: 1012px;
@@ -67,7 +70,16 @@ interface DepositHeaderProps {
 
 export default function DepositHeader({ loading }: DepositHeaderProps) {
   const erc20ReserveData = useErc20ReserveData()
-
+  const collections = useCollections()
+  const { id } = useParams()
+  const collection = useMemo(() => {
+    if (collections && id) {
+      return collections.find((el) => el.id.toLocaleLowerCase() === id.toLocaleLowerCase())
+    } else {
+      return null
+    }
+  }, [collections, id])
+  console.log(collection)
   return (
     <Box>
       {loading ? (
@@ -76,16 +88,16 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
         <HeaderBox>
           <FlexBox>
             <FlexBox>
-              <img src={Rectangle} alt="" />
+              <img src={collection?.icon} alt="" />
               <ImagesBox height="110px"></ImagesBox>
               <ImagesBox height="100px"></ImagesBox>
             </FlexBox>
             <Box ml="12px" width="272px">
               <Typography component="p" variant="h1" fontWeight="700" fontSize=" 24px" lineHeight="29px">
-                CRYPTOPUNKS
+                {collection?.symbol}
               </Typography>
               <Typography mt="12px" variant="subtitle2" fontWeight="500" lineHeight="16px" color="#A0A3BD">
-                60 Active Users
+                {collection?.stats?.countOwners} Active Users
               </Typography>
             </Box>
             <Box width="198px">
@@ -93,7 +105,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
               <FlexBox mt="8px">
                 <img margin-top="15px" src={myCollateralIcon} alt="" />
                 <BigTypography ml="7px" variant="body1">
-                  4,726.00
+                  {collection?.stats?.totalValue}
                 </BigTypography>
               </FlexBox>
               <Typography mt="4px" component="p" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
@@ -106,22 +118,22 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 <FlexBox>
                   <img margin-top="15px" src={myCollateralIcon} alt="" />
                   <BigTypography ml="7px" variant="body1">
-                    51.90
+                    {collection?.stats?.floorPrice}
                   </BigTypography>
                 </FlexBox>
                 <Box height={'22px'}></Box>
               </Box>
             </Box>
             <Box width="198px">
-              <SmallTypography>TLoan to value</SmallTypography>
+              <SmallTypography>Loan to value</SmallTypography>
               <FlexBox mt="8px">
                 <img margin-top={'15px'} src={myCollateralIcon} alt="" />
                 <BigTypography ml="7px" variant="body1">
-                  67.83
+                  {times(collection?.stats?.floorPrice || 0, div(collection.ltv, 10000))}
                 </BigTypography>
               </FlexBox>
               <Typography mt="4px" component="p" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
-                70%
+                {div(collection?.ltv, 100)}%
               </Typography>
             </Box>
           </FlexBox>
@@ -129,7 +141,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
             <RightFlexBox>
               <FlexBox>
                 <Box width={'86px'}>
-                  <BigTypography color="#4BC8B1 !important">20%</BigTypography>
+                  <BigTypography color="#4BC8B1 !important">0%</BigTypography>
                 </Box>
                 <Box sx={{ width: '62px' }}>
                   <BgFlexBox>
@@ -147,7 +159,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                   </BgFlexBox>
                 </Box>
                 <Box>
-                  <BigTypography>10%</BigTypography>
+                  <BigTypography>{erc20ReserveData.depositRate}%</BigTypography>
                 </Box>
               </FlexBox>
               <FlexBox>
@@ -165,7 +177,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
             <RightFlexBox ml={'24px'}>
               <FlexBox>
                 <Box ml={'24px'} width={'198px'}>
-                  <BigTypography>70%</BigTypography>
+                  <BigTypography> {div(collection.liqThreshold, 100)}%</BigTypography>
                   <SmallTypography mt="4px" color="#A0A3BD !important">
                     Liquidation Threshold
                   </SmallTypography>

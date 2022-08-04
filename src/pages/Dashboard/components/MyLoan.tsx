@@ -193,7 +193,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
               <FlexBox>
                 <Box width="64px">
                   <Typography variant="subtitle2" color="#4BC8B1">
-                    20%
+                    0%
                   </Typography>
                 </Box>
                 <ImgBox src={addBox} alt="" />
@@ -205,7 +205,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
                 <ImgBox src={rightBox} alt="" />
                 <Box>
                   <Typography ml="33px" variant="subtitle2" color="#4E4B66">
-                    30%
+                    {erc20ReserveData.borrowRate}%
                   </Typography>
                 </Box>
               </FlexBox>

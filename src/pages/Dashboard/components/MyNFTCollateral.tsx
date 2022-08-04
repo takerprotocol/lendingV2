@@ -114,7 +114,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                   depositedCollection.map((el: any) => {
                     return (
                       <ImgBox
-                        key={`ImgBox${el}`}
+                        key={`ImgBoxDepositedCollection${el.id}`}
                         onClick={() => {
                           navigate(`/deposit/${el.id}`)
                         }}
@@ -139,7 +139,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
             {collections &&
               collections.map((el: any) => {
                 return (
-                  <Tooltip key={`ImgBox${el}`} title={el.symbol} arrow placement="top">
+                  <Tooltip key={`collections${el.id}`} title={el.symbol} arrow placement="top">
                     <ImgBox
                       onClick={() => {
                         navigate(`/deposit/${el.id}`)
