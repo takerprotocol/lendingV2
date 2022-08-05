@@ -100,7 +100,9 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   useEffect(() => {
     if (contract && ercContract && address) {
       ercContract.isApprovedForAll(address, contract.address).then((res: boolean) => {
-        setIsApproved(2)
+        if (res) {
+          setIsApproved(2)
+        }
       })
     }
   }, [contract, address, ercContract, flag])

@@ -5,7 +5,7 @@ import tokenUp from 'assets/images/svg/dashboard/tokenUp.svg'
 import ButtonUp from 'assets/images/svg/dashboard/button-up.svg'
 import ButtonDown from 'assets/images/svg/dashboard/button-down.svg'
 import minMyCollateralIcon from 'assets/images/svg/dashboard/minMyCollateral-icon.svg'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { SpaceBetweenBox, FlexBox } from 'styleds'
 import { useAddress, useDecimal, useUserNftConfig } from 'state/user/hooks'
 import { useCollections, useDepositedCollection, usePoolValues, useWalletModalToggle } from 'state/application/hooks'
@@ -90,14 +90,20 @@ export default function Collection({ type, loading }: CollectionType) {
     return '0'
   }
 
-  const nftBalance = (id: string) => {
-    if (list) {
-      const item = list.filter((el: OwnedNft) => el.contract.address.toLocaleLowerCase() === id.toLocaleLowerCase())
-      return item ? item.length : '0'
-    }
-    return '0'
-  }
+  // const nftBalance = (id: string) => {
 
+  // }
+  const nftBalance = useCallback(
+    (id: string) => {
+      if (list) {
+        console.log(list.length)
+        const item = list.filter((el: OwnedNft) => el.contract.address.toLocaleLowerCase() === id.toLocaleLowerCase())
+        return item ? item.length : '0'
+      }
+      return '0'
+    },
+    [list]
+  )
   return (
     <Box ml="24px" width="1160px">
       {loading ? (

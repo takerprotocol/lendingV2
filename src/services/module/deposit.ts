@@ -21,7 +21,7 @@ export function useDepositableNfts(address: string, id?: string) {
     }
   }, [address, id])
   useEffect(() => {
-    if (address && id) {
+    if (address) {
       getList()
     }
   }, [address, getList, id])
