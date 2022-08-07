@@ -6,7 +6,7 @@ import footer3 from 'assets/images/svg/common/footer-3.svg'
 import footer4 from 'assets/images/svg/common/footer-4.svg'
 
 const FooterStyleBox = styled(Box)`
-  width: 1440px;
+  width: 100%;
   height: 267px;
   background: #14142a;
   padding: 48px 140px;

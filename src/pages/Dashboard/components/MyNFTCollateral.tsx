@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useNftCollateral, useUserNftConfig } from 'state/user/hooks'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
-// import ERC721 from 'assets/images/png/collection/721.png'
+import ERC721 from 'assets/images/png/collection/721.png'
 
 // import ILendingPoolAddressesProviderAbi from 'abis/MockERC721.json'
 // import { useContract } from 'hooks/useContract'
@@ -96,10 +96,10 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   //   }
   // }
 
-  // const renderImg = (id: string) => {
-  //   const item = collections.find((el) => el.id.toLocaleLowerCase() === id.toLocaleLowerCase())
-  //   return item ? item.icon : ERC721
-  // }
+  const renderImg = (id: string) => {
+    const item = collections.find((el) => el.id.toLocaleLowerCase() === id.split('-')[1].toLocaleLowerCase())
+    return item ? item.icon : ERC721
+  }
   return (
     <MyNFTCollateralBox>
       <BottomBox>
@@ -121,7 +121,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                           navigate(`/deposit/${el.id}`)
                         }}
                       >
-                        {/* <img width="22px" height="22px" src={renderImg(el.id)} alt="" /> */}
+                        <img width="22px" height="22px" src={renderImg(el.userNftCollection.id)} alt="" />
                       </ImgBox>
                     )
                   })}

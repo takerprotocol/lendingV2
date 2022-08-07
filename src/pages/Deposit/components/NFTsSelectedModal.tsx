@@ -14,9 +14,7 @@ import {
   useBorrowLimit,
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
-  useEthCollateral,
   useHeath,
-  useNftCollateral,
   useUserValue,
 } from 'state/user/hooks'
 import { gasLimit } from 'config'
