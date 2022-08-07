@@ -6,7 +6,7 @@ import rightIcon from 'assets/images/svg/common/right.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
-import { fixedFormat, percent, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal } from 'utils'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal } from 'utils'
 import {
   useAddress,
   useBorrowLimit,
@@ -113,23 +113,6 @@ const RiskyButton = styled(Box)`
   background: linear-gradient(180deg, #fba170 0%, #ef884f 100%);
   box-shadow: 0px 4px 8px rgba(221, 183, 140, 0.1);
 `
-const BorrowAmountBox = styled(Box)`
-  width: 372px;
-  height: 103px;
-  background: #eff0f6;
-  border-radius: 10px;
-  padding: 16px;
-  ::before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 38.5px;
-    top: 314px;
-    border-width: 11.5px 7.5px;
-    border-style: dashed solid dashed dashed;
-    border-color: #eff0f6 transparent transparent transparent;
-  }
-`
 const BorrowTypography = styled(Typography)`
   font-weight: 700;
   cursor: pointer;
@@ -144,6 +127,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const [check, setCheck] = useState<number>(repayRoBorrow)
   const [amount, setAmount] = useState('')
   const heath = useHeath()
+  const [sliderValue, setSliderValue] = useState<number>(+heath)
   const debtRiskLevel = useDebtRiskLevel(times(amount, check === 1 ? 1 : -1))
   const borrowUsed = useDebtBorrowLimitUsed() //操作前的borrowLimitUsed
   const borrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
@@ -156,6 +140,23 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const address = useAddress()
   const ethDebt = useEthDebt()
   const addTransaction = useTransactionAdder()
+  const BorrowAmountBox = styled(Box)`
+    width: 372px;
+    height: 103px;
+    background: #eff0f6;
+    border-radius: 10px;
+    padding: 16px;
+    ::before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: ${`${plus(times(3.57, sliderValue), 25)}px`};
+      top: 308px;
+      border-width: 17px 7px;
+      border-style: dashed solid dashed dashed;
+      border-color: #eff0f6 transparent transparent transparent;
+    }
+  `
   useEffect(() => {
     setCheck(repayRoBorrow)
   }, [repayRoBorrow])
@@ -353,7 +354,11 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </SpaceBetweenBox>
           </BorrowAmountBox>
           <Box mb="15px" mt="12px" height="8px" width="372px">
-            <CustomizedSlider riskLevelTag={riskLevelTag}></CustomizedSlider>
+            <CustomizedSlider
+              sliderValue={sliderValue}
+              setSliderValue={setSliderValue}
+              riskLevelTag={riskLevelTag}
+            ></CustomizedSlider>
           </Box>
           <SpaceBetweenBox mb="16.5px">
             <Box>
@@ -397,10 +402,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </Box>
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
-                {percent(borrowUsed, 1)} {'>'}
+                {borrowUsed}% {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                {percent(borrowLimitUsed, 1)}
+                {borrowLimitUsed}%
               </Typography>
             </Box>
           </SpaceBetweenBox>

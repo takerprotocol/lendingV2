@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import BgIcon from 'assets/images/png/dashboard/bg.png'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
+import Footer from 'components/Footer'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import DataNFTs from './components/DataNFTs'
 import { useLendingPool } from 'hooks/useLendingPool'
@@ -18,10 +19,10 @@ import {
   setUserEthAsset,
   setUserNftConfig,
   setUserNftValues,
-  // setUserState,
-  // setUserValues,
+  setUserState,
+  setUserValues,
 } from 'state/user/reducer'
-import { bigNumberToString, getContract, stringFormat } from 'utils'
+import { bigNumberToString, div, getContract, stringFormat } from 'utils'
 import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK, CHAIN_ID } from 'config'
 import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
@@ -120,25 +121,25 @@ export default function Dashboard() {
           })
         )
       })
-      // contract.getUserState(address).then((res: Array<BigNumber>) => {
-      //   dispatch(
-      //     setUserState({
-      //       loanToValue: div(res[0].toString(), 10000),
-      //       liquidationThreshold: div(res[1].toString(), 10000),
-      //       heathFactor: res[2].toString(),
-      //     })
-      //   )
-      // })
-      // contract.getUserValues(address).then((res: Array<BigNumber>) => {
-      //   dispatch(
-      //     setUserValues({
-      //       borrowLiquidity: res[0].toString(),
-      //       NFTLiquidity: fromWei(res[1].toString()),
-      //       totalDebt: fromWei(res[2].toString()),
-      //       totalCollateral: fromWei(res[3].toString()),
-      //     })
-      //   )
-      // })
+      contract.getUserState(address).then((res: Array<BigNumber>) => {
+        dispatch(
+          setUserState({
+            loanToValue: div(res[0].toString(), 10000),
+            liquidationThreshold: div(res[1].toString(), 10000),
+            heathFactor: res[2].toString(),
+          })
+        )
+      })
+      contract.getUserValues(address).then((res: Array<BigNumber>) => {
+        dispatch(
+          setUserValues({
+            borrowLiquidity: res[0].toString(),
+            NFTLiquidity: fromWei(res[1].toString()),
+            totalDebt: fromWei(res[2].toString()),
+            totalCollateral: fromWei(res[3].toString()),
+          })
+        )
+      })
       contract.getUserAssetValues(address, ERC20_ADDRESS).then((res: Array<BigNumber>) => {
         dispatch(
           setUserEthAsset([
@@ -182,6 +183,7 @@ export default function Dashboard() {
       // }
       const nfts: Array<any> = []
       const depositedCollection: Array<any> = []
+
       if (lendingPoolRes.data && lendingPoolRes.data.lendingPool) {
         lendingPoolRes.data.lendingPool.nfts.forEach(async (element: any) => {
           const item: any = {}
@@ -228,11 +230,12 @@ export default function Dashboard() {
 
   return (
     <Body className="header-padding">
-      <BlueChipNFTs type={type}></BlueChipNFTs>
       <Main>
+        <BlueChipNFTs type={type}></BlueChipNFTs>
         <DataNFTs type={type}></DataNFTs>
         <Collection loading={loading} type={type}></Collection>
       </Main>
+      <Footer></Footer>
     </Body>
   )
 }

@@ -92,7 +92,7 @@ export const Header = () => {
     <HeaderBox lightBackground={lightBackground}>
       <HeaderLogo onClick={() => navigate('/')} alt="logo" src={LogoIcon} />
       <FlexBox>
-        <Link to="/">
+        {/* <Link to="/">
           <StyledLinkText
             color={String(location.pathname === '/' ? theme.palette.primary.main : theme.palette.text)}
             variant="button"
@@ -100,7 +100,7 @@ export const Header = () => {
           >
             Home
           </StyledLinkText>
-        </Link>
+        </Link> */}
         <Link to="/dashboard">
           <StyledLinkText
             color={String(location.pathname === '/dashboard' ? theme.palette.primary.main : theme.palette.text)}

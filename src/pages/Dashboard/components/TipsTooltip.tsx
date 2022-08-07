@@ -5,7 +5,6 @@ import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import * as React from 'react'
 
 const ImgBox = styled(Box)`
-  margin-right: 4px;
   display: flex;
   align-items: center;
 `

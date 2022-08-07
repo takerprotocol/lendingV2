@@ -36,7 +36,7 @@ const BlueChipNFTs = styled(Box)`
   }
 `
 const GrowthNFTs = styled(Box)`
-  padding: 12px 24px 12px 17px;
+  padding: 12px 24px;
   height: 53px;
   margin-left: 8px;
   display: flex;

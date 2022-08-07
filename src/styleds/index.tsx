@@ -16,3 +16,7 @@ export const CenterBox = styled(Box)`
   align-items: center;
   justify-content: center;
 `
+export const SpaceBox = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+`

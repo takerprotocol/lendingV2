@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js'
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { erc20ReserveData, userState, UserValues } from 'state/types'
-import { decimalFormat, div, plus, times } from 'utils'
+import { decimalFormat, div, minus, plus, times } from 'utils'
 import { AppState } from '../index'
 import { setAddress } from './reducer'
 
@@ -84,7 +84,7 @@ export function useUserState(): userState {
   return useAppSelector((state: AppState) => state.user.userState)
 }
 export function useDebtBorrowLimitUsed(value?: string | number): string {
-  return div(new BigNumber(useEthDebt()).plus(value || 0).toNumber(), useBorrowLimit())
+  return div(minus(useBorrowLimit(), new BigNumber(useEthDebt()).plus(value || 0).toNumber()), useBorrowLimit())
 }
 export function useCollateralBorrowLimitUsed(value?: string | number): string {
   return div(useEthDebt(), useBorrowLimit(value || 0)).toString()

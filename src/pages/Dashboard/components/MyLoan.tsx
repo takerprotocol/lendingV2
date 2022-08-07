@@ -1,5 +1,5 @@
 import { Box, Button, styled, Typography } from '@mui/material'
-import { CenterBox, FlexBox, SpaceBetweenBox } from 'styleds'
+import { FlexBox, SpaceBetweenBox, CenterBox } from 'styleds'
 import rightBox from 'assets/images/svg/dashboard/rightBox.svg'
 import ButtonSupply from 'assets/images/svg/dashboard/Button-Supply.svg'
 import addBox from 'assets/images/svg/dashboard/addBox.svg'
@@ -8,7 +8,7 @@ import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
 import CustomizedSlider from 'components/Slider'
 import { useMemo, useState } from 'react'
 import MyLoanModal from './MyLoanModal'
-import { fixedFormat, getRiskLevel, getRiskLevelTag } from 'utils'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, times } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import BigNumber from 'bignumber.js'
 import { useBorrowLimit, useErc20ReserveData, useEthDebt, useHeath } from 'state/user/hooks'
@@ -31,31 +31,13 @@ const MyLoanBox = styled(Box)`
     padding: 5px 16px;
   }
 `
-const RiskLevelBox = styled(Box)`
-  padding: 10px 10px 10px 14px;
-  width: 100%;
-  height: 98px;
-  background: #f3f3f8;
-  border-radius: 0.375rem;
-  position: relative;
-  margin-bottom: 15px;
-  margin-top: 36px;
-  &.before {
-    ::before {
-      content: '';
-      display: block;
-      position: absolute;
-      left: 72px;
-      top: 98px;
-      border-width: 11.5px 7.5px;
-      border-style: dashed solid dashed dashed;
-      border-color: #f3f3f8 transparent transparent transparent;
-    }
-  }
-`
 const FlexEndBox = styled(Box)`
   display: flex;
   justify-content: flex-end;
+`
+const RepayBox = styled(Box)`
+  display: flex;
+  justify-content: space-between;
 `
 const BottomBox = styled(Box)`
   width: 371px;
@@ -69,7 +51,7 @@ const BottomBox = styled(Box)`
   }
 `
 const RewardAPYBox = styled(Box)`
-  height: 48px;
+  height: 45px;
   margin-bottom: 16px;
 `
 const ImgBox = styled('img')`
@@ -94,6 +76,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
   const ethDebt = useEthDebt()
   const borrowLimit = useBorrowLimit()
   const heath = useHeath()
+  const [sliderValue, setSliderValue] = useState<number>(+heath)
 
   const myLoanRiskLevel = useMemo(() => {
     return getRiskLevel(heath)
@@ -103,6 +86,28 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
     return getRiskLevelTag(heath)
   }, [heath])
 
+  const RiskLevelBox = styled(Box)`
+    padding: 10px 10px 10px 14px;
+    width: 100%;
+    height: 98px;
+    background: #f3f3f8;
+    border-radius: 0.375rem;
+    position: relative;
+    margin-bottom: 10px;
+    margin-top: 36px;
+    &.before {
+      ::before {
+        content: '';
+        display: block;
+        position: absolute;
+        left: ${`${times(3.57, sliderValue)}px`};
+        top: 95px;
+        border-width: 13px 7.5px;
+        border-style: dashed solid dashed dashed;
+        border-color: #f3f3f8 transparent transparent transparent;
+      }
+    }
+  `
   return (
     <MyLoanBox className={loading ? 'SkeletonBg' : ''}>
       {loading ? (
@@ -110,30 +115,34 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
       ) : (
         <>
           <Typography variant="h4">My Loan</Typography>
-          <SpaceBetweenBox mt="39px" ml="16px">
-            <Box>
-              <Typography variant="subtitle2" fontWeight="500" component="p" color="#A0A3BD">
-                My Debt
-              </Typography>
-              <CenterBox>
-                <img src={blackEthLogo} alt="" />
-                <Typography ml="13px" variant="h3" fontSize="32px" lineHeight="51px">
-                  {fixedFormat(ethDebt)}
+          <Box mt="39px" mr="24px" ml="16px">
+            <RepayBox>
+              <Box>
+                <Typography variant="subtitle2" fontWeight="500" component="p" color="#A0A3BD">
+                  My Debt
                 </Typography>
-              </CenterBox>
-            </Box>
-            <Button
-              disabled={!datatype}
-              className="Padding-button"
-              variant="contained"
-              onClick={() => {
-                setOpen(true)
-                setRepayRoBorrow(2)
-              }}
-            >
-              Repay {'>'}
-            </Button>
-          </SpaceBetweenBox>
+                <CenterBox mt="4px">
+                  <img src={blackEthLogo} alt="" />
+                  <Typography ml="8px" variant="h3" fontSize="32px" lineHeight="51px">
+                    {fixedFormat(ethDebt)}
+                  </Typography>
+                </CenterBox>
+              </Box>
+              <Box mt="26px">
+                <Button
+                  disabled={!datatype}
+                  className="Padding-button"
+                  variant="contained"
+                  onClick={() => {
+                    setOpen(true)
+                    setRepayRoBorrow(2)
+                  }}
+                >
+                  Repay {'>'}
+                </Button>
+              </Box>
+            </RepayBox>
+          </Box>
           <RiskLevelBox className={datatype ? 'before' : ''}>
             {datatype ? (
               <>
@@ -148,7 +157,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
                   </Box>
                   <Box>
                     <Box>
-                      <FlexEndBox>
+                      <FlexEndBox mt="2px" mr="2px">
                         <TipsTooltip size="16" grey="grey" value={'1111111'}></TipsTooltip>
                       </FlexEndBox>
                       <Box mr="24px">
@@ -182,8 +191,12 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
               </Box>
             )}
           </RiskLevelBox>
-          <CustomizedSlider riskLevelTag={myLoanRiskLevelTag}></CustomizedSlider>
-          <FlexEndBox>
+          <CustomizedSlider
+            setSliderValue={setSliderValue}
+            sliderValue={sliderValue}
+            riskLevelTag={myLoanRiskLevelTag}
+          ></CustomizedSlider>
+          <FlexEndBox mt="7px">
             <Typography variant="body1" color="#4E4B66">
               Borrow Limit {borrowLimit} ETH
             </Typography>

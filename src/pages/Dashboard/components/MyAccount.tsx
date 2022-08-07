@@ -80,10 +80,10 @@ export default function MyAccount({ type }: MyAccountProps) {
             <Typography variant="subtitle2" fontWeight="500" component="p" color="#A0A3BD">
               My assets
             </Typography>
-            <SpaceBetweenBox>
+            <SpaceBetweenBox mt="3px">
               <CenterBox>
                 <img src={blackEthLogo} alt="" />
-                <Typography ml="13px" variant="h3" fontSize="32px" lineHeight="51px">
+                <Typography ml="8px" variant="h3" fontSize="32px" lineHeight="51px">
                   {balance}
                 </Typography>
               </CenterBox>
@@ -92,7 +92,7 @@ export default function MyAccount({ type }: MyAccountProps) {
                   <Typography variant="subtitle2" color="#A0A3BD">
                     15%
                   </Typography>
-                  <CenterBox>
+                  <CenterBox mt="2px">
                     <Typography mr="4px" variant="body2" color="#A0A3BD">
                       Net APY
                     </Typography>
@@ -107,7 +107,7 @@ export default function MyAccount({ type }: MyAccountProps) {
                     <Typography variant="body1" component="span" fontWeight="600" color="#A0A3BD">
                       {'/day '}
                     </Typography>
-                    <FlexBox>
+                    <FlexBox mt="2px">
                       <Typography mr="4px" component="span" variant="body2" color="#A0A3BD">
                         Income estimation
                       </Typography>
@@ -120,7 +120,7 @@ export default function MyAccount({ type }: MyAccountProps) {
                       <Typography variant="subtitle2" color="#A0A3BD">
                         10%
                       </Typography>
-                      <CenterBox>
+                      <CenterBox mt="2px">
                         <Typography mr="4px" variant="body2" color="#A0A3BD">
                           Borrow APY
                         </Typography>
@@ -130,7 +130,7 @@ export default function MyAccount({ type }: MyAccountProps) {
                       <Typography variant="subtitle2" color="#A0A3BD">
                         25%
                       </Typography>
-                      <CenterBox>
+                      <CenterBox mt="2px">
                         <Typography mr="4px" variant="body2" color="#A0A3BD">
                           Earned APY
                         </Typography>

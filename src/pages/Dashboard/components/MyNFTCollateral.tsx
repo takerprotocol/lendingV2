@@ -1,12 +1,12 @@
 import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
 import MyNFTCollateralBg from 'assets/images/svg/dashboard/MyNFTCollateralBg.svg'
 import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
-import { FlexBox, SpaceBetweenBox } from 'styleds'
+import { FlexBox, SpaceBetweenBox, SpaceBox } from 'styleds'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useNftCollateral, useUserNftConfig } from 'state/user/hooks'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
-import ERC721 from 'assets/images/png/collection/721.png'
+// import ERC721 from 'assets/images/png/collection/721.png'
 
 // import ILendingPoolAddressesProviderAbi from 'abis/MockERC721.json'
 // import { useContract } from 'hooks/useContract'
@@ -19,7 +19,7 @@ const MyNFTCollateralBox = styled(Box)`
 `
 const TopBox = styled(Box)`
   width: 322px;
-  padding: 24px 24px;
+  padding: 24px 24px 22px 24px;
   height: 98px;
   position: absolute;
   top: 0px;
@@ -29,12 +29,10 @@ const TopBox = styled(Box)`
 const ButtonBox = styled(Box)`
   background: rgba(255, 255, 255, 0.15);
   border-radius: 4px;
+  margin-top: 24px;
   height: 28px;
   padding: 8px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `
 const TypographyButton = styled(Typography)`
   font-weight: 600;
@@ -44,7 +42,7 @@ const TypographyButton = styled(Typography)`
   opacity: 0.8;
 `
 const BottomBox = styled(Box)`
-  padding: 36px 16px;
+  padding: 36px 16px 24px 16px;
   width: 322px;
   top: 86px;
   height: 247px;
@@ -57,16 +55,20 @@ const BottomBox = styled(Box)`
 `
 const BottomTopBox = styled(Box)`
   width: 290px;
-  padding: 10px 10px 10px 8px;
+  padding: 10px 8px;
   background: #f7f7fc;
   border-radius: 4px;
   margin-bottom: 31px;
 `
 const ImgBox = styled(Box)`
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   margin-right: 4px;
   cursor: pointer;
+  :hover {
+    transform: translateY(-4px);
+    transition: all 0.25s ease-in;
+  }
 `
 const NftListBox = styled(Box)`
   margin-bottom: 16px;
@@ -83,7 +85,6 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const collateral = useNftCollateral()
   const collections = useCollections()
   const depositedCollection = useDepositedCollection()
-  console.log(depositedCollection)
   // const address = useAddress()
   // const contract = useContract(ERC721_ADDRESS, ILendingPoolAddressesProviderAbi)
   // const a = () => {
@@ -95,10 +96,10 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   //   }
   // }
 
-  const renderImg = (id: string) => {
-    const item = collections.find((el) => el.id.toLocaleLowerCase() === id.split('-')[1].toLocaleLowerCase())
-    return item ? item.icon : ERC721
-  }
+  // const renderImg = (id: string) => {
+  //   const item = collections.find((el) => el.id.toLocaleLowerCase() === id.toLocaleLowerCase())
+  //   return item ? item.icon : ERC721
+  // }
   return (
     <MyNFTCollateralBox>
       <BottomBox>
@@ -120,7 +121,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                           navigate(`/deposit/${el.id}`)
                         }}
                       >
-                        <img width="22px" height="22px" src={renderImg(el.userNftCollection.id)} alt="" />
+                        {/* <img width="22px" height="22px" src={renderImg(el.id)} alt="" /> */}
                       </ImgBox>
                     )
                   })}
@@ -133,8 +134,8 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
           )}
         </BottomTopBox>
         <NftListBox>
-          <Typography variant="body2" fontWeight="600" color="#A0A3BD">
-            We support these collections
+          <Typography variant="body2" lineHeight="12px" fontWeight="600" color="#A0A3BD">
+            You have 7 NFTs can deposit
           </Typography>
           <FlexBox mt="12px">
             {collections &&
@@ -163,24 +164,24 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
         </Button>
       </BottomBox>
       <TopBox>
-        <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
-          My NFT Collateral
-        </Typography>
-        <SpaceBetweenBox>
-          <FlexBox>
-            <Typography variant="h5" fontWeight="600" color="#ffffff" lineHeight="22px">
+        <SpaceBox>
+          <Box>
+            <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
+              My NFT Collateral
+            </Typography>
+            <Typography variant="h5" component="span" mr="8px" fontWeight="600" color="#ffffff" lineHeight="22px">
               {collateral}
             </Typography>
-            <Typography ml="8px" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
+            <Typography component="span" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
               ETH
             </Typography>
-          </FlexBox>
+          </Box>
           {dataType && (
             <ButtonBox>
               <TypographyButton>{nftConfig} NFTs</TypographyButton>
             </ButtonBox>
           )}
-        </SpaceBetweenBox>
+        </SpaceBox>
       </TopBox>
     </MyNFTCollateralBox>
   )

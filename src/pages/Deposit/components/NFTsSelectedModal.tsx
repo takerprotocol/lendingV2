@@ -14,7 +14,9 @@ import {
   useBorrowLimit,
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
+  useEthCollateral,
   useHeath,
+  useNftCollateral,
   useUserValue,
 } from 'state/user/hooks'
 import { gasLimit } from 'config'
@@ -81,6 +83,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const [isApproved, setIsApproved] = useState<number>(0)
   const addTransaction = useTransactionAdder()
   const transactions = useAllTransactions()
+  const borrowLimitUsed = useCollateralBorrowLimitUsed()
   const flag = useMemo(() => {
     return (
       transactions &&
@@ -107,10 +110,9 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const withdraw = () => {
     // console.log('withdraw')
   }
-  const borrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, type === 'Deposited' ? 1 : -1))
+  const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, type === 'Deposit' ? 1 : -1))
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
-  const upBorrowLimit = useBorrowLimit(times(amount, type === 'Deposited' ? 1 : -1)) //操作后的borrowLimit
-
+  const upBorrowLimit = useBorrowLimit(times(amount, type === 'Deposit' ? 1 : -1)) //操作后的borrowLimit
   const deposit = async () => {
     if (contract && address && ercContract) {
       if (isApproved) {
@@ -148,7 +150,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   }
 
   const riskLevelWarning = useMemo(() => {
-    return new BigNumber(collateralRiskLevel).lt(150) && type === 'Deposit'
+    return new BigNumber(collateralRiskLevel).lt(150) && type === 'withdraw'
   }, [collateralRiskLevel, type])
 
   return (
@@ -194,7 +196,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <BodyTypography>
-                {amount}
+                {userValue.totalCollateral}
                 {'>'}
               </BodyTypography>
               <BodyTypography ml="6px" fontWeight="700 !important" color="#14142A !important">
@@ -216,14 +218,14 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
               <BodyTypography>
-                {heath}% {'>'}
+                {borrowLimitUsed}% {'>'}
               </BodyTypography>
               <BodyTypography
                 ml="6px"
                 fontWeight="700 !important"
                 color={riskLevelWarning ? '#E1536C !important' : '#14142A !important'}
               >
-                {borrowLimitUsed}%
+                {upBorrowLimitUsed}%
               </BodyTypography>
             </Box>
           </Box>

@@ -1,8 +1,7 @@
 import * as React from 'react'
-import Slider, { SliderThumb } from '@mui/material/Slider'
+import Slider from '@mui/material/Slider'
 import { styled } from '@mui/material/styles'
 // import Tooltip from '@mui/material/Tooltip';
-import Box from '@mui/material/Box'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Props {
   children: React.ReactElement
@@ -13,18 +12,22 @@ const PrettoSlider = styled(Slider)({
   height: 8,
   padding: 0,
   '& .MuiSlider-track': {
-    border: 'none',
+    border: '1px solid #FFFFFF',
+    height: '6px',
   },
   '& .MuiSlider-rail': {
     background: '#eff0f6',
   },
   '& .MuiSlider-thumb': {
-    height: '12px',
-    width: '12px',
-    background: 'linear-gradient(213.69deg, #66DEC8 14%, #4BC8B1 92%)',
+    height: '14px',
+    width: '14px',
     border: '2px solid #FFFFFF',
+    background: 'linear-gradient(213.69deg, #66DEC8 14%, #4BC8B1 92%)',
     '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
       boxShadow: 'inherit',
+    },
+    '&:after': {
+      display: 'none',
     },
     '&:before': {
       display: 'none',
@@ -51,32 +54,25 @@ const PrettoSlider = styled(Slider)({
     },
   },
 })
-
-type AirbnbThumbComponentProps = React.HTMLAttributes<unknown>
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function AirbnbThumbComponent(props: AirbnbThumbComponentProps) {
-  const { children, ...other } = props
-  return (
-    <SliderThumb {...other}>
-      {children}
-      <span className="airbnb-bar" />
-      <span className="airbnb-bar" />
-      <span className="airbnb-bar" />
-    </SliderThumb>
-  )
-}
 interface CustomizedSliderProps {
   riskLevelTag: string
+  setSliderValue?: Function
+  sliderValue?: number
 }
-export default function CustomizedSlider({ riskLevelTag }: CustomizedSliderProps) {
+export default function CustomizedSlider({ riskLevelTag, setSliderValue, sliderValue }: CustomizedSliderProps) {
   return (
-    <Box sx={{ width: '100%' }}>
-      <PrettoSlider
-        className={`Slider-${riskLevelTag}`}
-        valueLabelDisplay="off"
-        aria-label="pretto slider"
-        defaultValue={20}
-      />
-    </Box>
+    <PrettoSlider
+      className={`Slider-${riskLevelTag}`}
+      valueLabelDisplay="off"
+      value={sliderValue}
+      step={1}
+      onChange={(MouseEvent: any) => {
+        if (setSliderValue) {
+          setSliderValue(MouseEvent.target.value)
+        }
+      }}
+      aria-label="pretto slider"
+      defaultValue={20}
+    />
   )
 }

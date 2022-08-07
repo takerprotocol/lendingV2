@@ -4,7 +4,7 @@ import rightBox from 'assets/images/svg/dashboard/rightBox.svg'
 import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
 import addBox from 'assets/images/svg/dashboard/addBox.svg'
 import ButtonSupply from 'assets/images/svg/dashboard/Button-Supply.svg'
-import { FlexBox, SpaceBetweenBox } from 'styleds'
+import { FlexBox, SpaceBetweenBox, SpaceBox } from 'styleds'
 import { useMemo, useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
@@ -34,7 +34,7 @@ const MyETHSupplyBox = styled(Box)`
 `
 const TopBox = styled(Box)`
   width: 322px;
-  padding: 24px 24px;
+  padding: 24px 24px 22px 24px;
   height: 98px;
   top: 0px;
   position: absolute;
@@ -47,9 +47,7 @@ const ButtonBox = styled(Box)`
   height: 28px;
   padding: 8px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-top: 24px;
 `
 const TypographyButton = styled(Typography)`
   font-weight: 600;
@@ -59,7 +57,7 @@ const TypographyButton = styled(Typography)`
   opacity: 0.8;
 `
 const BottomBox = styled(Box)`
-  padding: 36px 16px;
+  padding: 36px 16px 24px 16px;
   width: 322px;
   top: 86px;
   height: 247px;
@@ -79,7 +77,7 @@ const BottomTopBox = styled(Box)`
 `
 const RewardAPYBox = styled(Box)`
   width: 274px;
-  height: 48px;
+  height: 45px;
   margin-bottom: 16px;
   margin-left: 8px;
 `
@@ -198,18 +196,18 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
         </Button>
       </BottomBox>
       <TopBox>
-        <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
-          My ETH Supply
-        </Typography>
-        <SpaceBetweenBox>
-          <FlexBox>
-            <Typography variant="h5" fontWeight="600" color="#ffffff" lineHeight="22px">
+        <SpaceBox>
+          <Box>
+            <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
+              My ETH Supply
+            </Typography>
+            <Typography variant="h5" ml="8px" component="span" fontWeight="600" color="#ffffff" lineHeight="22px">
               {fixedFormat(ethCollateral)}
             </Typography>
-            <Typography ml="8px" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
+            <Typography component="span" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
               ETH
             </Typography>
-          </FlexBox>
+          </Box>
           {dataType && (
             <ButtonBox
               onClick={() => {
@@ -220,7 +218,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
               <TypographyButton>Withdraw</TypographyButton>
             </ButtonBox>
           )}
-        </SpaceBetweenBox>
+        </SpaceBox>
       </TopBox>
       <MySupplyModal
         openMySupplyModal={openMySupplyModal}

@@ -1,10 +1,10 @@
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import DepositHeader from 'pages/Deposit/components/DepositHeader'
-import AvailableNFTs from './components/AvailableNFTs'
+import DepositNFT from './components/DepositNFT'
 import BgImg from 'assets/images/svg/deposit/Bg.svg'
 import { useState } from 'react'
-import DepositedNFT from './components/DepositedNFT'
+import WithdrawNFT from './components/WithdrawNFT'
 import { useDepositableNfts } from 'services/module/deposit'
 import { useAddress } from 'state/user/hooks'
 import { useParams } from 'react-router-dom'
@@ -42,20 +42,20 @@ export default function Deposit() {
       <HeaderBg />
       <Main>
         <DepositHeader loading={loading}></DepositHeader>
-        <AvailableNFTs
+        <DepositNFT
           loading={loading}
           list={list}
           setDepositType={setDepositType}
           depositType={depositType}
           withdrawType={withdrawType}
-        ></AvailableNFTs>
-        <DepositedNFT
+        ></DepositNFT>
+        <WithdrawNFT
           loading={loading}
           list={list}
           depositType={depositType}
           withdrawType={withdrawType}
           setWithdrawType={setWithdrawType}
-        ></DepositedNFT>
+        ></WithdrawNFT>
       </Main>
     </Body>
   )
