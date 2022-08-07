@@ -14,9 +14,8 @@ import {
   useBorrowLimit,
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
-  useEthCollateral,
   useHeath,
-  useNftCollateral,
+  useUserValue,
 } from 'state/user/hooks'
 import { gasLimit } from 'config'
 import { toast } from 'react-toastify'
@@ -73,8 +72,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const { id } = useParams()
   const contract = useLendingPool()
   const address = useAddress()
-  const ethCollateral = useEthCollateral()
-  const nftCollateral = useNftCollateral()
+  const userValue = useUserValue()
   const heath = useHeath()
   const collateralRiskLevel = useCollateralRiskLevel()
   const TypographyRiskLevel = getRiskLevel(heath)
@@ -196,11 +194,11 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <BodyTypography>
-                {nftCollateral}
+                {amount}
                 {'>'}
               </BodyTypography>
               <BodyTypography ml="6px" fontWeight="700 !important" color="#14142A !important">
-                {plus(ethCollateral, nftCollateral)}
+                {plus(userValue.totalCollateral, amount)}
               </BodyTypography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">

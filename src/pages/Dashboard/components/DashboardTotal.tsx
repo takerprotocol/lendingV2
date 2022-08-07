@@ -55,12 +55,12 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
         <FlexBox>
           <FlexBox sx={{ justifyContent: 'flex-start' }}>
             {type === 1 ? (
-              <Box marginLeft="23px" width="62px" height="62px">
-                <img width="62px" height="62px" src={TotalLiquidityIcon} alt=" " />
+              <Box marginLeft="23px" width="74px" height="74px">
+                <img width="74px" height="74px" src={TotalLiquidityIcon} alt=" " />
               </Box>
             ) : (
-              <Box width="62px" height="62px" marginLeft="23px">
-                <img src={TotalLeft} height="62px" width="62px" alt=" " />
+              <Box width="74px" height="74px" marginLeft="23px">
+                <img src={TotalLeft} height="74px" width="74px" alt=" " />
               </Box>
             )}
             <Box marginLeft="24px">
@@ -96,12 +96,12 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
           </FlexBox>
           <FlexBox sx={{ marginLeft: '120px', justifyContent: 'flex-start' }}>
             {type === 1 ? (
-              <Box width="62px" height="62px">
-                <img width="62px" height="62px" src={TotalBorrowedIcon} alt="" />
+              <Box width="74px" height="74px">
+                <img width="74px" height="74px" src={TotalBorrowedIcon} alt="" />
               </Box>
             ) : (
-              <Box width="62px" height="62px">
-                <img src={TotalRight} height="62px" width="62px" alt="" />
+              <Box width="74px" height="74px">
+                <img src={TotalRight} height="74px" width="74px" alt="" />
               </Box>
             )}
             <Box sx={{ marginLeft: '24px' }}>
