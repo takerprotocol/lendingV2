@@ -83,6 +83,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const collateral = useNftCollateral()
   const collections = useCollections()
   const depositedCollection = useDepositedCollection()
+  console.log(depositedCollection)
   // const address = useAddress()
   // const contract = useContract(ERC721_ADDRESS, ILendingPoolAddressesProviderAbi)
   // const a = () => {
@@ -95,7 +96,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   // }
 
   const renderImg = (id: string) => {
-    const item = collections.find((el) => el.id.toLocaleLowerCase() === id.toLocaleLowerCase())
+    const item = collections.find((el) => el.id.toLocaleLowerCase() === id.split('-')[1].toLocaleLowerCase())
     return item ? item.icon : ERC721
   }
   return (
@@ -119,7 +120,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                           navigate(`/deposit/${el.id}`)
                         }}
                       >
-                        <img width="22px" height="22px" src={renderImg(el.id)} alt="" />
+                        <img width="22px" height="22px" src={renderImg(el.userNftCollection.id)} alt="" />
                       </ImgBox>
                     )
                   })}

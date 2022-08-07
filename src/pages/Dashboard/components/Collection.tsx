@@ -84,8 +84,10 @@ export default function Collection({ type, loading }: CollectionType) {
 
   const deposited = (id: string) => {
     if (depositedCollection) {
-      const item = depositedCollection.find((el) => el.collection.id.toLocaleLowerCase() === id.toLocaleLowerCase())
-      return item ? item.tokens.length : '0'
+      const item = depositedCollection.find(
+        (el) => el.userNftCollection.id.split('-')[1].toLocaleLowerCase() === id.toLocaleLowerCase()
+      )
+      return item ? item.userNftCollection.tokens.length : '0'
     }
     return '0'
   }

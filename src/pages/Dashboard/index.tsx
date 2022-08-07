@@ -182,7 +182,6 @@ export default function Dashboard() {
       // }
       const nfts: Array<any> = []
       const depositedCollection: Array<any> = []
-
       if (lendingPoolRes.data && lendingPoolRes.data.lendingPool) {
         lendingPoolRes.data.lendingPool.nfts.forEach(async (element: any) => {
           const item: any = {}

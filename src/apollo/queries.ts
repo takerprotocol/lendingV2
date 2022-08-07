@@ -69,6 +69,10 @@ export const UserNftCollection = (id: string) => {
     query userNftCollection {
       userNftCollection(id: "${id}") {
         id
+        tokens {
+          id
+          amount
+        }
       }
     }
   `
