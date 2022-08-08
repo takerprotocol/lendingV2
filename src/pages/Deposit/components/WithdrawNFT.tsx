@@ -7,10 +7,13 @@ import redXButton from 'assets/images/svg/deposit/redXButton.svg'
 import NFTsList from './NFTsList'
 import Pager from './Pager'
 import AvailableAndDepositedSkeleton from './depositSkeleton/AvailableAndDepositedSkeleton'
-import { useState } from 'react'
-import NFTsSelectedModal from './NFTsSelectedModal'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import SureModal from './SureModal'
-import { NftTokenModel } from 'services/type/nft'
+import BigNumber from 'bignumber.js'
+import { getAlchemyNftMetadata } from 'services/module/deposit'
+import { Nft } from '@alch/alchemy-sdk'
+import { useCollateralBorrowLimitUsed } from 'state/user/hooks'
+import WithdrawSelectedModal from './WithdrawSelectedModal'
 const DepositedNFTsStyleBox = styled(Box)``
 const DepositedNFTsBox = styled(Box)`
   width: 1012px;
@@ -54,61 +57,81 @@ interface DepositedNftProps {
   depositType: string
   withdrawType: string
   setWithdrawType: Function
-  list: NftTokenModel[]
+  list: any[]
   loading: boolean
 }
 export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType, list, loading }: DepositedNftProps) {
   const [checkedIndex, setCheckedIndex] = useState<Array<string>>([])
-  const [openSelectedModal, setOpenSelectedModal] = useState<boolean>(false)
+  const [withdrawList, setWithdrawList] = useState<Array<Nft>>([])
+  const [openSelect, setOpenSelect] = useState<boolean>(false)
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
-  const [withdrawLargeAmount] = useState<boolean>(true)
 
+  const withdrawAmount = useMemo(() => {
+    let totalAmount = '0'
+    checkedIndex.forEach((el) => {
+      const checkedNft = list.find((nft) => nft.id.split('-')[2] === el)
+      totalAmount = new BigNumber(checkedNft.amount).plus(totalAmount).toString()
+    })
+    return totalAmount
+  }, [checkedIndex, list])
+  const borrowLimitUsed = useCollateralBorrowLimitUsed(withdrawAmount)
+  const withdrawLargeAmount = useMemo(() => {
+    return new BigNumber(borrowLimitUsed).gte(1)
+  }, [borrowLimitUsed])
   function ButtonWithdraw() {
     if (depositType === 'shut') {
       setWithdrawType('open')
     }
   }
   const [withdraw] = useState<string>('withdraw')
+  const amount = useMemo(() => {
+    return list.reduce((total: string, current: any) => {
+      return new BigNumber(total).plus(current.amount || '0').toString()
+    }, '0')
+  }, [list])
+
+  const getWithdrawList = useCallback(async () => {
+    const arr: Array<Nft> = []
+    for (let i = 0, length = list.length; i < length; i++) {
+      const nft = await getAlchemyNftMetadata(list[i].id.split('-')[1], list[i].id.split('-')[2])
+      arr.push(nft)
+    }
+    setWithdrawList(arr)
+  }, [list])
+  useEffect(() => {
+    getWithdrawList()
+  }, [getWithdrawList])
   return (
     <DepositedNFTsStyleBox
       sx={{
         opacity: `${depositType === 'open' ? '0.7' : '1'}`,
       }}
     >
-      {list.length !== 0 ? (
-        <Box>
-          <Typography m="48px 24px" component="span" variant="h5" fontWeight="700" fontSize=" 24px">
-            0 Deposited NFTs
-          </Typography>
-          <Typography ml={'16px'} component="span" variant="subtitle1" color="#6E7191">
-            358.48 ETH
-          </Typography>
-        </Box>
-      ) : (
-        <DepositedNFTsBox>
-          {loading ? (
-            <AvailableAndDepositedSkeleton />
-          ) : (
-            <FlexBox mb="43px">
-              <Box>
-                <Typography component="span" variant="h5" fontWeight="700" fontSize=" 24px">
-                  You can withdraw
-                </Typography>
-                <Typography ml={'16px'} component="span" variant="subtitle1" color="#6E7191">
-                  358.48 ETH
-                </Typography>
-              </Box>
-              {withdrawType === 'shut' ? (
-                <Button
-                  sx={{ display: `${!list && 'none'}`, marginRight: '24px' }}
-                  variant="contained"
-                  color="secondary"
-                  onClick={ButtonWithdraw}
-                >
-                  Choose
-                </Button>
-              ) : (
-                <FlexBox mr={'24px'}>
+      <DepositedNFTsBox>
+        {loading ? (
+          <AvailableAndDepositedSkeleton />
+        ) : (
+          <FlexBox mb="43px">
+            <Box>
+              <Typography component="span" variant="h5" fontWeight="700" fontSize=" 24px">
+                You can withdraw
+              </Typography>
+              <Typography ml={'16px'} component="span" variant="subtitle1" color="#6E7191">
+                {list.length} NFTs / {amount} ETH
+              </Typography>
+            </Box>
+            {withdrawType === 'shut' ? (
+              <Button
+                sx={{ display: `${!list && 'none'}`, marginRight: '24px' }}
+                variant="contained"
+                color="secondary"
+                onClick={ButtonWithdraw}
+              >
+                Choose
+              </Button>
+            ) : (
+              <FlexBox mr={'24px'}>
+                {withdrawLargeAmount && (
                   <Box display={withdrawLargeAmount ? '' : 'none'} mr="16px">
                     <Typography fontWeight="600" variant="body2" color="#E1536C">
                       The amount of withdraw is too large
@@ -117,65 +140,67 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
                       and it is easy to be liquidated
                     </Typography>
                   </Box>
-                  <XButtonBox
-                    onClick={() => setOpenSureModal(true)}
-                    sx={{ background: `${withdrawLargeAmount ? ' rgba(225, 83, 108, 0.1)' : '#e1e3ee'}` }}
+                )}
+                <XButtonBox
+                  onClick={() => setOpenSureModal(true)}
+                  sx={{ background: `${withdrawLargeAmount ? ' rgba(225, 83, 108, 0.1)' : '#e1e3ee'}` }}
+                >
+                  <img width={'14px'} height={'14px'} src={withdrawLargeAmount ? redXButton : XIcon} alt="" />
+                </XButtonBox>
+                <RefreshButtonBox
+                  mx="16px"
+                  sx={{
+                    borderRadius: '100%',
+                    background: `${withdrawLargeAmount ? '' : '#e1e3ee'}`,
+                  }}
+                  onClick={() => {
+                    setWithdrawType('shut')
+                  }}
+                >
+                  <img src={withdrawLargeAmount ? redResetButton : RefreshIcon2} alt="" />
+                </RefreshButtonBox>
+                <WithdrawButtonBox
+                  sx={{ background: `${withdrawLargeAmount ? ' rgba(225, 83, 108, 0.1)' : '#e1e3ee'}` }}
+                  onClick={() => {
+                    if (checkedIndex.length !== 0) {
+                      setOpenSelect(true)
+                    }
+                  }}
+                >
+                  <Typography
+                    variant="body1"
+                    component="h1"
+                    fontWeight="700"
+                    color={withdrawLargeAmount ? '#E1536C' : '#14142A'}
                   >
-                    <img width={'14px'} height={'14px'} src={withdrawLargeAmount ? redXButton : XIcon} alt="" />
-                  </XButtonBox>
-                  <RefreshButtonBox
-                    mx="16px"
-                    sx={{
-                      borderRadius: '100%',
-                      background: `${withdrawLargeAmount ? '' : '#e1e3ee'}`,
-                    }}
-                    onClick={() => {
-                      setWithdrawType('shut')
-                    }}
-                  >
-                    <img src={withdrawLargeAmount ? redResetButton : RefreshIcon2} alt="" />
-                  </RefreshButtonBox>
-                  <WithdrawButtonBox
-                    sx={{ background: `${withdrawLargeAmount ? ' rgba(225, 83, 108, 0.1)' : '#e1e3ee'}` }}
-                    onClick={() => {
-                      if (checkedIndex.length === 0) {
-                        setOpenSelectedModal(true)
-                      }
-                    }}
-                  >
-                    <Typography
-                      variant="body1"
-                      component="h1"
-                      fontWeight="700"
-                      color={withdrawLargeAmount ? '#E1536C' : '#14142A'}
-                    >
-                      Withdraw {checkedIndex.length} NFTs
-                    </Typography>
-                  </WithdrawButtonBox>
-                </FlexBox>
-              )}
-            </FlexBox>
-          )}
-          <NFTsList
-            loading={loading}
-            TypeKey={withdraw}
-            list={list}
-            depositType={withdrawType}
-            checked={checkedIndex}
-            onChange={(data: Array<string>) => {
-              setCheckedIndex(data)
-            }}
-          ></NFTsList>
-          <Pager TypeKey={withdraw} list={list}></Pager>
-        </DepositedNFTsBox>
-      )}
-      <NFTsSelectedModal
+                    Withdraw {checkedIndex.length} NFTs
+                  </Typography>
+                </WithdrawButtonBox>
+              </FlexBox>
+            )}
+          </FlexBox>
+        )}
+        <NFTsList
+          loading={loading}
+          TypeKey={withdraw}
+          list={withdrawList}
+          depositType={withdrawType}
+          checked={checkedIndex}
+          onChange={(data: Array<string>) => {
+            setCheckedIndex(data)
+          }}
+        ></NFTsList>
+        <Pager TypeKey={withdraw} list={list}></Pager>
+      </DepositedNFTsBox>
+      <WithdrawSelectedModal
         type={withdraw}
         checkedIndex={checkedIndex}
-        data={list.filter((el) => checkedIndex.includes(el.tokenId))}
-        openSelectedModal={openSelectedModal}
-        setOpenSelectedModal={setOpenSelectedModal}
-      ></NFTsSelectedModal>
+        amount={withdrawAmount}
+        amountList={list.filter((el) => checkedIndex.includes(el.id.split('-')[2]))}
+        data={withdrawList.filter((el) => checkedIndex.includes(el.tokenId))}
+        open={openSelect}
+        close={setOpenSelect}
+      ></WithdrawSelectedModal>
       <SureModal
         openSureModal={openSureModal}
         handle={(type: string) => {

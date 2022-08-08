@@ -3,11 +3,12 @@ import Box from '@mui/material/Box'
 import DepositHeader from 'pages/Deposit/components/DepositHeader'
 import DepositNFT from './components/DepositNFT'
 import BgImg from 'assets/images/svg/deposit/Bg.svg'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import WithdrawNFT from './components/WithdrawNFT'
 import { useDepositableNfts } from 'services/module/deposit'
 import { useAddress } from 'state/user/hooks'
 import { useParams } from 'react-router-dom'
+import { useDepositedCollection } from 'state/application/hooks'
 
 const Body = styled(Box)`
   padding-top: 233px;
@@ -37,6 +38,16 @@ export default function Deposit() {
   const [depositType, setDepositType] = useState<string>('shut')
   const [withdrawType, setWithdrawType] = useState<string>('shut')
   const { list, loading } = useDepositableNfts(address, id)
+  const depositedCollection = useDepositedCollection()
+  const depositedList = useMemo(() => {
+    if (depositedCollection && id) {
+      const collection = depositedCollection.find((el) => {
+        return el.userNftCollection.id.split('-')[1] === id
+      })
+      return collection ? collection.userNftCollection.tokens : []
+    }
+    return []
+  }, [depositedCollection, id])
   return (
     <Body className="header-padding">
       <HeaderBg />
@@ -51,7 +62,7 @@ export default function Deposit() {
         ></DepositNFT>
         <WithdrawNFT
           loading={loading}
-          list={list}
+          list={depositedList}
           depositType={depositType}
           withdrawType={withdrawType}
           setWithdrawType={setWithdrawType}

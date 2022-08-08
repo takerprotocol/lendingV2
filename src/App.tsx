@@ -15,6 +15,7 @@ import { ToastContainer } from 'react-toastify'
 import ToastSuccessIcon from 'assets/images/png/common/toast-success.png'
 import ToastErrorIcon from 'assets/images/png/common/toast-error.png'
 import CloseIcon from 'assets/images/svg/common/close.svg'
+import Footer from 'components/Footer'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 if (!!window.ethereum) {
@@ -55,6 +56,7 @@ export default function App() {
                   <Updaters />
                   <Header />
                   <CustomizeRoutes></CustomizeRoutes>
+                  <Footer />
                 </Router>
               </BlockNumberProvider>
             </Web3ReactManager>

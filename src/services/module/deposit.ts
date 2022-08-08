@@ -1,4 +1,4 @@
-import { getNftsForOwner, OwnedNftsResponse } from '@alch/alchemy-sdk'
+import { getNftsForOwner, OwnedNftsResponse, getNftMetadata, NftTokenType } from '@alch/alchemy-sdk'
 import alchemy from 'constants/alchemy'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -26,4 +26,14 @@ export function useDepositableNfts(address: string, id?: string) {
     }
   }, [address, getList, id])
   return { loading, list }
+}
+
+export async function getAlchemyNftMetadata(collection: string, tokenId: string) {
+  return await getNftMetadata(alchemy, {
+    tokenId,
+    tokenType: NftTokenType.ERC721,
+    contract: {
+      address: collection,
+    },
+  })
 }

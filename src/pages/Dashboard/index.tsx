@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import BgIcon from 'assets/images/png/dashboard/bg.png'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
-import Footer from 'components/Footer'
+// import Footer from 'components/Footer'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import DataNFTs from './components/DataNFTs'
 import { useLendingPool } from 'hooks/useLendingPool'
@@ -235,7 +235,7 @@ export default function Dashboard() {
         <DataNFTs type={type}></DataNFTs>
         <Collection loading={loading} type={type}></Collection>
       </Main>
-      <Footer></Footer>
+      {/* <Footer></Footer> */}
     </Body>
   )
 }

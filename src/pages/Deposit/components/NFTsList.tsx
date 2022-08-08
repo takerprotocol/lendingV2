@@ -1,3 +1,4 @@
+import { Nft } from '@alch/alchemy-sdk'
 import styled from '@emotion/styled'
 import { Box, Checkbox, Skeleton, TextField, Typography } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
@@ -66,7 +67,7 @@ const Image = (props: any) => {
   )
 }
 interface NFTsLisProps {
-  list: NftTokenModel[]
+  list: NftTokenModel[] | Nft[]
   loading: boolean
   depositType: string
   TypeKey: string
@@ -100,7 +101,7 @@ export default function NFTsList({ list, loading, depositType, onChange, TypeKey
           LoadingNftListSkeleton
         ) : (
           <>
-            {list.slice(0, 10).map((el: NftTokenModel) => (
+            {list.slice(0, 10).map((el: NftTokenModel | Nft) => (
               <NftBox
                 className={checkboxType.includes(el.tokenId) ? 'isCheck' : ' '}
                 key={`nft${TypeKey}-${el.tokenId}`}
