@@ -212,10 +212,16 @@ export const theme = createTheme({
             background: #D9DBE9;
             box-shadow: none !important;
           }
-          &:focus {
+          // &:focus {
+          //   border: 4px solid #c4b7e8;
+          //   box-shadow: none !important;
+          //   box-sizing: border-box;
+          // }
+          &:focus-visible {
             border: 4px solid #c4b7e8;
             box-shadow: none !important;
-            box-sizing: border-box;
+            box-sizing: content-box;
+            padding: 0 !important;
           }
           &.MuiButton-containedSecondary {
             background: #F7F7FC;
