@@ -43,7 +43,7 @@ const BottomBox = styled(Box)`
   width: 371px;
   height: 149px;
   margin-top: 24px;
-  padding: 16px 24px 24px 23px;
+  padding: 16px 0px 24px 23px;
   background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
   border-radius: 8px;
   .left {
@@ -240,7 +240,7 @@ export default function MyLoan({ loading, type, assets }: MyLoanProps) {
                 </Box>
               </FlexBox>
             </RewardAPYBox>
-            <SpaceBetweenBox mt="16px">
+            <SpaceBetweenBox mr="24px" mt="16px">
               <Box>
                 <Typography variant="subtitle2" fontWeight="700" color="#262338">
                   Net Borrow APY

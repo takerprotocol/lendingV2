@@ -1,9 +1,9 @@
 import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import BgIcon from 'assets/images/png/dashboard/bg.png'
+import growthBg from 'assets/images/svg/dashboard/growthBg.svg'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
-// import Footer from 'components/Footer'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import DataNFTs from './components/DataNFTs'
 import { useLendingPool } from 'hooks/useLendingPool'
@@ -40,6 +40,7 @@ import ERC721 from 'assets/images/png/collection/721.png'
 import Azuki from 'assets/images/png/collection/azuki.png'
 import Bayc from 'assets/images/png/collection/bayc.png'
 import Mayc from 'assets/images/png/collection/mayc.png'
+// import Footer from 'components/Footer'
 
 // import { getClient } from 'apollo/client'
 // import { SupportedChainId } from 'constants/chains'
@@ -47,7 +48,6 @@ import Mayc from 'assets/images/png/collection/mayc.png'
 
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
-  background-image: url(${BgIcon});
   background-repeat: no-repeat;
   background-size: cover;
 `
@@ -227,15 +227,13 @@ export default function Dashboard() {
   useEffect(() => {
     getCollection()
   }, [getCollection])
-
   return (
-    <Body className="header-padding">
+    <Body className="header-padding" sx={{ backgroundImage: `${type === 1 ? `url(${BgIcon})` : `url(${growthBg})`}` }}>
       <Main>
         <BlueChipNFTs type={type}></BlueChipNFTs>
         <DataNFTs type={type}></DataNFTs>
         <Collection loading={loading} type={type}></Collection>
       </Main>
-      {/* <Footer></Footer> */}
     </Body>
   )
 }

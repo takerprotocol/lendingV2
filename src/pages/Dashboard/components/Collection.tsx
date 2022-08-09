@@ -115,10 +115,8 @@ export default function Collection({ type, loading }: CollectionType) {
         <>
           <SpaceBetweenBox>
             <Box m="36px 0px 16px 24px">
-              <Typography mb="8px" variant="h4">
-                Collection Supported
-              </Typography>
-              <Box display={dataType ? '' : 'none'}>
+              <Typography variant="h4">Collection Supported</Typography>
+              <Box mt="8px" display={dataType ? 'none' : ''}>
                 <Typography mr="16px" fontWeight="500" component="span" color="#6E7191" variant="subtitle2">
                   {nftConfig} NFT Collaterals
                 </Typography>
@@ -127,7 +125,7 @@ export default function Collection({ type, loading }: CollectionType) {
                 </Typography>
               </Box>
             </Box>
-            <Box display={dataType ? '' : 'none'}>
+            <Box display={dataType ? 'none' : ''}>
               <FlexBox>
                 <TokenUpBox mr="24px">
                   <img src={tokenUp} alt="" />
@@ -170,7 +168,7 @@ export default function Collection({ type, loading }: CollectionType) {
           </CollectionHeader>
           {collection.map((el: any) => (
             <CollectionBox key={`${el.id}collection`} className={el === check ? 'open' : ''}>
-              <Box padding="28px 24px 24px 24px">
+              <Box padding="24px 24px 24px 24px">
                 <CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '272px' }}>
                     <img
@@ -187,20 +185,20 @@ export default function Collection({ type, loading }: CollectionType) {
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '124px' }}>
                     <img src={minMyCollateralIcon} alt="" />
-                    <Typography ml="6px" component="span" variant="body1" fontWeight="700">
+                    <Typography ml="2px" component="span" variant="body1" fontWeight="700">
                       {el?.stats?.floorPrice}
                     </Typography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '148px' }}>
                     <img src={minMyCollateralIcon} alt="" />
-                    <Typography ml="6px" mr="8px" component="span" variant="body1" fontWeight="700">
+                    <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
                       {times(el?.stats?.floorPrice || 0, div(el.ltv, 10000))}
                     </Typography>
                     <TitleTypography>{div(el.ltv, 100)}%</TitleTypography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '246px' }}>
                     <img src={minMyCollateralIcon} alt="" />
-                    <Typography ml="6px" mr="8px" component="span" variant="body1" fontWeight="700">
+                    <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
                       {el.totalValue}
                     </Typography>
                     <TitleTypography>21,001 NFTs</TitleTypography>
@@ -287,7 +285,7 @@ export default function Collection({ type, loading }: CollectionType) {
                             toggleModal()
                           }}
                         >
-                          Connect Wallet
+                          Deposit
                         </Button>
                       </Box>
                     )}

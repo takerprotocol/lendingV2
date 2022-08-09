@@ -1,5 +1,4 @@
-import { Box, Typography } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { Box, Typography, styled } from '@mui/material'
 import TotalBorrowedIcon from 'assets/images/svg/dashboard/total-borrowed.svg'
 import TotalLiquidityIcon from 'assets/images/svg/dashboard/total-liquidity.svg'
 import TotalLeft from 'assets/images/svg/dashboard/totalLeft.svg'
@@ -16,14 +15,13 @@ import { useAppDispatch } from 'state/hooks'
 import { setPoolValues } from 'state/application/reducer'
 import { usePoolValues } from 'state/application/hooks'
 
-const FlexBox = styled(Box)`
-  height: 62px;
-  display: flex;
-  align-items: center;
-`
 const CenterBox = styled(Box)`
   display: flex;
   align-items: center;
+`
+const FlexStartBox = styled(Box)`
+  display: flex;
+  justify-content: flex-start;
 `
 interface DashboardTotalType {
   type: number
@@ -52,57 +50,49 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
       {loading ? (
         <DashboardTotalSkeleton />
       ) : (
-        <FlexBox>
-          <FlexBox sx={{ justifyContent: 'flex-start' }}>
+        <FlexStartBox>
+          <FlexStartBox ml="18px" sx={{ justifyContent: 'flex-start' }}>
             {type === 1 ? (
-              <Box marginLeft="23px" width="74px" height="74px">
-                <img width="74px" height="74px" src={TotalLiquidityIcon} alt=" " />
-              </Box>
+              <img width="74px" height="74px" src={TotalLiquidityIcon} alt=" " />
             ) : (
-              <Box width="74px" height="74px" marginLeft="23px">
-                <img src={TotalLeft} height="74px" width="74px" alt=" " />
-              </Box>
+              <img src={TotalLeft} height="74px" width="74px" alt=" " />
             )}
-            <Box marginLeft="24px">
-              <CenterBox marginY="0px">
+            <Box width="236px" marginLeft="24px">
+              <CenterBox>
                 <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px" marginRight="8px">
                   Total Liquidity
                 </Typography>
                 <TipsTooltip size="16" value={'Total Liquidity'}></TipsTooltip>
               </CenterBox>
-              <Box marginTop="16px">
+              <CenterBox marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
                 <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">
                   {decimalFormat(poolValues[1].toString(), decimal)}
                 </Typography>
-              </Box>
+              </CenterBox>
             </Box>
-            <Box sx={{ marginLeft: '55px' }}>
+            <Box>
               <Typography component="p" fontWeight="500" variant="subtitle2" color="#6E7191">
-                ETH Supply
-              </Typography>
-              <Typography component="p" marginTop="10px" fontWeight="500" variant="subtitle2" color="#6E7191">
                 NFT Collaterals
               </Typography>
-            </Box>
-            <Box sx={{ marginLeft: '10px' }}>
-              <Typography component="p" variant="subtitle2" color="#262338">
-                {decimalFormat(poolValues[0].toString(), decimal)} ETH
+              <Typography component="p" marginTop="10px" fontWeight="500" variant="subtitle2" color="#6E7191">
+                ETH Supply
               </Typography>
-              <Typography component="p" marginTop="10px" variant="subtitle2" color="#262338">
+            </Box>
+            <Box width="262px" sx={{ marginLeft: '10px' }}>
+              <Typography component="p" variant="subtitle2" color="#262338">
                 {decimalFormat(poolValues[1].toString(), decimal)} ETH
               </Typography>
+              <Typography component="p" mt="10px" variant="subtitle2" color="#262338">
+                {decimalFormat(poolValues[0].toString(), decimal)} ETH
+              </Typography>
             </Box>
-          </FlexBox>
-          <FlexBox sx={{ marginLeft: '120px', justifyContent: 'flex-start' }}>
+          </FlexStartBox>
+          <FlexStartBox>
             {type === 1 ? (
-              <Box width="74px" height="74px">
-                <img width="74px" height="74px" src={TotalBorrowedIcon} alt="" />
-              </Box>
+              <img width="74px" height="74px" src={TotalBorrowedIcon} alt="" />
             ) : (
-              <Box width="74px" height="74px">
-                <img src={TotalRight} height="74px" width="74px" alt="" />
-              </Box>
+              <img src={TotalRight} height="74px" width="74px" alt="" />
             )}
             <Box sx={{ marginLeft: '24px' }}>
               <Box>
@@ -117,8 +107,8 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
                 </Typography>
               </Box>
             </Box>
-          </FlexBox>
-        </FlexBox>
+          </FlexStartBox>
+        </FlexStartBox>
       )}
     </Box>
   )

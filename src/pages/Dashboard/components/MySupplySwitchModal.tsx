@@ -171,7 +171,7 @@ export default function MySupplySwitchModal({
                 <Box>
                   <Typography variant="body1" fontWeight="600" component="span" color="#A0A3BD">
                     {fixedFormat(switchType === 1 ? NFTCollateralType : plus(ETHCollateralType, NFTCollateralType))}
-                    {'>'}
+                    {' >'}
                   </Typography>
                   <Typography ml="6px" variant="body1" fontWeight="700" component="span">
                     {fixedFormat(switchType === 1 ? plus(ETHCollateralType, NFTCollateralType) : NFTCollateralType)}

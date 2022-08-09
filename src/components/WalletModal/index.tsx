@@ -206,7 +206,7 @@ export default function WalletModal() {
   }
   return (
     <Modal isOpen={walletModalOpen} onClose={toggleWalletModal} isTitle={!error} title="Select a wallet">
-      <Box padding={'16px'}>{getModalContent()}</Box>
+      <Box padding={'32px 16px 12px 16px'}>{getModalContent()}</Box>
     </Modal>
   )
 }

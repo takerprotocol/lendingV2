@@ -48,6 +48,7 @@ const ButtonBox = styled(Box)`
   padding: 8px;
   cursor: pointer;
   margin-top: 24px;
+  margin-right: 24px;
 `
 const TypographyButton = styled(Typography)`
   font-weight: 600;

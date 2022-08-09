@@ -6,7 +6,7 @@ import rightIcon from 'assets/images/svg/common/right.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
-import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal } from 'utils'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal, div } from 'utils'
 import {
   useAddress,
   useBorrowLimit,
@@ -129,7 +129,6 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const heath = useHeath()
   const [sliderValue, setSliderValue] = useState<number>(+heath)
   const debtRiskLevel = useDebtRiskLevel(times(amount, check === 1 ? 1 : -1))
-  const borrowUsed = useDebtBorrowLimitUsed() //操作前的borrowLimitUsed
   const borrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
   const TypographyRiskLevel = getRiskLevel(amount ? debtRiskLevel : heath)
   const riskLevelTag = getRiskLevelTag(amount ? debtRiskLevel : heath)
@@ -402,7 +401,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </Box>
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
-                {borrowUsed}% {'>'}
+                {div(ethDebt, borrowLimit)}% {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
                 {borrowLimitUsed}%

@@ -4,8 +4,8 @@ import { Box, Typography } from '@mui/material'
 import theme from 'theme'
 
 const OptionWrapper = styled(Box)`
-  width: 330px;
-  padding-left: 64px;
+  width: 303px;
+  padding-left: 24px;
   cursor: pointer;
   margin-bottom: 24px;
   :hover {

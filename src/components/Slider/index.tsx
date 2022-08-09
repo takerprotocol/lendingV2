@@ -65,12 +65,6 @@ export default function CustomizedSlider({ riskLevelTag, setSliderValue, sliderV
       className={`Slider-${riskLevelTag}`}
       valueLabelDisplay="off"
       value={sliderValue}
-      step={1}
-      onChange={(MouseEvent: any) => {
-        if (setSliderValue) {
-          setSliderValue(MouseEvent.target.value)
-        }
-      }}
       aria-label="pretto slider"
       defaultValue={20}
     />

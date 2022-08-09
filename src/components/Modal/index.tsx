@@ -5,6 +5,7 @@ import { isMobile } from '../../utils/userAgent'
 import ClosePic from 'assets/images/svg/common/shutOff.svg'
 
 const DialogWrapper = styled(Dialog)`
+  box-shadow: 0px 15px 30px rgba(20, 20, 42, 0.2);
   .MuiPaper-root {
     border-radius: 12px;
   }
@@ -21,7 +22,7 @@ const CloseIcon = styled('span')`
   background-image: url(${ClosePic});
   background-repeat: no-repeat;
   width: 16px;
-  height: 16px;
+  height: 32px;
   cursor: pointer;
   position: absolute;
   top: 24px;

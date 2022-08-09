@@ -10,7 +10,6 @@ import MyAccount from './MyAccount'
 import MyLoan from './MyLoan'
 const DataNFTsBox = styled(Box)`
   width: 1208px;
-  margin-top: 24px;
   background: linear-gradient(180deg, rgba(153, 159, 210, 0.1) 0%, rgba(160, 163, 189, 0) 96.99%);
   border-radius: 12px;
   padding: 48px 24px 24px;
@@ -49,7 +48,7 @@ export default function DataNFTs({ type }: DataNFTsProps) {
       <Box>
         <DashboardTotal type={type}></DashboardTotal>
       </Box>
-      <FlexBox mt="48px">
+      <FlexBox mt="38px">
         {!address && !loading ? (
           <ConnectWallet type={type}></ConnectWallet>
         ) : (

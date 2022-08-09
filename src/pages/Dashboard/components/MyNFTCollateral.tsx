@@ -60,10 +60,11 @@ const BottomTopBox = styled(Box)`
   border-radius: 4px;
   margin-bottom: 31px;
 `
-const ImgBox = styled(Box)`
+const ImgBox = styled(`img`)`
   width: 24px;
   height: 24px;
   margin-right: 4px;
+  border-radius: 4px;
   cursor: pointer;
   :hover {
     transform: translateY(-4px);
@@ -100,6 +101,31 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
     const item = collections.find((el) => el.id.toLocaleLowerCase() === id.split('-')[1].toLocaleLowerCase())
     return item ? item.icon : ERC721
   }
+  //  changAnchor 点击切换锚点
+  //  changAnchor(item: any){
+  //   if(this.clickShow === true){
+  //     this.clickShow = false // 用于判断上一次滚动是否执行完毕，如若不执行完毕不执行下一次滚动，否则多次点击动画会出现错乱
+  //     const targetbox: any = document.getElementById(item.firstStepId); // 获取对应锚点盒子
+  //     const target = targetbox.offsetTop - 110;
+  //     this.timeTop = setInterval(() => {
+  //       if((this.$refs['scroll'] as any).wrap.scrollTop > target + 20){
+  //         (this.$refs['scroll'] as any).wrap.scrollTop -= 20
+  //       } else if((this.$refs['scroll'] as any).wrap.scrollTop <= target +20 && (this.$refs['scroll'] as any).wrap.scrollTop >= target){
+  //         (this.$refs['scroll'] as any).wrap.scrollTop = target
+  //       }
+  //       if((this.$refs['scroll'] as any).wrap.scrollTop < target - 20) {
+  //         (this.$refs['scroll'] as any).wrap.scrollTop += 20
+  //       } else if((this.$refs['scroll'] as any).wrap.scrollTop >= target - 20 && (this.$refs['scroll'] as any).wrap.scrollTop <= target){
+  //         (this.$refs['scroll'] as any).wrap.scrollTop = target
+  //       }
+  //       if((this.$refs['scroll'] as any).wrap.scrollTop === target){
+  //         clearInterval(this.timeTop);
+  //         this.clickShow = true
+  //       }
+  //     }, 1);
+  //   }
+  // }
+
   return (
     <MyNFTCollateralBox>
       <BottomBox>
@@ -117,12 +143,12 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                     return (
                       <ImgBox
                         key={`ImgBoxDepositedCollection${el.id}`}
+                        src={renderImg(el.userNftCollection.id)}
+                        alt=""
                         onClick={() => {
                           navigate(`/deposit/${el.id}`)
                         }}
-                      >
-                        <img width="22px" height="22px" src={renderImg(el.userNftCollection.id)} alt="" />
-                      </ImgBox>
+                      ></ImgBox>
                     )
                   })}
               </FlexBox>
@@ -143,12 +169,12 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                 return (
                   <Tooltip key={`collections${el.id}`} title={el.symbol} arrow placement="top">
                     <ImgBox
+                      src={el.icon}
+                      alt=""
                       onClick={() => {
                         navigate(`/deposit/${el.id}`)
                       }}
-                    >
-                      <img width="24px" height="24px" src={el.icon} alt="" />
-                    </ImgBox>
+                    ></ImgBox>
                   </Tooltip>
                 )
               })}
@@ -157,7 +183,12 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
         <Button
           sx={{ width: '274px', marginLeft: '8px', height: '48px' }}
           variant="contained"
-          onClick={() => navigate(`/deposit/${collections.length > 0 ? collections[0].id : ''}`)}
+          onClick={() => {
+            window.scrollTo({
+              top: 800,
+              behavior: 'smooth',
+            })
+          }}
         >
           Deposit
           <img className="left" src={ButtonDeposit} alt="" />

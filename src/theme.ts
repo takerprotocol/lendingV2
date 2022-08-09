@@ -205,6 +205,7 @@ export const theme = createTheme({
           }
           &.MuiButton-containedPrimary:hover {
             box-shadow: 0px 4px 8px rgba(75, 75, 122, 0.3), inset 0px 2px 2px rgba(75, 86, 132, 0.5) !important;
+            border: none !important;
           }
           &.MuiButton-containedPrimary.Mui-disabled {
             color: #fff;
@@ -233,6 +234,7 @@ export const theme = createTheme({
           }
           &.MuiButton-containedInfo:hover {
             box-shadow: 0px 5px 10px rgba(113, 104, 210, 0.8), inset 0px -2px 2px rgba(182, 168, 240, 0.3), inset 0px 2px 2px #FFFFFF;
+            border: none !important;
           }
           &.MuiButton-containedInfo.Mui-disabled {
             opacity: 0.5;

@@ -4,12 +4,11 @@ import wallet from 'assets/images/svg/dashboard/wallet.svg'
 import { useWalletModalToggle } from 'state/application/hooks'
 const ConnectWalletBox = styled(Box)`
   width: 1159px;
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f7fc 100%);
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
   border-radius: 12px;
   padding: 49px 0px;
-  margin-top: 48px;
-  margin-bottom: 24px;
+  margin-top: 14px;
 `
 const WalletFlexBox = styled(Box)`
   justify-content: center;
@@ -31,7 +30,7 @@ const WalletBgBox = styled(Box)`
     ),
     #262338;
   box-shadow: 0px 4px 8px rgba(75, 75, 122, 0.1), inset 0px 2px 2px rgba(75, 86, 132, 0.5);
-  border-radius: 6px;
+  border-radius: 10px;
 `
 export default function ConnectWallet({ type }: { type: number }) {
   const toggleModal = useWalletModalToggle()
@@ -64,7 +63,6 @@ export default function ConnectWallet({ type }: { type: number }) {
         ) : (
           <Button
             variant="contained"
-            color="success"
             sx={{ width: '172px', borderRadius: '31px', mt: '24px' }}
             onClick={() => {
               toggleModal()
