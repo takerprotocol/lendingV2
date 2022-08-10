@@ -1,5 +1,5 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import { ERC20_ADDRESS } from 'config'
+import { WETH } from 'config'
 import { useContract } from 'hooks/useContract'
 import { useCallback, useEffect, useState } from 'react'
 import erc20 from 'abis/MockErc20.json'
@@ -23,15 +23,17 @@ export function useApproval(
   ApprovalState,
   () => Promise<{ response: TransactionResponse; tokenAddress: string; spenderAddress: string } | undefined>
 ] {
-  const tokenContract = useContract(ERC20_ADDRESS, erc20)
+  const tokenContract = useContract(WETH, erc20)
   const [approvalState, setApprovalState] = useState(ApprovalState.NOT_APPROVED)
   const address = useAddress()
-  const hasPendingApproval = useHasPendingApproval(ERC20_ADDRESS, spender)
+  const hasPendingApproval = useHasPendingApproval(WETH, spender)
   useEffect(() => {
     if (tokenContract && address && spender) {
       tokenContract.allowance(address, spender).then((allowance: BigNumber) => {
         if (new BigNumber(amount).lte(allowance.toString())) {
           setApprovalState(ApprovalState.APPROVED)
+        } else {
+          setApprovalState(ApprovalState.NOT_APPROVED)
         }
       })
     }
@@ -56,7 +58,7 @@ export function useApproval(
       useExact = true
       return tokenContract.estimateGas.approve(spender, amount)
     })
-
+    setApprovalState(ApprovalState.PENDING)
     return tokenContract
       .approve(spender, useExact ? amount : MaxUint256, {
         gasLimit: calculateGasMargin(estimatedGas),
@@ -65,7 +67,7 @@ export function useApproval(
         setApprovalState(ApprovalState.PENDING)
         return {
           response,
-          tokenAddress: ERC20_ADDRESS,
+          tokenAddress: WETH,
           amount,
           spenderAddress: spender,
         }
