@@ -37,8 +37,8 @@ import {
 import { gasLimit } from 'config'
 import { useTransactionAdder } from 'state/transactions/hooks'
 // import { TransactionType } from 'state/transactions/types'
-import { useApproveCallback } from 'hooks/transactions/useApproveCallback'
-import { ApprovalState } from 'hooks/transactions/useApproval'
+// import { useApproveCallback } from 'hooks/transactions/useApproveCallback'
+// import { ApprovalState } from 'hooks/transactions/useApproval'
 import { TransactionType } from 'state/transactions/types'
 import { useGateway } from 'hooks/useGateway'
 // import { useContract } from 'hooks/useContract'
@@ -148,7 +148,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const usedCollateral = useUsedCollateral()
   const erc20ReserveData = useErc20ReserveData()
   const addTransaction = useTransactionAdder()
-  const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
+  // const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
   // const erc20Contract = useContract(ERC20_ADDRESS, erc20Abi)
   const decimal = useDecimal()
   // useEffect(() => {
@@ -167,28 +167,24 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
       return
     }
     if (contract && address) {
-      if (approval !== ApprovalState.APPROVED) {
-        await approveCallback()
-      } else {
-        contract
-          .deposit(poolContract?.address, address, {
-            value: amountDecimal(amount, decimal),
-            gasLimit,
+      contract
+        .deposit(poolContract?.address, address, {
+          value: amountDecimal(amount, decimal),
+          gasLimit,
+        })
+        .then((res: any) => {
+          addTransaction(res, {
+            type: TransactionType.DEPOSIT,
+            recipient: address,
+            amount,
           })
-          .then((res: any) => {
-            addTransaction(res, {
-              type: TransactionType.DEPOSIT,
-              recipient: address,
-              amount,
-            })
-            toast.success(desensitization(res.hash))
-            setAmount('')
-            setOpenMySupplyModal(false)
-          })
-          .catch((error: any) => {
-            toast.error(error.message)
-          })
-      }
+          toast.success(desensitization(res.hash))
+          setAmount('')
+          setOpenMySupplyModal(false)
+        })
+        .catch((error: any) => {
+          toast.error(error.message)
+        })
     }
   }
   const withdrawSubmit = () => {
@@ -236,9 +232,9 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
 
   const buttonDisabled = useMemo(() => {
     return borrowOrRepay === 1
-      ? approval === ApprovalState.APPROVED && (!amount || new BigNumber(amount).gt(supplyLimit))
+      ? !amount || new BigNumber(amount).gt(supplyLimit)
       : !amount || new BigNumber(amount).gt(ethCollateral)
-  }, [amount, approval, borrowOrRepay, ethCollateral, supplyLimit])
+  }, [amount, borrowOrRepay, ethCollateral, supplyLimit])
 
   return (
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -511,13 +507,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               }
             }}
           >
-            {borrowOrRepay === 1
-              ? approval === ApprovalState.APPROVED || !amount
-                ? 'Supply'
-                : approval === ApprovalState.PENDING
-                ? 'Pending'
-                : 'Approve'
-              : 'Withdraw'}
+            {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}
           </Button>
         </BottomBox>
       </Box>
