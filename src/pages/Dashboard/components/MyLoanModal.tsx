@@ -18,7 +18,7 @@ import {
   useHeath,
 } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { ERC20_ADDRESS, gasLimit } from 'config'
+import { gasLimit } from 'config'
 import BigNumber from 'bignumber.js'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
@@ -186,7 +186,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               recipient: address,
               amount,
             })
-            // setOpenMySupplyModal(false)
+            onClose(false)
           })
           .catch((error: any) => {
             toast.error(error.message)
@@ -196,9 +196,19 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   }
   const repaySubmit = () => {
     if (contract) {
-      contract.repay(ERC20_ADDRESS, amountDecimal(amount, decimal), address, { gasLimit }).then((res: any) => {
-        console.log(res)
-      })
+      contract
+        .repay(poolContract?.address, amountDecimal(amount, decimal), address, { gasLimit })
+        .then((res: any) => {
+          addTransaction(res, {
+            type: TransactionType.REPAY,
+            recipient: address,
+            amount,
+          })
+          onClose(false)
+        })
+        .catch((error: any) => {
+          toast.error(error.message)
+        })
     }
   }
 

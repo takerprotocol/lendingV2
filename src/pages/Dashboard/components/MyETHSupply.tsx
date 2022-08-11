@@ -18,7 +18,7 @@ import {
 } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { toast } from 'react-toastify'
-import { ERC20_ADDRESS, gasLimit } from 'config'
+import { WETH, gasLimit } from 'config'
 import { useAppDispatch } from 'state'
 import { setUsedCollateral } from 'state/user/reducer'
 import { fixedFormat } from 'utils'
@@ -110,7 +110,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   }, [ethDebt])
   const changeUsedAsCollateral = () => {
     if (contract) {
-      contract.setUserUsingAsCollateral(ERC20_ADDRESS, !usedCollateral, { gasLimit }).then(() => {
+      contract.setUserUsingAsCollateral(WETH, !usedCollateral, { gasLimit }).then(() => {
         toast.success('success')
         dispatch(setUsedCollateral(!usedCollateral))
       })

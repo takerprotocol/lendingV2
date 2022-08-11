@@ -19,11 +19,11 @@ import {
   setUserEthAsset,
   setUserNftConfig,
   setUserNftValues,
-  setUserState,
-  setUserValues,
+  // setUserState,
+  // setUserValues,
 } from 'state/user/reducer'
-import { bigNumberToString, div, stringFormat } from 'utils'
-import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK, CHAIN_ID } from 'config'
+import { bigNumberToString, stringFormat } from 'utils'
+import { WETH, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK, CHAIN_ID, COLLATERAL_MASK } from 'config'
 import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -82,7 +82,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (contract && address && chainId === CHAIN_ID) {
       contract
-        .getUserAssetValues(address, ERC20_ADDRESS)
+        .getUserAssetValues(address, WETH)
         .then((res: Array<BigNumber>) => {
           setLoading(false)
           dispatch(
@@ -97,16 +97,17 @@ export default function Dashboard() {
           console.log(err)
         })
       contract.getUserConfig(address).then((res: any) => {
+        console.log(new BN(res.toString()).and(new BN(COLLATERAL_MASK, 16)).toString())
         dispatch(setUsedCollateral(res.toString() !== '0'))
       })
-      contract.getReserveConfig(ERC20_ADDRESS).then((res: any) => {
+      contract.getReserveConfig(WETH).then((res: any) => {
         dispatch(setDecimal(new BN(res.toString()).and(new BN(DECIMALS_MASK, 16)).shrn(32).toString()))
         dispatch(setErc20Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
       })
       contract.getReserveConfig(ERC721_ADDRESS).then((res: any) => {
         dispatch(setErc721Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
       })
-      contract.getReserveData(ERC20_ADDRESS).then((res: any) => {
+      contract.getReserveData(WETH).then((res: any) => {
         dispatch(
           setReserveData({
             borrowRate: res.borrowRate.toString(),
@@ -122,26 +123,27 @@ export default function Dashboard() {
           })
         )
       })
-      contract.getUserState(address).then((res: Array<BigNumber>) => {
-        dispatch(
-          setUserState({
-            loanToValue: div(res[0].toString(), 10000),
-            liquidationThreshold: div(res[1].toString(), 10000),
-            heathFactor: res[2].toString(),
-          })
-        )
-      })
-      contract.getUserValues(address).then((res: Array<BigNumber>) => {
-        dispatch(
-          setUserValues({
-            borrowLiquidity: res[0].toString(),
-            NFTLiquidity: fromWei(res[1].toString()),
-            totalDebt: fromWei(res[2].toString()),
-            totalCollateral: fromWei(res[3].toString()),
-          })
-        )
-      })
-      contract.getUserAssetValues(address, ERC20_ADDRESS).then((res: Array<BigNumber>) => {
+      // contract.getUserState(address).then((res: Array<BigNumber>) => {
+      //   dispatch(
+      //     setUserState({
+      //       loanToValue: div(res[0].toString(), 10000),
+      //       liquidationThreshold: div(res[1].toString(), 10000),
+      //       heathFactor: res[2].toString(),
+      //     })
+      //   )
+      // })
+      // contract.getUserValues(address).then((res: Array<BigNumber>) => {
+      //   dispatch(
+      //     setUserValues({
+      //       borrowLiquidity: res[0].toString(),
+      //       NFTLiquidity: fromWei(res[1].toString()),
+      //       totalDebt: fromWei(res[2].toString()),
+      //       totalCollateral: fromWei(res[3].toString()),
+      //     })
+      //   )
+      // })
+      contract.getUserAssetValues(address, WETH).then((res: Array<BigNumber>) => {
+        console.log(res)
         dispatch(
           setUserEthAsset([
             fromWei(res[0].toString()).toString(),
