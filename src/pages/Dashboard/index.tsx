@@ -19,10 +19,10 @@ import {
   setUserEthAsset,
   setUserNftConfig,
   setUserNftValues,
-  // setUserState,
-  // setUserValues,
+  setUserState,
+  setUserValues,
 } from 'state/user/reducer'
-import { bigNumberToString, stringFormat } from 'utils'
+import { bigNumberToString, div, stringFormat } from 'utils'
 import { WETH, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK, CHAIN_ID, COLLATERAL_MASK } from 'config'
 import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
@@ -123,25 +123,25 @@ export default function Dashboard() {
           })
         )
       })
-      // contract.getUserState(address).then((res: Array<BigNumber>) => {
-      //   dispatch(
-      //     setUserState({
-      //       loanToValue: div(res[0].toString(), 10000),
-      //       liquidationThreshold: div(res[1].toString(), 10000),
-      //       heathFactor: res[2].toString(),
-      //     })
-      //   )
-      // })
-      // contract.getUserValues(address).then((res: Array<BigNumber>) => {
-      //   dispatch(
-      //     setUserValues({
-      //       borrowLiquidity: res[0].toString(),
-      //       NFTLiquidity: fromWei(res[1].toString()),
-      //       totalDebt: fromWei(res[2].toString()),
-      //       totalCollateral: fromWei(res[3].toString()),
-      //     })
-      //   )
-      // })
+      contract.getUserState(address).then((res: Array<BigNumber>) => {
+        dispatch(
+          setUserState({
+            loanToValue: div(res[0].toString(), 10000),
+            liquidationThreshold: div(res[1].toString(), 10000),
+            heathFactor: res[2].toString(),
+          })
+        )
+      })
+      contract.getUserValues(address).then((res: Array<BigNumber>) => {
+        dispatch(
+          setUserValues({
+            borrowLiquidity: res[0].toString(),
+            NFTLiquidity: fromWei(res[1].toString()),
+            totalDebt: fromWei(res[2].toString()),
+            totalCollateral: fromWei(res[3].toString()),
+          })
+        )
+      })
       contract.getUserAssetValues(address, WETH).then((res: Array<BigNumber>) => {
         console.log(res)
         dispatch(
