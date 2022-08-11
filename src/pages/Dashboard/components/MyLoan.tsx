@@ -75,7 +75,6 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
   const borrowLimit = useBorrowLimit()
   const heath = useHeath()
   const [sliderValue, setSliderValue] = useState<number>(+heath)
-
   const myLoanRiskLevel = useMemo(() => {
     return getRiskLevel(heath)
   }, [heath])

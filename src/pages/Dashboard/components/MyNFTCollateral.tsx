@@ -167,7 +167,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
             {collections &&
               collections.map((el: any) => {
                 return (
-                  <Tooltip key={`collections${el.id}`} title={el.symbol} arrow placement="top">
+                  <Tooltip key={`collections${el.id}`} title={el.symbol || ''} arrow placement="top">
                     <ImgBox
                       src={el.icon}
                       alt=""

@@ -143,7 +143,6 @@ export default function Dashboard() {
         )
       })
       contract.getUserAssetValues(address, WETH).then((res: Array<BigNumber>) => {
-        console.log(res)
         dispatch(
           setUserEthAsset([
             fromWei(res[0].toString()).toString(),
