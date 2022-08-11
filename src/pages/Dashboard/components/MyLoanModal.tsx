@@ -23,6 +23,7 @@ import BigNumber from 'bignumber.js'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { toast } from 'react-toastify'
+import { useGateway } from 'hooks/useGateway'
 const style = {
   width: '420px',
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -132,7 +133,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const borrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
   const TypographyRiskLevel = getRiskLevel(amount ? debtRiskLevel : heath)
   const riskLevelTag = getRiskLevelTag(amount ? debtRiskLevel : heath)
-  const contract = useLendingPool()
+  const contract = useGateway()
+  const poolContract = useLendingPool()
   const erc20ReserveData = useErc20ReserveData()
   const borrowLimit = useBorrowLimit()
   const decimal = useDecimal()
@@ -163,7 +165,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
     if (contract) {
       if (check === 1) {
         contract
-          .borrow(ERC20_ADDRESS, amountDecimal(amount, decimal), address, { gasLimit })
+          .borrow(poolContract?.address, amountDecimal(amount, decimal), { gasLimit })
           .then((res: any) => {
             addTransaction(res, {
               type: TransactionType.BORROW,
@@ -177,7 +179,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
           })
       } else {
         contract
-          .repay(ERC20_ADDRESS, amountDecimal(amount, decimal), address, { gasLimit })
+          .repay(poolContract?.address, amountDecimal(amount, decimal), address, { gasLimit })
           .then((res: any) => {
             addTransaction(res, {
               type: TransactionType.REPAY,

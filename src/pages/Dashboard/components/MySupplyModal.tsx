@@ -34,7 +34,7 @@ import {
   useUsedCollateral,
   useWalletBalance,
 } from 'state/user/hooks'
-import { gasLimit, WETH } from 'config'
+import { gasLimit } from 'config'
 import { useTransactionAdder } from 'state/transactions/hooks'
 // import { TransactionType } from 'state/transactions/types'
 import { useApproveCallback } from 'hooks/transactions/useApproveCallback'
@@ -171,7 +171,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
         await approveCallback()
       } else {
         contract
-          .transfer(WETH, poolContract?.address, amountDecimal(amount, decimal), {
+          .deposit(poolContract?.address, address, {
+            value: amountDecimal(amount, decimal),
             gasLimit,
           })
           .then((res: any) => {
