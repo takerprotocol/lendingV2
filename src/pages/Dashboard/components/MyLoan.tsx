@@ -10,7 +10,6 @@ import { useMemo, useState } from 'react'
 import MyLoanModal from './MyLoanModal'
 import { fixedFormat, getRiskLevel, getRiskLevelTag, times } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
-import BigNumber from 'bignumber.js'
 import { useBorrowLimit, useErc20ReserveData, useEthDebt, useHeath } from 'state/user/hooks'
 import TipsTooltip from './TipsTooltip'
 // import { useContract } from 'hooks/useContract'
@@ -66,9 +65,8 @@ const FlexStartBox = styled(Box)`
 interface MyLoanProps {
   loading: boolean
   type: number
-  assets: BigNumber
 }
-export default function MyLoan({ loading, type, assets }: MyLoanProps) {
+export default function MyLoan({ loading, type }: MyLoanProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
   const [datatype] = useState<boolean>(true)

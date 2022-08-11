@@ -22,7 +22,7 @@ import {
   setUserState,
   setUserValues,
 } from 'state/user/reducer'
-import { bigNumberToString, div, getContract, stringFormat } from 'utils'
+import { bigNumberToString, div, stringFormat } from 'utils'
 import { ERC20_ADDRESS, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK, CHAIN_ID } from 'config'
 import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
@@ -40,6 +40,7 @@ import ERC721 from 'assets/images/png/collection/721.png'
 import Azuki from 'assets/images/png/collection/azuki.png'
 import Bayc from 'assets/images/png/collection/bayc.png'
 import Mayc from 'assets/images/png/collection/mayc.png'
+import { Contract } from '@ethersproject/contracts'
 // import Footer from 'components/Footer'
 
 // import { getClient } from 'apollo/client'
@@ -173,33 +174,33 @@ export default function Dashboard() {
   }
 
   const getCollection = useCallback(async () => {
-    if (client && address && contract && library) {
+    if (client) {
       const lendingPoolRes = await client.query({
-        query: LendingPool(contract.address),
+        query: LendingPool(contract ? contract.address : '0xEB6f6d0B528e0222B924dd5527117f8aa5f48AD0'),
       })
-      // const aaa = await getContract(lendingPoolRes.data.lendingPool.nfts[0].id, erc721abi, library, address)
-      // if (aaa) {
-      //   aaa.mint(address, address, { gasLimit })
-      // }
       const nfts: Array<any> = []
       const depositedCollection: Array<any> = []
-
       if (lendingPoolRes.data && lendingPoolRes.data.lendingPool) {
         lendingPoolRes.data.lendingPool.nfts.forEach(async (element: any) => {
           const item: any = {}
-          const ercContract = getContract(element.id, erc721abi, library, address)
-          const res = await client.query({
-            query: UserNftCollection(`${address.toLocaleLowerCase()}-${element.id}`),
-          })
-          if (res.data && res.data.userNftCollection) {
-            depositedCollection.push(res.data)
+          const ercContract = new Contract(element.id, erc721abi, library)
+          if (address) {
+            const res = await client.query({
+              query: UserNftCollection(`${address.toLocaleLowerCase()}-${element.id}`),
+            })
+            if (res.data && res.data.userNftCollection) {
+              depositedCollection.push(res.data)
+            }
+            const balance = await ercContract.balanceOf(element.tNFT)
+            item.totalValue = balance ? fromWei(balance.toString()) : '0'
+            item.symbol = await ercContract.symbol()
           }
-          const balance = await ercContract.balanceOf(element.tNFT)
-          item.totalValue = balance ? fromWei(balance.toString()) : '0'
-          item.symbol = await ercContract.symbol()
-          item.icon = renderImg(item.symbol)
+
           const info = await getCollectionInfo(element.id)
           item.info = info.data
+          if (info && info.data) {
+            item.icon = renderImg(info.data.symbol)
+          }
           const stats = await getCollectionStats(element.id)
           item.stats = stats.data
           item.id = element.id
@@ -209,6 +210,7 @@ export default function Dashboard() {
           item.tToken = element.tToken
           nfts.push(item)
           if (nfts.length === lendingPoolRes.data.lendingPool.nfts.length) {
+            setLoading(false)
             dispatch(setCollections(nfts))
             dispatch(setDepositedCollection(depositedCollection))
           }
@@ -222,7 +224,7 @@ export default function Dashboard() {
         // console.log(nftRes)
       }
     }
-  }, [client, address, contract, library, dispatch])
+  }, [client, address, contract, dispatch, library])
 
   useEffect(() => {
     getCollection()
@@ -230,8 +232,8 @@ export default function Dashboard() {
   return (
     <Body className="header-padding" sx={{ backgroundImage: `${type === 1 ? `url(${BgIcon})` : `url(${growthBg})`}` }}>
       <Main>
-        <BlueChipNFTs type={type}></BlueChipNFTs>
-        <DataNFTs type={type}></DataNFTs>
+        <BlueChipNFTs loading={loading} type={type}></BlueChipNFTs>
+        <DataNFTs loading={loading} type={type}></DataNFTs>
         <Collection loading={loading} type={type}></Collection>
       </Main>
     </Body>

@@ -201,7 +201,7 @@ export default function Collection({ type, loading }: CollectionType) {
                     <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
                       {el.totalValue}
                     </Typography>
-                    <TitleTypography>21,001 NFTs</TitleTypography>
+                    <TitleTypography>0 NFTs</TitleTypography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '148px' }}>
                     <Typography component="span" variant="body1" fontWeight="700">

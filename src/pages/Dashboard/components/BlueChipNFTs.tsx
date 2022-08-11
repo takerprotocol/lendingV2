@@ -63,8 +63,9 @@ const GrowthNFTs = styled(Box)`
 `
 interface BlueChipGrowthNFTs {
   type: number
+  loading: boolean
 }
-export default function ChipNFTs({ type }: BlueChipGrowthNFTs) {
+export default function ChipNFTs({ type, loading }: BlueChipGrowthNFTs) {
   const dispatch = useAppDispatch()
   return (
     <FlexBox>

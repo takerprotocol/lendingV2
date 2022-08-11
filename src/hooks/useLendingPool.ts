@@ -16,6 +16,7 @@ export function useLendingPool() {
   useEffect(() => {
     if (contract && !address && account && chainId === CHAIN_ID) {
       contract.getLendingPool().then((res: string) => {
+        console.log(res)
         if (res) {
           setAddress(res)
         }
