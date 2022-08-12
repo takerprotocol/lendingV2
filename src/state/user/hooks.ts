@@ -114,8 +114,11 @@ export function useDebtRiskLevel(value?: string | number): string {
   const userState = useUserState()
   const ethDebt = useEthDebt()
   useEffect(() => {
-    const riskLevel = div(times(userValue.totalCollateral, userState.liquidationThreshold), plus(ethDebt, value || 0))
-    setDebtRiskLevel(riskLevel)
+    const riskLevel = times(
+      div(times(userValue.totalCollateral, userState.liquidationThreshold), plus(ethDebt, value || 0)),
+      100
+    )
+    setDebtRiskLevel(new BigNumber(riskLevel).decimalPlaces(2, 1).toString())
   }, [ethDebt, userState.liquidationThreshold, userValue.totalCollateral, value])
   return debtRiskLevel
 }
