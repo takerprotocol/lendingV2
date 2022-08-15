@@ -186,11 +186,11 @@ describe("New reserve and NftCollection initialized", () => {
 
     test("Can handle NftsDeposited", () => {
         let event = createNftsDepositedEvent(
-            ["0xc023600dd707860f6521e1d5cb02c66ca90996aa", "0x5CeB7116100fBAF2AEA73Bf964eD435f7D816c37"],
+            ["0xc023600dd707860f6521e1d5cb02c66ca90996aa"],
             "0x388a519241457b90e1349e342dCA1Fb093B50378",
             "0x388a519241457b90e1349e342dCA1Fb093B50378",
-            [1, 2],
-            [1, 1]
+            [1],
+            [1]
         );
         handleNFTsDeposited(event);
         assert.fieldEquals(
@@ -206,8 +206,7 @@ describe("New reserve and NftCollection initialized", () => {
         const id = "0x388a519241457b90e1349e342dCA1Fb093B50378".toLowerCase() + "-" + "0xc023600dd707860f6521e1d5cb02c66ca90996aa".toLowerCase();
         let userNftCollection = newUserNftCollection(id);
         addNft(userNftCollection, BigInt.fromI32(1), BigInt.fromI32(1));
-        userNftCollection = UserNftCollection.load(id)!;
-        assert.assertTrue(userNftCollection.tokenIds[0] == BigInt.fromI32(1));
+        assert.fieldEquals("NftToken", id + '-' + "1", "amount", "1");
 
     })
 })

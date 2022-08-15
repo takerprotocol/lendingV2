@@ -14,6 +14,9 @@ type Reserve @entity {
   liqThreshold: BigInt!
   ltv: BigInt!
 
+  name: String
+  symbol: String
+
   users: [UserReserve!]! @derivedFrom(field: "reserve")
 }
 
@@ -25,6 +28,10 @@ type NftCollection @entity {
   ercType: BigInt!
   liqThreshold: BigInt!
   ltv: BigInt!
+
+  name: String
+  symbol: String
+  floorPrice: BigInt
 
   users: [UserNftCollection!]! @derivedFrom(field: "collection")
 }
@@ -48,7 +55,12 @@ type UserNftCollection  @entity {
   id: ID! # user - collection - tokenId
   user: User!
   collection: NftCollection!
-  tokenIds: [BigInt!]!
-  amounts: [BigInt!]!
+  tokens: [NftToken!]! @derivedFrom(field: "userCollection")
+}
+
+type NftToken @entity {
+  id: ID! # UserNftCollection - tokenId
+  userCollection: UserNftCollection!
+  amount: BigInt!
 }
 

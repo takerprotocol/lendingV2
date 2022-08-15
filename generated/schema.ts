@@ -146,6 +146,40 @@ export class Reserve extends Entity {
     this.set("ltv", Value.fromBigInt(value));
   }
 
+  get name(): string | null {
+    let value = this.get("name");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string | null) {
+    if (!value) {
+      this.unset("name");
+    } else {
+      this.set("name", Value.fromString(<string>value));
+    }
+  }
+
+  get symbol(): string | null {
+    let value = this.get("symbol");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set symbol(value: string | null) {
+    if (!value) {
+      this.unset("symbol");
+    } else {
+      this.set("symbol", Value.fromString(<string>value));
+    }
+  }
+
   get users(): Array<string> {
     let value = this.get("users");
     return value!.toStringArray();
@@ -230,6 +264,57 @@ export class NftCollection extends Entity {
 
   set ltv(value: BigInt) {
     this.set("ltv", Value.fromBigInt(value));
+  }
+
+  get name(): string | null {
+    let value = this.get("name");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string | null) {
+    if (!value) {
+      this.unset("name");
+    } else {
+      this.set("name", Value.fromString(<string>value));
+    }
+  }
+
+  get symbol(): string | null {
+    let value = this.get("symbol");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set symbol(value: string | null) {
+    if (!value) {
+      this.unset("symbol");
+    } else {
+      this.set("symbol", Value.fromString(<string>value));
+    }
+  }
+
+  get floorPrice(): BigInt | null {
+    let value = this.get("floorPrice");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set floorPrice(value: BigInt | null) {
+    if (!value) {
+      this.unset("floorPrice");
+    } else {
+      this.set("floorPrice", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get users(): Array<string> {
@@ -420,21 +505,62 @@ export class UserNftCollection extends Entity {
     this.set("collection", Value.fromString(value));
   }
 
-  get tokenIds(): Array<BigInt> {
-    let value = this.get("tokenIds");
-    return value!.toBigIntArray();
+  get tokens(): Array<string> {
+    let value = this.get("tokens");
+    return value!.toStringArray();
   }
 
-  set tokenIds(value: Array<BigInt>) {
-    this.set("tokenIds", Value.fromBigIntArray(value));
+  set tokens(value: Array<string>) {
+    this.set("tokens", Value.fromStringArray(value));
+  }
+}
+
+export class NftToken extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
   }
 
-  get amounts(): Array<BigInt> {
-    let value = this.get("amounts");
-    return value!.toBigIntArray();
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save NftToken entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type NftToken must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("NftToken", id.toString(), this);
+    }
   }
 
-  set amounts(value: Array<BigInt>) {
-    this.set("amounts", Value.fromBigIntArray(value));
+  static load(id: string): NftToken | null {
+    return changetype<NftToken | null>(store.get("NftToken", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get userCollection(): string {
+    let value = this.get("userCollection");
+    return value!.toString();
+  }
+
+  set userCollection(value: string) {
+    this.set("userCollection", Value.fromString(value));
+  }
+
+  get amount(): BigInt {
+    let value = this.get("amount");
+    return value!.toBigInt();
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
   }
 }
