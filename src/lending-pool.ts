@@ -30,7 +30,6 @@ import {IPriceOracleGetter} from "../generated/LendingPool/IPriceOracleGetter";
 const POOLID = "0xEB6f6d0B528e0222B924dd5527117f8aa5f48AD0";
 const ORACLE = "0x8e29CCd90EBd9fe068788D4d9e1c2416EC22637f";
 
-
 export function handleNftReserveInitialized(event: NftReserveInitialized): void{
   let poolId = POOLID;
   let pool = LendingPool.load(poolId);
@@ -70,7 +69,6 @@ export function handleNftReserveInitialized(event: NftReserveInitialized): void{
   else {
     log.error("Unrecognized collection ERC type", [collection.id]);
   }
-
 
   collection.save();
   log.info("New collection {}", [collection.id])
@@ -333,8 +331,6 @@ export function addNft(userNftCollection: UserNftCollection, tokenId: BigInt, am
     nftToken.userCollection = userNftCollection.id;
     nftToken.amount = amount;
     log.info("New nftToken {}", [nftTokenId.toString()]);
-
-    // log.info("userNftCollection.tokenIds {}", [userNftCollection.tokenIds.at(0).toString()]);
   }
   nftToken.save();
 }
