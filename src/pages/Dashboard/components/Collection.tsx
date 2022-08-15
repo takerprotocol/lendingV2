@@ -14,6 +14,7 @@ import CollectionSkeleton from './DashboardSkeleton/CollectionSkeleton'
 import { decimalFormat, div, times } from 'utils'
 import { useDepositableNfts } from 'services/module/deposit'
 import { OwnedNft } from '@alch/alchemy-sdk'
+import { fromWei } from 'web3-utils'
 
 // import { gasLimit } from 'config'
 
@@ -180,19 +181,19 @@ export default function Collection({ type, loading }: CollectionType) {
                       }}
                     />
                     <Typography ml="10px" component="span" variant="body1" fontWeight="700">
-                      {el?.info?.name}
+                      {el?.name}
                     </Typography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '124px' }}>
                     <img src={minMyCollateralIcon} alt="" />
                     <Typography ml="2px" component="span" variant="body1" fontWeight="700">
-                      {el?.stats?.floorPrice}
+                      {fromWei(el?.floorPrice || 0)}
                     </Typography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '148px' }}>
                     <img src={minMyCollateralIcon} alt="" />
                     <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
-                      {times(el?.stats?.floorPrice || 0, div(el.ltv, 10000))}
+                      {times(fromWei(el?.floorPrice || 0), div(el.ltv, 10000))}
                     </Typography>
                     <TitleTypography>{div(el.ltv, 100)}%</TitleTypography>
                   </CollectionFlexBox>

@@ -33,7 +33,7 @@ import { TransactionType } from 'state/transactions/types'
 import { getClient } from 'apollo/client'
 import { SupportedChainId } from 'constants/chains'
 import { LendingPool, UserNftCollection } from 'apollo/queries'
-import { getCollectionInfo, getCollectionStats } from 'services/module/collection'
+import { getCollectionStats } from 'services/module/collection'
 import erc721abi from 'abis/MockERC721.json'
 import { setCollections, setDepositedCollection } from 'state/application/reducer'
 import ERC721 from 'assets/images/png/collection/721.png'
@@ -194,17 +194,17 @@ export default function Dashboard() {
             }
             const balance = await ercContract.balanceOf(element.tNFT)
             item.totalValue = balance ? fromWei(balance.toString()) : '0'
-            item.symbol = await ercContract.symbol()
           }
 
-          const info = await getCollectionInfo(element.id)
-          item.info = info.data
-          if (info && info.data) {
-            item.icon = renderImg(info.data.symbol)
-          }
+          // const info = await getCollectionInfo(element.id)
+          // item.info = info.data
+          item.icon = renderImg(element.symbol)
           const stats = await getCollectionStats(element.id)
           item.stats = stats.data
           item.id = element.id
+          item.name = element.name
+          item.symbol = element.symbol
+          item.floorPrice = element.floorPrice
           item.interestRateCalculator = element.interestRateCalculator
           item.liqThreshold = element.liqThreshold
           item.ltv = element.ltv

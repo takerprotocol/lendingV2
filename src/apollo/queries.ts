@@ -18,6 +18,9 @@ export const LendingPool = (id: string) => {
           tNFT
           ercType
           liqThreshold
+          name
+          symbol
+          floorPrice
           ltv
         }
       }
@@ -35,6 +38,9 @@ export const NftCollection = (id: string) => {
         ercType
         liqThreshold
         ltv
+        name
+        symbol
+        floorPrice
         users {
           id
           user {
