@@ -79,7 +79,6 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
       return null
     }
   }, [collections, id])
-  console.log(collection)
   return (
     <Box>
       {loading ? (

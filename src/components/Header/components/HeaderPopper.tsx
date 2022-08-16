@@ -5,22 +5,15 @@ import Logout from 'assets/images/svg/common/Logout.svg'
 import notice from 'assets/images/svg/common/notice.svg'
 import purpleETH from 'assets/images/svg/common/purpleETH.svg'
 import BoxETH from 'assets/images/svg/wallet/BoxETH.svg'
-import NFT1 from 'assets/images/svg/wallet/NFT1.svg'
-import NFT2 from 'assets/images/svg/wallet/NFT2.svg'
-import NFT3 from 'assets/images/svg/wallet/NFT3.svg'
-import NFT4 from 'assets/images/svg/wallet/NFT4.svg'
-import NFT5 from 'assets/images/svg/wallet/NFT5.svg'
-import NFT6 from 'assets/images/svg/wallet/NFT6.svg'
-import NFT7 from 'assets/images/svg/wallet/NFT7.svg'
-import NFT8 from 'assets/images/svg/wallet/NFT8.svg'
-import NFT9 from 'assets/images/svg/wallet/NFT9.svg'
-import NFT10 from 'assets/images/svg/wallet/NFT10.svg'
 import { useAddress, useWalletBalance } from 'state/user/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useAppDispatch } from 'state/hooks'
 import { setAddress } from 'state/user/reducer'
 import Copy from 'components/Copy'
 import Blockies from 'react-blockies'
+import { useAllTransactions } from 'state/transactions/hooks'
+import { TransactionDetails, TransactionType } from 'state/transactions/types'
+import dayjs from 'dayjs'
 
 const PopperBox = styled(Box)`
   z-index: 4;
@@ -70,12 +63,28 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
   const balance = useWalletBalance()
   const dispatch = useAppDispatch()
   const { deactivate } = useWeb3React()
+  const transactions = useAllTransactions()
   //  useEffect(() => {if (library) {
   //     // const web3 = new Web3(library.provider)
   //     // console.log(web3)
   //  }}, [library])
   //   }
-
+  const getNoticeTitle = (transaction: TransactionDetails) => {
+    switch (transaction.info.type) {
+      case TransactionType.APPROVAL:
+        return 'Approval'
+      case TransactionType.BORROW:
+        return `Borrow ${transaction.info.amount} ETH`
+      case TransactionType.REPAY:
+        return `Repay ${transaction.info.amount} ETH`
+      case TransactionType.DEPOSIT:
+        return `Deposit ${transaction.info.amount} ETH`
+      case TransactionType.WITHDRAW:
+        return `Withdraw ${transaction.info.amount} ETH`
+      default:
+        return 'Approval'
+    }
+  }
   return (
     <StyledPopper
       open={open}
@@ -136,67 +145,101 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
                 Latest notifications
               </Typography>
             </FlexBox>
-            <SpaceBetweenBox m="16px 0px 4px 34px">
-              <Typography variant="body2" component="h1" color="#A0A3BD" lineHeight="12px">
-                Dec. 19, 2022
-              </Typography>
-              <Typography variant="body2" component="h1" color="#A0A3BD" lineHeight="12px">
-                12:36 PM
-              </Typography>
-            </SpaceBetweenBox>
-            <FlexBox ml="10px">
-              <img src={BoxETH} alt="" />
-              <Typography ml="8px" variant="body1" component="h1" fontWeight="600" color="#4E4B66">
-                You have 10 NFTs were liquidated
-              </Typography>
-            </FlexBox>
-            <FlexBox m="8px 0px 8px 32px">
-              <Box mr="4px" sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}>
-                <img width="24px" height="24px" src={NFT1} alt="" />
+            {Object.keys(transactions).map((hash) => (
+              <Box key={`notifications-hash-${hash}`}>
+                <SpaceBetweenBox m="16px 0px 4px 34px">
+                  <Typography variant="body2" component="h1" color="#A0A3BD" lineHeight="12px">
+                    {dayjs(transactions[hash].addedTime).format('MMMM D, YYYY')}
+                  </Typography>
+                  <Typography variant="body2" component="h1" color="#A0A3BD" lineHeight="12px">
+                    {dayjs(transactions[hash].addedTime).format('h:mm A')}
+                  </Typography>
+                </SpaceBetweenBox>
+                <FlexBox ml="10px">
+                  <img src={BoxETH} alt="" />
+                  <Typography ml="8px" variant="body1" component="h1" fontWeight="600" color="#4E4B66">
+                    {getNoticeTitle(transactions[hash])}
+                  </Typography>
+                </FlexBox>
+                {/* <FlexBox m="8px 0px 8px 32px">
+                  <Box
+                    mr="4px"
+                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
+                  >
+                    <img width="24px" height="24px" src={NFT1} alt="" />
+                  </Box>
+                  <Box
+                    mr="4px"
+                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
+                  >
+                    <img width="24px" height="24px" src={NFT2} alt="" />
+                  </Box>
+                  <Box
+                    mr="4px"
+                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
+                  >
+                    <img width="24px" height="24px" src={NFT3} alt="" />
+                  </Box>
+                  <Box
+                    mr="4px"
+                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
+                  >
+                    <img width="24px" height="24px" src={NFT4} alt="" />
+                  </Box>
+                  <Box
+                    mr="4px"
+                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
+                  >
+                    <img width="24px" height="24px" src={NFT5} alt="" />
+                  </Box>
+                  <Box
+                    mr="4px"
+                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
+                  >
+                    <img width="24px" height="24px" src={NFT6} alt="" />
+                  </Box>
+                  <Box
+                    mr="4px"
+                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
+                  >
+                    <img width="24px" height="24px" src={NFT7} alt="" />
+                  </Box>
+                  <Box
+                    mr="4px"
+                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
+                  >
+                    <img width="24px" height="24px" src={NFT8} alt="" />
+                  </Box>
+                  <Box
+                    mr="4px"
+                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
+                  >
+                    <img width="24px" height="24px" src={NFT9} alt="" />
+                  </Box>
+                  <Box
+                    mr="4px"
+                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
+                  >
+                    <img width="24px" height="24px" src={NFT10} alt="" />
+                  </Box>
+                </FlexBox> */}
+                <FlexBox ml="34px">
+                  <Typography variant="body2" component="h1" color="#4E4B66">
+                    Txid
+                  </Typography>
+                  <Typography
+                    marginX="8px"
+                    variant="body2"
+                    component="h1"
+                    color="#4E4B66"
+                    sx={{ textDecorationLine: 'underline' }}
+                  >
+                    {desensitization(hash)}
+                  </Typography>
+                  <Copy text={hash} />
+                </FlexBox>
               </Box>
-              <Box mr="4px" sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}>
-                <img width="24px" height="24px" src={NFT2} alt="" />
-              </Box>
-              <Box mr="4px" sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}>
-                <img width="24px" height="24px" src={NFT3} alt="" />
-              </Box>
-              <Box mr="4px" sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}>
-                <img width="24px" height="24px" src={NFT4} alt="" />
-              </Box>
-              <Box mr="4px" sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}>
-                <img width="24px" height="24px" src={NFT5} alt="" />
-              </Box>
-              <Box mr="4px" sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}>
-                <img width="24px" height="24px" src={NFT6} alt="" />
-              </Box>
-              <Box mr="4px" sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}>
-                <img width="24px" height="24px" src={NFT7} alt="" />
-              </Box>
-              <Box mr="4px" sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}>
-                <img width="24px" height="24px" src={NFT8} alt="" />
-              </Box>
-              <Box mr="4px" sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}>
-                <img width="24px" height="24px" src={NFT9} alt="" />
-              </Box>
-              <Box mr="4px" sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}>
-                <img width="24px" height="24px" src={NFT10} alt="" />
-              </Box>
-            </FlexBox>
-            <FlexBox ml="34px">
-              <Typography variant="body2" component="h1" color="#4E4B66">
-                Txid
-              </Typography>
-              <Typography
-                marginX="8px"
-                variant="body2"
-                component="h1"
-                color="#4E4B66"
-                sx={{ textDecorationLine: 'underline' }}
-              >
-                0x5068L3NJSL58O932
-              </Typography>
-              <Copy text="0x5068L3NJSL58O932" />
-            </FlexBox>
+            ))}
           </PopperBox>
         </Fade>
       )}

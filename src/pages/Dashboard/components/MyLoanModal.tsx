@@ -172,7 +172,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               recipient: address,
               amount,
             })
-            // setOpenMySupplyModal(false)
+            onClose(false)
           })
           .catch((error: any) => {
             toast.error(error.message)
@@ -413,10 +413,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </Box>
             <Box>
               <Typography variant="body1" component="span" color="#A0A3BD">
-                {div(ethDebt, borrowLimit)}% {'>'}
+                {new BigNumber(div(ethDebt, borrowLimit)).decimalPlaces(2, 1).toString()}% {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
-                {borrowLimitUsed}%
+                {new BigNumber(borrowLimitUsed).decimalPlaces(2, 1).toString()}%
               </Typography>
             </Box>
           </SpaceBetweenBox>

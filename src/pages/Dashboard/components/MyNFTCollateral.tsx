@@ -2,9 +2,9 @@ import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
 import MyNFTCollateralBg from 'assets/images/svg/dashboard/MyNFTCollateralBg.svg'
 import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
 import { FlexBox, SpaceBetweenBox, SpaceBox } from 'styleds'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useNftCollateral, useUserNftConfig } from 'state/user/hooks'
+import { useAccountNfts, useNftCollateral, useUserNftConfig } from 'state/user/hooks'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
 import ERC721 from 'assets/images/png/collection/721.png'
 
@@ -85,6 +85,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const [dataType] = useState<boolean>(true)
   const collateral = useNftCollateral()
   const collections = useCollections()
+  const accountNfts = useAccountNfts()
   const depositedCollection = useDepositedCollection()
   // const address = useAddress()
   // const contract = useContract(ERC721_ADDRESS, ILendingPoolAddressesProviderAbi)
@@ -101,31 +102,12 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
     const item = collections.find((el) => el.id.toLocaleLowerCase() === id.split('-')[1].toLocaleLowerCase())
     return item ? item.icon : ERC721
   }
-  //  changAnchor 点击切换锚点
-  //  changAnchor(item: any){
-  //   if(this.clickShow === true){
-  //     this.clickShow = false // 用于判断上一次滚动是否执行完毕，如若不执行完毕不执行下一次滚动，否则多次点击动画会出现错乱
-  //     const targetbox: any = document.getElementById(item.firstStepId); // 获取对应锚点盒子
-  //     const target = targetbox.offsetTop - 110;
-  //     this.timeTop = setInterval(() => {
-  //       if((this.$refs['scroll'] as any).wrap.scrollTop > target + 20){
-  //         (this.$refs['scroll'] as any).wrap.scrollTop -= 20
-  //       } else if((this.$refs['scroll'] as any).wrap.scrollTop <= target +20 && (this.$refs['scroll'] as any).wrap.scrollTop >= target){
-  //         (this.$refs['scroll'] as any).wrap.scrollTop = target
-  //       }
-  //       if((this.$refs['scroll'] as any).wrap.scrollTop < target - 20) {
-  //         (this.$refs['scroll'] as any).wrap.scrollTop += 20
-  //       } else if((this.$refs['scroll'] as any).wrap.scrollTop >= target - 20 && (this.$refs['scroll'] as any).wrap.scrollTop <= target){
-  //         (this.$refs['scroll'] as any).wrap.scrollTop = target
-  //       }
-  //       if((this.$refs['scroll'] as any).wrap.scrollTop === target){
-  //         clearInterval(this.timeTop);
-  //         this.clickShow = true
-  //       }
-  //     }, 1);
-  //   }
-  // }
 
+  const supportNfts = useMemo(() => {
+    return accountNfts.filter((el) =>
+      collections.find((cel) => cel.id.toLocaleLowerCase() === el.contract.address.toLocaleLowerCase())
+    )
+  }, [accountNfts, collections])
   return (
     <MyNFTCollateralBox>
       <BottomBox>
@@ -161,18 +143,18 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
         </BottomTopBox>
         <NftListBox>
           <Typography variant="body2" lineHeight="12px" fontWeight="600" color="#A0A3BD">
-            You have 7 NFTs can deposit
+            <>You have {supportNfts.length} NFTs can deposit</>
           </Typography>
           <FlexBox mt="12px">
-            {collections &&
-              collections.map((el: any) => {
+            {supportNfts &&
+              supportNfts.map((el: any) => {
                 return (
-                  <Tooltip key={`collections${el.id}`} title={el.symbol || ''} arrow placement="top">
+                  <Tooltip key={`collections${el.contract.address}`} title={el.title || ''} arrow placement="top">
                     <ImgBox
-                      src={el.icon}
+                      src={el.media[0]?.gateway || ''}
                       alt=""
                       onClick={() => {
-                        navigate(`/deposit/${el.id}`)
+                        navigate(`/deposit/${el.contract.address}`)
                       }}
                     ></ImgBox>
                   </Tooltip>

@@ -1,4 +1,3 @@
-import { OwnedNftsResponse } from '@alch/alchemy-sdk'
 import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -12,7 +11,7 @@ export function useUpdateAddress(address: string): () => void {
   return useCallback(() => dispatch(setAddress(address)), [dispatch, address])
 }
 
-export function useAccountNfts(): OwnedNftsResponse | any {
+export function useAccountNfts() {
   return useAppSelector((state: AppState) => state.user.ownedNfts)
 }
 

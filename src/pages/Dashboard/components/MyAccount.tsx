@@ -30,7 +30,7 @@ const RewardsBox = styled(Box)`
   justify-content: space-between;
 `
 const MyAssetsBox = styled(Box)`
-  margin: 39px 0 36px 24px;
+  margin: 36px 0 36px 24px;
 `
 interface MyAccountProps {
   type: number

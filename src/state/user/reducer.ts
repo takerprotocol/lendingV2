@@ -1,4 +1,4 @@
-import { OwnedNftsResponse } from '@alch/alchemy-sdk'
+import { OwnedNft, OwnedNftsResponse } from '@alch/alchemy-sdk'
 import { createSlice } from '@reduxjs/toolkit'
 import { UserValues, erc20ReserveData, userState } from 'state/types'
 
@@ -19,7 +19,7 @@ export interface ApplicationState {
   readonly nftLiquidity: string
   readonly nftCollateral: string
   readonly userNftConfig: string
-  readonly ownedNfts: OwnedNftsResponse | any
+  readonly ownedNfts: OwnedNft[]
   readonly ethLiquidity: string
   readonly ethDebt: string
   readonly ethCollateral: string

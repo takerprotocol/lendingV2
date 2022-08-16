@@ -29,3 +29,7 @@ export function useCollections() {
 export function useDepositedCollection() {
   return useAppSelector((state: AppState) => state.application.depositedCollection)
 }
+
+export function useLoading() {
+  return useAppSelector((state: AppState) => state.application.loading)
+}

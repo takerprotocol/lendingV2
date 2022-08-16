@@ -7,12 +7,11 @@ import ButtonDown from 'assets/images/svg/dashboard/button-down.svg'
 import minMyCollateralIcon from 'assets/images/svg/dashboard/minMyCollateral-icon.svg'
 import { useCallback, useState } from 'react'
 import { SpaceBetweenBox, FlexBox } from 'styleds'
-import { useAddress, useDecimal, useUserNftConfig } from 'state/user/hooks'
+import { useAccountNfts, useAddress, useDecimal, useUserNftConfig } from 'state/user/hooks'
 import { useCollections, useDepositedCollection, usePoolValues, useWalletModalToggle } from 'state/application/hooks'
 import { useNavigate } from 'react-router-dom'
 import CollectionSkeleton from './DashboardSkeleton/CollectionSkeleton'
 import { decimalFormat, div, times } from 'utils'
-import { useDepositableNfts } from 'services/module/deposit'
 import { OwnedNft } from '@alch/alchemy-sdk'
 import { fromWei } from 'web3-utils'
 
@@ -80,11 +79,9 @@ export default function Collection({ type, loading }: CollectionType) {
   const poolValues = usePoolValues()
   const decimal = useDecimal()
   const depositedCollection = useDepositedCollection()
-  const { list } = useDepositableNfts(address)
   const nftConfig = useUserNftConfig()
-
+  const list = useAccountNfts()
   const deposited = (id: string) => {
-    console.log(depositedCollection)
     if (depositedCollection) {
       const item = depositedCollection.find(
         (el) => el.userNftCollection.id.split('-')[1].toLocaleLowerCase() === id.toLocaleLowerCase()
