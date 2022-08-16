@@ -20,7 +20,7 @@ import { useAppDispatch } from 'state/hooks'
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
 `
 const Main = styled(Box)`
   width: 1208px;

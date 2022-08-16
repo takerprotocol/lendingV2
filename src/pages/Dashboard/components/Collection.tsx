@@ -65,6 +65,18 @@ const TokenUpBox = styled(Box)`
   width: 35px;
   height: 35px;
 `
+
+const LabelBox = styled(Box)`
+  padding: 2px 8px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 150%;
+  color: #6e7191;
+  margin-right: 8px;
+  margin-top: 5px;
+  background: #eff0f6;
+  border-radius: 4px;
+`
 interface CollectionType {
   type: number
   loading: boolean
@@ -177,9 +189,15 @@ export default function Collection({ type, loading }: CollectionType) {
                         borderRadius: '6px',
                       }}
                     />
-                    <Typography ml="10px" component="span" variant="body1" fontWeight="700">
-                      {el?.name}
-                    </Typography>
+                    <Box ml="10px">
+                      <Typography component="span" variant="body1" fontWeight="700">
+                        {el?.name}
+                      </Typography>
+                      <FlexBox>
+                        <LabelBox>Can Deposit</LabelBox>
+                        <LabelBox>Deposited</LabelBox>
+                      </FlexBox>
+                    </Box>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '124px' }}>
                     <img src={minMyCollateralIcon} alt="" />
