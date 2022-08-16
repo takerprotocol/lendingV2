@@ -194,8 +194,8 @@ export default function Collection({ type, loading }: CollectionType) {
                         {el?.name}
                       </Typography>
                       <FlexBox>
-                        <LabelBox>Can Deposit</LabelBox>
-                        <LabelBox>Deposited</LabelBox>
+                        {nftBalance(el.id) > 0 && <LabelBox>Can Deposit</LabelBox>}
+                        {deposited(el.id) > 0 && <LabelBox>Deposited</LabelBox>}
                       </FlexBox>
                     </Box>
                   </CollectionFlexBox>
