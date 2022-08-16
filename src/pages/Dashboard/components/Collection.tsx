@@ -153,9 +153,9 @@ export default function Collection({ type, loading }: CollectionType) {
               <Box sx={{ width: '148px' }}>
                 <TitleTypography> Loan to value </TitleTypography>
               </Box>
-              <Box sx={{ width: '246px' }}>
+              {/* <Box sx={{ width: '246px' }}>
                 <TitleTypography>Total Value Locked</TitleTypography>
-              </Box>
+              </Box> */}
               <Box sx={{ width: '148px' }}>
                 <TitleTypography>Active user</TitleTypography>
               </Box>
@@ -187,26 +187,26 @@ export default function Collection({ type, loading }: CollectionType) {
                       {fromWei(el?.floorPrice || 0)}
                     </Typography>
                   </CollectionFlexBox>
-                  <CollectionFlexBox sx={{ width: '148px' }}>
+                  <CollectionFlexBox sx={{ width: '248px' }}>
                     <img src={minMyCollateralIcon} alt="" />
                     <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
                       {times(fromWei(el?.floorPrice || 0), div(el.ltv, 10000))}
                     </Typography>
                     <TitleTypography>{div(el.ltv, 100)}%</TitleTypography>
                   </CollectionFlexBox>
-                  <CollectionFlexBox sx={{ width: '246px' }}>
+                  {/* <CollectionFlexBox sx={{ width: '246px' }}>
                     <img src={minMyCollateralIcon} alt="" />
                     <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
                       {el.totalValue}
                     </Typography>
                     <TitleTypography>0 NFTs</TitleTypography>
-                  </CollectionFlexBox>
-                  <CollectionFlexBox sx={{ width: '148px' }}>
+                  </CollectionFlexBox> */}
+                  <CollectionFlexBox sx={{ width: '248px' }}>
                     <Typography component="span" variant="body1" fontWeight="700">
                       {el?.stats?.countOwners}
                     </Typography>
                   </CollectionFlexBox>
-                  <CollectionFlexBox sx={{ width: '126px' }}>
+                  <CollectionFlexBox sx={{ width: '172px' }}>
                     <Typography component="span" variant="subtitle2" fontWeight="700" color="#4BC8B1">
                       0
                     </Typography>
