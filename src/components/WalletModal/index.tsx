@@ -28,7 +28,7 @@ const WALLET_VIEWS = {
 }
 
 export default function WalletModal() {
-  const { account, connector, activate, error } = useWeb3React()
+  const { account, connector, activate, error, chainId } = useWeb3React()
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
   const previousAccount = usePrevious(account)
@@ -61,7 +61,7 @@ export default function WalletModal() {
 
   useEffect(() => {
     setBalance()
-  }, [setBalance])
+  }, [setBalance, chainId])
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     Object.keys(SUPPORTED_WALLETS).map((key) => {
