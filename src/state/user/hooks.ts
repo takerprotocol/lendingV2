@@ -39,7 +39,7 @@ export function useUserNftConfig(): string {
   return useAppSelector((state: AppState) => state.user.userNftConfig)
 }
 export function useHeath(): string {
-  const value = decimalFormat(useUserState().heathFactor, Number(useDecimal()), false)
+  const value = decimalFormat(times(useUserState().heathFactor, 100), Number(useDecimal()), false)
   if (new BigNumber(value).gt(200)) {
     return '200'
   } else {
