@@ -8,7 +8,7 @@ import DashboardTotalSkeleton from './DashboardSkeleton/TotalSkeleton'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
-import { decimalFormat } from 'utils'
+import { decimalFormat, plus } from 'utils'
 import { useDecimal } from 'state/user/hooks'
 import TipsTooltip from './TipsTooltip'
 import { useAppDispatch } from 'state/hooks'
@@ -67,7 +67,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
               <CenterBox marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
                 <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">
-                  {decimalFormat(poolValues[1].toString(), decimal)}
+                  {decimalFormat(plus(poolValues[1].toString(), poolValues[0].toString()), decimal)}
                 </Typography>
               </CenterBox>
             </Box>

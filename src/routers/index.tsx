@@ -119,7 +119,7 @@ export default function CustomizeRoutes() {
       contract.getUserValues(address).then((res: Array<BigNumber>) => {
         dispatch(
           setUserValues({
-            borrowLiquidity: res[0].toString(),
+            borrowLiquidity: fromWei(res[0].toString()),
             NFTLiquidity: fromWei(res[1].toString()),
             totalDebt: fromWei(res[2].toString()),
             totalCollateral: fromWei(res[3].toString()),

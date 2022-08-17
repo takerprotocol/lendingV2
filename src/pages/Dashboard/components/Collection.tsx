@@ -109,7 +109,6 @@ export default function Collection({ type, loading }: CollectionType) {
   const nftBalance = useCallback(
     (id: string) => {
       if (list) {
-        console.log(list.length)
         const item = list.filter((el: OwnedNft) => el.contract.address.toLocaleLowerCase() === id.toLocaleLowerCase())
         return item ? item.length : '0'
       }
@@ -162,13 +161,13 @@ export default function Collection({ type, loading }: CollectionType) {
               <Box sx={{ width: '124px' }}>
                 <TitleTypography>Floor Price</TitleTypography>
               </Box>
-              <Box sx={{ width: '148px' }}>
+              <Box sx={{ width: '248px' }}>
                 <TitleTypography> Loan to value </TitleTypography>
               </Box>
               {/* <Box sx={{ width: '246px' }}>
                 <TitleTypography>Total Value Locked</TitleTypography>
               </Box> */}
-              <Box sx={{ width: '148px' }}>
+              <Box sx={{ width: '248px' }}>
                 <TitleTypography>Active user</TitleTypography>
               </Box>
               <Box>
