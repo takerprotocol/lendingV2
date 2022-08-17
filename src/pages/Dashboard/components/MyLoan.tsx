@@ -5,6 +5,7 @@ import ButtonSupply from 'assets/images/svg/dashboard/Button-Supply.svg'
 import addBox from 'assets/images/svg/dashboard/addBox.svg'
 import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
+import riskLevelBefore from 'assets/images/svg/dashboard/riskLevelBefore.svg'
 import CustomizedSlider from 'components/Slider'
 import { useMemo, useState } from 'react'
 import MyLoanModal from './MyLoanModal'
@@ -62,6 +63,24 @@ const FlexStartBox = styled(Box)`
   align-items: flex-start;
   justify-content: space-between;
 `
+const RiskLevelBox = styled(Box)`
+  padding: 10px 10px 10px 14px;
+  width: 100%;
+  height: 98px;
+  background: #f3f3f8;
+  border-radius: 0.375rem;
+  position: relative;
+  margin-bottom: 10px;
+  margin-top: 36px;
+  img {
+    display: none;
+  }
+  &.before {
+    img {
+      display: block;
+    }
+  }
+`
 interface MyLoanProps {
   loading: boolean
   type: number
@@ -83,27 +102,10 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
     return getRiskLevelTag(heath)
   }, [heath])
 
-  const RiskLevelBox = styled(Box)`
-    padding: 10px 10px 10px 14px;
-    width: 100%;
-    height: 98px;
-    background: #f3f3f8;
-    border-radius: 0.375rem;
-    position: relative;
-    margin-bottom: 10px;
-    margin-top: 36px;
-    &.before {
-      ::before {
-        content: '';
-        display: block;
-        position: absolute;
-        left: ${`${times(3.57, sliderValue)}px`};
-        top: 95px;
-        border-width: 13px 7.5px;
-        border-style: dashed solid dashed dashed;
-        border-color: #f3f3f8 transparent transparent transparent;
-      }
-    }
+  const BeforeImg = styled(`img`)`
+    position: absolute;
+    top: calc(100% - 10.5px);
+    left: ${`${times(3.57, sliderValue)}px`};
   `
   return (
     <MyLoanBox className={loading ? 'SkeletonBg' : ''}>
@@ -140,7 +142,10 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
               </Box>
             </RepayBox>
           </Box>
-          <RiskLevelBox className={datatype ? 'before' : ''}>
+          <RiskLevelBox
+            sx={{ borderBottomLeftRadius: `${sliderValue === 0 ? '0px' : '6px'}` }}
+            className={datatype ? 'before' : ''}
+          >
             {datatype ? (
               <>
                 <FlexStartBox ml="10px">
@@ -187,6 +192,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                 </Typography>
               </Box>
             )}
+            <BeforeImg src={riskLevelBefore}></BeforeImg>
           </RiskLevelBox>
           <CustomizedSlider
             setSliderValue={setSliderValue}
@@ -238,11 +244,11 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
               </FlexBox>
             </RewardAPYBox>
             <SpaceBetweenBox mr="24px" mt="16px">
-              <Box>
+              <Box pt="1px">
                 <Typography variant="subtitle2" fontWeight="700" color="#262338">
-                  Net Borrow APY
+                  0.00 ETH
                 </Typography>
-                <Typography ml="2px" variant="body2" fontWeight="600" color="#A0A3BD">
+                <Typography mt="2px" variant="body2" fontWeight="600" color="#A0A3BD">
                   Remaining loanable
                 </Typography>
               </Box>

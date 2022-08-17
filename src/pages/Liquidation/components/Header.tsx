@@ -9,7 +9,6 @@ const Image = styled('img')`
   top: 0;
   right: 0;
   z-index: 1;
-  object-fit: cover;
   width: 100%;
   height: 100vh;
 

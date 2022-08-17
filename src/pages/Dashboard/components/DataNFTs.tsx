@@ -9,7 +9,7 @@ const DataNFTsBox = styled(Box)`
   width: 1208px;
   background: linear-gradient(180deg, rgba(153, 159, 210, 0.1) 0%, rgba(160, 163, 189, 0) 96.99%);
   border-radius: 12px;
-  padding: 48px 24px 24px;
+  padding: 46px 24px 24px;
   .SkeletonBg {
     background: #ffffff !important;
   }

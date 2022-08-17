@@ -13,7 +13,8 @@ const DialogWrapper = styled(Dialog)`
     color: #a0a3bd;
     font-weight: 500;
     font-size: 16px;
-    line-height: 26px;
+    line-height: 32px;
+    padding: 16px !important;
   }
 `
 
@@ -21,12 +22,12 @@ const CloseIcon = styled('span')`
   display: block;
   background-image: url(${ClosePic});
   background-repeat: no-repeat;
-  width: 16px;
+  width: 32px;
   height: 32px;
   cursor: pointer;
   position: absolute;
-  top: 24px;
-  right: 24px;
+  top: 16px;
+  right: 16px;
 `
 interface ModalProps {
   width?: string

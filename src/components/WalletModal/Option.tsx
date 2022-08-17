@@ -20,7 +20,6 @@ const OptionCard = styled(Box)`
   img {
     width: 40px;
     height: 40px;
-    margin-right: 16px;
     border-radius: 6px;
   }
 `

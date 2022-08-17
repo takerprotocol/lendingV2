@@ -57,7 +57,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
             ) : (
               <img src={TotalLeft} height="74px" width="74px" alt=" " />
             )}
-            <Box width="236px" marginLeft="24px">
+            <Box width="236px" mt="2px" height="62px" marginLeft="24px">
               <CenterBox>
                 <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px" marginRight="8px">
                   Total Liquidity
@@ -71,7 +71,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
                 </Typography>
               </CenterBox>
             </Box>
-            <Box>
+            <Box mt="2px" height="62px">
               <Typography component="p" fontWeight="500" variant="subtitle2" color="#6E7191">
                 NFT Collaterals
               </Typography>
@@ -79,7 +79,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
                 ETH Supply
               </Typography>
             </Box>
-            <Box width="262px" sx={{ marginLeft: '10px' }}>
+            <Box mt="2px" height="62px" width="262px" sx={{ marginLeft: '10px' }}>
               <Typography component="p" variant="subtitle2" color="#262338">
                 {decimalFormat(poolValues[1].toString(), decimal)} ETH
               </Typography>
@@ -94,7 +94,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
             ) : (
               <img src={TotalRight} height="74px" width="74px" alt="" />
             )}
-            <Box sx={{ marginLeft: '24px' }}>
+            <Box mt="2px" height="62px" sx={{ marginLeft: '24px' }}>
               <Box>
                 <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px">
                   Total Borrowed

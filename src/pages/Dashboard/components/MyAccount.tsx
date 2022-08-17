@@ -80,14 +80,14 @@ export default function MyAccount({ type }: MyAccountProps) {
             <Typography variant="subtitle2" fontWeight="500" component="p" color="#A0A3BD">
               My assets
             </Typography>
-            <SpaceBetweenBox mt="3px">
+            <SpaceBetweenBox mt="4px">
               <CenterBox>
                 <img src={blackEthLogo} alt="" />
                 <Typography ml="8px" variant="h3" fontSize="32px" lineHeight="51px">
                   {balance}
                 </Typography>
               </CenterBox>
-              <FlexBox>
+              <FlexBox mt="-15px">
                 <Box>
                   <Typography variant="subtitle2" color="#A0A3BD">
                     15%

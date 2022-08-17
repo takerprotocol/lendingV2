@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState } from 'react'
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 
 const Body = styled(Box)`
-  background: #e5e5e5;
+  background: #f7f7fc;
   width: 100%;
 `
 
@@ -170,7 +170,6 @@ export default function Liquidation() {
   }, [])
 
   const multipleCollaterals = [...collaterals, ...collaterals, ...collaterals, ...collaterals, ...collaterals]
-
   return (
     <Body className="header-padding">
       <Header />

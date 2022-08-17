@@ -13,18 +13,17 @@ const CollateralsContainer = styled(Box)`
   min-height: 100vh;
   margin: 0 auto;
   margin-top: 378px;
-
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 15.73%, rgba(255, 255, 255, 0) 78.72%);
   backdrop-filter: blur(80px);
   /* Note: backdrop-filter has minimal browser support */
 
   border-radius: 12px;
   z-index: 5;
-  padding-top: 32px;
+  padding-top: 27px;
   padding-left: 50px;
   padding-right: 50px;
+  padding-bottom: 56px;
   position: relative;
-  padding-bottom: 48px;
 `
 
 const CollateralSelectText = styled(Typography)`

@@ -63,7 +63,7 @@ const BottomTopBox = styled(Box)`
 const ImgBox = styled(`img`)`
   width: 24px;
   height: 24px;
-  margin-right: 4px;
+  margin-left: 4px;
   border-radius: 4px;
   cursor: pointer;
   :hover {
@@ -74,6 +74,10 @@ const ImgBox = styled(`img`)`
 const NftListBox = styled(Box)`
   margin-bottom: 16px;
   margin-left: 8px;
+`
+const FlexEndBox = styled(Box)`
+  display: flex;
+  align-items: flex-end;
 `
 interface MyNFTCollateralProps {
   type: number
@@ -182,16 +186,18 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
             <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
               My NFT Collateral
             </Typography>
-            <Typography variant="h5" component="span" mr="8px" fontWeight="600" color="#ffffff" lineHeight="22px">
-              {userValue.NFTLiquidity}
-            </Typography>
-            <Typography component="span" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
-              ETH
-            </Typography>
+            <FlexEndBox>
+              <Typography variant="h5" mr="8px" fontWeight="600" color="#ffffff" lineHeight="22px">
+                {userValue.NFTLiquidity}
+              </Typography>
+              <Typography variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
+                ETH
+              </Typography>
+            </FlexEndBox>
           </Box>
           {dataType && (
             <ButtonBox>
-              <TypographyButton>{nftConfig} NFTs</TypographyButton>
+              <TypographyButton>{+nftConfig} NFTs</TypographyButton>
             </ButtonBox>
           )}
         </SpaceBox>

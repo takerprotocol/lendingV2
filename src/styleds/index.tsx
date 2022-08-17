@@ -20,3 +20,7 @@ export const SpaceBox = styled(Box)`
   display: flex;
   justify-content: space-between;
 `
+export const FlexEndBox = styled(Box)`
+  align-items: center;
+  justify-content: flex-end;
+`

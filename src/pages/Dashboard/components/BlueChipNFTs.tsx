@@ -2,12 +2,15 @@ import { styled } from '@mui/material/styles'
 import { Box, Typography } from '@mui/material'
 import blueChipNFTs from 'assets/images/svg/dashboard/blueChipNFTs.svg'
 import growthNFTs from 'assets/images/svg/dashboard/growthNFTs.svg'
+import growthNFTsBefore from 'assets/images/svg/dashboard/growthNFTsBefore.svg'
+import blueChipNFTBefore from 'assets/images/svg/dashboard/ blueChipNFTBefore.svg'
 import { setDashboardType } from 'state/user/reducer'
 import { useAppDispatch } from 'state/hooks'
 const FlexBox = styled(Box)`
   display: flex;
   align-items: center;
   margin: 38px auto;
+  margin-bottom: 24px;
   width: 1208px;
 `
 const BlueChipNFTs = styled(Box)`
@@ -20,18 +23,16 @@ const BlueChipNFTs = styled(Box)`
   position: relative;
   background: #ffffff;
   border-radius: 8px;
+  img {
+    display: none;
+  }
   &.open {
     background: #14142a;
+    padding: 12px 24px 12px 17px;
     box-shadow: 0px 5px 10px rgba(110, 113, 145, 0.05);
-    ::before {
-      content: '';
+    img {
       display: block;
-      position: absolute;
-      left: 90px;
-      top: 53px;
-      border-width: 11px 9px;
-      border-style: dashed solid dashed dashed;
-      border-color: #14142a transparent transparent transparent;
+      margin-right: 8px;
     }
   }
 `
@@ -46,20 +47,23 @@ const GrowthNFTs = styled(Box)`
   cursor: pointer;
   background: #ffffff;
   border-radius: 8px;
+  img {
+    display: none;
+  }
   &.open {
+    padding: 12px 24px 12px 17px;
     background: linear-gradient(263.58deg, #7076ff 0%, #796aff 49.95%, #8e6bfd 100%);
     box-shadow: 0px 5px 10px rgba(125, 112, 239, 0.1);
-    ::before {
-      content: '';
+    img {
       display: block;
-      position: absolute;
-      left: 82px;
-      top: 53px;
-      border-width: 11px 9px;
-      border-style: dashed solid dashed dashed;
-      border-color: #7b6bff transparent transparent transparent;
+      margin-right: 8px;
     }
   }
+`
+const BeforeImg = styled(`img`)`
+  position: absolute;
+  top: calc(100% - 16px);
+  left: calc(50% - 19px);
 `
 interface BlueChipGrowthNFTs {
   type: number
@@ -77,12 +81,11 @@ export default function ChipNFTs({ type, loading }: BlueChipGrowthNFTs) {
           }
         }}
       >
-        <Box mr="8px" width="24px" height="24px" display={type === 1 ? '' : 'none'}>
-          <img src={blueChipNFTs} alt="" />
-        </Box>
+        <img width="24px" height="24px" src={blueChipNFTs} alt="" />
         <Typography variant="subtitle1" color={type === 2 ? '#14142A' : '#ffffff'}>
           Blue Chip NFTs
         </Typography>
+        <BeforeImg src={blueChipNFTBefore}></BeforeImg>
       </BlueChipNFTs>
       <GrowthNFTs
         className={type === 2 ? 'open' : ''}
@@ -92,12 +95,11 @@ export default function ChipNFTs({ type, loading }: BlueChipGrowthNFTs) {
           }
         }}
       >
-        <Box mr="8px" width="24px" height="24px" display={type === 2 ? '' : 'none'}>
-          <img src={growthNFTs} alt="" />
-        </Box>
+        <img width="24px" height="24px" src={growthNFTs} alt="" />
         <Typography variant="subtitle1" color={type === 1 ? '#14142A' : '#ffffff'}>
           Growth NFTs
         </Typography>
+        <BeforeImg src={growthNFTsBefore}></BeforeImg>
       </GrowthNFTs>
     </FlexBox>
   )

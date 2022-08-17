@@ -8,7 +8,7 @@ const ConnectWalletBox = styled(Box)`
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
   border-radius: 12px;
   padding: 49px 0px;
-  margin-top: 14px;
+  margin-top: 10px;
 `
 const WalletFlexBox = styled(Box)`
   justify-content: center;
@@ -63,6 +63,7 @@ export default function ConnectWallet({ type }: { type: number }) {
         ) : (
           <Button
             variant="contained"
+            color="success"
             sx={{ width: '172px', borderRadius: '31px', mt: '24px' }}
             onClick={() => {
               toggleModal()

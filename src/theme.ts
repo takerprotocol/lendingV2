@@ -49,7 +49,7 @@ export const colors: COLOR = {
 export const theme = createTheme({
   palette: {
     primary: {
-      main: '#7646FF',
+      main: '#ffffff',
       dark: 'rgba(0, 255, 10, 0.88)',
       contrastText: '#14142A',
     },
@@ -254,7 +254,8 @@ export const theme = createTheme({
             opacity: 0.6;
           }
           &.MuiButton-containedSuccess {
-            background: linear-gradient(82.51deg, #A476FF 0%, #7E7BFF 42.39%, #6096FF 74.2%, #53CBFF 100%);
+            background: linear-gradient(82.51deg, #7076FF 0%, #796AFF 48.84%, #8E6BFD 100%);
+            box-shadow: 0px 5px 10px rgba(125, 112, 239, 0.1);
             color: #fff;
           }
           &.MuiButton-containedSuccess.Mui-disabled {
@@ -278,6 +279,45 @@ export const theme = createTheme({
         }
         &.Mui-checked {
           color: #4E4B66;
+        }
+      `,
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        root: `
+        &.MuiSwitch-root {
+          .MuiSwitch-input {
+            display: none;
+          }
+          width: 48px;
+          height: 28px;
+          padding: 2px;
+          background: #d9dbe9;
+          border-radius: 20px;
+          .MuiSwitch-switchBase {
+            width: 24px;
+            height: 24px;
+            padding: 0px;
+          }
+          .MuiSwitch-switchBase {
+            width: 24px;
+            height: 24px;
+            display: block !important;
+            padding: 2px;
+          }
+          .MuiSwitch-track {
+            width: 0px;
+            height: 0px;
+          }
+          .MuiSwitch-thumb {
+            width: 24px;
+            height: 24px;
+            display: block;
+            background-color: linear-gradient(180deg, #fbfbfc 0%, #f7f7f8 100%);
+            box-shadow: 0px 4px 4px rgba(200, 202, 217, 0.2), inset 0px -1px 1px rgba(219, 224, 238, 0.31),
+              inset 0px 1px 1px #ffffff;
+          }
         }
       `,
       },

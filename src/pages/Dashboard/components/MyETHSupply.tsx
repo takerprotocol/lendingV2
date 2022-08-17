@@ -4,6 +4,7 @@ import rightBox from 'assets/images/svg/dashboard/rightBox.svg'
 import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
 import addBox from 'assets/images/svg/dashboard/addBox.svg'
 import ButtonSupply from 'assets/images/svg/dashboard/Button-Supply.svg'
+import switchIcon from 'assets/images/svg/dashboard/Switch-icon.svg'
 import { FlexBox, SpaceBetweenBox, SpaceBox } from 'styleds'
 import { useMemo, useState } from 'react'
 import MySupplyModal from './MySupplyModal'
@@ -31,6 +32,16 @@ const MyETHSupplyBox = styled(Box)`
   height: 333px;
   margin-left: 24px;
   position: relative;
+  .open {
+    width: 48px;
+    background: linear-gradient(261.55deg, #6aa1f0 6.23%, #6e9df3 95.09%) !important;
+    .MuiSwitch-thumb {
+      background-color: '' !important;
+      background-image: url(${switchIcon}) !important;
+      background-repeat: no-repeat !important;
+      background-position: center center !important;
+    }
+  }
 `
 const TopBox = styled(Box)`
   width: 322px;
@@ -48,7 +59,6 @@ const ButtonBox = styled(Box)`
   padding: 8px;
   cursor: pointer;
   margin-top: 24px;
-  margin-right: 24px;
 `
 const TypographyButton = styled(Typography)`
   font-weight: 600;
@@ -71,7 +81,7 @@ const BottomBox = styled(Box)`
 `
 const BottomTopBox = styled(Box)`
   width: 290px;
-  padding: 3px 10px 3px 8px;
+  padding: 8px 10px 8px 8px;
   background: #f7f7fc;
   border-radius: 4px;
   margin-bottom: 34px;
@@ -85,6 +95,10 @@ const RewardAPYBox = styled(Box)`
 const ImgBox = styled('img')`
   width: 18px;
   height: 18px;
+`
+const FlexEndBox = styled(Box)`
+  display: flex;
+  align-items: flex-end;
 `
 interface MyETHSupplyProps {
   type: number
@@ -128,6 +142,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
               <TipsTooltip size="14" grey="grey" value={'1111111'}></TipsTooltip>
             </FlexBox>
             <Switch
+              className={usedCollateral ? 'open' : ''}
               disabled={!dataType}
               checked={usedCollateral}
               onClick={(event: any) => {
@@ -202,12 +217,15 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
             <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
               My ETH Supply
             </Typography>
-            <Typography variant="h5" ml="8px" component="span" fontWeight="600" color="#ffffff" lineHeight="22px">
-              {fixedFormat(ethCollateral)}
-            </Typography>
-            <Typography component="span" variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
-              ETH
-            </Typography>
+            <FlexEndBox>
+              <Typography variant="h5" mr="8px" fontWeight="600" color="#ffffff" lineHeight="22px">
+                {fixedFormat(ethCollateral)}
+              </Typography>
+              <Typography variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
+                {' '}
+                ETH
+              </Typography>
+            </FlexEndBox>
           </Box>
           {dataType && (
             <ButtonBox

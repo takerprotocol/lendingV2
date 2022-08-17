@@ -9,7 +9,7 @@ const Card = styled('div')(({ theme }) => ({
   border: '1px solid #eff0f6',
   borderRadius: 12,
   width: '100%',
-  padding: 24,
+  padding: 23,
   display: 'flex',
   justifyContent: 'space-between',
   flexWrap: 'wrap',
@@ -33,7 +33,7 @@ const Value = styled(Typography)`
   font-weight: 700;
   font-size: 14px;
   line-height: 160%;
-  margin-top: 10px;
+  margin-top: 12px;
   display: flex;
   flex-wrap: wrap;
 `
