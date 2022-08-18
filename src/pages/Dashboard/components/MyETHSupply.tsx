@@ -75,6 +75,8 @@ const BottomBox = styled(Box)`
   position: absolute;
   background: linear-gradient(180deg, #ffffff 49.8%, rgba(255, 255, 255, 0) 100%);
   box-shadow: 0px 5px 10px #f8f8fd;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   .left {
     margin-left: 8px;
   }
@@ -217,7 +219,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
             <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
               My ETH Supply
             </Typography>
-            <FlexEndBox>
+            <FlexEndBox height={24}>
               <Typography variant="h5" mr="8px" fontWeight="600" color="#ffffff" lineHeight="22px">
                 {fixedFormat(ethCollateral)}
               </Typography>

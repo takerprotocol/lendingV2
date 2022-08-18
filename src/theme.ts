@@ -98,7 +98,7 @@ export const theme = createTheme({
     },
     h4: {
       fontSize: '28px',
-      lineHeight: '160%',
+      lineHeight: '45px',
       fontWeight: 700,
     },
     h5: {
@@ -290,11 +290,14 @@ export const theme = createTheme({
           .MuiSwitch-input {
             display: none;
           }
-          width: 48px;
+          width: 50px;
           height: 28px;
           padding: 2px;
           background: #d9dbe9;
           border-radius: 20px;
+          .Mui-checked {
+            transform: translateX(22px);
+          }
           .MuiSwitch-switchBase {
             width: 24px;
             height: 24px;

@@ -1,5 +1,5 @@
 import { Box, styled, Typography } from '@mui/material'
-import { SpaceBetweenBox, CenterBox, FlexBox } from 'styleds/index'
+import { SpaceBetweenBox, CenterBox, FlexBox, SpaceBox } from 'styleds/index'
 import OverviewIcon from 'assets/images/svg/dashboard/overview-icon.svg'
 import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
 import MyNFTCollateral from './MyNFTCollateral'
@@ -61,7 +61,7 @@ export default function MyAccount({ type }: MyAccountProps) {
         <MyAccountSkeleton></MyAccountSkeleton>
       ) : (
         <>
-          <SpaceBetweenBox>
+          <SpaceBox sx={{ alignItems: 'flex-start' }}>
             <Typography variant="h4">My Account</Typography>
             <RewardsBox display="">
               <Typography mr="10px" variant="body1" fontWeight="600">
@@ -75,7 +75,7 @@ export default function MyAccount({ type }: MyAccountProps) {
                 Claim{' >'}
               </Typography>
             </RewardsBox>
-          </SpaceBetweenBox>
+          </SpaceBox>
           <MyAssetsBox>
             <Typography variant="subtitle2" fontWeight="500" component="p" color="#A0A3BD">
               My assets
@@ -100,7 +100,7 @@ export default function MyAccount({ type }: MyAccountProps) {
                   </CenterBox>
                 </Box>
                 {data ? (
-                  <Box ml="36px" width="194px">
+                  <Box ml="36px" width="198px">
                     <Typography variant="subtitle2" component="span" color="#A0A3BD">
                       {'≈ 0.46 ETH '}
                     </Typography>

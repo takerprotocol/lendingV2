@@ -53,6 +53,7 @@ const WalletButton = styled(Button)`
   padding: 0 18.5px;
   .MuiTypography-root {
     font-weight: 700;
+    font-size: 16px;
     background: linear-gradient(95.08deg, #7646ff 2.49%, #297ac9 49.84%, #00dfd2 97.19%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

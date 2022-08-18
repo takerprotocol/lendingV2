@@ -57,7 +57,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
             ) : (
               <img src={TotalLeft} height="74px" width="74px" alt=" " />
             )}
-            <Box width="236px" mt="2px" height="62px" marginLeft="24px">
+            <Box width="236px" mt="2px" height="62px" marginLeft="16px">
               <CenterBox>
                 <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px" marginRight="8px">
                   Total Liquidity
@@ -94,7 +94,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
             ) : (
               <img src={TotalRight} height="74px" width="74px" alt="" />
             )}
-            <Box mt="2px" height="62px" sx={{ marginLeft: '24px' }}>
+            <Box mt="2px" height="62px" sx={{ marginLeft: '16px' }}>
               <Box>
                 <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px">
                   Total Borrowed

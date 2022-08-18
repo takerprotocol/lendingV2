@@ -49,16 +49,21 @@ const BottomBox = styled(Box)`
   position: absolute;
   background: linear-gradient(180deg, #ffffff 49.8%, rgba(255, 255, 255, 0) 100%);
   box-shadow: 0px 5px 10px #f8f8fd;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   .left {
     margin-left: 8px;
   }
 `
 const BottomTopBox = styled(Box)`
   width: 290px;
-  padding: 10px 8px;
+  padding: 0 8px;
   background: #f7f7fc;
   border-radius: 4px;
   margin-bottom: 31px;
+  height: 44px;
+  display: flex;
+  align-items: center;
 `
 const ImgBox = styled(`img`)`
   width: 24px;
@@ -147,24 +152,47 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
         </BottomTopBox>
         <NftListBox>
           <Typography variant="body2" lineHeight="12px" fontWeight="600" color="#A0A3BD">
-            <>You have {supportNfts.length} NFTs can deposit</>
+            {supportNfts.length > 0 ? (
+              <>You have {supportNfts.length} NFTs can deposit</>
+            ) : (
+              <>We support these collections</>
+            )}
           </Typography>
-          <FlexBox mt="12px">
-            {supportNfts &&
-              supportNfts.map((el: any) => {
-                return (
-                  <Tooltip key={`collections${el.contract.address}`} title={el.title || ''} arrow placement="top">
-                    <ImgBox
-                      src={el.media[0]?.gateway || ''}
-                      alt=""
-                      onClick={() => {
-                        navigate(`/deposit/${el.contract.address}`)
-                      }}
-                    ></ImgBox>
-                  </Tooltip>
-                )
-              })}
-          </FlexBox>
+          {supportNfts.length > 0 ? (
+            <FlexBox mt="12px">
+              {supportNfts &&
+                supportNfts.map((el: any) => {
+                  return (
+                    <Tooltip key={`collections${el.contract.address}`} title={el.title || ''} arrow placement="top">
+                      <ImgBox
+                        src={el.media[0]?.gateway || ''}
+                        alt=""
+                        onClick={() => {
+                          navigate(`/deposit/${el.contract.address}`)
+                        }}
+                      ></ImgBox>
+                    </Tooltip>
+                  )
+                })}
+            </FlexBox>
+          ) : (
+            <FlexBox mt="12px">
+              {collections &&
+                collections.map((el: any) => {
+                  return (
+                    <Tooltip key={`collections${el.id}`} title={el.name || ''} arrow placement="top">
+                      <ImgBox
+                        src={el.icon || ''}
+                        alt=""
+                        onClick={() => {
+                          navigate(`/deposit/${el.id}`)
+                        }}
+                      ></ImgBox>
+                    </Tooltip>
+                  )
+                })}
+            </FlexBox>
+          )}
         </NftListBox>
         <Button
           sx={{ width: '274px', marginLeft: '8px', height: '48px' }}
@@ -186,7 +214,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
             <Typography mb="12px" variant="body1" color=" rgba(255, 255, 255, 0.7)" lineHeight="14px">
               My NFT Collateral
             </Typography>
-            <FlexEndBox>
+            <FlexEndBox height={24}>
               <Typography variant="h5" mr="8px" fontWeight="600" color="#ffffff" lineHeight="22px">
                 {userValue.NFTLiquidity}
               </Typography>

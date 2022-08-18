@@ -64,13 +64,13 @@ const FlexStartBox = styled(Box)`
   justify-content: space-between;
 `
 const RiskLevelBox = styled(Box)`
-  padding: 10px 10px 10px 14px;
+  padding: 12px 12px 10px 14px;
   width: 100%;
   height: 98px;
   background: #f3f3f8;
   border-radius: 0.375rem;
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: 11px;
   margin-top: 36px;
   img {
     display: none;

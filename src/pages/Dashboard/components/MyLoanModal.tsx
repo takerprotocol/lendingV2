@@ -54,6 +54,22 @@ const BottomBox = styled(Box)`
   border-radius: 12px;
   margin-top: -12px;
   padding: 24px;
+  input::-webkit-input-placeholder {
+    /* Chrome/Opera/Safari */
+    color: #a0a3bd;
+  }
+  input::-moz-placeholder {
+    /* Firefox 19+ */
+    color: #a0a3bd;
+  }
+  input:-ms-input-placeholder {
+    /* IE 10+ */
+    color: #a0a3bd;
+  }
+  input:-moz-placeholder {
+    /* Firefox 18- */
+    color: #a0a3bd;
+  }
 `
 const CenterBox = styled(Box)`
   display: flex;
@@ -90,7 +106,7 @@ const RightFlexBox = styled(Box)`
 const HealthyButton = styled(Box)`
   padding: 4px 12px;
   height: 30px;
-  margin-top: 34px;
+  margin-top: 30px;
   border-radius: 20px;
   cursor: pointer;
   background: linear-gradient(180deg, #1cc1a4 0%, #1cb5ab 100%);
@@ -99,7 +115,7 @@ const HealthyButton = styled(Box)`
 const HighRiskButton = styled(Box)`
   padding: 4px 12px;
   height: 30px;
-  margin-top: 34px;
+  margin-top: 30px;
   border-radius: 20px;
   cursor: pointer;
   background: linear-gradient(180deg, #ff7272 0%, #e1536c 100%);
@@ -108,7 +124,7 @@ const HighRiskButton = styled(Box)`
 const RiskyButton = styled(Box)`
   padding: 4px 12px;
   height: 30px;
-  margin-top: 34px;
+  margin-top: 30px;
   border-radius: 20px;
   cursor: pointer;
   background: linear-gradient(180deg, #fba170 0%, #ef884f 100%);
@@ -273,8 +289,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               )}
             </Box>
           </SpaceBetweenBox>
-          <SpaceBetweenBox mt="24px">
-            <Box ml="114px">
+          <CenterBox mt="24px" justifyContent={'center'}>
+            <Box>
               <BorrowTypography
                 variant="subtitle1"
                 color={check === 1 ? '#FFFFFF' : '#A0A3BD'}
@@ -290,7 +306,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '13px' }}
               ></Box>
             </Box>
-            <Box mr="118px">
+            <Box ml="68px">
               <BorrowTypography
                 variant="subtitle1"
                 color={check === 2 ? '#FFFFFF' : '#A0A3BD'}
@@ -306,7 +322,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '13px' }}
               ></Box>
             </Box>
-          </SpaceBetweenBox>
+          </CenterBox>
         </TopBox>
         <BottomBox>
           <BorrowAmountBox>
@@ -319,7 +335,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                   <img src={myCollateral} alt="" />
                   <TextField
                     autoFocus={true}
-                    sx={{ marginLeft: '7px' }}
+                    sx={{ marginLeft: '4px', marginTop: '4px' }}
                     placeholder="0.00"
                     value={amount}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -332,7 +348,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               {check === 1 ? (
                 <Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Typography mt="16px" variant="body2" fontWeight="600" color="#A0A3BD">
+                    <Typography mt="20px" variant="body2" fontWeight="600" color="#A0A3BD">
                       Borrow Limit
                     </Typography>
                   </Box>
@@ -364,7 +380,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               )}
             </SpaceBetweenBox>
           </BorrowAmountBox>
-          <Box mb="15px" mt="12px" height="8px" width="372px">
+          <Box mb="12px" mt="14px" height="14px" width="372px">
             <CustomizedSlider
               sliderValue={sliderValue}
               setSliderValue={setSliderValue}
