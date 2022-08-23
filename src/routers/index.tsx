@@ -96,11 +96,11 @@ export default function CustomizeRoutes() {
         console.log(res.borrowRate.toString())
         dispatch(
           setReserveData({
-            borrowRate: new BigNumber(div(fromWei(res.borrowRate.toString()), 100)).decimalPlaces(2, 1).toString(),
+            borrowRate: new BigNumber(div(fromWei(res.borrowRate.toString()), 10000)).decimalPlaces(2, 1).toString(),
             configuration: res.configuration.toString(),
             debtIndex: res.debtIndex.toString(),
             debtTokenAddress: res.debtTokenAddress.toString(),
-            depositRate: new BigNumber(div(fromWei(res.depositRate.toString()), 100)).decimalPlaces(2, 1).toString(),
+            depositRate: new BigNumber(div(fromWei(res.depositRate.toString()), 10000)).decimalPlaces(2, 1).toString(),
             interestRateCalculatorAddress: res.interestRateCalculatorAddress.toString(),
             tTokenAddress: res.tTokenAddress.toString(),
             treasury: res.treasury.toString(),
