@@ -92,8 +92,6 @@ export default function CustomizeRoutes() {
         dispatch(setErc721Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
       })
       contract.getReserveData(WETH).then((res: any) => {
-        console.log(fromWei(res.borrowRate.toString()))
-        console.log(res.borrowRate.toString())
         dispatch(
           setReserveData({
             borrowRate: new BigNumber(div(fromWei(res.borrowRate.toString()), 10000)).decimalPlaces(2, 1).toString(),
