@@ -21,6 +21,7 @@ export interface ApplicationState {
   readonly userNftConfig: string
   readonly ownedNfts: OwnedNft[]
   readonly ethLiquidity: string
+  readonly collateralsType: string
   readonly ethDebt: string
   readonly ethCollateral: string
   readonly usedCollateral: boolean
@@ -53,6 +54,7 @@ const initialState: ApplicationState = {
   usedCollateral: false,
   erc20Ltv: '0',
   erc721Ltv: '0',
+  collateralsType: 'All Collaterals',
   decimal: 18,
   dashboardType: 1,
   userValues: {
@@ -145,6 +147,9 @@ const applicationSlice = createSlice({
         // state.userValues.totalCollateral = new BigNumber(action.payload[3].toString())
       }
     },
+    setCollateralsType(state, action) {
+      state.collateralsType = action.payload
+    },
   },
 })
 
@@ -163,5 +168,6 @@ export const {
   setDecimal,
   setDashboardType,
   setUserValues,
+  setCollateralsType,
 } = applicationSlice.actions
 export default applicationSlice.reducer

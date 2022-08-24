@@ -3,6 +3,7 @@ import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material
 import { useEffect, useMemo, useState } from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
+import loanModalBefore from 'assets/images/svg/dashboard/loanModal-before.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
@@ -32,7 +33,6 @@ const style = {
 }
 const TopBox = styled(Box)`
   width: 420px;
-  height: 200px;
   background: linear-gradient(
       60.76deg,
       rgba(102, 166, 232, 0) 0%,
@@ -134,6 +134,14 @@ const BorrowTypography = styled(Typography)`
   font-weight: 700;
   cursor: pointer;
 `
+const BorrowAmountBox = styled(Box)`
+  width: 372px;
+  height: 103px;
+  background: #eff0f6;
+  border-radius: 10px;
+  padding: 16px;
+  position: relative;
+`
 interface MyLoanModalProps {
   open: boolean
   repayRoBorrow: number
@@ -157,22 +165,11 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const address = useAddress()
   const ethDebt = useEthDebt()
   const addTransaction = useTransactionAdder()
-  const BorrowAmountBox = styled(Box)`
-    width: 372px;
-    height: 103px;
-    background: #eff0f6;
-    border-radius: 10px;
-    padding: 16px;
-    ::before {
-      content: '';
-      display: block;
-      position: absolute;
-      left: ${`${plus(times(3.57, sliderValue), 25)}px`};
-      top: 308px;
-      border-width: 17px 7px;
-      border-style: dashed solid dashed dashed;
-      border-color: #eff0f6 transparent transparent transparent;
-    }
+  const BeforeImg = styled('img')`
+    position: absolute;
+    display: block;
+    top: calc(100% - 10.5px);
+    left: ${`${plus(times(3.57, sliderValue), 25)}px`};
   `
   useEffect(() => {
     setCheck(repayRoBorrow)
@@ -235,8 +232,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
-        <TopBox>
-          <SpaceBetweenBox alignItems="flex-start">
+        <TopBox height={+ethDebt === 0 ? '156px' : '200px'}>
+          <SpaceBetweenBox paddingBottom={+ethDebt === 0 ? '37px' : '0px'} alignItems="flex-start">
             <Box m="32px 0 0 36px">
               <Typography mt="16px" variant="body1" component="h1" color="#A0A3BD">
                 My Debt
@@ -260,21 +257,19 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               >
                 <img src={greyShutOff} alt="" />
               </Box>
-              {new BigNumber(amount ? debtRiskLevel : heath).lt(100) ? (
+              {new BigNumber(heath).lt(100) ? (
                 <HighRiskButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
                     In liquidation...
                   </Typography>
                 </HighRiskButton>
-              ) : new BigNumber(amount ? debtRiskLevel : heath).gte(100) &&
-                new BigNumber(amount ? debtRiskLevel : heath).lte(110) ? (
+              ) : new BigNumber(heath).gte(100) && new BigNumber(heath).lte(110) ? (
                 <HighRiskButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
                     HIGH RISK
                   </Typography>
                 </HighRiskButton>
-              ) : new BigNumber(amount ? debtRiskLevel : heath).gt(110) &&
-                new BigNumber(amount ? debtRiskLevel : heath).lte(130) ? (
+              ) : new BigNumber(heath).gt(110) && new BigNumber(heath).lte(130) ? (
                 <RiskyButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
                     RISKY
@@ -289,40 +284,42 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               )}
             </Box>
           </SpaceBetweenBox>
-          <CenterBox mt="24px" justifyContent={'center'}>
-            <Box>
-              <BorrowTypography
-                variant="subtitle1"
-                color={check === 1 ? '#FFFFFF' : '#A0A3BD'}
-                onClick={() => {
-                  setCheck(1)
-                  setAmount('')
-                }}
-              >
-                Borrow
-              </BorrowTypography>
-              <Box
-                className={check === 1 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '13px' }}
-              ></Box>
-            </Box>
-            <Box ml="68px">
-              <BorrowTypography
-                variant="subtitle1"
-                color={check === 2 ? '#FFFFFF' : '#A0A3BD'}
-                onClick={() => {
-                  setCheck(2)
-                  setAmount('')
-                }}
-              >
-                Repay
-              </BorrowTypography>
-              <Box
-                className={check === 2 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '13px' }}
-              ></Box>
-            </Box>
-          </CenterBox>
+          <Box display={+ethDebt === 0 ? 'none' : ''}>
+            <CenterBox mt="24px">
+              <Box ml="114px">
+                <BorrowTypography
+                  variant="subtitle1"
+                  color={check === 1 ? '#FFFFFF' : '#A0A3BD'}
+                  onClick={() => {
+                    setCheck(1)
+                    setAmount('')
+                  }}
+                >
+                  Borrow
+                </BorrowTypography>
+                <Box
+                  className={check === 1 ? 'BorrowOrRepay' : ''}
+                  sx={{ width: '100%', height: '5px', borderRadius: '21px', marginTop: '13.5px' }}
+                ></Box>
+              </Box>
+              <Box ml="68px">
+                <BorrowTypography
+                  variant="subtitle1"
+                  color={check === 2 ? '#FFFFFF' : '#A0A3BD'}
+                  onClick={() => {
+                    setCheck(2)
+                    setAmount('')
+                  }}
+                >
+                  Repay
+                </BorrowTypography>
+                <Box
+                  className={check === 2 ? 'BorrowOrRepay' : ''}
+                  sx={{ width: '100%', height: '5px', borderRadius: '21px', marginTop: '13.5px' }}
+                ></Box>
+              </Box>
+            </CenterBox>
+          </Box>
         </TopBox>
         <BottomBox>
           <BorrowAmountBox>
@@ -331,11 +328,11 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 <Typography variant="body1" component="p" color="#14142A">
                   {check === 1 ? 'Borrow Amount' : 'Repay Amount'}
                 </Typography>
-                <CenterBox>
+                <CenterBox mt="4px">
                   <img src={myCollateral} alt="" />
                   <TextField
                     autoFocus={true}
-                    sx={{ marginLeft: '4px', marginTop: '4px' }}
+                    sx={{ marginLeft: '4px', height: '45px' }}
                     placeholder="0.00"
                     value={amount}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -372,15 +369,16 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                     </MAXBox>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Typography mt="4px" variant="body1" component="p" color="#14142A">
+                    <Typography mt="8px" variant="body1" color="#14142A">
                       {fixedFormat(borrowLimit)} ETH
                     </Typography>
                   </Box>
                 </Box>
               )}
             </SpaceBetweenBox>
+            <BeforeImg src={loanModalBefore} alt=""></BeforeImg>
           </BorrowAmountBox>
-          <Box mb="12px" mt="14px" height="14px" width="372px">
+          <Box mb="21px" mt="9px" height="8px" width="372px">
             <CustomizedSlider
               sliderValue={sliderValue}
               setSliderValue={setSliderValue}
@@ -388,38 +386,38 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             ></CustomizedSlider>
           </Box>
           <SpaceBetweenBox mb="16.5px">
-            <Box>
-              <Typography variant="body1" component="span" color="#A0A3BD">
+            <FlexBox>
+              <Typography variant="body1" color="#A0A3BD">
                 Risk level
               </Typography>
-              <Typography className={riskLevelTag} ml="8px" variant="body1" component="span" fontWeight="700">
+              <Typography className={riskLevelTag} ml="8px" variant="body1" fontWeight="700">
                 {TypographyRiskLevel}
               </Typography>
-            </Box>
-            <Box>
-              <Typography variant="body1" component="span" color="#A0A3BD">
+            </FlexBox>
+            <FlexBox>
+              <Typography variant="body1" fontWeight="600" color="#A0A3BD">
                 {heath}% {'>'}
               </Typography>
-              <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+              <Typography ml="6px" variant="body1" fontWeight="700" color="#14142A">
                 {amount ? debtRiskLevel : heath}%
               </Typography>
-            </Box>
+            </FlexBox>
           </SpaceBetweenBox>
-          <Box sx={{ width: '371px', border: '1px solid #EFF0F6' }}></Box>
+          <Box sx={{ width: '371px', border: '0.5px solid #EFF0F6' }}></Box>
           <SpaceBetweenBox mt="16.5px">
             <Box>
-              <Typography variant="body1" component="p" color="#A0A3BD">
+              <Typography variant="body1" color="#A0A3BD">
                 Debt (ETH)
               </Typography>
             </Box>
-            <Box>
-              <Typography variant="body1" component="span" color="#A0A3BD">
+            <FlexBox>
+              <Typography variant="body1" fontWeight="600" color="#A0A3BD">
                 {fixedFormat(ethDebt)} {'>'}
               </Typography>
-              <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+              <Typography ml="6px" variant="body1" fontWeight="700" color="#14142A">
                 {fixedFormat(plus(ethDebt, times(amount, check === 1 ? 1 : -1)))}
               </Typography>
-            </Box>
+            </FlexBox>
           </SpaceBetweenBox>
           <SpaceBetweenBox mt="16px">
             <Box>
@@ -427,19 +425,19 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 Borrow Limit Used
               </Typography>
             </Box>
-            <Box>
-              <Typography variant="body1" component="span" color="#A0A3BD">
+            <FlexBox>
+              <Typography variant="body1" fontWeight="600" color="#A0A3BD">
                 {new BigNumber(div(ethDebt, borrowLimit)).decimalPlaces(2, 1).toString()}% {'>'}
               </Typography>
-              <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
+              <Typography ml="6px" variant="body1" fontWeight="700" color="#14142A">
                 {new BigNumber(borrowLimitUsed).decimalPlaces(2, 1).toString()}%
               </Typography>
-            </Box>
+            </FlexBox>
           </SpaceBetweenBox>
           <RightFlexBox>
             <FlexBox>
               <Box width={'65px'}>
-                <Typography component="p" variant="subtitle2" lineHeight="16px" color="#4BC8B1">
+                <Typography variant="subtitle2" color="#4BC8B1">
                   20%
                 </Typography>
               </Box>
@@ -449,7 +447,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 </FlexBox>
               </Box>
               <Box width={'66px'}>
-                <Typography component="p" variant="subtitle2" lineHeight="16px" color="#6E7191">
+                <Typography variant="subtitle2" color="#6E7191">
                   {erc20ReserveData.borrowRate}%
                 </Typography>
               </Box>
@@ -460,24 +458,24 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               </Box>
 
               <Box>
-                <Typography component="p" variant="subtitle2" lineHeight="16px" color="#4E4B66">
+                <Typography variant="subtitle2" color="#4E4B66">
                   10%
                 </Typography>
               </Box>
             </FlexBox>
             <FlexBox>
               <Box width="117px">
-                <Typography component="span" variant="body2" fontWeight="500" color="#A0A3BD">
+                <Typography variant="body2" fontWeight="500" color="#A0A3BD">
                   Token Reward
                 </Typography>
               </Box>
               <Box width="116px">
-                <Typography component="span" variant="body2" fontWeight="600" color="#A0A3BD">
+                <Typography variant="body2" fontWeight="600" color="#A0A3BD">
                   Borrow APY
                 </Typography>
               </Box>
               <Box>
-                <Typography component="span" variant="body2" fontWeight="600" color="#4E4B66">
+                <Typography variant="body2" fontWeight="600" color="#4E4B66">
                   Net Borrow APY
                 </Typography>
               </Box>

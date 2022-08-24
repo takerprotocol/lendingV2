@@ -147,14 +147,14 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
               className={usedCollateral ? 'open' : ''}
               disabled={!dataType}
               checked={usedCollateral}
-              onClick={(event: any) => {
-                if (event.target.checked) {
-                  setOpenMySupplySwitchModal(true)
+              onClick={() => {
+                if (!usedCollateral) {
                   setSwitchType(1)
+                  setOpenMySupplySwitchModal(true)
                 } else {
                   if (!loanType && (+nftCollateral === 0 || new BigNumber(heath).lte(150))) {
-                    setSwitchUnableOffModal(true)
                     setSwitchType(0)
+                    setSwitchUnableOffModal(true)
                   } else {
                     setOpenMySupplySwitchModal(true)
                   }

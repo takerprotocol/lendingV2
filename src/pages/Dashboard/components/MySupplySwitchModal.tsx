@@ -14,7 +14,8 @@ const style = {
 }
 const TopBox = styled(Box)`
   height: 156px;
-  padding: 32px;
+  padding-bottom: 32px;
+  padding-top: 24px;
   box-shadow: 0px 10px 20px rgba(20, 20, 42, 0.3);
   border-radius: 12px 12px 0px 0px;
 `
@@ -68,6 +69,7 @@ export default function MySupplySwitchModal({
   const modalType = useMemo(() => {
     return !loanType && +NFTCollateralType === 0 && new BigNumber(upBorrowLimitUsed).lte(150) && switchType === 0
   }, [NFTCollateralType, loanType, switchType, upBorrowLimitUsed])
+  console.log('switchType', switchType)
   return (
     <Modal
       open={openMySupplySwitchModal}
@@ -81,14 +83,14 @@ export default function MySupplySwitchModal({
           }}
         >
           <CenterBox
-            sx={{ justifyContent: 'flex-end', cursor: 'pointer' }}
+            sx={{ marginRight: '24px', justifyContent: 'flex-end', cursor: 'pointer' }}
             onClick={() => {
               handle('unable')
             }}
           >
             <img src={switchType === 0 ? shutOff : whiteShutOff} alt="" />
           </CenterBox>
-          <Box>
+          <Box mt="-8px">
             <CenterBox>
               <Typography
                 variant="body1"
@@ -132,10 +134,10 @@ export default function MySupplySwitchModal({
         </TopBox>
         <BottomBox>
           <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="h5" component="h1">
+            <Typography mb="4px" variant="h5" component="h1">
               {switchType === 0 ? 'Sure to unable ?' : 'Enable Collateral Mode'}
             </Typography>
-            <Typography mt="4px" variant="subtitle2" component="span" color="#6E7191" fontWeight="500">
+            <Typography variant="subtitle2" component="span" color="#6E7191" fontWeight="500">
               {switchType === 0
                 ? 'If you unable the collateral mode will reduce the borrow limit '
                 : 'Use your Supply ETH as collateral to get a higher Borrow limit amount'}
@@ -218,7 +220,7 @@ export default function MySupplySwitchModal({
             </DataBox>
           )}
           {switchType === 0 ? (
-            <SpaceBetweenBox mt="48px">
+            <SpaceBetweenBox mt="54px">
               <Button
                 sx={{ width: '50%', height: '48px' }}
                 color="secondary"

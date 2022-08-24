@@ -4,6 +4,7 @@ import { desensitization } from 'utils'
 import Logout from 'assets/images/svg/common/Logout.svg'
 import notice from 'assets/images/svg/common/notice.svg'
 import purpleETH from 'assets/images/svg/common/purpleETH.svg'
+import headerPopperBefore from 'assets/images/svg/common/headerPopper-before.svg'
 import BoxETH from 'assets/images/svg/wallet/BoxETH.svg'
 import { useAddress, useWalletBalance } from 'state/user/hooks'
 import { useWeb3React } from '@web3-react/core'
@@ -18,7 +19,7 @@ import dayjs from 'dayjs'
 const PopperBox = styled(Box)`
   z-index: 4;
   align-items: flex-end;
-  padding: 16px 16px 24px;
+  padding: 17px 16px 24px;
   width: 358px;
   background: #ffffff;
   border: 1px solid #eff0f6;
@@ -27,22 +28,28 @@ const PopperBox = styled(Box)`
   right: 24px;
   position: relative;
   top: 24px;
-  ::before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 267px;
-    top: -30px;
-    border-width: 15px 10px;
-    border-style: dashed solid dashed dashed;
-    border-color: transparent transparent #ffffff transparent;
-  }
 `
+// ::before {
+//     content: '';
+//     display: block;
+//     position: absolute;
+//     left: 267px;
+//     top: -30px;
+//     border-width: 15px 10px;
+//     border-style: dashed solid dashed dashed;
+//     border-color: transparent transparent #ffffff transparent;
+//   }
 const LogoutBox = styled(Box)`
   width: 326px;
   background: #f7f7fc;
   border-radius: 6px;
-  padding: 9px 12px 8px;
+  padding: 8px 8px 12px 8px;
+`
+const BeforeImg = styled(`img`)`
+  position: absolute;
+  display: block;
+  top: -11px;
+  right: 81.5px;
 `
 
 const StyledPopper = styled(Popper)`
@@ -51,6 +58,8 @@ const StyledPopper = styled(Popper)`
 
 const StyledBlockie = styled(Blockies)`
   border-radius: 50%;
+  width: 24px;
+  height: 24px;
 `
 interface HeaderPopperProps {
   open: boolean
@@ -101,6 +110,7 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
       {({ TransitionProps }) => (
         <Fade {...TransitionProps}>
           <PopperBox>
+            <BeforeImg src={headerPopperBefore} alt=""></BeforeImg>
             <LogoutBox>
               <SpaceBetweenBox>
                 <CenterBox>
@@ -118,7 +128,7 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
                   <Copy text={address} />
                 </CenterBox>
                 <Box
-                  sx={{ cursor: 'pointer' }}
+                  sx={{ width: '24px', height: '24px', cursor: 'pointer' }}
                   onClick={() => {
                     dispatch(setAddress(''))
                     deactivate()
@@ -133,15 +143,15 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
                 </Typography>
                 <CenterBox mt="3px">
                   <img src={purpleETH} alt="" />
-                  <Typography mr="7px" variant="h5" component="span" color="#7646FF">
+                  <Typography ml="4px" variant="h5" fontSize="24px" lineHeight="38px" color="#7646FF">
                     {balance}
                   </Typography>
                 </CenterBox>
               </CenterBox>
             </LogoutBox>
-            <FlexBox ml="10px" mt="36px">
+            <FlexBox ml="8px" mt="36px">
               <img src={notice} alt="" />
-              <Typography ml="6px" variant="body1" component="h1" fontWeight="700">
+              <Typography ml="4px" variant="body1" component="h1" fontWeight="700">
                 Latest notifications
               </Typography>
             </FlexBox>
@@ -151,13 +161,13 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
                   <Typography variant="body2" component="h1" color="#A0A3BD" lineHeight="12px">
                     {dayjs(transactions[hash].addedTime).format('MMMM D, YYYY')}
                   </Typography>
-                  <Typography variant="body2" component="h1" color="#A0A3BD" lineHeight="12px">
+                  <Typography mr="8px" variant="body2" component="h1" color="#A0A3BD" lineHeight="12px">
                     {dayjs(transactions[hash].addedTime).format('h:mm A')}
                   </Typography>
                 </SpaceBetweenBox>
-                <FlexBox ml="10px">
+                <FlexBox ml="8px">
                   <img src={BoxETH} alt="" />
-                  <Typography ml="8px" variant="body1" component="h1" fontWeight="600" color="#4E4B66">
+                  <Typography ml="8px" mt="4px" variant="body1" component="h1" fontWeight="600" color="#4E4B66">
                     {getNoticeTitle(transactions[hash])}
                   </Typography>
                 </FlexBox>
@@ -236,7 +246,7 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
                   >
                     {desensitization(hash)}
                   </Typography>
-                  <Copy text={hash} />
+                  <Copy color={'Txid'} text={hash} />
                 </FlexBox>
               </Box>
             ))}

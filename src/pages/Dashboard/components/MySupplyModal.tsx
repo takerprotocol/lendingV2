@@ -20,7 +20,6 @@ import {
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { SpaceBetweenBox } from 'styleds'
 import {
   useAddress,
   useBorrowLimit,
@@ -41,6 +40,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 // import { ApprovalState } from 'hooks/transactions/useApproval'
 import { TransactionType } from 'state/transactions/types'
 import { useGateway } from 'hooks/useGateway'
+import { SpaceBetweenBox } from 'styleds'
 // import { useContract } from 'hooks/useContract'
 // import erc20Abi from 'abis/MockErc20.json'
 // import { fromWei } from 'web3-utils'
@@ -64,7 +64,7 @@ const TopBox = styled(Box)`
 `
 const BottomBox = styled(Box)`
   width: 420px;
-  margin-top: -12px;
+  margin-top: -14px;
   background: #ffffff;
   box-shadow: 0px 15px 30px rgba(20, 20, 42, 0.2);
   border-radius: 12px;
@@ -106,10 +106,10 @@ const BorrowAmountBox = styled(Box)`
   padding: 16px;
 `
 export const MAXBox = styled(Box)`
-  padding: 2px 8px;
+  padding: 1px 8px;
   border: 1px solid #14142a;
   border-radius: 4px;
-  margin-top: 16px;
+  margin-top: 12px;
   width: 42px;
   cursor: pointer;
   color: #14142a;
@@ -121,6 +121,11 @@ export const MAXBox = styled(Box)`
     color: #ffffff;
     background: #14142a;
   }
+`
+export const SupplySpaceBetweenBox = styled(Box)`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 `
 interface MySupplyModalProps {
   openMySupplyModal: boolean
@@ -240,7 +245,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
         <TopBox>
-          <SpaceBetweenBox alignItems="flex-start">
+          <SupplySpaceBetweenBox alignItems="flex-start">
             <Box>
               <Typography mt="16px" variant="body1" component="h1" color="#FFFFFF">
                 Currently Supplying
@@ -257,7 +262,6 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             <Box>
               <Box
                 sx={{ display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }}
-                mr="8px"
                 onClick={() => {
                   setOpenMySupplyModal(false)
                 }}
@@ -271,13 +275,13 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 <img src={prompt} alt="" />
               </FlexBox>
             </Box>
-          </SpaceBetweenBox>
-          <SpaceBetweenBox mt="28px">
-            <Box display={supplyLimit !== '0' ? '' : 'none'} ml="80px">
+          </SupplySpaceBetweenBox>
+          <SpaceBetweenBox mt="24px">
+            <Box ml="80px" display={supplyLimit !== '0' ? '' : 'none'}>
               <Typography
                 variant="subtitle1"
                 fontWeight="700"
-                component="h1"
+                lineHeight="28px"
                 sx={{ cursor: 'pointer' }}
                 color={borrowOrRepay === 1 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
                 onClick={() => {
@@ -289,14 +293,14 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Typography>
               <Box
                 className={borrowOrRepay === 1 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '14px' }}
+                sx={{ width: '100%', height: '5px', borderRadius: '21px', marginTop: '14px' }}
               ></Box>
             </Box>
-            <Box display={supplyLimit !== '0' ? '' : 'none'} mr="73px">
+            <Box mr="72px" display={supplyLimit !== '0' ? '' : 'none'}>
               <Typography
                 variant="subtitle1"
                 fontWeight="700"
-                component="h1"
+                lineHeight="28px"
                 sx={{ cursor: 'pointer' }}
                 color={borrowOrRepay === 2 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
                 onClick={() => {
@@ -308,7 +312,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Typography>
               <Box
                 className={borrowOrRepay === 2 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '64px', height: '5px', borderRadius: '21px', marginTop: '14px' }}
+                sx={{ width: '100%', height: '5px', borderRadius: '21px', marginTop: '14px' }}
               ></Box>
             </Box>
           </SpaceBetweenBox>
@@ -320,7 +324,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 <Typography variant="body1" component="p" color="#14142A">
                   {borrowOrRepay === 1 ? 'Supply Amount' : 'Withdraw Amount'}
                 </Typography>
-                <CenterBox width="200px">
+                <CenterBox mt="4px" width="200px">
                   <img src={myCollateral} alt="" />
                   <TextField
                     autoFocus={true}
@@ -348,13 +352,13 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                   <MAXBox
                     className={new BigNumber(amount).gte(borrowOrRepay === 1 ? supplyLimit : mySupply) ? 'max' : ''}
                   >
-                    <Typography variant="body2" component="p" fontWeight="700">
+                    <Typography variant="body2" fontWeight="700">
                       MAX
                     </Typography>
                   </MAXBox>
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Typography mt="4px" variant="body1" fontWeight="600" component="p" color="#14142A">
+                <Box mt="8px" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Typography variant="body1" fontWeight="600" component="p" color="#14142A">
                     {borrowOrRepay === 1 ? fixedFormat(supplyLimit) : mySupply} ETH
                   </Typography>
                 </Box>
@@ -367,7 +371,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 Supply Amount (ETH)
               </Typography>
               <Box>
-                <Typography variant="body1" component="span" color="#A0A3BD">
+                <Typography fontWeight="600" variant="body1" component="span" color="#A0A3BD">
                   {fixedFormat(mySupply)} {'>'}
                 </Typography>
                 <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
@@ -382,7 +386,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                     Borrow Limited (ETH)
                   </Typography>
                   <Box>
-                    <Typography variant="body1" component="span" color={'#A0A3BD'}>
+                    <Typography variant="body1" fontWeight="600" component="span" color={'#A0A3BD'}>
                       {borrowLimit} {'>'}
                     </Typography>
                     <Typography
@@ -401,7 +405,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                     Borrow Limit Used
                   </Typography>
                   <Box>
-                    <Typography variant="body1" component="span" color="#A0A3BD">
+                    <Typography variant="body1" fontWeight="600" component="span" color="#A0A3BD">
                       {percent(div(ethDebt, borrowLimit), 1)} {'>'}
                     </Typography>
                     <Typography
@@ -425,7 +429,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Typography variant="body1" component="span" color="#A0A3BD">
+                    <Typography fontWeight="600" variant="body1" component="span" color="#A0A3BD">
                       {heath}% {'>'}
                     </Typography>
                     <Typography ml="6px" variant="body1" component="span" fontWeight="700" color="#14142A">
@@ -439,7 +443,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
           <RightFlexBox>
             <FlexBox>
               <Box width={'65px'}>
-                <Typography component="p" variant="subtitle2" lineHeight="16px" color="#4BC8B1">
+                <Typography variant="subtitle2" color="#4BC8B1">
                   20%
                 </Typography>
               </Box>
@@ -449,7 +453,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 </AddBgBox>
               </Box>
               <Box width={'66px'}>
-                <Typography component="p" variant="subtitle2" lineHeight="16px" color="#6E7191">
+                <Typography variant="subtitle2" color="#6E7191">
                   {erc20ReserveData.depositRate}%
                 </Typography>
               </Box>
@@ -460,24 +464,24 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Box>
 
               <Box>
-                <Typography component="p" variant="subtitle2" lineHeight="16px" color="#4E4B66">
+                <Typography variant="subtitle2" color="#4E4B66">
                   10%
                 </Typography>
               </Box>
             </FlexBox>
             <FlexBox>
               <Box width="117px">
-                <Typography component="span" variant="body2" fontWeight="500" color="#A0A3BD">
+                <Typography variant="body2" fontWeight="500" color="#A0A3BD">
                   Token Reward
                 </Typography>
               </Box>
               <Box width="116px">
-                <Typography component="span" variant="body2" fontWeight="600" color="#A0A3BD">
+                <Typography variant="body2" fontWeight="600" color="#A0A3BD">
                   Borrow APY
                 </Typography>
               </Box>
               <Box>
-                <Typography component="span" variant="body2" fontWeight="600" color="#4E4B66">
+                <Typography variant="body2" fontWeight="600" color="#4E4B66">
                   Net Borrow APY
                 </Typography>
               </Box>

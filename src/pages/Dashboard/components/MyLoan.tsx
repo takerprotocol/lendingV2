@@ -133,8 +133,10 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                   className="Padding-button"
                   variant="contained"
                   onClick={() => {
-                    setOpen(true)
-                    setRepayRoBorrow(2)
+                    if (+ethDebt !== 0) {
+                      setOpen(true)
+                      setRepayRoBorrow(2)
+                    }
                   }}
                 >
                   Repay {'>'}

@@ -73,8 +73,8 @@ export const Header = () => {
   const toggleModal = useToggleModal(ApplicationModal.WALLET)
   const address = useAddress()
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null)
   const [open, setOpen] = React.useState(false)
+  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null)
   const [placement, setPlacement] = React.useState<PopperPlacementType>()
   const handleClick = (newPlacement: PopperPlacementType) => (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget)

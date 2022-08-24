@@ -134,3 +134,6 @@ export function useCollateralRiskLevel(value?: string | number): string {
   }, [ethDebt, userState.liquidationThreshold, userValue.totalCollateral, value])
   return collateralRiskLevel
 }
+export function useCollateralsType(): string {
+  return useAppSelector((state: AppState) => state.user.collateralsType)
+}

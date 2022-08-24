@@ -5,11 +5,21 @@ import Collaterals from './components/Collaterals'
 import Collection1 from '../../assets/images/png/liquidation/example/1.png'
 import Collection2 from '../../assets/images/png/liquidation/example/2.png'
 import Collection3 from '../../assets/images/png/liquidation/example/3.png'
+import liquidationBg from 'assets/images/svg/liquidation/liquidation-icon.svg'
 import { useEffect, useMemo, useState } from 'react'
+import React from 'react'
+
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 
 const Body = styled(Box)`
+<<<<<<< Updated upstream
   background: #f7f7fc;
+=======
+  background-color: #f7f7fc;
+  background-image: url(${liquidationBg});
+  background-repeat: no-repeat;
+  background-size: contain;
+>>>>>>> Stashed changes
   width: 100%;
 `
 
@@ -168,7 +178,6 @@ export default function Liquidation() {
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000)
   }, [])
-
   const multipleCollaterals = [...collaterals, ...collaterals, ...collaterals, ...collaterals, ...collaterals]
   return (
     <Body className="header-padding">

@@ -7,29 +7,31 @@ import CollateralItem from './CollateralItem'
 import CollateralItemSkeleton from './CollateralItemSkeleton'
 import EmptyState from './EmptyState'
 import CollateralPagination from './CollateralPagination'
+import { FlexBox } from 'styleds'
+import React from 'react'
+import CollateralsType from './CollateralsType'
+import { useCollateralsType } from 'state/user/hooks'
+// import { setUserValues } from 'state/user/reducer'
 
 const CollateralsContainer = styled(Box)`
   width: calc(100% - 280px);
   min-height: 100vh;
   margin: 0 auto;
-  margin-top: 378px;
+  margin-top: 308px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 15.73%, rgba(255, 255, 255, 0) 78.72%);
   backdrop-filter: blur(80px);
   /* Note: backdrop-filter has minimal browser support */
-
   border-radius: 12px;
   z-index: 5;
   padding-top: 27px;
   padding-left: 50px;
   padding-right: 50px;
-  padding-bottom: 56px;
   position: relative;
+  padding-bottom: 48px;
 `
 
 const CollateralSelectText = styled(Typography)`
-  width: 187px;
   height: 45px;
-
   font-family: 'Quicksand';
   font-style: normal;
   font-weight: 700;
@@ -74,6 +76,9 @@ const KeywordSearchInput = styled('input')`
   font-weight: 500;
   font-size: 16px;
   line-height: 22px;
+  :focus {
+    border: 1px solid #7646ff !important;
+  }
   display: flex;
   align-items: center;
 `
@@ -376,11 +381,43 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
   const CloseTermIcon = styled('svg')`
     cursor: pointer;
   `
-
+  //---------------//
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const collateralsType = useCollateralsType()
+  //---------------//
   return (
     <CollateralsContainer>
       <CollateralsFilterHeader>
-        <CollateralSelectText>All Collaterals</CollateralSelectText>
+        <FlexBox
+          mt="5px"
+          sx={{ cursor: 'pointer' }}
+          id="basic-button"
+          aria-controls={open ? 'basic-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClick}
+        >
+          <CollateralSelectText mr="8px">{collateralsType}</CollateralSelectText>
+          {open ? (
+            <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M18 17L11 10L4 17"
+                stroke="#14142A"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          ) : (
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 2L9 9L2 2" stroke="#14142A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
+        </FlexBox>
         <InputContainer>
           <TermsContainer>
             {searchTerms.map((term: string, index: number) => (
@@ -489,6 +526,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
         {loading ? CollateralSkeletonList : !!collaterals.length ? CollateralList : <EmptyState />}
       </CollateralItems>
       <CollateralPagination collaterals={collaterals} onPageSelect={(number: number) => null} />
+      <CollateralsType open={open} anchorEl={anchorEl} setAnchorEl={setAnchorEl}></CollateralsType>
     </CollateralsContainer>
   )
 }

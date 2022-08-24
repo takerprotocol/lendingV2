@@ -14,7 +14,7 @@ const StyledSelect = styled(Select)`
   padding-top: 2px;
   cursor: pointer;
   fieldset {
-    border: 1px solid #d9dbe9 !important;
+    border: 1px solid #d9dbe9;
   }
   ::before,
   ::after {
@@ -23,13 +23,32 @@ const StyledSelect = styled(Select)`
   .MuiInput-input {
     background: transparent !important;
     padding-left: 10px;
+    &.open {
+      border: 1px solid #7646ff !important;
+    }
   }
 `
 
 const StyledMenuItem = styled(MenuItem)`
   display: flex;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 0 12px 0 12px;
   justify-content: flex-start;
   align-items: center;
+  :hover {
+    background: #f7f7fc;
+  }
+  &.Mui-selected {
+    font-family: 'Quicksand';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 22px;
+    /* identical to box height, or 138% */
+    background-color: #ffffff !important;
+    color: #7646ff;
+  }
 `
 
 const Arrow = () => (
@@ -50,7 +69,11 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
   const Options = useMemo(
     () =>
       props.options.map((option: any) => (
-        <StyledMenuItem key={`${option.value}-item`} value={option.value}>
+        <StyledMenuItem
+          sx={{ marginRight: `${props.options[0].name === 'All Debt' ? '28px' : '12px'}` }}
+          key={`${option.value}-item`}
+          value={option.value}
+        >
           {option.name}
         </StyledMenuItem>
       )),
@@ -69,18 +92,21 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
     },
     [props]
   )
-
   return (
     <div>
       <StyledSelect
+        className={open ? 'focus' : ''}
         {...props}
         IconComponent={Arrow}
         variant="standard"
         open={open}
         onClick={() => setOpen(!open)}
-        className={props.startAdornment ? 'withicon' : ''}
+        // className={props.startAdornment ? 'withicon' : ''}
         value={value}
         onChange={onChange}
+        sx={{
+          border: `${open ? '1px solid #7646ff !important' : 'border: 1px solid #d9dbe9;'}`,
+        }}
       >
         {Options}
       </StyledSelect>

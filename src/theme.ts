@@ -158,6 +158,22 @@ export const theme = createTheme({
         `,
       },
     },
+    MuiList: {
+      styleOverrides: {
+        root: `
+        max-height: 265px;
+        overflow: auto;
+        padding:12px 0px; 
+        `,
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: `
+          margin-top: 20px!important;
+      `,
+      },
+    },
     MuiInputBase: {
       styleOverrides: {
         root: `
