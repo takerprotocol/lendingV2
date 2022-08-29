@@ -299,7 +299,7 @@ export default function Collection({ type, loading }: CollectionType) {
                             toggleModal()
                           }}
                         >
-                          Deposit
+                          Connect Wallet
                         </Button>
                       </Box>
                     )}
