@@ -8,7 +8,7 @@ const Body = styled(Box)`
   width: 100%;
   max-width: 1012px;
   margin: 0 auto;
-  margin-top: 94px;
+  padding-top: 94px;
 `
 
 const collateralData = [

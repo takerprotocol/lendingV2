@@ -36,6 +36,16 @@ const StyledMenuItem = styled(MenuItem)`
   margin: 0 12px 0 12px;
   justify-content: flex-start;
   align-items: center;
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  /* identical to box height, or 138% */
+
+  /* Cool Gray 800 */
+
+  color: #14142a;
   :hover {
     background: #f7f7fc;
   }

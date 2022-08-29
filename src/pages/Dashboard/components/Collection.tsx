@@ -1,6 +1,5 @@
 import styled from '@emotion/styled'
 import { Box, Button, Typography } from '@mui/material'
-
 import tokenUp from 'assets/images/svg/dashboard/tokenUp.svg'
 import ButtonUp from 'assets/images/svg/dashboard/button-up.svg'
 import ButtonDown from 'assets/images/svg/dashboard/button-down.svg'

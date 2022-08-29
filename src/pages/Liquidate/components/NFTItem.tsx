@@ -1,9 +1,8 @@
-import { Checkbox, styled, TextField, Typography } from '@mui/material'
+import { Box, Checkbox, styled, TextField, Typography } from '@mui/material'
 import { useCallback, useState } from 'react'
 
-const Container = styled('div')`
+const Container = styled(Box)`
   padding: 12px;
-  border: 1px solid #a0a3bd;
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.5);
   border-radius: 10px;
   display: flex;
@@ -187,7 +186,7 @@ const NFTItem = ({ name, image, collection, price, max }: NFTItemProps) => {
   const handleCollectionImageError = useCallback(() => setErrorCollectionImage(true), [])
 
   return (
-    <Container onClick={handleCheck}>
+    <Container sx={{ border: `${checked ? '1px solid #a0a3bd' : ''}` }} onClick={handleCheck}>
       <StyledCheckbox checked={checked} onChange={handleCheck} />
       <ActionInfoContainer>
         <NFTInfoContainer>

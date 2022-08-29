@@ -89,7 +89,9 @@ export const Header = () => {
   }
   const navigate = useNavigate()
   const location = useLocation()
-  const lightBackground = ['/deposit', '/liquidate'].includes(location.pathname)
+  const lightBackground = location.pathname.includes('/deposit') || location.pathname.includes('/liquidate')
+  console.log('lightBackground', lightBackground)
+  console.log('location', location)
   return (
     <HeaderBox lightBackground={lightBackground}>
       <HeaderLogo onClick={() => navigate('/')} alt="logo" src={LogoIcon} />

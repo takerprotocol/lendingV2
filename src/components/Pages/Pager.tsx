@@ -29,7 +29,7 @@ const PagerBox = styled(Box)`
 `
 interface NFTsListType {
   list: any[]
-  TypeKey: string
+  TypeKey?: string
 }
 export default function Pager({ list, TypeKey }: NFTsListType) {
   const totalPage = useMemo(() => Math.ceil(list.length / 9), [list])
@@ -38,7 +38,7 @@ export default function Pager({ list, TypeKey }: NFTsListType) {
     <Box display={list.length > 9 ? '' : 'none'}>
       <PagerBox>
         <PageBox
-          sx={{ left: '-3rem', transform: 'rotate(180deg)' }}
+          sx={{ left: `${TypeKey === 'Liquidate' ? '-48px' : '-72px'}`, transform: 'rotate(180deg)' }}
           className={pageType === 1 ? 'none' : ''}
           onClick={() => {
             if (pageType > 1) {
@@ -49,7 +49,7 @@ export default function Pager({ list, TypeKey }: NFTsListType) {
           }}
         ></PageBox>
         <PageBox
-          sx={{ right: '-3rem' }}
+          sx={{ right: `${TypeKey === 'Liquidate' ? '-48px' : '-72px'}` }}
           onClick={() => {
             if (pageType < 4) {
               setPageType(() => pageType + 1)

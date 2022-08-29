@@ -21,6 +21,7 @@ export const SpaceBox = styled(Box)`
   justify-content: space-between;
 `
 export const FlexEndBox = styled(Box)`
+  display: flex;
   align-items: center;
   justify-content: flex-end;
 `

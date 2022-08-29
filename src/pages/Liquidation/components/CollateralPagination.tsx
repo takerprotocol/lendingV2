@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 const PaginationContainer = styled('div')`
   display: flex;
   gap: 6px;
+  padding-left: 50px;
   margin-top: 48px;
 `
 

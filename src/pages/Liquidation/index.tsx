@@ -12,17 +12,16 @@ import React from 'react'
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 
 const Body = styled(Box)`
-<<<<<<< Updated upstream
-  background: #f7f7fc;
-=======
   background-color: #f7f7fc;
   background-image: url(${liquidationBg});
   background-repeat: no-repeat;
   background-size: contain;
->>>>>>> Stashed changes
   width: 100%;
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: -284px;
+  margin-bottom: 304px;
 `
-
 export default function Liquidation() {
   const collaterals = useMemo(
     () => [
@@ -173,7 +172,6 @@ export default function Liquidation() {
     ],
     []
   )
-
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     setTimeout(() => setLoading(false), 2000)
@@ -182,6 +180,7 @@ export default function Liquidation() {
   return (
     <Body className="header-padding">
       <Header />
+      <Box height="308px"></Box>
       <Collaterals loading={loading} collaterals={multipleCollaterals} />
     </Body>
   )

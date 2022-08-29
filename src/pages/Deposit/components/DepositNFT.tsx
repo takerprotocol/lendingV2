@@ -3,7 +3,7 @@ import { Box, Button, Typography } from '@mui/material'
 import XIcon from 'assets/images/svg/common/close.svg'
 import RefreshIcon from 'assets/images/svg/common/refresh.svg'
 import NFTsList from './NFTsList'
-import Pager from './Pager'
+import Pager from '../../../components/Pages/Pager'
 import AvailableAndDepositedSkeleton from './depositSkeleton/AvailableAndDepositedSkeleton'
 import { useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
@@ -81,7 +81,7 @@ export default function DepositNFT({ depositType, withdrawType, list, loading, s
   return (
     <AvailableNFTsStyleBox sx={{ opacity: `${withdrawType === 'open' ? '0.7' : '1'}` }}>
       {list.length === 0 ? (
-        <Typography m="48px 24px" variant="h5" fontWeight="700" fontSize=" 24px">
+        <Typography m="48px 24px 24px 24px" variant="h5" fontWeight="700" fontSize=" 24px">
           0 NFT you can deposit
         </Typography>
       ) : (

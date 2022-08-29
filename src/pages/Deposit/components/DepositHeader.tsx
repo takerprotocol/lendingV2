@@ -12,7 +12,6 @@ import { div, times } from 'utils'
 // import { percent } from 'utils'
 const HeaderBox = styled(Box)`
   width: 1012px;
-  height: 308px;
   padding: 24px;
   background: #ffffff;
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
@@ -47,6 +46,12 @@ const BigTypography = styled(Typography)`
 const SmallTypography = styled(Typography)`
   font-weight: 600;
   font-size: 14px;
+  line-height: 14px;
+  color: #4e4b66;
+`
+const TokenTypography = styled(Typography)`
+  font-weight: 600;
+  font-size: 14px;
   line-height: 22px;
   color: #4e4b66;
 `
@@ -58,12 +63,27 @@ const ImagesBox = styled(Box)`
   border-radius: 0 6px 6px 0;
   border-left: 0;
 `
+const LeftFlexBox = styled(Box)`
+  background: #f7f7fc;
+  border-radius: 10px;
+  padding: 24px 18px 24px 50px;
+`
 const RightFlexBox = styled(Box)`
   background: #f7f7fc;
   border-radius: 10px;
-  padding: 24px 24px 24px 50px;
+  padding: 24px 83px 24px 74px;
 `
-
+const ImgBox = styled('img')`
+  width: 124px;
+  height: 124px;
+  display: block;
+  border-radius: 10px;
+`
+export const FlexEndBox = styled(Box)`
+  display: flex;
+  align-items: flex-start;
+  padding-top: 14px;
+`
 interface DepositHeaderProps {
   loading: boolean
 }
@@ -87,7 +107,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
         <HeaderBox>
           <FlexBox>
             <FlexBox>
-              <img src={collection?.icon} alt="" />
+              <ImgBox src={collection?.icon} alt="" />
               <ImagesBox height="110px"></ImagesBox>
               <ImagesBox height="100px"></ImagesBox>
             </FlexBox>
@@ -99,45 +119,47 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 {collection?.stats?.countOwners} Active Users
               </Typography>
             </Box>
-            <Box width="198px">
-              <SmallTypography color="#4E4B66 !important">Total Value Locked</SmallTypography>
-              <FlexBox mt="8px">
-                <img margin-top="15px" src={myCollateralIcon} alt="" />
-                <BigTypography ml="7px" variant="body1">
-                  {collection?.stats?.totalValue}
-                </BigTypography>
-              </FlexBox>
-              <Typography mt="4px" component="p" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
-                9221 NFTs
-              </Typography>
-            </Box>
-            <Box width="148px">
-              <SmallTypography>Floor Price</SmallTypography>
-              <Box mt="8px">
-                <FlexBox>
+            <FlexEndBox>
+              <Box width="198px">
+                <SmallTypography color="#4E4B66 !important">Total Value Locked</SmallTypography>
+                <FlexBox mt="8px">
                   <img margin-top="15px" src={myCollateralIcon} alt="" />
-                  <BigTypography ml="7px" variant="body1">
-                    {collection?.stats?.floorPrice}
+                  <BigTypography ml="4px" variant="body1">
+                    {collection?.stats?.totalValue || 0}
                   </BigTypography>
                 </FlexBox>
-                <Box height={'22px'}></Box>
+                <Typography mt="4px" component="p" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
+                  9221 NFTs
+                </Typography>
               </Box>
-            </Box>
-            <Box width="198px">
-              <SmallTypography>Loan to value</SmallTypography>
-              <FlexBox mt="8px">
-                <img margin-top={'15px'} src={myCollateralIcon} alt="" />
-                <BigTypography ml="7px" variant="body1">
-                  {times(collection?.stats?.floorPrice || 0, div(collection.ltv, 10000))}
-                </BigTypography>
-              </FlexBox>
-              <Typography mt="4px" component="p" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
-                {div(collection?.ltv, 100)}%
-              </Typography>
-            </Box>
+              <Box width="148px">
+                <SmallTypography>Floor Price</SmallTypography>
+                <Box mt="8px">
+                  <FlexBox>
+                    <img src={myCollateralIcon} alt="" />
+                    <BigTypography ml="4px" variant="body1">
+                      {collection?.stats?.floorPrice || 0}
+                    </BigTypography>
+                  </FlexBox>
+                  <Box height={'22px'}></Box>
+                </Box>
+              </Box>
+              <Box width="198px">
+                <SmallTypography>Loan to value</SmallTypography>
+                <FlexBox mt="8px">
+                  <img src={myCollateralIcon} alt="" />
+                  <BigTypography ml="4px" variant="body1">
+                    {times(collection?.stats?.floorPrice || 0, div(collection.ltv, 10000))}
+                  </BigTypography>
+                </FlexBox>
+                <Typography mt="4px" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
+                  {div(collection?.ltv, 100)}%
+                </Typography>
+              </Box>
+            </FlexEndBox>
           </FlexBox>
           <FlexBoxBetween mt={'24px'}>
-            <RightFlexBox>
+            <LeftFlexBox>
               <FlexBox>
                 <Box width={'86px'}>
                   <BigTypography color="#4BC8B1 !important">0%</BigTypography>
@@ -161,31 +183,31 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                   <BigTypography>{erc20ReserveData.depositRate}%</BigTypography>
                 </Box>
               </FlexBox>
-              <FlexBox>
-                <Box mt={'4px'} width="149px">
-                  <SmallTypography color="#A0A3BD !important">Token Reward</SmallTypography>
+              <FlexBox mt="4px">
+                <Box width="149px">
+                  <TokenTypography color="#A0A3BD !important">Token Reward</TokenTypography>
                 </Box>
                 <Box width="147px">
-                  <SmallTypography color="#A0A3BD !important">Borrow APY</SmallTypography>
+                  <TokenTypography color="#A0A3BD !important">Borrow APY</TokenTypography>
                 </Box>
                 <Box>
-                  <SmallTypography>Net Borrow APY</SmallTypography>
+                  <TokenTypography>Net Borrow APY</TokenTypography>
                 </Box>
               </FlexBox>
-            </RightFlexBox>
-            <RightFlexBox ml={'24px'}>
+            </LeftFlexBox>
+            <RightFlexBox>
               <FlexBox>
-                <Box ml={'24px'} width={'198px'}>
+                <Box width={'198px'}>
                   <BigTypography> {div(collection.liqThreshold, 100)}%</BigTypography>
-                  <SmallTypography mt="4px" color="#A0A3BD !important">
+                  <TokenTypography mt="4px" color="#A0A3BD !important">
                     Liquidation Threshold
-                  </SmallTypography>
+                  </TokenTypography>
                 </Box>
                 <Box>
                   <BigTypography>10%</BigTypography>
-                  <SmallTypography mt="4px" color="#A0A3BD !important">
+                  <TokenTypography mt="4px" color="#A0A3BD !important">
                     Liquidation Profit
-                  </SmallTypography>
+                  </TokenTypography>
                 </Box>
               </FlexBox>
             </RightFlexBox>

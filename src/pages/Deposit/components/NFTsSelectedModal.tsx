@@ -58,7 +58,7 @@ const WithdrawList = styled(Box)`
 const BodyTypography = styled(Typography)`
   font-weight: 500;
   font-size: 14px;
-  line-height: 22px;
+  line-height: 19px;
   color: #a0a3bd;
 `
 interface NFTsSelectedType {
@@ -251,7 +251,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
         <RightFlexBox mb="24px">
           <FlexBox>
             <Box width={'65px'}>
-              <Typography component="p" variant="subtitle2" lineHeight="16px" color="#4BC8B1">
+              <Typography variant="subtitle2" color="#4BC8B1">
                 20%
               </Typography>
             </Box>
@@ -269,7 +269,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
               </FlexBox>
             </Box>
             <Box width={'66px'}>
-              <Typography component="p" variant="subtitle2" lineHeight="16px" color="#6E7191">
+              <Typography variant="subtitle2" color="#6E7191">
                 -10%
               </Typography>
             </Box>
@@ -287,7 +287,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
               </FlexBox>
             </Box>
             <Box>
-              <Typography component="p" variant="subtitle2" lineHeight="16px" color="#4E4B66">
+              <Typography variant="subtitle2" color="#4E4B66">
                 10%
               </Typography>
             </Box>

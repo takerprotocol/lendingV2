@@ -69,7 +69,6 @@ export default function MySupplySwitchModal({
   const modalType = useMemo(() => {
     return !loanType && +NFTCollateralType === 0 && new BigNumber(upBorrowLimitUsed).lte(150) && switchType === 0
   }, [NFTCollateralType, loanType, switchType, upBorrowLimitUsed])
-  console.log('switchType', switchType)
   return (
     <Modal
       open={openMySupplySwitchModal}

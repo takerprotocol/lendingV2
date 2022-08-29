@@ -1,5 +1,11 @@
-import { styled, Typography } from '@mui/material'
-import { useMemo } from 'react'
+import { Box, styled, Typography } from '@mui/material'
+import Pager from 'components/Pages/Pager'
+import CustomizedSelect from 'components/Select'
+import { useCallback, useMemo, useState } from 'react'
+import { FlexBox } from 'styleds'
+import Collection1 from 'assets/images/png/liquidation/example/1.png'
+import Collection2 from 'assets/images/png/liquidation/example/2.png'
+import Collection3 from 'assets/images/png/liquidation/example/3.png'
 import EthCollateral from './EthCollateral'
 import LiquidationBar from './LiquidationBar'
 import NFTItem from './NFTItem'
@@ -56,6 +62,9 @@ const TotalLiquidation = styled(Typography)`
 `
 
 const NFTRow = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 35px;
 `
 
@@ -70,11 +79,30 @@ const NFTRowTitle = styled(Typography)`
 
 const NFTCollaterals = styled('div')`
   display: grid;
+  position: relative;
   margin-top: 30px;
   grid-template-columns: repeat(auto-fit, minmax(305px, 1fr));
   grid-gap: 24px;
 `
+//------css--------//
 
+const CollectionSortItem = styled('div')`
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  img {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #7646ff;
+    object-fit: cover;
+  }
+`
+//-------css-------//
 const LiquidateBody = ({ total, collaterals, loading }: { total: number; collaterals: any[]; loading: boolean }) => {
   const Collaterals = useMemo(
     () =>
@@ -90,6 +118,235 @@ const LiquidateBody = ({ total, collaterals, loading }: { total: number; collate
         .map((_collateral, index) => <NFTItemSkeleton key={`collateral-${index}`} />),
     []
   )
+  //--------js--------//
+  const testCollaterals = useMemo(
+    () => [
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 120,
+        collections: [
+          {
+            name: 'Cryptopunks',
+            image: Collection1,
+            nfts: new Array(2),
+          },
+        ],
+        debt: 50,
+        riskPercentage: 105,
+        riskLevel: 'Liquidation',
+      },
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 2,
+        collections: [
+          {
+            name: 'Cryptopunks',
+            image: Collection1,
+            nfts: new Array(2),
+          },
+        ],
+        debt: 2,
+        riskPercentage: 90,
+        riskLevel: 'Liquidation',
+      },
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 50,
+        collections: [
+          {
+            name: 'Cryptopunks',
+            image: Collection1,
+            nfts: new Array(2),
+          },
+        ],
+        debt: 398,
+        riskPercentage: 0,
+        riskLevel: 'Liquidation',
+      },
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 20,
+        collections: [
+          {
+            name: 'Bored Ape Yacht Club',
+            image: Collection2,
+            nfts: new Array(2),
+          },
+          {
+            name: 'Jadu Hoverboard',
+            image: Collection3,
+            nfts: new Array(2),
+          },
+          {
+            name: 'Bored Ape Yacht Club',
+            image: Collection2,
+            nfts: new Array(2),
+          },
+        ],
+        debt: 60,
+        riskPercentage: 110,
+        riskLevel: 'Liquidation',
+      },
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 0.1,
+        collections: [
+          {
+            name: 'Jadu Hoverboard',
+            image: Collection3,
+            nfts: new Array(2),
+          },
+        ],
+        debt: 20,
+        riskPercentage: 110,
+        riskLevel: 'Liquidation',
+      },
+      {
+        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+        collateral: 60,
+        collections: [
+          {
+            name: 'Cryptopunks',
+            image: Collection1,
+            nfts: new Array(2),
+          },
+          {
+            name: 'NFTrees',
+            image: Collection2,
+            nfts: new Array(2),
+          },
+          {
+            name: 'Jadu Hoverboard',
+            image: Collection3,
+            nfts: new Array(2),
+          },
+          {
+            name: 'Bored Ape Yacht Club',
+            image: Collection2,
+            nfts: new Array(2),
+          },
+          {
+            name: 'Bored Ape Yacht Club',
+            image: Collection2,
+            nfts: new Array(2),
+          },
+          {
+            name: 'Jadu Hoverboard',
+            image: Collection3,
+            nfts: new Array(5),
+          },
+          {
+            name: 'Bored Ape Yacht Club',
+            image: Collection2,
+            nfts: new Array(5),
+          },
+          {
+            name: 'Bored Ape Yacht Club',
+            image: Collection2,
+            nfts: new Array(5),
+          },
+          {
+            name: 'Bored Ape Yacht Club',
+            image: Collection2,
+            nfts: new Array(5),
+          },
+          {
+            name: 'Jadu Hoverboard',
+            image: Collection3,
+            nfts: new Array(5),
+          },
+          {
+            name: 'Bored Ape Yacht Club',
+            image: Collection2,
+            nfts: new Array(3),
+          },
+        ],
+        debt: 35,
+        riskPercentage: 110,
+        riskLevel: 'Liquidation',
+      },
+    ],
+    []
+  )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const multipleCollaterals = [
+    ...testCollaterals,
+    ...testCollaterals,
+    ...testCollaterals,
+    ...testCollaterals,
+    ...testCollaterals,
+  ]
+  const [collectionFilter, setCollectionFilter] = useState(0)
+  const handleCollectionFilterChange = useCallback(
+    (event: any) => setCollectionFilter(event.target.value as number),
+    []
+  )
+  const NftCollections = useMemo(
+    () => multipleCollaterals.map((collateral: any) => collateral.collections).flat(),
+    [multipleCollaterals]
+  )
+  const uniqueCollections: any = useMemo(
+    () => [...new Set(NftCollections.map((collection: any) => collection.name))],
+    [NftCollections]
+  )
+  console.log('uniqueCollections', uniqueCollections)
+  console.log('multipleCollaterals', multipleCollaterals)
+  const collectionOptions = useMemo(() => {
+    return [
+      {
+        value: 0,
+        name: 'All Collections',
+      },
+      ...uniqueCollections.map((collection: any, index: number) => ({
+        value: index + 1,
+        name: (
+          <CollectionSortItem>
+            <img
+              alt={collection}
+              src={NftCollections.find((findCollection: any) => findCollection.name === collection).image}
+            />
+            {collection}
+          </CollectionSortItem>
+        ),
+      })),
+    ]
+  }, [uniqueCollections, NftCollections])
+
+  const [sort, setSort] = useState(0)
+  const handleSortUpdate = useCallback((event: any) => setSort(event.target.value as number), [])
+  const sortOptions = useMemo(() => {
+    return [
+      {
+        value: 0,
+        name: 'Default Sort',
+      },
+      {
+        value: 1,
+        name: 'Collateral ↓',
+      },
+      {
+        value: 2,
+        name: 'Collateral ↑',
+      },
+      {
+        value: 3,
+        name: 'Total Debt ↓',
+      },
+      {
+        value: 4,
+        name: 'Total Debt ↑',
+      },
+      {
+        value: 5,
+        name: 'Risk Level: Low to High',
+      },
+      {
+        value: 6,
+        name: 'Risk Level: High to Low',
+      },
+    ]
+  }, [])
+  //-------js---------//
   return (
     <Container>
       <TitleRow>
@@ -112,8 +369,41 @@ const LiquidateBody = ({ total, collaterals, loading }: { total: number; collate
       </TitleRow>
       <NFTRow>
         <NFTRowTitle>{collaterals.length || 0} NFT Collaterals</NFTRowTitle>
+        <FlexBox>
+          <CustomizedSelect
+            value={collectionFilter}
+            options={collectionOptions}
+            onChange={handleCollectionFilterChange}
+            startAdornment={
+              <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
+                <path d="M7 8H17" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M8 5H16" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            }
+            labelId="collateral-filter"
+            id="collateral-filter"
+          />
+          <Box width="36px"></Box>
+          <CustomizedSelect
+            value={sort}
+            options={sortOptions}
+            onChange={handleSortUpdate}
+            startAdornment={
+              <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.5 18.5V5.5L5.5 8.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M14.5 5.5V18.5L17.5 15.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            }
+            labelId="collateral-sort"
+            id="collateral-sort"
+          />
+        </FlexBox>
       </NFTRow>
-      <NFTCollaterals>{loading ? LoadingCollaterals : Collaterals}</NFTCollaterals>
+      <NFTCollaterals>
+        {loading ? LoadingCollaterals : Collaterals}
+        <Pager TypeKey={'liquidate'} list={loading ? [] : Collaterals}></Pager>
+      </NFTCollaterals>
       <EthCollateral liquidationAmount={46.0} max={117.5789} potentialProfit={3.6} subtotal={41.4} label="Profitable" />
       <LiquidationBar total={233.7965} nfts={2} nftsValue={116.2176} ethValue={41.4} />
     </Container>

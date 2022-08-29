@@ -5,7 +5,7 @@ import RefreshIcon2 from 'assets/images/svg/common/refresh2.svg'
 import redResetButton from 'assets/images/svg/deposit/redResetButton.svg'
 import redXButton from 'assets/images/svg/deposit/redXButton.svg'
 import NFTsList from './NFTsList'
-import Pager from './Pager'
+import Pager from '../../../components/Pages/Pager'
 import AvailableAndDepositedSkeleton from './depositSkeleton/AvailableAndDepositedSkeleton'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import SureModal from './SureModal'
@@ -14,19 +14,24 @@ import { getAlchemyNftMetadata } from 'services/module/deposit'
 import { Nft } from '@alch/alchemy-sdk'
 import { useCollateralBorrowLimitUsed } from 'state/user/hooks'
 import WithdrawSelectedModal from './WithdrawSelectedModal'
-const DepositedNFTsStyleBox = styled(Box)``
+const DepositedNFTsStyleBox = styled(Box)`
+  margin-bottom: 200px;
+`
 const DepositedNFTsBox = styled(Box)`
   width: 1012px;
   border-radius: 12px;
-  padding: 24px 0 0 24px;
+  padding: 19px 0 0 24px;
   margin-bottom: 42px;
   position: relative;
-  background: linear-gradient(180deg, rgba(217, 219, 233, 0.3) 17.89%, rgba(217, 219, 233, 0) 100%);
 `
 const FlexBox = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`
+const FlexStartBox = styled(Box)`
+  display: flex;
+  align-items: flex-start;
 `
 const WithdrawButtonBox = styled(Box)`
   display: flex;
@@ -101,28 +106,50 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
   useEffect(() => {
     getWithdrawList()
   }, [getWithdrawList])
+  console.log('list.length', list.length)
   return (
     <DepositedNFTsStyleBox
       sx={{
         opacity: `${depositType === 'open' ? '0.7' : '1'}`,
       }}
     >
-      <DepositedNFTsBox>
+      <DepositedNFTsBox
+        sx={{
+          background: `${
+            list.length === 0
+              ? ''
+              : 'linear-gradient(180deg, rgba(217, 219, 233, 0.3) 17.89%, rgba(217, 219, 233, 0) 100%)'
+          }`,
+        }}
+      >
         {loading ? (
           <AvailableAndDepositedSkeleton />
         ) : (
           <FlexBox mb="43px">
-            <Box>
-              <Typography component="span" variant="h5" fontWeight="700" fontSize=" 24px">
-                You can withdraw
-              </Typography>
-              <Typography ml={'16px'} component="span" variant="subtitle1" color="#6E7191">
-                {list.length} NFTs / {amount} ETH
-              </Typography>
-            </Box>
+            <>
+              {list.length === 0 ? (
+                <FlexStartBox>
+                  <Typography lineHeight="38px" color="#4E4B66" fontWeight="700" fontSize=" 24px">
+                    You can withdraw
+                  </Typography>
+                  <Typography mt="12px" ml="16px" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
+                    {list.length} NFTs / {amount} ETH
+                  </Typography>
+                </FlexStartBox>
+              ) : (
+                <FlexStartBox>
+                  <Typography lineHeight="38px" color="#4E4B66" fontWeight="700" fontSize=" 24px">
+                    0 Deposited NFTs
+                  </Typography>
+                  <Typography mt="12px" ml="16px" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
+                    0.00 ETH
+                  </Typography>
+                </FlexStartBox>
+              )}
+            </>
             {withdrawType === 'shut' ? (
               <Button
-                sx={{ display: `${!list && 'none'}`, marginRight: '24px' }}
+                sx={{ display: `${list.length === 0 && 'none'}`, marginRight: '24px' }}
                 variant="contained"
                 color="secondary"
                 onClick={ButtonWithdraw}

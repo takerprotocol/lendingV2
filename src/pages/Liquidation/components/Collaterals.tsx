@@ -6,9 +6,10 @@ import { ReactNode, useCallback, useMemo, useState } from 'react'
 import CollateralItem from './CollateralItem'
 import CollateralItemSkeleton from './CollateralItemSkeleton'
 import EmptyState from './EmptyState'
+import collateralsBg from 'assets/images/svg/liquidation/collaterals-Bg.svg'
 import CollateralPagination from './CollateralPagination'
-import { FlexBox } from 'styleds'
 import React from 'react'
+import { FlexBox } from 'styleds'
 import CollateralsType from './CollateralsType'
 import { useCollateralsType } from 'state/user/hooks'
 // import { setUserValues } from 'state/user/reducer'
@@ -17,17 +18,12 @@ const CollateralsContainer = styled(Box)`
   width: calc(100% - 280px);
   min-height: 100vh;
   margin: 0 auto;
-  margin-top: 308px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 15.73%, rgba(255, 255, 255, 0) 78.72%);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url(${collateralsBg});
   backdrop-filter: blur(80px);
-  /* Note: backdrop-filter has minimal browser support */
   border-radius: 12px;
   z-index: 5;
-  padding-top: 27px;
-  padding-left: 50px;
-  padding-right: 50px;
-  position: relative;
-  padding-bottom: 48px;
 `
 
 const CollateralSelectText = styled(Typography)`
@@ -51,6 +47,15 @@ const CollateralSelectText = styled(Typography)`
 `
 
 const CollateralsFilterHeader = styled('div')`
+  padding-top: 27px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 40px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+  z-index: 10;
   display: flex;
   justify-content: space-between;
 `
@@ -98,19 +103,17 @@ const SortFilterContainer = styled('div')`
 const FilterContainer = styled('div')`
   display: flex;
   width: 100%;
-  margin-top: 40px;
   gap: 20px;
 `
 
 const SortContainer = styled('div')`
   display: flex;
   width: 100%;
-  margin-top: 40px;
   justify-content: flex-end;
 `
 
 const DebtFilterSelect = styled(CustomizedSelect)`
-  margin-left: 10px;
+  margin-left: 2px;
 `
 
 const CollateralItems = styled('div')`
@@ -289,11 +292,11 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       },
       {
         value: 5,
-        name: 'Risk Level ↓',
+        name: 'Risk Level: Low to High',
       },
       {
         value: 6,
-        name: 'Risk Level ↑',
+        name: 'Risk Level: High to Low',
       },
     ]
   }, [])
@@ -382,11 +385,18 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
     cursor: pointer;
   `
   //---------------//
+  const PaddingBox = styled(Box)`
+    padding-left: 50px;
+    padding-right: 50px;
+    max-height: 735px;
+    overflow: scroll;
+  `
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget)
   }
+  console.log('searchTerms', searchTerms)
   const collateralsType = useCollateralsType()
   //---------------//
   return (
@@ -476,55 +486,71 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
           </SearchIcon>
         </InputContainer>
       </CollateralsFilterHeader>
-      <SortFilterContainer>
-        <FilterContainer>
-          <CustomizedSelect
-            value={collectionFilter}
-            options={collectionOptions}
-            onChange={handleCollectionFilterChange}
-            startAdornment={
-              <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
-                <path d="M7 8H17" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M8 5H16" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+      <PaddingBox>
+        <SortFilterContainer>
+          <FilterContainer>
+            <CustomizedSelect
+              value={collectionFilter}
+              options={collectionOptions}
+              onChange={handleCollectionFilterChange}
+              startAdornment={
+                <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
+                  <path d="M7 8H17" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M8 5H16" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              }
+              labelId="collateral-filter"
+              id="collateral-filter"
+            />
+            <DebtFilterSelect
+              value={debtFilter}
+              options={debtFilters}
+              onChange={handleDebtFilterChange}
+              startAdornment={
+                <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 11.7576L11.5 3L17 11.7576L11.5 20L6 11.7576Z" stroke="#6E7191" strokeLinejoin="round" />
+                  <path d="M6 11.5L11.5 15L17 11.5" stroke="#6E7191" strokeLinejoin="round" />
+                </svg>
+              }
+              labelId="debt-filter"
+              id="debt-filter"
+            />
+            <FlexBox sx={{ cursor: 'pointer' }} ml="12px" width="120px">
+              <Typography fontStyle="16px" color="#4E4B66" fontWeight="700" lineHeight="22px" mr="4px">
+                Reset All
+              </Typography>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 18C8.68629 18 6 15.3137 6 12C6 9.99247 6.98593 8.21523 8.5 7.12605L5 8M12 6C15.3137 6 18 8.68629 18 12C18 14.0075 17.0141 15.7848 15.5 16.874L19 16"
+                  stroke="#6E7191"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
-            }
-            labelId="collateral-filter"
-            id="collateral-filter"
-          />
-          <DebtFilterSelect
-            value={debtFilter}
-            options={debtFilters}
-            onChange={handleDebtFilterChange}
-            startAdornment={
-              <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 11.7576L11.5 3L17 11.7576L11.5 20L6 11.7576Z" stroke="#6E7191" strokeLinejoin="round" />
-                <path d="M6 11.5L11.5 15L17 11.5" stroke="#6E7191" strokeLinejoin="round" />
-              </svg>
-            }
-            labelId="debt-filter"
-            id="debt-filter"
-          />
-        </FilterContainer>
-        <SortContainer>
-          <CustomizedSelect
-            value={sort}
-            options={sortOptions}
-            onChange={handleSortUpdate}
-            startAdornment={
-              <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8.5 18.5V5.5L5.5 8.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M14.5 5.5V18.5L17.5 15.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            }
-            labelId="collateral-sort"
-            id="collateral-sort"
-          />
-        </SortContainer>
-      </SortFilterContainer>
-      <CollateralItems>
-        {loading ? CollateralSkeletonList : !!collaterals.length ? CollateralList : <EmptyState />}
-      </CollateralItems>
+            </FlexBox>
+          </FilterContainer>
+          <SortContainer>
+            <CustomizedSelect
+              value={sort}
+              options={sortOptions}
+              onChange={handleSortUpdate}
+              startAdornment={
+                <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.5 18.5V5.5L5.5 8.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M14.5 5.5V18.5L17.5 15.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              }
+              labelId="collateral-sort"
+              id="collateral-sort"
+            />
+          </SortContainer>
+        </SortFilterContainer>
+        <CollateralItems>
+          {loading ? CollateralSkeletonList : !!collaterals.length ? CollateralList : <EmptyState />}
+        </CollateralItems>
+      </PaddingBox>
       <CollateralPagination collaterals={collaterals} onPageSelect={(number: number) => null} />
       <CollateralsType open={open} anchorEl={anchorEl} setAnchorEl={setAnchorEl}></CollateralsType>
     </CollateralsContainer>
