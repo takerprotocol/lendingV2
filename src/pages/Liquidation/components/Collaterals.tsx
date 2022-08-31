@@ -12,6 +12,8 @@ import React from 'react'
 import { FlexBox } from 'styleds'
 import CollateralsType from './CollateralsType'
 import { useCollateralsType } from 'state/user/hooks'
+import { CollateralModel, CollectionsModel } from 'services/type/nft'
+import BigNumber from 'bignumber.js'
 // import { setUserValues } from 'state/user/reducer'
 
 const CollateralsContainer = styled(Box)`
@@ -171,7 +173,7 @@ const AutoCompleteItem = styled(Typography)`
   }
 `
 
-const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; loading: boolean }) => {
+const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<CollateralModel>; loading: boolean }) => {
   const [search, setSearch] = useState('')
   const [searchTerms, setSearchTerms] = useState<string[]>([])
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => setSearch(String(e.currentTarget.value))
@@ -302,22 +304,22 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
   }, [])
 
   const sortOptionsFunction = useCallback(
-    (collateralA: any, collateralB: any) => {
+    (collateralA: CollateralModel, collateralB: CollateralModel) => {
       switch (sort) {
         case 1:
-          return collateralA.collateral - collateralB.collateral
+          return new BigNumber(collateralA.collateral).gt(collateralB.collateral) ? 1 : -1
         case 2:
-          return collateralB.collateral - collateralA.collateral
+          return new BigNumber(collateralB.collateral).gt(collateralA.collateral) ? 1 : -1
         case 3:
-          return collateralA.debt - collateralB.debt
+          return new BigNumber(collateralA.debt).gt(collateralB.debt) ? 1 : -1
         case 4:
-          return collateralB.debt - collateralA.debt
+          return new BigNumber(collateralB.debt).gt(collateralA.debt) ? 1 : -1
         case 5:
-          return collateralA.riskPercentage - collateralB.riskPercentage
+          return new BigNumber(collateralA.riskPercentage).gt(collateralB.riskPercentage) ? 1 : -1
         case 6:
-          return collateralB.riskPercentage - collateralA.riskPercentage
+          return new BigNumber(collateralB.riskPercentage).gt(collateralA.riskPercentage) ? 1 : -1
         default:
-          return true
+          return 0
       }
     },
     [sort]
@@ -328,8 +330,11 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals?: any; load
       .filter(collectionsFilterFunction)
       .filter(deptFilterFunction)
       .sort(sortOptionsFunction)
-      .map((collateral: any, index: number) => {
-        const nfts = collateral.collections.reduce((acc: any, current: any) => acc + current.nfts.length, 0)
+      .map((collateral: CollateralModel, index: number) => {
+        const nfts = collateral.collections.reduce(
+          (acc: number, current: CollectionsModel) => acc + current.tokens.length,
+          0
+        )
         return <CollateralItem key={`collateral-${JSON.stringify(collateral)}${index}`} {...collateral} nfts={nfts} />
       })
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

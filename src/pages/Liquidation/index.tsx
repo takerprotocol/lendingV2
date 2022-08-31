@@ -2,13 +2,15 @@ import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Header from './components/Header'
 import Collaterals from './components/Collaterals'
-import Collection1 from '../../assets/images/png/liquidation/example/1.png'
-import Collection2 from '../../assets/images/png/liquidation/example/2.png'
-import Collection3 from '../../assets/images/png/liquidation/example/3.png'
 import liquidationBg from 'assets/images/svg/liquidation/liquidation-icon.svg'
-import { useEffect, useMemo, useState } from 'react'
-import React from 'react'
-
+import { useCallback, useEffect, useState } from 'react'
+import { getClient } from 'apollo/client'
+import { SupportedChainId } from 'constants/chains'
+import { User } from 'apollo/queries'
+import { useAddress, useHeath, useUserValue } from 'state/user/hooks'
+import { CollateralModel } from 'services/type/nft'
+import { getRiskLevel, getRiskLevelTag } from 'utils'
+const client = getClient()[SupportedChainId.MAINNET]
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 
 const Body = styled(Box)`
@@ -23,165 +25,44 @@ const Body = styled(Box)`
   margin-bottom: 304px;
 `
 export default function Liquidation() {
-  const collaterals = useMemo(
-    () => [
-      {
-        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        collateral: 120,
-        collections: [
-          {
-            name: 'Cryptopunks',
-            image: Collection1,
-            nfts: new Array(2),
-          },
-        ],
-        debt: 50,
-        riskPercentage: 105,
-        riskLevel: 'Liquidation',
-      },
-      {
-        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        collateral: 2,
-        collections: [
-          {
-            name: 'Cryptopunks',
-            image: Collection1,
-            nfts: new Array(2),
-          },
-        ],
-        debt: 2,
-        riskPercentage: 90,
-        riskLevel: 'Liquidation',
-      },
-      {
-        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        collateral: 50,
-        collections: [
-          {
-            name: 'Cryptopunks',
-            image: Collection1,
-            nfts: new Array(2),
-          },
-        ],
-        debt: 398,
-        riskPercentage: 0,
-        riskLevel: 'Liquidation',
-      },
-      {
-        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        collateral: 20,
-        collections: [
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Jadu Hoverboard',
-            image: Collection3,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-        ],
-        debt: 60,
-        riskPercentage: 110,
-        riskLevel: 'Liquidation',
-      },
-      {
-        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        collateral: 0.1,
-        collections: [
-          {
-            name: 'Jadu Hoverboard',
-            image: Collection3,
-            nfts: new Array(2),
-          },
-        ],
-        debt: 20,
-        riskPercentage: 110,
-        riskLevel: 'Liquidation',
-      },
-      {
-        address: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        collateral: 60,
-        collections: [
-          {
-            name: 'Cryptopunks',
-            image: Collection1,
-            nfts: new Array(2),
-          },
-          {
-            name: 'NFTrees',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Jadu Hoverboard',
-            image: Collection3,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(2),
-          },
-          {
-            name: 'Jadu Hoverboard',
-            image: Collection3,
-            nfts: new Array(5),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(5),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(5),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(5),
-          },
-          {
-            name: 'Jadu Hoverboard',
-            image: Collection3,
-            nfts: new Array(5),
-          },
-          {
-            name: 'Bored Ape Yacht Club',
-            image: Collection2,
-            nfts: new Array(3),
-          },
-        ],
-        debt: 35,
-        riskPercentage: 110,
-        riskLevel: 'Liquidation',
-      },
-    ],
-    []
-  )
   const [loading, setLoading] = useState(true)
+  const [collaterals, setCollaterals] = useState<Array<CollateralModel>>([])
+  const address = useAddress()
+  const userValue = useUserValue()
+  const heath = useHeath()
+  const TypographyRiskLevel = getRiskLevel(heath)
+  const riskLevelTag = getRiskLevelTag(heath)
+  const getCollaterals = useCallback(async () => {
+    if (address) {
+      const user = await client.query({
+        query: User(`${address}`),
+      })
+      setLoading(false)
+      if (user.data.user) {
+        setCollaterals([
+          {
+            address,
+            collateral: userValue.totalCollateral,
+            collections: user.data.user.collections,
+            debt: userValue.totalDebt,
+            riskPercentage: heath,
+            riskLevel: TypographyRiskLevel,
+            riskLevelTag,
+          },
+        ])
+      }
+    }
+  }, [TypographyRiskLevel, address, heath, riskLevelTag, userValue.totalCollateral, userValue.totalDebt])
+
   useEffect(() => {
-    setTimeout(() => setLoading(false), 2000)
-  }, [])
-  const multipleCollaterals = [...collaterals, ...collaterals, ...collaterals, ...collaterals, ...collaterals]
+    getCollaterals()
+  }, [getCollaterals])
+
   return (
     <Body className="header-padding">
       <Header />
       <Box height="308px"></Box>
-      <Collaterals loading={loading} collaterals={multipleCollaterals} />
+      <Collaterals loading={loading} collaterals={collaterals} />
     </Body>
   )
 }

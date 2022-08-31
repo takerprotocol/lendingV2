@@ -22,3 +22,35 @@ export interface NftTokenModel {
   }
   balance: number
 }
+
+export interface CollateralModel {
+  address: string
+  collateral: string
+  collections: Array<CollectionsModel>
+  debt: string
+  riskPercentage: string
+  riskLevel: string
+  riskLevelTag?: string
+}
+
+export interface CollectionsModel {
+  id: string
+  collection: CollectionModel
+  tokens: Array<TokenModel>
+}
+
+export interface CollectionModel {
+  id: string
+  tNFT: string
+  ercType: string
+  liqThreshold: string
+  ltv: string
+  name: string
+  symbol: string
+  floorPrice: string
+}
+
+export interface TokenModel {
+  id: string
+  amount: string
+}

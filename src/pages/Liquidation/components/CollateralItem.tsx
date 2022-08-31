@@ -1,9 +1,13 @@
-import { Button, styled, Typography } from '@mui/material'
+import { Box, Button, styled, Typography } from '@mui/material'
 import Copy from 'components/Copy'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { CollectionsModel } from 'services/type/nft'
 import { abbrevAddress } from 'utils/abbrevAddres'
-
+import ERC721 from 'assets/images/png/collection/721.png'
+import Azuki from 'assets/images/png/collection/azuki.png'
+import Bayc from 'assets/images/png/collection/bayc.png'
+import Mayc from 'assets/images/png/collection/mayc.png'
 const Card = styled('div')(({ theme }) => ({
   background: '#ffffff',
   border: '1px solid #eff0f6',
@@ -27,7 +31,7 @@ const Header = styled(Typography)`
   color: #a0a3bd;
 `
 
-const Value = styled(Typography)`
+const Value = styled(Box)`
   font-family: 'Quicksand';
   font-style: normal;
   font-weight: 700;
@@ -73,14 +77,7 @@ const StyledCollectionPlaceholder = styled('div')(({ theme }) => ({
 const CollectionImage = (props: any & { src?: string; overflow?: boolean }) => {
   const [error, setError] = useState(false)
   if (props.src || error) {
-    return (
-      <StyledCollectionImage
-        overflow={!!props.overflow}
-        onLoad={() => setError(false)}
-        onError={() => setError(true)}
-        {...props}
-      />
-    )
+    return <StyledCollectionImage onLoad={() => setError(false)} onError={() => setError(true)} {...props} />
   } else {
     return <StyledCollectionPlaceholder />
   }
@@ -131,11 +128,12 @@ const NoCollateralText = styled(Typography)`
 
 type CollateralItemType = {
   address: string
-  collateral: number
+  collateral: string
   collections: any
-  debt: number
-  riskPercentage: number
+  debt: string
+  riskPercentage: string
   riskLevel: string
+  riskLevelTag?: string
   nfts: number
 }
 
@@ -144,27 +142,42 @@ const CollateralItem = ({
   collateral,
   collections,
   debt,
-  riskPercentage = 0,
+  riskPercentage = '0',
+  riskLevelTag,
   riskLevel,
   nfts = 0,
 }: CollateralItemType) => {
-  const overflow = (collections: any[]) => !!(collections?.length > 9)
+  const overflow = useMemo(() => {
+    return collections ? collections.length > 9 : undefined
+  }, [collections])
+
+  const renderImg = (symbol?: string) => {
+    if (symbol) {
+      if (symbol.toLocaleLowerCase().indexOf('mayc') > -1) {
+        return Mayc
+      } else if (symbol.toLocaleLowerCase().indexOf('azuki') > -1) {
+        return Azuki
+      } else if (symbol.toLocaleLowerCase().indexOf('bayc') > -1) {
+        return Bayc
+      }
+    }
+    return ERC721
+  }
   const [shownCollections, setShowCollections] = useState(collections.slice(0, 8))
   const showAllCollections = useCallback(() => setShowCollections(collections), [collections])
   const Collections = useMemo(() => {
     if (shownCollections.length) {
-      return shownCollections?.map((collection: any, index: number) => (
+      return shownCollections?.map((collection: CollectionsModel, index: number) => (
         <CollectionImage
-          key={`collection-${collection.name}${index}`}
+          key={`collection-${collection.id}${index}`}
           alt="collection"
-          src={collection.image}
-          overflow={overflow(collections)}
+          src={renderImg(collection.collection.symbol)}
         />
       ))
     } else {
       return <NoCollateralText>No NFT collateral</NoCollateralText>
     }
-  }, [shownCollections, collections])
+  }, [shownCollections])
 
   const navigate = useNavigate()
 
@@ -197,9 +210,9 @@ const CollateralItem = ({
           {collections?.length || 0} Collections / {nfts} NFTs
         </Header>
         <Value>
-          <CollectionImageContainer style={{ marginLeft: overflow(collections) ? 10 : 0 }}>
+          <CollectionImageContainer style={{ marginLeft: overflow ? 10 : 0 }}>
             {Collections}
-            {overflow(collections) && collections?.length !== shownCollections?.length && (
+            {overflow && collections?.length !== shownCollections?.length && (
               <ShowMoreCollectionsButton onClick={showAllCollections}>
                 <div />
                 <div />
@@ -227,7 +240,7 @@ const CollateralItem = ({
       <DataItem>
         <Header>Risk Level</Header>
         <Value>
-          {riskPercentage}% - {riskLevel}
+          <span className={riskLevelTag}>{riskPercentage}%</span> - {riskLevel}
         </Value>
       </DataItem>
       <Button onClick={() => navigate('/liquidate')} variant="contained" color="primary">
