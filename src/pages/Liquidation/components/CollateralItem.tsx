@@ -57,7 +57,7 @@ const StyledCollectionImage = styled('img', {
   borderLeft: overflow ? '2px white solid' : 'none',
   marginLeft: overflow ? -10 : 0,
   objectFit: 'cover',
-  ':first-child': {
+  ':first-of-type': {
     borderLeft: 'none',
     marginLeft: 'none',
   },
@@ -109,7 +109,7 @@ const ShowMoreCollectionsButton = styled('div')`
     background: #a0a3bd;
     border-radius: 50%;
 
-    :first-child {
+    :first-of-type {
       margin-right: 2px;
     }
 
@@ -153,9 +153,9 @@ const CollateralItem = ({
   const showAllCollections = useCallback(() => setShowCollections(collections), [collections])
   const Collections = useMemo(() => {
     if (shownCollections.length) {
-      return shownCollections?.map((collection: any) => (
+      return shownCollections?.map((collection: any, index: number) => (
         <CollectionImage
-          key={`collection-${JSON.stringify(collection)}`}
+          key={`collection-${collection.name}${index}`}
           alt="collection"
           src={collection.image}
           overflow={overflow(collections)}

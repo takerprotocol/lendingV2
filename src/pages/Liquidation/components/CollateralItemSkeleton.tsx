@@ -15,17 +15,6 @@ const Card = styled('div')(({ theme }) => ({
   },
 }))
 
-const Value = styled(Typography)`
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 160%;
-  margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-`
-
 const DataItem = styled('div')`
   display: flex;
   flex-direction: column;
@@ -73,9 +62,9 @@ const CollateralItemSkeleton = () => {
       </DataItem>
       <CollectionDataItem>
         <StyledSkeleton variant="rectangular" />
-        <Value>
+        <Typography component="div">
           <CollectionImageContainer>{Collections}</CollectionImageContainer>
-        </Value>
+        </Typography>
       </CollectionDataItem>
       <DataItem>
         <StyledSkeleton variant="rectangular" />

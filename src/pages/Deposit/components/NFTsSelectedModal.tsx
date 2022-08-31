@@ -74,7 +74,6 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const address = useAddress()
   const userValue = useUserValue()
   const heath = useHeath()
-  const collateralRiskLevel = useCollateralRiskLevel()
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
   const ercContract = useContract(id, MockERC721Abi)
@@ -96,6 +95,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
       return new BigNumber(total).plus(current.balance || '0').toString()
     }, '0')
   }, [data])
+  const collateralRiskLevel = useCollateralRiskLevel(amount)
   useEffect(() => {
     if (contract && ercContract && address) {
       ercContract.isApprovedForAll(address, contract.address).then((res: boolean) => {
@@ -194,16 +194,16 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <BodyTypography>
-                {userValue.totalCollateral}
+                {new BigNumber(userValue.totalCollateral).toFixed(2, 1)}
                 {'>'}
               </BodyTypography>
               <BodyTypography ml="6px" fontWeight="700 !important" color="#14142A !important">
-                {plus(userValue.totalCollateral, amount)}
+                {new BigNumber(plus(userValue.totalCollateral, amount)).toFixed(2, 1)}
               </BodyTypography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
               <BodyTypography>
-                {borrowLimit}
+                {new BigNumber(borrowLimit).toFixed(2, 1)}
                 {'>'}
               </BodyTypography>
               <BodyTypography
@@ -211,19 +211,19 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
                 fontWeight="700 !important"
                 color={riskLevelWarning ? '#E1536C !important' : '#14142A !important'}
               >
-                {upBorrowLimit}
+                {new BigNumber(upBorrowLimit).toFixed(2, 1)}
               </BodyTypography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
               <BodyTypography>
-                {borrowLimitUsed}% {'>'}
+                {new BigNumber(borrowLimitUsed).toFixed(2, 1)}% {'>'}
               </BodyTypography>
               <BodyTypography
                 ml="6px"
                 fontWeight="700 !important"
                 color={riskLevelWarning ? '#E1536C !important' : '#14142A !important'}
               >
-                {upBorrowLimitUsed}%
+                {new BigNumber(upBorrowLimitUsed).toFixed(2, 1)}%
               </BodyTypography>
             </Box>
           </Box>
@@ -237,14 +237,14 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <BodyTypography>
-              {heath}% {'>'}
+              {new BigNumber(heath).toFixed(2, 1)}% {'>'}
             </BodyTypography>
             <BodyTypography
               ml="6px"
               fontWeight="700 !important"
               color={riskLevelWarning ? '#E1536C !important' : '#14142A !important'}
             >
-              {collateralRiskLevel}%
+              {new BigNumber(collateralRiskLevel).toFixed(2, 1)}%
             </BodyTypography>
           </Box>
         </SpaceBetweenBox>

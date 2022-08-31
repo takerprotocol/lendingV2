@@ -1,8 +1,13 @@
 import { Box } from '@mui/material'
 import { styled } from '@mui/system'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import LiquidateBody from './components/Body'
 import LiquidateHeader from './components/Header'
+import { getClient } from 'apollo/client'
+import { SupportedChainId } from 'constants/chains'
+import { User } from 'apollo/queries'
+import { useAddress } from 'state/user/hooks'
+const client = getClient()[SupportedChainId.MAINNET]
 
 const Body = styled(Box)`
   width: 100%;
@@ -49,6 +54,20 @@ const collateralData = [
 
 const Liquidate = () => {
   const [collaterals, setCollaterals] = useState<any>([])
+  const address = useAddress()
+
+  const getCollaterals = useCallback(async () => {
+    if (address) {
+      const user = await client.query({
+        query: User(`${address}`),
+      })
+      console.log(user, 'useruseruser')
+    }
+  }, [address])
+
+  useEffect(() => {
+    getCollaterals()
+  }, [getCollaterals])
   useEffect(() => {
     setTimeout(() => setCollaterals(collateralData), 1000)
   }, [])

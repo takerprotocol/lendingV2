@@ -129,7 +129,7 @@ export function useCollateralRiskLevel(value?: string | number): string {
   useEffect(() => {
     const riskLevel = times(plus(userValue.totalCollateral, value || 0), div(userState.liquidationThreshold, ethDebt))
     if (new BigNumber(riskLevel).lt(200)) {
-      setCollateralRiskLevel(riskLevel)
+      setCollateralRiskLevel(times(riskLevel, 100))
     }
   }, [ethDebt, userState.liquidationThreshold, userValue.totalCollateral, value])
   return collateralRiskLevel

@@ -106,3 +106,45 @@ export const FIRST_COLLECTION = () => {
 `
   return gql(queryString)
 }
+
+export const User = (id: string) => {
+  const queryString = `
+    query user {
+      user(id: "${id.toLocaleLowerCase()}") {
+        id
+        collections {
+          id
+          collection {
+            id
+            tNFT
+            ercType
+            liqThreshold
+            ltv
+            name
+            symbol
+            floorPrice
+          }
+          tokens {
+            id
+            amount
+          }
+        }
+      }
+    }
+`
+  return gql(queryString)
+}
+
+export const UserReserve = (id: string) => {
+  const queryString = `
+    query userReserve {
+      userReserve(id: "${id.toLocaleLowerCase()}") {
+        id
+        depositedAmount
+        borrowedAmount
+        usedAsCollateral
+      }
+    }
+`
+  return gql(queryString)
+}
