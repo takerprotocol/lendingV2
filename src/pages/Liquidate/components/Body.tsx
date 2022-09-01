@@ -10,6 +10,7 @@ import EthCollateral from './EthCollateral'
 import LiquidationBar from './LiquidationBar'
 import NFTItem from './NFTItem'
 import NFTItemSkeleton from './NftItemSkeleton'
+import { CollateralModel } from 'services/type/nft'
 
 const Container = styled('div')`
   width: 1012px;
@@ -103,14 +104,27 @@ const CollectionSortItem = styled('div')`
   }
 `
 //-------css-------//
-const LiquidateBody = ({ total, collaterals, loading }: { total: number; collaterals: any[]; loading: boolean }) => {
-  const Collaterals = useMemo(
-    () =>
-      collaterals
-        .slice(0, 9)
-        .map((collateral, index) => <NFTItem {...collateral} key={`collateral-${collateral.name}-${index}`} />),
-    [collaterals]
-  )
+const LiquidateBody = ({
+  total,
+  collaterals,
+  loading,
+}: {
+  total: string
+  collaterals: CollateralModel | null
+  loading: boolean
+}) => {
+  const Collaterals = useMemo(() => {
+    if (collaterals) {
+      const items: Array<JSX.Element> = []
+      collaterals.collections.forEach((collection) => {
+        collection.tokens.forEach((token) => {
+          items.push(<NFTItem token={token.id} key={`collateral-${collection.id}-${token.id}`} />)
+        })
+      })
+      return items
+    }
+    return []
+  }, [collaterals])
   const LoadingCollaterals = useMemo(
     () =>
       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -368,7 +382,7 @@ const LiquidateBody = ({ total, collaterals, loading }: { total: number; collate
         </div>
       </TitleRow>
       <NFTRow>
-        <NFTRowTitle>{collaterals.length || 0} NFT Collaterals</NFTRowTitle>
+        <NFTRowTitle>{Collaterals.length || 0} NFT Collaterals</NFTRowTitle>
         <FlexBox>
           <CustomizedSelect
             value={collectionFilter}

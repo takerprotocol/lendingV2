@@ -1,5 +1,6 @@
 import { styled, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
+import { div, times } from 'utils'
 
 const CollateralStatContainer = styled('div')`
   flex: 1;
@@ -116,19 +117,19 @@ const IndicatorColor = styled('div', { shouldForwardProp: (prop) => true })(({ t
 
 type CollateralStatType = {
   title: string
-  total: number
+  total: string
   split1Title: string
-  split1: number
+  split1: string
   split2Title: string
-  split2: number
+  split2: string
 }
 
 const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2 }: CollateralStatType) => {
   const [split1LineLength, setSplit1LineLength] = useState('0%')
   const [split2LineLength, setSplit2LineLength] = useState('0%')
   useEffect(() => {
-    setSplit1LineLength(`${(100 * split1) / total}%`)
-    setSplit2LineLength(`${(100 * split2) / total}%`)
+    setSplit1LineLength(`${div(times(100, split1), total)}%`)
+    setSplit2LineLength(`${div(times(100, split2), total)}%`)
   }, [total, split1, split2])
   return (
     <CollateralStatContainer>

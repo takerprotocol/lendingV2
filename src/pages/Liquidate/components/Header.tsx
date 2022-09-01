@@ -1,7 +1,7 @@
 import Copy from 'components/Copy'
 import CollateralStat from './CollateralStat'
 import { styled } from '@mui/system'
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { abbrevAddress } from 'utils/abbrevAddres'
 
 const CollateralStatsContainer = styled('div')`
@@ -18,7 +18,7 @@ const Stats = styled('div')`
   flex-direction: column;
 `
 
-const CollateralAddress = styled(Typography)`
+const CollateralAddress = styled(Box)`
   flex: 2;
   font-family: 'Quicksand';
   font-style: normal;
@@ -73,12 +73,12 @@ const InfoContainer = styled('div')`
 type LiquidateHeaderType = {
   address: string
   riskPercentage: number
-  totalCollateral: number
-  nftCollateral: number
-  ethCollateral: number
-  totalDebt: number
-  ethDebt: number
-  borrowings: number
+  totalCollateral: string
+  nftCollateral: string
+  ethCollateral: string
+  totalDebt: string
+  ethDebt: string
+  borrowings: string
 }
 
 const LiquidateHeader = ({

@@ -1,5 +1,7 @@
+import { Nft } from '@alch/alchemy-sdk'
 import { Box, Checkbox, styled, TextField, Typography } from '@mui/material'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { getAlchemyNftMetadata } from 'services/module/deposit'
 
 const Container = styled(Box)`
   padding: 12px;
@@ -166,17 +168,12 @@ const EthValue = styled(Typography)`
 `
 
 type NFTItemProps = {
-  name: string
-  image: string
-  collection: {
-    name: string
-    image: string
-  }
-  price: number
-  max: number
+  token: string
 }
 
-const NFTItem = ({ name, image, collection, price, max }: NFTItemProps) => {
+const NFTItem = ({ token }: NFTItemProps) => {
+  const [max] = useState('')
+  const [metadata, setMetadata] = useState<Nft | null>(null)
   const [checked, setChecked] = useState<boolean>(false)
   const handleCheck = useCallback(() => setChecked(!checked), [checked])
   const [floorPrice, setFloorPrice] = useState<string | number>('')
@@ -184,60 +181,74 @@ const NFTItem = ({ name, image, collection, price, max }: NFTItemProps) => {
   const handleNftImageError = useCallback(() => setErrorNftImage(true), [])
   const [errorCollectionImage, setErrorCollectionImage] = useState(false)
   const handleCollectionImageError = useCallback(() => setErrorCollectionImage(true), [])
-
+  useEffect(() => {
+    if (token) {
+      getAlchemyNftMetadata(token.split('-')[1], token.split('-')[2]).then((res) => {
+        if (res) {
+          setMetadata(res)
+        }
+      })
+    }
+  }, [token])
   return (
     <Container sx={{ border: `${checked ? '1px solid #a0a3bd' : ''}` }} onClick={handleCheck}>
       <StyledCheckbox checked={checked} onChange={handleCheck} />
-      <ActionInfoContainer>
-        <NFTInfoContainer>
-          {!errorNftImage ? <NFTImage onError={handleNftImageError} src={image} alt="nft" /> : <NFTImagePlaceholder />}
-          <CollectionInfoContainer>
-            <CollectionImageTitle>
-              {!errorCollectionImage ? (
-                <CollectionImage
-                  onError={handleCollectionImageError}
-                  src={collection.image}
-                  alt={`collection-${collection.name}`}
-                />
-              ) : (
-                <CollectionImagePlaceholder />
-              )}
-              <CollectionTitle>{collection.name || ''}</CollectionTitle>
-            </CollectionImageTitle>
-            <NFTTitle>{name || ''}</NFTTitle>
-          </CollectionInfoContainer>
-        </NFTInfoContainer>
-        <NFTActionContainer>
-          {!!max ? (
-            <StyledTextField
-              placeholder="Floor Price"
-              InputProps={{
-                endAdornment: <MaxText onClick={() => setFloorPrice(15)}>Max {max}</MaxText>,
-              }}
-              value={floorPrice}
-              onChange={(event) => setFloorPrice(event.target.value)}
-              type="number"
-              disabled={!checked}
-            />
-          ) : (
-            <FloorPriceLabel>Floor Price</FloorPriceLabel>
-          )}
-          <EthValue>
-            <svg width="17" height="24" viewBox="0 0 17 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g opacity="0.5">
-                <path
-                  d="M4 12.2121L8.5 5L13 12.2121L8.5 19L4 12.2121Z"
-                  stroke="#6E7191"
-                  strokeWidth="1.5"
-                  strokeLinejoin="round"
-                />
-                <path d="M4 12L8.5 14.5L13 12" stroke="#6E7191" strokeLinejoin="round" />
-              </g>
-            </svg>
-            {price || '0.0000'}
-          </EthValue>
-        </NFTActionContainer>
-      </ActionInfoContainer>
+      {metadata && (
+        <ActionInfoContainer>
+          <NFTInfoContainer>
+            {!errorNftImage ? (
+              <NFTImage onError={handleNftImageError} src={metadata.media[0]?.gateway} alt="nft" />
+            ) : (
+              <NFTImagePlaceholder />
+            )}
+            <CollectionInfoContainer>
+              <CollectionImageTitle>
+                {!errorCollectionImage ? (
+                  <CollectionImage
+                    onError={handleCollectionImageError}
+                    src={metadata.media[0]?.gateway}
+                    alt={`collection-${token}`}
+                  />
+                ) : (
+                  <CollectionImagePlaceholder />
+                )}
+                <CollectionTitle>{token || ''}</CollectionTitle>
+              </CollectionImageTitle>
+              <NFTTitle>{metadata.title || ''}</NFTTitle>
+            </CollectionInfoContainer>
+          </NFTInfoContainer>
+          <NFTActionContainer>
+            {!!max ? (
+              <StyledTextField
+                placeholder="Floor Price"
+                InputProps={{
+                  endAdornment: <MaxText onClick={() => setFloorPrice(15)}>Max {max}</MaxText>,
+                }}
+                value={floorPrice}
+                onChange={(event) => setFloorPrice(event.target.value)}
+                type="number"
+                disabled={!checked}
+              />
+            ) : (
+              <FloorPriceLabel>Floor Price</FloorPriceLabel>
+            )}
+            <EthValue>
+              <svg width="17" height="24" viewBox="0 0 17 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g opacity="0.5">
+                  <path
+                    d="M4 12.2121L8.5 5L13 12.2121L8.5 19L4 12.2121Z"
+                    stroke="#6E7191"
+                    strokeWidth="1.5"
+                    strokeLinejoin="round"
+                  />
+                  <path d="M4 12L8.5 14.5L13 12" stroke="#6E7191" strokeLinejoin="round" />
+                </g>
+              </svg>
+              {'price' || '0.0000'}
+            </EthValue>
+          </NFTActionContainer>
+        </ActionInfoContainer>
+      )}
     </Container>
   )
 }

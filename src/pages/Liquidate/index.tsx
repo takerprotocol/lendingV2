@@ -1,9 +1,18 @@
 import { Box } from '@mui/material'
 import { styled } from '@mui/system'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import LiquidateBody from './components/Body'
 import LiquidateHeader from './components/Header'
+import { getClient } from 'apollo/client'
+import { SupportedChainId } from 'constants/chains'
+import { User } from 'apollo/queries'
+import { useAddress } from 'state/user/hooks'
+import { fromWei } from 'web3-utils'
+import { minus, plus } from 'utils'
+import BigNumber from 'bignumber.js'
+import { CollateralModel } from 'services/type/nft'
 
+const client = getClient()[SupportedChainId.MAINNET]
 const Body = styled(Box)`
   width: 100%;
   max-width: 1012px;
@@ -11,64 +20,66 @@ const Body = styled(Box)`
   padding-top: 94px;
 `
 
-const collateralData = [
-  {
-    name: 'CRYPTOPUNK #4728',
-    image: 'https://cryptopunks.app/cryptopunks/cryptopunk4728.png',
-    collection: {
-      name: 'Cryptopunks',
-      image:
-        'https://img-ae.seadn.io/https%3A%2F%2Flh3.googleusercontent.com%2FBdxvLseXcfl57BiuQcQYdJ64v-aI8din7WPk0Pgo3qQFhAUH-B6i-dCqqc_mCkRIzULmwzwecnohLhrcH8A9mpWIZqA7ygc52Sr81hE%3Ds10000?fit=max&h=120&w=120&auto=format&s=5eab9dfe19106ac590e683947112951b',
-    },
-    price: 7.2176,
-    max: 15,
-  },
-  {
-    name: 'CRYPTOPUNK #4728',
-    image: 'https://cryptopunks.app/cryptopunks/cryptopunk4728.png',
-    collection: {
-      name: 'Cryptopunks',
-      image:
-        'https://img-ae.seadn.io/https%3A%2F%2Flh3.googleusercontent.com%2FBdxvLseXcfl57BiuQcQYdJ64v-aI8din7WPk0Pgo3qQFhAUH-B6i-dCqqc_mCkRIzULmwzwecnohLhrcH8A9mpWIZqA7ygc52Sr81hE%3Ds10000?fit=max&h=120&w=120&auto=format&s=5eab9dfe19106ac590e683947112951b',
-    },
-    price: 7.2176,
-    max: 0,
-  },
-  {
-    name: 'CRYPTOPUNK #4728',
-    image: 'https://cryptopunks.app/cryptopunks/cryptopunk4728.png',
-    collection: {
-      name: 'Cryptopunks',
-      image:
-        'https://img-ae.seadn.io/https%3A%2F%2Flh3.googleusercontent.com%2FBdxvLseXcfl57BiuQcQYdJ64v-aI8din7WPk0Pgo3qQFhAUH-B6i-dCqqc_mCkRIzULmwzwecnohLhrcH8A9mpWIZqA7ygc52Sr81hE%3Ds10000?fit=max&h=120&w=120&auto=format&s=5eab9dfe19106ac590e683947112951b',
-    },
-    price: 7.2176,
-    max: 15,
-  },
-]
-
 const Liquidate = () => {
-  const [collaterals, setCollaterals] = useState<any>([])
-
+  const [collaterals, setCollaterals] = useState<CollateralModel | null>(null)
+  const [totalDebt, setTotalDebt] = useState('0')
+  const [totalCollateral, setTotalCollateral] = useState('0')
+  const [nftCollateral, setNftCollateral] = useState('0')
+  const [loading, setLoading] = useState(false)
+  const address = useAddress()
+  const getCollaterals = useCallback(async () => {
+    if (address) {
+      const user = await client.query({
+        query: User(`${address}`),
+      })
+      setLoading(false)
+      let _totalCollateral = '0'
+      let _totalDebt = '0'
+      let _nftCollateral = '0'
+      if (user.data.user) {
+        user.data.user.reserves.forEach((el: any) => {
+          _totalCollateral = plus(fromWei(el.depositedAmount), _totalCollateral)
+          _totalDebt = plus(fromWei(el.borrowedAmount), totalDebt)
+        })
+        user.data.user.collections.forEach((el: any) => {
+          el.tokens.forEach((tokenItem: any) => {
+            _nftCollateral = plus(fromWei(tokenItem.amount), nftCollateral)
+          })
+        })
+      }
+      setCollaterals({
+        address,
+        collateral: _totalCollateral,
+        collections: user.data.user.collections,
+        debt: _totalDebt,
+        riskPercentage: '100',
+        riskLevel: 'TypographyRiskLevel',
+        riskLevelTag: 'riskLevelTag',
+      })
+      setNftCollateral(_totalCollateral)
+      setTotalDebt(_totalDebt)
+      setTotalCollateral(_nftCollateral)
+    }
+  }, [address, nftCollateral, totalDebt])
   useEffect(() => {
-    setTimeout(() => setCollaterals(collateralData), 1000)
-  }, [])
+    getCollaterals()
+  }, [getCollaterals])
   return (
     <Body>
       <LiquidateHeader
-        address="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+        address={address}
         riskPercentage={110}
-        totalCollateral={526.1862}
-        nftCollateral={360.26}
-        ethCollateral={165.93}
-        totalDebt={467.5814}
-        ethDebt={420.82}
-        borrowings={46.75}
+        totalCollateral={totalCollateral}
+        nftCollateral={nftCollateral}
+        ethCollateral={minus(totalCollateral, nftCollateral)}
+        totalDebt={totalDebt}
+        ethDebt={totalDebt}
+        borrowings={totalDebt}
       />
       <LiquidateBody
-        total={233.7965}
-        collaterals={collaterals.length ? [...collaterals, ...collaterals, ...collaterals] : []}
-        loading={!!!collaterals.length}
+        total={new BigNumber(totalDebt).gt(totalCollateral) ? minus(totalDebt, totalCollateral) : '0'}
+        collaterals={collaterals}
+        loading={loading}
       />
     </Body>
   )

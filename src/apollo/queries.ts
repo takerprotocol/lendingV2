@@ -112,6 +112,20 @@ export const User = (id: string) => {
     query user {
       user(id: "${id.toLocaleLowerCase()}") {
         id
+        reserves {
+          id
+          reserve {
+            tToken
+            debtToken
+            interestRateCalculator
+            liqThreshold
+            ltv
+            name
+            symbol
+          }
+          depositedAmount
+          borrowedAmount
+        }
         collections {
           id
           collection {
