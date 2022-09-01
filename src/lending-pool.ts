@@ -14,7 +14,7 @@ import {
   Withdrawn
 } from "../generated/LendingPool/LendingPool"
 import {
-  NftReserveInitialized, ReserveDeleted, ReserveInitialized
+  NftReserveInitialized, ReserveInitialized
 } from "../generated/PoolConfigurator/PoolConfigurator"
 import {
   LendingPool, Reserve, NftCollection, User, UserReserve, UserNftCollection, NftToken

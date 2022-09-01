@@ -6,6 +6,7 @@ dataSources:
     name: LendingPool
     network: kovan
     source:
+      startBlock: 33440978
       address: "0xDb2d112963A0c320b6DE43AD732b0Fb815a3Bf27"
       abi: LendingPool
     mapping:
@@ -45,6 +46,7 @@ dataSources:
     name: PoolConfigurator
     network: kovan
     source:
+      startBlock: 33440978
       address: "0x2ab524EEbA543Ee9dAe31fb6a9a96f138e467324"
       abi: PoolConfigurator
     mapping:
@@ -79,6 +81,7 @@ dataSources:
     name: NFTBankConsumer
     network: kovan
     source:
+      startBlock: 33440978
       address: "0x6855Ce53c62695d7EF681232c7D6739ce8a11c28"
       abi: NFTBankConsumer
     mapping:
