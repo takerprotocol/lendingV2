@@ -4,8 +4,17 @@ import { setCollateralsType } from 'state/user/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { useCollateralsType } from 'state/user/hooks'
 const CollateralsMenu = styled(Menu)`
+  .MuiPaper-root {
+    max-width: 224px !important;
+    margin-top: 9px !important;
+    margin-left: 0px !important;
+    border: 1px solid #eff0f6 !important;
+    box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3) !important;
+    border-radius: 12px !important;
+  }
   .MuiList-root {
-    width: 224px;
+    width: 224px !important;
+    margin: 0px;
   }
 `
 const StyledMenuItem = styled(MenuItem)`
@@ -13,6 +22,7 @@ const StyledMenuItem = styled(MenuItem)`
   font-style: normal;
   font-weight: 600;
   font-size: 16px;
+  width: 200px;
   line-height: 22px;
   color: #14142a;
   display: flex;
@@ -48,6 +58,7 @@ export default function CollateralsType({ open, anchorEl, setAnchorEl }: Collate
       <CollateralsMenu
         id="basic-menu"
         anchorEl={anchorEl}
+        className="Collaterals"
         open={open}
         onClose={() => {
           setAnchorEl(null)

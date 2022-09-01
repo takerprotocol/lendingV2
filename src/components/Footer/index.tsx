@@ -10,7 +10,6 @@ const FooterStyleBox = styled(Box)`
   height: 267px;
   background: #14142a;
   padding: 48px 140px;
-  margin-top: 72px;
 `
 const FlexBox = styled(Box)`
   display: flex;

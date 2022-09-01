@@ -1,6 +1,7 @@
 import { Box, styled, Fade, Popper, Typography } from '@mui/material'
 import blueChip from 'assets/images/svg/common/blueChip.svg'
 import growth from 'assets/images/svg/common/growth.svg'
+import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { setDashboardType } from 'state/user/reducer'
 
@@ -37,6 +38,7 @@ interface headerProps {
 }
 export default function HeaderPopper({ open, anchorEl, placement, setDashboardOpen }: headerProps) {
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   return (
     <StyledPopper
       open={open}
@@ -56,6 +58,7 @@ export default function HeaderPopper({ open, anchorEl, placement, setDashboardOp
             <ButtonBox
               onClick={() => {
                 dispatch(setDashboardType(1))
+                navigate('/dashboard')
               }}
             >
               <img src={blueChip} alt="" />
@@ -67,6 +70,7 @@ export default function HeaderPopper({ open, anchorEl, placement, setDashboardOp
               mt="12px"
               onClick={() => {
                 dispatch(setDashboardType(2))
+                navigate('/dashboard')
               }}
             >
               <img src={growth} alt="" />

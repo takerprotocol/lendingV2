@@ -2,6 +2,7 @@ import { Button, Typography } from '@mui/material'
 import { styled } from '@mui/system'
 
 const Container = styled('div')`
+  width: 100%;
   text-align: center;
   padding-top: 100px;
 `
@@ -59,20 +60,12 @@ const Explainer = styled(Typography)`
 `
 
 const ClearButton = styled(Button)`
-  background: linear-gradient(
-      61.18deg,
-      rgba(102, 166, 232, 0) 0%,
-      rgba(135, 143, 248, 0.098) 51.07%,
-      rgba(105, 165, 233, 0.2) 97.23%
-    ),
-    #262338;
-  box-shadow: 0px 4px 8px rgba(75, 75, 122, 0.1), inset 0px 2px 2px rgba(75, 86, 132, 0.5);
-  border-radius: 31px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 172px;
+  height: 48px;
   margin: 0 auto;
   margin-top: 10px;
+  margin-bottom: 332px;
+  border-radius: 31px;
 `
 
 const EmptyState = ({
@@ -112,7 +105,9 @@ const EmptyState = ({
       </SearchIcon>
       <Title>No result found</Title>
       <Explainer>No results for {searchTerm}, please check your search or clear your search criteria.</Explainer>
-      <ClearButton onClick={() => onClear()}>Clear Search</ClearButton>
+      <ClearButton variant="contained" onClick={() => onClear()}>
+        Clear Search
+      </ClearButton>
     </Container>
   )
 }

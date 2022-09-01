@@ -13,13 +13,11 @@ const Card = styled('div')(({ theme }) => ({
   border: '1px solid #eff0f6',
   borderRadius: 12,
   width: '100%',
-  padding: 23,
+  padding: 24,
+  paddingTop: 22,
+  paddingBottom: 22,
   display: 'flex',
-  justifyContent: 'space-between',
-  flexWrap: 'wrap',
-  [theme.breakpoints.down('md')]: {
-    gap: 20,
-  },
+  [theme.breakpoints.down('md')]: {},
 }))
 
 const Header = styled(Typography)`
@@ -37,12 +35,22 @@ const Value = styled(Box)`
   font-weight: 700;
   font-size: 14px;
   line-height: 160%;
-  margin-top: 12px;
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+`
+const ValueText = styled(Typography)`
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 160%;
+  color: #a0a3bd;
   display: flex;
   flex-wrap: wrap;
 `
 
-const DataItem = styled('div')`
+const DataItem = styled(Box)`
   display: flex;
   flex-direction: column;
 `
@@ -54,11 +62,13 @@ const CollectionDataItem = styled(DataItem)`
 const StyledCollectionImage = styled('img', {
   shouldForwardProp: (props) => true,
 })<{ overflow?: boolean }>(({ theme, overflow }) => ({
-  width: 24,
-  height: 24,
+  width: 26,
+  height: 28,
   borderRadius: 4,
   backgroundColor: theme.palette.primary.main,
   borderLeft: overflow ? '2px white solid' : 'none',
+  borderTop: '2px white solid',
+  borderBottom: overflow ? '2px white solid' : 'none',
   marginLeft: overflow ? -10 : 0,
   objectFit: 'cover',
   ':first-of-type': {
@@ -183,14 +193,14 @@ const CollateralItem = ({
 
   return (
     <Card>
-      <DataItem>
+      <DataItem width={'198px'}>
         <Header>Address</Header>
         <Value>
           {abbrevAddress(address)}&nbsp;
           <Copy text={address} />
         </Value>
       </DataItem>
-      <DataItem>
+      <DataItem width={'148px'}>
         <Header>Collateral</Header>
         <Value>
           <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -205,7 +215,7 @@ const CollateralItem = ({
           {collateral}
         </Value>
       </DataItem>
-      <CollectionDataItem>
+      <CollectionDataItem width={'222px'}>
         <Header>
           {collections?.length || 0} Collections / {nfts} NFTs
         </Header>
@@ -214,15 +224,27 @@ const CollateralItem = ({
             {Collections}
             {overflow && collections?.length !== shownCollections?.length && (
               <ShowMoreCollectionsButton onClick={showAllCollections}>
-                <div />
-                <div />
-                <div />
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle opacity="0.5" cx="12" cy="12" r="12" fill="#D9DBE9" />
+                  <path
+                    d="M13.5 12C13.5 11.1716 12.8284 10.5 12 10.5C11.1716 10.5 10.5 11.1716 10.5 12C10.5 12.8284 11.1716 13.5 12 13.5C12.8284 13.5 13.5 12.8284 13.5 12Z"
+                    fill="#A0A3BD"
+                  />
+                  <path
+                    d="M19 12C19 11.1716 18.3284 10.5 17.5 10.5C16.6716 10.5 16 11.1716 16 12C16 12.8284 16.6716 13.5 17.5 13.5C18.3284 13.5 19 12.8284 19 12Z"
+                    fill="#A0A3BD"
+                  />
+                  <path
+                    d="M8 12C8 11.1716 7.32843 10.5 6.5 10.5C5.67157 10.5 5 11.1716 5 12C5 12.8284 5.67157 13.5 6.5 13.5C7.32843 13.5 8 12.8284 8 12Z"
+                    fill="#A0A3BD"
+                  />
+                </svg>
               </ShowMoreCollectionsButton>
             )}
           </CollectionImageContainer>
         </Value>
       </CollectionDataItem>
-      <DataItem>
+      <DataItem width={'148px'}>
         <Header>Total Debt</Header>
         <Value>
           <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -237,14 +259,19 @@ const CollateralItem = ({
           {debt}
         </Value>
       </DataItem>
-      <DataItem>
+      <DataItem width={'178px'}>
         <Header>Risk Level</Header>
-        <Value>
-          <span className={riskLevelTag}>{riskPercentage}%</span> - {riskLevel}
+        <Value color={+riskPercentage <= 120 ? '#E1536C' : '#4E4B66'}>
+          {riskPercentage}%<ValueText>&nbsp;- {riskLevel}</ValueText>
         </Value>
       </DataItem>
-      <Button onClick={() => navigate('/liquidate')} variant="contained" color="primary">
-        Liquidate
+      <Button
+        onClick={() => navigate('/liquidate')}
+        disabled={+riskPercentage <= 120 ? false : true}
+        variant="contained"
+        color="primary"
+      >
+        LIQUIDATE
       </Button>
     </Card>
   )

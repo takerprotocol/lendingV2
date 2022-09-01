@@ -16,13 +16,18 @@ const PaginationButton = styled('div', {
   alignItems: 'center',
   minWidth: 48,
   minHeight: 48,
-  background: selected ? '#262338' : '#ffffff',
+  background: selected
+    ? 'linear-gradient(61.18deg, rgba(102, 166, 232, 0) 0%, rgba(135, 143, 248, 0.098) 51.07%, rgba(105, 165, 233, 0.2) 97.23%), #262338'
+    : '#ffffff',
+  boxShadow: selected ? '0px 4px 8px rgba(75, 75, 122, 0.1), inset 0px 2px 2px rgba(75, 86, 132, 0.5)' : '',
   borderRadius: 6,
   transition: 'all 0.25s ease',
   cursor: 'pointer',
   color: selected ? '#ffffff' : 'initial',
   '&:hover': {
-    background: '#262338',
+    background:
+      'linear-gradient(61.18deg, rgba(102, 166, 232, 0) 0%, rgba(135, 143, 248, 0.098) 51.07%, rgba(105, 165, 233, 0.2) 97.23%), #262338',
+    boxShadow: '0px 4px 8px rgba(75, 75, 122, 0.1), inset 0px 2px 2px rgba(75, 86, 132, 0.5)',
     color: '#ffffff',
   },
 }))
@@ -47,13 +52,16 @@ const ResultsText = styled(Typography)`
   /* Cool Gray 400 */
 
   color: #a0a3bd;
+  opacity: 0.8;
 `
 
 const CollateralPagination = ({
   collaterals,
   onPageSelect,
+  setCurrentPage,
 }: {
   collaterals: any[]
+  setCurrentPage: Function
   onPageSelect: (page: number) => void
 }) => {
   const pages = Math.ceil(collaterals.length / 16)
@@ -61,11 +69,13 @@ const CollateralPagination = ({
   const navigate = useNavigate()
   const onSelect = (index: number) => {
     onPageSelect(index)
+    setCurrentPage(index)
     navigate(`/liquidation/${index}`)
   }
   const nextPage = () => {
     if (params.page && Number(params.page) + 1 <= pages) {
       navigate(`/liquidation/${Number(params.page) + 1}`)
+      setCurrentPage(Number(params.page) + 1)
     } else {
       navigate(`/liquidation/${pages}`)
     }
@@ -73,6 +83,7 @@ const CollateralPagination = ({
   const previousPage = () => {
     if (params.page && Number(params.page) - 1 > 0) {
       navigate(`/liquidation/${Number(params.page) - 1}`)
+      setCurrentPage(Number(params.page) - 1)
     } else {
       navigate(`/liquidation/1`)
     }
@@ -92,7 +103,10 @@ const CollateralPagination = ({
           return (
             <PaginationButton
               selected={Number(params.page || 0) === index + 1}
-              onClick={() => onSelect(index + 1)}
+              onClick={() => {
+                onSelect(index + 1)
+                setCurrentPage(index + 1)
+              }}
               key={`pagination-button-${index}`}
             >
               {index + 1}

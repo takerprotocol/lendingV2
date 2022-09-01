@@ -14,6 +14,7 @@ import CollateralsType from './CollateralsType'
 import { useCollateralsType } from 'state/user/hooks'
 import { CollateralModel, CollectionsModel } from 'services/type/nft'
 import BigNumber from 'bignumber.js'
+import { plus, minus, times } from 'utils'
 // import { setUserValues } from 'state/user/reducer'
 
 const CollateralsContainer = styled(Box)`
@@ -21,9 +22,9 @@ const CollateralsContainer = styled(Box)`
   min-height: 100vh;
   margin: 0 auto;
   background-repeat: no-repeat;
-  background-size: contain;
   background-image: url(${collateralsBg});
   backdrop-filter: blur(80px);
+  background-size: cover;
   border-radius: 12px;
   z-index: 5;
 `
@@ -50,7 +51,7 @@ const CollateralSelectText = styled(Typography)`
 
 const CollateralsFilterHeader = styled('div')`
   padding-top: 27px;
-  padding-left: 50px;
+  padding-left: 48px;
   padding-right: 50px;
   padding-bottom: 40px;
   border-top-left-radius: 12px;
@@ -77,7 +78,7 @@ const KeywordSearchInput = styled('input')`
   outline: none;
   border: none;
   padding: 16px;
-  padding-left: 46px;
+  padding-left: 48px;
   font-family: 'Quicksand';
   font-style: normal;
   font-weight: 500;
@@ -85,6 +86,7 @@ const KeywordSearchInput = styled('input')`
   line-height: 22px;
   :focus {
     border: 1px solid #7646ff !important;
+    box-shadow: 0px 10px 20px rgba(208, 217, 244, 0.5) !important;
   }
   display: flex;
   align-items: center;
@@ -93,7 +95,7 @@ const KeywordSearchInput = styled('input')`
 const SearchIcon = styled('svg')`
   position: absolute;
   top: 16px;
-  left: 16px;
+  left: 18px;
 `
 
 const SortFilterContainer = styled('div')`
@@ -119,7 +121,7 @@ const DebtFilterSelect = styled(CustomizedSelect)`
 `
 
 const CollateralItems = styled('div')`
-  margin-top: 50px;
+  margin-top: 36px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -162,6 +164,7 @@ const AutoCompleteItem = styled(Typography)`
   font-weight: 600;
   font-size: 16px;
   line-height: 22px;
+  color: #a0a3bd !important;
   color: grey;
   &:hover {
     cursor: pointer;
@@ -176,7 +179,10 @@ const AutoCompleteItem = styled(Typography)`
 const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<CollateralModel>; loading: boolean }) => {
   const [search, setSearch] = useState('')
   const [searchTerms, setSearchTerms] = useState<string[]>([])
-  const handleSearch = (e: React.FormEvent<HTMLInputElement>) => setSearch(String(e.currentTarget.value))
+  console.log('searchTerms', searchTerms[0])
+  const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
+    setSearch(String(e.currentTarget.value))
+  }
   const [collectionFilter, setCollectionFilter] = useState(0)
   const handleCollectionFilterChange = useCallback(
     (event: any) => setCollectionFilter(event.target.value as number),
@@ -325,14 +331,28 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
     [sort]
   )
 
+  //------------//
+
+  const [currentPage, setCurrentPage] = React.useState<number>(1)
+  const currentPageIndex = useMemo(
+    () =>
+      Math.ceil(collaterals.length / 16) === currentPage
+        ? plus(plus(collaterals.length, currentPage % 16), times(minus(currentPage, 1), 16))
+        : times(currentPage, 16),
+    [collaterals.length, currentPage]
+  )
+  console.log()
+  //------------//
+
   const CollateralList = useMemo(() => {
     return collaterals
       .filter(collectionsFilterFunction)
       .filter(deptFilterFunction)
       .sort(sortOptionsFunction)
-      .map((collateral: CollateralModel, index: number) => {
+      .slice(+times(minus(currentPage, 1), 16), +currentPageIndex)
+      .map((collateral: any, index: number) => {
         const nfts = collateral.collections.reduce(
-          (acc: number, current: CollectionsModel) => acc + current.tokens.length,
+          (acc: any, current: CollectionsModel) => acc + current.tokens.length,
           0
         )
         return <CollateralItem key={`collateral-${JSON.stringify(collateral)}${index}`} {...collateral} nfts={nfts} />
@@ -355,13 +375,10 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
     [collaterals]
   )
 
-  const handleAddSearchTerm = useCallback(
-    (term: string) => {
-      setSearchTerms([...searchTerms, term])
-      setSearch('')
-    },
-    [searchTerms]
-  )
+  const handleAddSearchTerm = useCallback((term: string) => {
+    setSearchTerms([term])
+    setSearch('')
+  }, [])
 
   const TermsContainer = styled('div')`
     position: absolute;
@@ -380,10 +397,10 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
 
     background: #f7f7fc;
     border-radius: 6px;
-    padding: 12px 9px;
+    padding: 8px 14px 8px 12px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 18px;
   `
 
   const CloseTermIcon = styled('svg')`
@@ -393,22 +410,21 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
   const PaddingBox = styled(Box)`
     padding-left: 50px;
     padding-right: 50px;
-    max-height: 735px;
-    overflow: scroll;
+    // max-height: 735px;
+    // overflow: scroll;
   `
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget)
   }
-  console.log('searchTerms', searchTerms)
   const collateralsType = useCollateralsType()
   //---------------//
   return (
     <CollateralsContainer>
       <CollateralsFilterHeader>
         <FlexBox
-          mt="5px"
+          mt="4px"
           sx={{ cursor: 'pointer' }}
           id="basic-button"
           aria-controls={open ? 'basic-menu' : undefined}
@@ -437,7 +453,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
           <TermsContainer>
             {searchTerms.map((term: string, index: number) => (
               <TermItem key={`${term}${index}`}>
-                {term}
+                <Typography variant="subtitle2">{term.length > 29 ? term.slice(0, 29).concat('...') : term}</Typography>
                 <CloseTermIcon
                   width="12"
                   height="12"
@@ -461,9 +477,9 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
             onKeyDown={(e: any) => {
               if (e.code === 'Tab' || e.code === 'Enter') {
                 handleAddSearchTerm(search)
+                e.target.blur()
               }
             }}
-            disabled={!!searchTerms.length}
           />
           {search && autocompleteOptions.find((option: string) => option.toLowerCase().includes(search.toLowerCase())) && (
             <AutoCompleteContainer>
@@ -556,7 +572,13 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
           {loading ? CollateralSkeletonList : !!collaterals.length ? CollateralList : <EmptyState />}
         </CollateralItems>
       </PaddingBox>
-      <CollateralPagination collaterals={collaterals} onPageSelect={(number: number) => null} />
+      {collaterals.length !== 0 && (
+        <CollateralPagination
+          collaterals={collaterals}
+          setCurrentPage={setCurrentPage}
+          onPageSelect={(number: number) => null}
+        />
+      )}
       <CollateralsType open={open} anchorEl={anchorEl} setAnchorEl={setAnchorEl}></CollateralsType>
     </CollateralsContainer>
   )

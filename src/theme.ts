@@ -49,7 +49,7 @@ export const colors: COLOR = {
 export const theme = createTheme({
   palette: {
     primary: {
-      main: '#ffffff',
+      main: '#7646FF',
       dark: 'rgba(0, 255, 10, 0.88)',
       contrastText: '#14142A',
     },
@@ -170,7 +170,11 @@ export const theme = createTheme({
     MuiMenu: {
       styleOverrides: {
         paper: `
-          margin-top: 20px!important;
+          margin-top: 21px !important;
+          margin-left: -5.5px;
+          border: 1px solid #eff0f6 !important;
+          box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3) !important;
+          border-radius: 12px !important;
       `,
       },
     },

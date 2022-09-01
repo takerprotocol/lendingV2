@@ -3,15 +3,26 @@ import { styled } from '@mui/material/styles'
 import { MenuItem, Select, SelectChangeEvent, SelectProps } from '@mui/material'
 
 const StyledSelect = styled(Select)`
+  .MuiPaper-elevation {
+    margin-left: -100px !important;
+    border: 1px solid #eff0f6 !important;
+    box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3) !important;
+    border-radius: 12px !important;
+  }
   display: flex;
   width: 240px;
   height: 48px;
   /* Cool Gray 300 */
   border: 1px solid #d9dbe9;
   border-radius: 50px;
-  padding-right: 20px;
-  padding-left: 20px;
-  padding-top: 2px;
+  align-items: center;
+  padding-right: 17.07px;
+  padding-left: 12px;
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
   cursor: pointer;
   fieldset {
     border: 1px solid #d9dbe9;
@@ -22,7 +33,7 @@ const StyledSelect = styled(Select)`
   }
   .MuiInput-input {
     background: transparent !important;
-    padding-left: 10px;
+    padding-left: 6px;
     &.open {
       border: 1px solid #7646ff !important;
     }
