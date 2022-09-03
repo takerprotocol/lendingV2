@@ -179,7 +179,6 @@ const AutoCompleteItem = styled(Typography)`
 const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<CollateralModel>; loading: boolean }) => {
   const [search, setSearch] = useState('')
   const [searchTerms, setSearchTerms] = useState<string[]>([])
-  console.log('searchTerms', searchTerms[0])
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
     setSearch(String(e.currentTarget.value))
   }

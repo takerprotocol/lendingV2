@@ -266,7 +266,7 @@ const CollateralItem = ({
         </Value>
       </DataItem>
       <Button
-        onClick={() => navigate('/liquidate')}
+        onClick={() => navigate(`/liquidate/${address}`)}
         disabled={+riskPercentage <= 120 ? false : true}
         variant="contained"
         color="primary"

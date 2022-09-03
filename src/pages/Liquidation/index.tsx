@@ -6,10 +6,13 @@ import liquidationBg from 'assets/images/svg/liquidation/liquidation-icon.svg'
 import { useCallback, useEffect, useState } from 'react'
 import { getClient } from 'apollo/client'
 import { SupportedChainId } from 'constants/chains'
-import { User } from 'apollo/queries'
-import { useAddress, useHeath, useUserValue } from 'state/user/hooks'
+import { AllUser } from 'apollo/queries'
+import { useAddress } from 'state/user/hooks'
 import { CollateralModel } from 'services/type/nft'
-import { getRiskLevel, getRiskLevelTag } from 'utils'
+import { div, getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
+import { WETH } from 'config'
+import { fromWei } from 'web3-utils'
+
 const client = getClient()[SupportedChainId.MAINNET]
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 
@@ -28,31 +31,41 @@ export default function Liquidation() {
   const [loading, setLoading] = useState(true)
   const [collaterals, setCollaterals] = useState<Array<CollateralModel>>([])
   const address = useAddress()
-  const userValue = useUserValue()
-  const heath = useHeath()
-  const TypographyRiskLevel = getRiskLevel(heath)
-  const riskLevelTag = getRiskLevelTag(heath)
   const getCollaterals = useCallback(async () => {
     if (address) {
       const user = await client.query({
-        query: User(`${address}`),
+        query: AllUser(),
       })
+      console.log(user)
       setLoading(false)
-      if (user.data.user) {
-        setCollaterals([
-          {
-            address,
-            collateral: userValue.totalCollateral,
-            collections: user.data.user.collections,
-            debt: userValue.totalDebt,
+      if (user.data.users) {
+        const users: Array<CollateralModel> = []
+        user.data.users.forEach((element: any) => {
+          let depositedAmount = '0'
+          let borrowedAmount = '0'
+          let liqThreshold = '0'
+          element.reserves.forEach((rel: any) => {
+            if (rel.id.split('-')[1].toLocaleLowerCase() === WETH.toLocaleLowerCase()) {
+              liqThreshold = rel.reserve.liqThreshold
+            }
+            depositedAmount = plus(depositedAmount, rel.depositedAmount)
+            borrowedAmount = plus(borrowedAmount, rel.borrowedAmount)
+          })
+          const heath = times(depositedAmount, div(liqThreshold, borrowedAmount))
+          users.push({
+            address: element.id,
+            collateral: fromWei(depositedAmount),
+            collections: element.collections,
+            debt: fromWei(borrowedAmount),
             riskPercentage: heath,
-            riskLevel: TypographyRiskLevel,
-            riskLevelTag,
-          },
-        ])
+            riskLevel: getRiskLevel(heath),
+            riskLevelTag: getRiskLevelTag(heath),
+          })
+        })
+        setCollaterals(users)
       }
     }
-  }, [TypographyRiskLevel, address, heath, riskLevelTag, userValue.totalCollateral, userValue.totalDebt])
+  }, [address])
 
   useEffect(() => {
     getCollaterals()

@@ -6,11 +6,11 @@ import LiquidateHeader from './components/Header'
 import { getClient } from 'apollo/client'
 import { SupportedChainId } from 'constants/chains'
 import { User } from 'apollo/queries'
-import { useAddress } from 'state/user/hooks'
 import { fromWei } from 'web3-utils'
 import { minus, plus } from 'utils'
 import BigNumber from 'bignumber.js'
 import { CollateralModel } from 'services/type/nft'
+import { useParams } from 'react-router-dom'
 
 const client = getClient()[SupportedChainId.MAINNET]
 const Body = styled(Box)`
@@ -26,7 +26,7 @@ const Liquidate = () => {
   const [totalCollateral, setTotalCollateral] = useState('0')
   const [nftCollateral, setNftCollateral] = useState('0')
   const [loading, setLoading] = useState(false)
-  const address = useAddress()
+  const { address } = useParams()
   const getCollaterals = useCallback(async () => {
     if (address) {
       const user = await client.query({
@@ -67,7 +67,7 @@ const Liquidate = () => {
   return (
     <Body>
       <LiquidateHeader
-        address={address}
+        address={address || ''}
         riskPercentage={110}
         totalCollateral={totalCollateral}
         nftCollateral={nftCollateral}

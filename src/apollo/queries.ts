@@ -107,6 +107,48 @@ export const FIRST_COLLECTION = () => {
   return gql(queryString)
 }
 
+export const AllUser = () => {
+  const queryString = `
+    query users {
+      users {
+        id
+        reserves {
+          id
+          reserve {
+            tToken
+            debtToken
+            interestRateCalculator
+            liqThreshold
+            ltv
+            name
+            symbol
+          }
+          depositedAmount
+          borrowedAmount
+        }
+        collections {
+          id
+          collection {
+            id
+            tNFT
+            ercType
+            liqThreshold
+            ltv
+            name
+            symbol
+            floorPrice
+          }
+          tokens {
+            id
+            amount
+          }
+        }
+      }
+    }
+`
+  return gql(queryString)
+}
+
 export const User = (id: string) => {
   const queryString = `
     query user {

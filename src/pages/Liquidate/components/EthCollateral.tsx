@@ -1,4 +1,5 @@
-import { styled, Typography } from '@mui/material'
+import { styled, TextField, Typography } from '@mui/material'
+import { useState } from 'react'
 
 const EthCollateralsTitle = styled(Typography)`
   font-family: 'Quicksand';
@@ -70,6 +71,10 @@ const LiquidationValue = styled(Typography)`
   display: flex;
   align-items: center;
   gap: 7px;
+  .MuiInputBase-root {
+    font-size: 28px;
+    line-height: 160%;
+  }
 `
 
 const MaxContainer = styled('div')`
@@ -216,14 +221,15 @@ const SubtotalStrikeThroughValue = styled(Typography)`
 `
 
 type EthCollateralType = {
-  liquidationAmount: number
-  max: number
+  handleAmount: Function
+  max: string
   potentialProfit: number
   subtotal: number
   label: string
 }
 
-const EthCollateral = ({ liquidationAmount, max, potentialProfit, subtotal, label }: EthCollateralType) => {
+const EthCollateral = ({ handleAmount, max, potentialProfit, subtotal, label }: EthCollateralType) => {
+  const [amount, setAmount] = useState('')
   return (
     <>
       <EthCollateralProfitable>
@@ -246,7 +252,17 @@ const EthCollateral = ({ liquidationAmount, max, potentialProfit, subtotal, labe
                   <path d="M3 12.5L8.5 16L14 12.5" stroke="#14142A" strokeWidth="1.5" strokeLinejoin="round" />
                 </g>
               </svg>
-              {liquidationAmount}
+              <TextField
+                autoFocus={true}
+                sx={{ marginLeft: '7px', fontSize: '28px' }}
+                placeholder="0.00"
+                value={amount}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  event.target.value = event.target.value.replace(/^\D*(\d*(?:\.\d{0,10})?).*$/g, '$1')
+                  handleAmount(event.target.value)
+                  setAmount(event.target.value)
+                }}
+              />
             </LiquidationValue>
           </div>
           <MaxContainer>

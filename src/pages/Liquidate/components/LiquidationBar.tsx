@@ -94,13 +94,14 @@ const TotalPriceValue = styled(Typography)`
 `
 
 type LiquidationBarType = {
-  total: number
+  total: string
   nfts: number
-  nftsValue: number
-  ethValue: number
+  nftsValue: string
+  ethValue: string
+  submit: Function
 }
 
-const LiquidationBar = ({ total, nfts, nftsValue, ethValue }: LiquidationBarType) => {
+const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit }: LiquidationBarType) => {
   return (
     <TotalLiquidationAmountContainer>
       <LabelValueContainer>
@@ -164,7 +165,13 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue }: LiquidationBarType
             <TotalPriceValue>{ethValue + nftsValue}</TotalPriceValue>
           </TotalLiquidationAmountWrapper>
         </LabelValueContainerPrice>
-        <LiquidateButton variant="contained" color="primary">
+        <LiquidateButton
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            submit()
+          }}
+        >
           Liquidate
         </LiquidateButton>
       </StatsContainer>

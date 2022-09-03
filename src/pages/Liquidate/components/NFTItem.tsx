@@ -1,5 +1,5 @@
 import { Nft } from '@alch/alchemy-sdk'
-import { Box, Checkbox, styled, TextField, Typography } from '@mui/material'
+import { Box, Checkbox, styled, Typography } from '@mui/material'
 import { useCallback, useEffect, useState } from 'react'
 import { getAlchemyNftMetadata } from 'services/module/deposit'
 
@@ -101,82 +101,86 @@ const ActionInfoContainer = styled('div')`
   gap: 16px;
 `
 
-const NFTActionContainer = styled('div')`
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-`
+// const NFTActionContainer = styled('div')`
+//   display: flex;
+//   gap: 10px;
+//   justify-content: space-between;
+// `
 
-const StyledTextField = styled(TextField)`
-  flex: 1;
-  background: #eff0f6;
-  border-radius: 6px;
-  max-height: 30px;
-  input {
-    background: #eff0f6;
-    padding-left: 8px !important;
-    border-radius: 6px;
-    max-width: 100px;
-    max-height: 30px;
-  }
-`
+// const StyledTextField = styled(TextField)`
+//   flex: 1;
+//   background: #eff0f6;
+//   border-radius: 6px;
+//   max-height: 30px;
+//   input {
+//     background: #eff0f6;
+//     padding-left: 8px !important;
+//     border-radius: 6px;
+//     max-width: 100px;
+//     max-height: 30px;
+//   }
+// `
 
-const FloorPriceLabel = styled(Typography)`
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 160%;
-  /* or 22px */
+// const FloorPriceLabel = styled(Typography)`
+//   font-family: 'Quicksand';
+//   font-style: normal;
+//   font-weight: 500;
+//   font-size: 14px;
+//   line-height: 160%;
+//   /* or 22px */
 
-  /* Cool Gray 400 */
+//   /* Cool Gray 400 */
 
-  color: #a0a3bd;
-`
+//   color: #a0a3bd;
+// `
 
-const MaxText = styled(Typography)`
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 160%;
-  text-align: right;
-  color: #6e7191;
-  position: absolute;
-  right: 10px;
-  cursor: pointer;
-`
+// const MaxText = styled(Typography)`
+//   font-family: 'Quicksand';
+//   font-style: normal;
+//   font-weight: 600;
+//   font-size: 14px;
+//   line-height: 160%;
+//   text-align: right;
+//   color: #6e7191;
+//   position: absolute;
+//   right: 10px;
+//   cursor: pointer;
+// `
 
-const EthValue = styled(Typography)`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 160%;
-  /* identical to box height, or 26px */
+// const EthValue = styled(Typography)`
+//   display: flex;
+//   align-items: center;
+//   gap: 6px;
+//   font-family: 'Quicksand';
+//   font-style: normal;
+//   font-weight: 700;
+//   font-size: 16px;
+//   line-height: 160%;
+//   /* identical to box height, or 26px */
 
-  display: flex;
-  align-items: center;
-  text-align: right;
+//   display: flex;
+//   align-items: center;
+//   text-align: right;
 
-  /* Main color 2 */
+//   /* Main color 2 */
 
-  color: #7646ff;
-`
+//   color: #7646ff;
+// `
 
 type NFTItemProps = {
   token: string
+  handle: Function
 }
 
-const NFTItem = ({ token }: NFTItemProps) => {
-  const [max] = useState('')
+const NFTItem = ({ token, handle }: NFTItemProps) => {
+  // const [max] = useState('')
   const [metadata, setMetadata] = useState<Nft | null>(null)
   const [checked, setChecked] = useState<boolean>(false)
-  const handleCheck = useCallback(() => setChecked(!checked), [checked])
-  const [floorPrice, setFloorPrice] = useState<string | number>('')
+  const handleCheck = useCallback(() => {
+    handle(!checked)
+    setChecked(!checked)
+  }, [checked, handle])
+  // const [floorPrice, setFloorPrice] = useState<string | number>('')
   const [errorNftImage, setErrorNftImage] = useState(false)
   const handleNftImageError = useCallback(() => setErrorNftImage(true), [])
   const [errorCollectionImage, setErrorCollectionImage] = useState(false)
@@ -197,18 +201,14 @@ const NFTItem = ({ token }: NFTItemProps) => {
         <ActionInfoContainer>
           <NFTInfoContainer>
             {!errorNftImage ? (
-              <NFTImage onError={handleNftImageError} src={metadata.media[0]?.gateway} alt="nft" />
+              <NFTImage onError={handleNftImageError} src={metadata.media[0]?.gateway} alt="" />
             ) : (
               <NFTImagePlaceholder />
             )}
             <CollectionInfoContainer>
               <CollectionImageTitle>
                 {!errorCollectionImage ? (
-                  <CollectionImage
-                    onError={handleCollectionImageError}
-                    src={metadata.media[0]?.gateway}
-                    alt={`collection-${token}`}
-                  />
+                  <CollectionImage onError={handleCollectionImageError} src={metadata.media[0]?.gateway} alt="" />
                 ) : (
                   <CollectionImagePlaceholder />
                 )}
@@ -217,7 +217,7 @@ const NFTItem = ({ token }: NFTItemProps) => {
               <NFTTitle>{metadata.title || ''}</NFTTitle>
             </CollectionInfoContainer>
           </NFTInfoContainer>
-          <NFTActionContainer>
+          {/* <NFTActionContainer>
             {!!max ? (
               <StyledTextField
                 placeholder="Floor Price"
@@ -246,7 +246,7 @@ const NFTItem = ({ token }: NFTItemProps) => {
               </svg>
               {'price' || '0.0000'}
             </EthValue>
-          </NFTActionContainer>
+          </NFTActionContainer> */}
         </ActionInfoContainer>
       )}
     </Container>

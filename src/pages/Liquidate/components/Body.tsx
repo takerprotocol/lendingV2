@@ -1,7 +1,7 @@
 import { Box, styled, Typography } from '@mui/material'
 import Pager from 'components/Pages/Pager'
 import CustomizedSelect from 'components/Select'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { FlexBox } from 'styleds'
 import Collection1 from 'assets/images/png/liquidation/example/1.png'
 import Collection2 from 'assets/images/png/liquidation/example/2.png'
@@ -10,7 +10,16 @@ import EthCollateral from './EthCollateral'
 import LiquidationBar from './LiquidationBar'
 import NFTItem from './NFTItem'
 import NFTItemSkeleton from './NftItemSkeleton'
-import { CollateralModel } from 'services/type/nft'
+import { CollateralModel, TokenModel } from 'services/type/nft'
+import BigNumber from 'bignumber.js'
+import { useWalletBalance } from 'state/user/hooks'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { desensitization, plus } from 'utils'
+import { gasLimit, WETH } from 'config'
+import { toast } from 'react-toastify'
+import { TransactionType } from 'state/transactions/types'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { useParams } from 'react-router-dom'
 
 const Container = styled('div')`
   width: 1012px;
@@ -113,18 +122,69 @@ const LiquidateBody = ({
   collaterals: CollateralModel | null
   loading: boolean
 }) => {
+  const { address } = useParams()
+  const balance = useWalletBalance()
+  const contract = useLendingPool()
+  const [tokenChecked, setTokenChecked] = useState<Array<string>>([])
+  const [ethValue, setEthValue] = useState('0')
+  const addTransaction = useTransactionAdder()
+
+  useEffect(() => {
+    if (contract) {
+      // contract.getUserState(address).then((res: Array<BigNumber>) => {
+      //   console.log('1111', res)
+      // })
+      // contract.getUserValues(address).then((res: Array<BigNumber>) => {
+      //   console.log('11122', res)
+      // })
+    }
+  }, [contract])
   const Collaterals = useMemo(() => {
     if (collaterals) {
       const items: Array<JSX.Element> = []
       collaterals.collections.forEach((collection) => {
         collection.tokens.forEach((token) => {
-          items.push(<NFTItem token={token.id} key={`collateral-${collection.id}-${token.id}`} />)
+          items.push(
+            <NFTItem
+              handle={(checked: boolean) => {
+                if (checked) {
+                  setTokenChecked([...tokenChecked, token.id])
+                } else {
+                  setTokenChecked(tokenChecked.filter((tc: string) => tc !== token.id))
+                }
+              }}
+              token={token.id}
+              key={`collateral-${collection.id}-${token.id}`}
+            />
+          )
         })
       })
       return items
     }
     return []
+  }, [collaterals, tokenChecked])
+
+  const nfts = useMemo(() => {
+    const _nfts: Array<TokenModel> = []
+    if (collaterals) {
+      collaterals.collections.forEach((collection) => {
+        collection.tokens.forEach((token) => {
+          _nfts.push(token)
+        })
+      })
+    }
+    return _nfts
   }, [collaterals])
+
+  const nftAmount = useMemo(() => {
+    let amount = '0'
+    nfts
+      .filter((nft) => tokenChecked.includes(nft.id))
+      .forEach((el) => {
+        amount = new BigNumber(el.amount).plus(amount).toString()
+      })
+    return amount
+  }, [nfts, tokenChecked])
   const LoadingCollaterals = useMemo(
     () =>
       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -303,8 +363,6 @@ const LiquidateBody = ({
     () => [...new Set(NftCollections.map((collection: any) => collection.name))],
     [NftCollections]
   )
-  console.log('uniqueCollections', uniqueCollections)
-  console.log('multipleCollaterals', multipleCollaterals)
   const collectionOptions = useMemo(() => {
     return [
       {
@@ -360,6 +418,47 @@ const LiquidateBody = ({
       },
     ]
   }, [])
+
+  const submit = () => {
+    if (contract) {
+      const collections: Array<string> = []
+      const tokenIds: Array<string> = []
+      const amounts: Array<string> = []
+      nfts
+        .filter((nft) => tokenChecked.includes(nft.id))
+        .forEach((el) => {
+          collections.push(el.id.split('-')[1])
+          tokenIds.push(el.id.split('-')[2])
+          amounts.push(el.amount)
+        })
+      console.log([
+        collections,
+        tokenIds,
+        amounts,
+        WETH,
+        address,
+        true,
+        {
+          gasLimit,
+        },
+      ])
+      contract
+        .liquidate(collections, tokenIds, amounts, WETH, address, true, {
+          gasLimit,
+        })
+        .then((res: any) => {
+          addTransaction(res, {
+            type: TransactionType.LIQUIDATE,
+            amount: plus(nftAmount, ethValue || '0'),
+          })
+          toast.success(desensitization(res.hash))
+          setEthValue('')
+        })
+        .catch((error: any) => {
+          toast.error(error.message)
+        })
+    }
+  }
   //-------js---------//
   return (
     <Container>
@@ -418,8 +517,24 @@ const LiquidateBody = ({
         {loading ? LoadingCollaterals : Collaterals}
         <Pager TypeKey={'liquidate'} list={loading ? [] : Collaterals}></Pager>
       </NFTCollaterals>
-      <EthCollateral liquidationAmount={46.0} max={117.5789} potentialProfit={3.6} subtotal={41.4} label="Profitable" />
-      <LiquidationBar total={233.7965} nfts={2} nftsValue={116.2176} ethValue={41.4} />
+      <EthCollateral
+        handleAmount={(value: string) => {
+          setEthValue(value)
+        }}
+        max={balance}
+        potentialProfit={3.6}
+        subtotal={41.4}
+        label="Profitable"
+      />
+      <LiquidationBar
+        total={plus(nftAmount, ethValue || '0')}
+        nfts={tokenChecked.length}
+        nftsValue={nftAmount}
+        ethValue={ethValue}
+        submit={() => {
+          submit()
+        }}
+      />
     </Container>
   )
 }
