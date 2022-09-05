@@ -3,7 +3,7 @@ import Dashboard from 'pages/Dashboard'
 import Liquidation from 'pages/Liquidation'
 import Deposit from 'pages/Deposit'
 import Liquidate from 'pages/Liquidate'
-import { useCallback, useMemo, useEffect, useLayoutEffect } from 'react'
+import { useCallback, useMemo, useEffect, useLayoutEffect, useState } from 'react'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress } from 'state/user/hooks'
 import BigNumber from 'bignumber.js'
@@ -29,7 +29,6 @@ import { toast } from 'react-toastify'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { getClient } from 'apollo/client'
-import { SupportedChainId } from 'constants/chains'
 import { LendingPool, UserNftCollection } from 'apollo/queries'
 import { getCollectionStats } from 'services/module/collection'
 import erc721abi from 'abis/MockERC721.json'
@@ -49,7 +48,12 @@ export default function CustomizeRoutes() {
   const contract = useLendingPool()
   const address = useAddress()
   const transactions = useAllTransactions()
-  const client = getClient()[SupportedChainId.MAINNET]
+  const [client, setClient] = useState<any>(null)
+  useEffect(() => {
+    if (chainId) {
+      setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : 42])
+    }
+  }, [chainId])
   const flag = useMemo(() => {
     return (
       transactions &&
@@ -61,7 +65,7 @@ export default function CustomizeRoutes() {
   }, [transactions])
   useEffect(() => {
     if (address && chainId && CHAIN_ID && chainId !== CHAIN_ID) {
-      toast.error('Please switch network to Rinkeby')
+      toast.error('Please switch network')
     }
   }, [chainId, address])
   useEffect(() => {
@@ -161,7 +165,13 @@ export default function CustomizeRoutes() {
   const getCollection = useCallback(async () => {
     if (client) {
       const lendingPoolRes = await client.query({
-        query: LendingPool(contract ? contract.address : '0xEB6f6d0B528e0222B924dd5527117f8aa5f48AD0'),
+        query: LendingPool(
+          contract
+            ? contract.address
+            : chainId === 4
+            ? '0xEB6f6d0B528e0222B924dd5527117f8aa5f48AD0'
+            : '0xDb2d112963A0c320b6DE43AD732b0Fb815a3Bf27'
+        ),
       })
       const nfts: Array<any> = []
       const depositedCollection: Array<any> = []

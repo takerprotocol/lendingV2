@@ -4,15 +4,14 @@ import { useCallback, useEffect, useState } from 'react'
 import LiquidateBody from './components/Body'
 import LiquidateHeader from './components/Header'
 import { getClient } from 'apollo/client'
-import { SupportedChainId } from 'constants/chains'
 import { User } from 'apollo/queries'
 import { fromWei } from 'web3-utils'
 import { minus, plus } from 'utils'
 import BigNumber from 'bignumber.js'
 import { CollateralModel } from 'services/type/nft'
 import { useParams } from 'react-router-dom'
+import { useActiveWeb3React } from 'hooks/web3'
 
-const client = getClient()[SupportedChainId.MAINNET]
 const Body = styled(Box)`
   width: 100%;
   max-width: 1012px;
@@ -21,14 +20,22 @@ const Body = styled(Box)`
 `
 
 const Liquidate = () => {
+  const { chainId } = useActiveWeb3React()
   const [collaterals, setCollaterals] = useState<CollateralModel | null>(null)
   const [totalDebt, setTotalDebt] = useState('0')
   const [totalCollateral, setTotalCollateral] = useState('0')
   const [nftCollateral, setNftCollateral] = useState('0')
   const [loading, setLoading] = useState(false)
   const { address } = useParams()
+  const [client, setClient] = useState<any>(null)
+
+  useEffect(() => {
+    if (chainId) {
+      setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : 42])
+    }
+  }, [chainId])
   const getCollaterals = useCallback(async () => {
-    if (address) {
+    if (address && client) {
       const user = await client.query({
         query: User(`${address}`),
       })
@@ -60,7 +67,7 @@ const Liquidate = () => {
       setTotalDebt(_totalDebt)
       setTotalCollateral(_nftCollateral)
     }
-  }, [address, nftCollateral, totalDebt])
+  }, [address, client, nftCollateral, totalDebt])
   useEffect(() => {
     getCollaterals()
   }, [getCollaterals])
