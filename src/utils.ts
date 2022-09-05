@@ -4,6 +4,19 @@ import {
 import {BigInt} from "@graphprotocol/graph-ts";
 import { log } from '@graphprotocol/graph-ts';
 
+export function newUser(Id: string): User {
+
+    let user = new User(Id);
+
+    user.nftCollateral = BigInt.zero();
+    user.reserveSupply = BigInt.zero();
+    user.totalDebt = BigInt.zero();
+    user.avgLtv = BigInt.zero();
+    user.liqThreshold = BigInt.zero();
+
+    return user;
+}
+
 export function newUserReserve(Id: string): UserReserve {
 
     let userReserve = new UserReserve(Id);

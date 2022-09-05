@@ -110,24 +110,6 @@ export class ReserveActiveUpdated__Params {
   }
 }
 
-export class ReserveDeleted extends ethereum.Event {
-  get params(): ReserveDeleted__Params {
-    return new ReserveDeleted__Params(this);
-  }
-}
-
-export class ReserveDeleted__Params {
-  _event: ReserveDeleted;
-
-  constructor(event: ReserveDeleted) {
-    this._event = event;
-  }
-
-  get asset(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-}
-
 export class ReserveFactorUpdated extends ethereum.Event {
   get params(): ReserveFactorUpdated__Params {
     return new ReserveFactorUpdated__Params(this);
@@ -488,36 +470,6 @@ export class PoolConfigurator extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-}
-
-export class DeleteReserveCall extends ethereum.Call {
-  get inputs(): DeleteReserveCall__Inputs {
-    return new DeleteReserveCall__Inputs(this);
-  }
-
-  get outputs(): DeleteReserveCall__Outputs {
-    return new DeleteReserveCall__Outputs(this);
-  }
-}
-
-export class DeleteReserveCall__Inputs {
-  _call: DeleteReserveCall;
-
-  constructor(call: DeleteReserveCall) {
-    this._call = call;
-  }
-
-  get asset(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class DeleteReserveCall__Outputs {
-  _call: DeleteReserveCall;
-
-  constructor(call: DeleteReserveCall) {
-    this._call = call;
   }
 }
 

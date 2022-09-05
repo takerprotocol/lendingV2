@@ -1160,36 +1160,6 @@ export class BorrowCall__Outputs {
   }
 }
 
-export class DeleteReserveCall extends ethereum.Call {
-  get inputs(): DeleteReserveCall__Inputs {
-    return new DeleteReserveCall__Inputs(this);
-  }
-
-  get outputs(): DeleteReserveCall__Outputs {
-    return new DeleteReserveCall__Outputs(this);
-  }
-}
-
-export class DeleteReserveCall__Inputs {
-  _call: DeleteReserveCall;
-
-  constructor(call: DeleteReserveCall) {
-    this._call = call;
-  }
-
-  get asset(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class DeleteReserveCall__Outputs {
-  _call: DeleteReserveCall;
-
-  constructor(call: DeleteReserveCall) {
-    this._call = call;
-  }
-}
-
 export class DepositCall extends ethereum.Call {
   get inputs(): DepositCall__Inputs {
     return new DepositCall__Inputs(this);
@@ -1642,6 +1612,52 @@ export class SetWETHGatewayCall__Outputs {
   }
 }
 
+export class ValidateTransferCall extends ethereum.Call {
+  get inputs(): ValidateTransferCall__Inputs {
+    return new ValidateTransferCall__Inputs(this);
+  }
+
+  get outputs(): ValidateTransferCall__Outputs {
+    return new ValidateTransferCall__Outputs(this);
+  }
+}
+
+export class ValidateTransferCall__Inputs {
+  _call: ValidateTransferCall;
+
+  constructor(call: ValidateTransferCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get from(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get to(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
+  get amount(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get balanceFromBefore(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+}
+
+export class ValidateTransferCall__Outputs {
+  _call: ValidateTransferCall;
+
+  constructor(call: ValidateTransferCall) {
+    this._call = call;
+  }
+}
+
 export class WithdrawCall extends ethereum.Call {
   get inputs(): WithdrawCall__Inputs {
     return new WithdrawCall__Inputs(this);
@@ -1667,12 +1683,8 @@ export class WithdrawCall__Inputs {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get from(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-
   get to(): Address {
-    return this._call.inputValues[3].value.toAddress();
+    return this._call.inputValues[2].value.toAddress();
   }
 }
 

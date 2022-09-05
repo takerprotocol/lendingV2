@@ -40,6 +40,8 @@ dataSources:
           handler: handleRepaid
         - event: Withdrawn(indexed address,indexed address,indexed address,uint256)
           handler: handleWithdrawn
+        - event: CollateralStatusUpdated(indexed address,indexed address,bool)
+          handler: handleCollateralStatusUpdated
       file: ./src/lending-pool.ts
 
   - kind: ethereum
