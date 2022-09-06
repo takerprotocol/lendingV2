@@ -9,8 +9,8 @@ import { SupportedChainId } from 'constants/chains'
 import { AllUser } from 'apollo/queries'
 import { useAddress } from 'state/user/hooks'
 import { CollateralModel } from 'services/type/nft'
-import { div, getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
-import { WETH } from 'config'
+import { div, getRiskLevel, getRiskLevelTag, times } from 'utils'
+// import { WETH } from 'config'
 import { fromWei } from 'web3-utils'
 
 const client = getClient()[SupportedChainId.MAINNET]
@@ -41,22 +41,23 @@ export default function Liquidation() {
       if (user.data.users) {
         const users: Array<CollateralModel> = []
         user.data.users.forEach((element: any) => {
-          let depositedAmount = '0'
-          let borrowedAmount = '0'
-          let liqThreshold = '0'
-          element.reserves.forEach((rel: any) => {
-            if (rel.id.split('-')[1].toLocaleLowerCase() === WETH.toLocaleLowerCase()) {
-              liqThreshold = rel.reserve.liqThreshold
-            }
-            depositedAmount = plus(depositedAmount, rel.depositedAmount)
-            borrowedAmount = plus(borrowedAmount, rel.borrowedAmount)
-          })
-          const heath = times(depositedAmount, div(liqThreshold, borrowedAmount))
+          // let depositedAmount = '0'
+          // let borrowedAmount = '0'
+          // let liqThreshold = '0'
+          console.log(element)
+          // element.reserves.forEach((rel: any) => {
+          //   if (rel.id.split('-')[1].toLocaleLowerCase() === WETH.toLocaleLowerCase()) {
+          //     liqThreshold = rel.reserve.liqThreshold
+          //   }
+          //   depositedAmount = plus(depositedAmount, rel.depositedAmount)
+          //   borrowedAmount = plus(borrowedAmount, rel.borrowedAmount)
+          // })
+          const heath = div(times(element.reserveSupply, element.liqThreshold), element.totalDebt)
           users.push({
             address: element.id,
-            collateral: fromWei(depositedAmount),
+            collateral: fromWei(element.reserveSupply),
             collections: element.collections,
-            debt: fromWei(borrowedAmount),
+            debt: fromWei(element.totalDebt),
             riskPercentage: heath,
             riskLevel: getRiskLevel(heath),
             riskLevelTag: getRiskLevelTag(heath),

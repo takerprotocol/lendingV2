@@ -72,7 +72,7 @@ const InfoContainer = styled('div')`
 
 type LiquidateHeaderType = {
   address: string
-  riskPercentage: number
+  riskPercentage: string
   totalCollateral: string
   nftCollateral: string
   ethCollateral: string

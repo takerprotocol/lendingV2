@@ -112,6 +112,11 @@ export const AllUser = () => {
     query users {
       users {
         id
+        nftCollateral
+        reserveSupply
+        totalDebt
+        avgLtv
+        liqThreshold
         reserves {
           id
           reserve {
@@ -154,6 +159,11 @@ export const User = (id: string) => {
     query user {
       user(id: "${id.toLocaleLowerCase()}") {
         id
+        nftCollateral
+        reserveSupply
+        totalDebt
+        avgLtv
+        liqThreshold
         reserves {
           id
           reserve {

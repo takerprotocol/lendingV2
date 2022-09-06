@@ -7,7 +7,7 @@ import { getClient } from 'apollo/client'
 import { SupportedChainId } from 'constants/chains'
 import { User } from 'apollo/queries'
 import { fromWei } from 'web3-utils'
-import { minus, plus } from 'utils'
+import { div, getRiskLevel, getRiskLevelTag, minus, times } from 'utils'
 import BigNumber from 'bignumber.js'
 import { CollateralModel } from 'services/type/nft'
 import { useParams } from 'react-router-dom'
@@ -25,6 +25,7 @@ const Liquidate = () => {
   const [totalDebt, setTotalDebt] = useState('0')
   const [totalCollateral, setTotalCollateral] = useState('0')
   const [nftCollateral, setNftCollateral] = useState('0')
+  const [heath, setHeath] = useState('0')
   const [loading, setLoading] = useState(false)
   const { address } = useParams()
   const getCollaterals = useCallback(async () => {
@@ -33,34 +34,36 @@ const Liquidate = () => {
         query: User(`${address}`),
       })
       setLoading(false)
-      let _totalCollateral = '0'
-      let _totalDebt = '0'
-      let _nftCollateral = '0'
+      // let _totalCollateral = '0'
+      // let _totalDebt = '0'
+      // let _nftCollateral = '0'
       if (user.data.user) {
-        user.data.user.reserves.forEach((el: any) => {
-          _totalCollateral = plus(fromWei(el.depositedAmount), _totalCollateral)
-          _totalDebt = plus(fromWei(el.borrowedAmount), totalDebt)
-        })
-        user.data.user.collections.forEach((el: any) => {
-          el.tokens.forEach((tokenItem: any) => {
-            _nftCollateral = plus(fromWei(tokenItem.amount), nftCollateral)
-          })
-        })
+        // user.data.user.reserves.forEach((el: any) => {
+        //   _totalCollateral = plus(fromWei(el.depositedAmount), _totalCollateral)
+        //   _totalDebt = plus(fromWei(el.borrowedAmount), totalDebt)
+        // })
+        // user.data.user.collections.forEach((el: any) => {
+        //   el.tokens.forEach((tokenItem: any) => {
+        //     _nftCollateral = plus(fromWei(tokenItem.amount), nftCollateral)
+        //   })
+        // })
       }
+      const _heath = div(times(user.data.user.reserveSupply, user.data.user.liqThreshold), user.data.user.totalDebt)
       setCollaterals({
         address,
-        collateral: _totalCollateral,
+        collateral: fromWei(user.data.user.reserveSupply),
         collections: user.data.user.collections,
-        debt: _totalDebt,
-        riskPercentage: '100',
-        riskLevel: 'TypographyRiskLevel',
-        riskLevelTag: 'riskLevelTag',
+        debt: fromWei(user.data.user.totalDebt),
+        riskPercentage: _heath,
+        riskLevel: getRiskLevel(_heath),
+        riskLevelTag: getRiskLevelTag(_heath),
       })
-      setNftCollateral(_totalCollateral)
-      setTotalDebt(_totalDebt)
-      setTotalCollateral(_nftCollateral)
+      setNftCollateral(user.data.user.reserveSupply)
+      setHeath(_heath)
+      setTotalDebt(user.data.user.totalDebt)
+      setTotalCollateral(user.data.user.nftCollateral)
     }
-  }, [address, nftCollateral, totalDebt])
+  }, [address])
   useEffect(() => {
     getCollaterals()
   }, [getCollaterals])
@@ -68,7 +71,7 @@ const Liquidate = () => {
     <Body>
       <LiquidateHeader
         address={address || ''}
-        riskPercentage={110}
+        riskPercentage={heath}
         totalCollateral={totalCollateral}
         nftCollateral={nftCollateral}
         ethCollateral={minus(totalCollateral, nftCollateral)}
