@@ -17,8 +17,8 @@ import {ERC1155} from "../generated/LendingPool/ERC1155";
 import {NewNFTPrice} from "../generated/NFTBankConsumer/NFTBankConsumer";
 import {IPriceOracleGetter} from "../generated/LendingPool/IPriceOracleGetter";
 
-const POOLID = "0xEB6f6d0B528e0222B924dd5527117f8aa5f48AD0";
-const ORACLE = "0x8e29CCd90EBd9fe068788D4d9e1c2416EC22637f";
+const POOLID = "{{#LendingPool}}{{address}}{{/LendingPool}}";
+const ORACLE = "{{#PriceOracle}}{{address}}{{/PriceOracle}}";
 
 export function handleNftReserveInitialized(event: NftReserveInitialized): void{
   let poolId = POOLID;

@@ -1,0 +1,18 @@
+{
+  "network": "kovan",
+  "LendingPool": {
+    "startBlock": 33440978,
+    "address": "0xDb2d112963A0c320b6DE43AD732b0Fb815a3Bf27"
+  },
+  "PoolConfigurator": {
+    "startBlock": 33440978,
+    "address": "0x2ab524EEbA543Ee9dAe31fb6a9a96f138e467324"
+  },
+  "NFTBankConsumer": {
+    "startBlock": 33440978,
+    "address": "0x6855Ce53c62695d7EF681232c7D6739ce8a11c28"
+  },
+  "PriceOracle": {
+    "address": "0xF0D0D41e2A9188f88B98b61A368413DD5b3FB785"
+  }
+}

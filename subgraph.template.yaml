@@ -4,10 +4,10 @@ schema:
 dataSources:
   - kind: ethereum
     name: LendingPool
-    network: rinkeby
+    network: {{network}}
     source:
-      address: "0xEB6f6d0B528e0222B924dd5527117f8aa5f48AD0"
-      startBlock: 11010442
+      address: "{{#LendingPool}}{{address}}{{/LendingPool}}"
+      startBlock: {{#LendingPool}}{{startBlock}}{{/LendingPool}}
       abi: LendingPool
     mapping:
       kind: ethereum/events
@@ -46,10 +46,10 @@ dataSources:
 
   - kind: ethereum
     name: PoolConfigurator
-    network: rinkeby
+    network: {{network}}
     source:
-      address: "0x437A87f1C524ecBe66653f34A18c3b4DAb888C4f"
-      startBlock: 11010442
+      address: "{{#PoolConfigurator}}{{address}}{{/PoolConfigurator}}"
+      startBlock: {{#PoolConfigurator}}{{startBlock}}{{/PoolConfigurator}}
       abi: PoolConfigurator
     mapping:
       kind: ethereum/events
@@ -82,10 +82,10 @@ dataSources:
 
   - kind: ethereum
     name: NFTBankConsumer
-    network: rinkeby
+    network: {{network}}
     source:
-      address: "0x8e29CCd90EBd9fe068788D4d9e1c2416EC22637f"
-      startBlock: 11010442
+      address: "{{#NFTBankConsumer}}{{address}}{{/NFTBankConsumer}}"
+      startBlock: {{#NFTBankConsumer}}{{startBlock}}{{/NFTBankConsumer}}
       abi: NFTBankConsumer
     mapping:
       kind: ethereum/events
