@@ -25,6 +25,7 @@ const Body = styled(Box)`
 const Main = styled(Box)`
   width: 1208px;
   margin: 0 auto;
+  margin-bottom: 72px;
 `
 export default function Dashboard() {
   const type = useDashboardType()

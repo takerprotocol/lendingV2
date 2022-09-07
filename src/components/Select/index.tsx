@@ -84,7 +84,10 @@ const Arrow = () => (
   </svg>
 )
 
-type CustomizedSelectProps = SelectProps & { options: { value: any; name: string | JSX.Element }[] }
+type CustomizedSelectProps = SelectProps & {
+  options: { value: any; name: string | JSX.Element }[]
+  filter?: boolean
+}
 
 export default function CustomizedSelect(props: CustomizedSelectProps) {
   const Options = useMemo(
@@ -100,7 +103,6 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
       )),
     [props.options]
   )
-
   const [open, setOpen] = useState(false)
 
   const [value, setValue] = useState('0')
@@ -121,13 +123,18 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
         IconComponent={Arrow}
         variant="standard"
         open={open}
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          if (!props.filter) {
+            setOpen(!open)
+          }
+        }}
         // className={props.startAdornment ? 'withicon' : ''}
         value={value}
         onChange={onChange}
         sx={{
           border: `${open ? '1px solid #7646ff !important' : 'border: 1px solid #d9dbe9;'}`,
         }}
+        disabled={props.filter}
       >
         {Options}
       </StyledSelect>

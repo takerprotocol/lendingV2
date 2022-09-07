@@ -8,6 +8,18 @@ export const clientEth = new ApolloClient({
   }),
   cache: new InMemoryCache(),
 })
+export const clientRINKEBY = new ApolloClient({
+  link: new HttpLink({
+    uri: 'https://api.studio.thegraph.com/query/29077/lending-subgraph-2/0.0.94',
+  }),
+  cache: new InMemoryCache(),
+})
+export const clientKOVAN = new ApolloClient({
+  link: new HttpLink({
+    uri: 'http://ec2-35-91-31-227.us-west-2.compute.amazonaws.com:8000/subgraphs/name/lending-subgraph',
+  }),
+  cache: new InMemoryCache(),
+})
 export const clientPolygon = new ApolloClient({
   link: new HttpLink({
     uri: 'https://api.thegraph.com/subgraphs/name/takerprotocol/taker-renting-chapel',
@@ -45,7 +57,8 @@ export const clientBsc1155 = new ApolloClient({
 export const getClient = () => {
   return {
     [SupportedChainId.MAINNET]: clientEth,
-    [SupportedChainId.BSC_MAINNET]: clientBsc,
+    [SupportedChainId.RINKEBY]: clientRINKEBY,
+    [SupportedChainId.KOVAN]: clientKOVAN,
     [SupportedChainId.POLYGON_MAINNET]: clientPolygon,
   }
 }

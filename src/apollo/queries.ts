@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 export const LendingPool = (id: string) => {
   const queryString = `
     query lendingPool {
-      lendingPool(id: "${id}") {
+      lendingPool(id: "${id.toLocaleLowerCase()}") {
         id
         reserves {
           id
@@ -32,7 +32,7 @@ export const LendingPool = (id: string) => {
 export const NftCollection = (id: string) => {
   const queryString = `
     query nftCollection {
-      nftCollection(id: "${id}") {
+      nftCollection(id: "${id.toLocaleLowerCase()}") {
         id
         tNFT
         ercType
@@ -59,7 +59,7 @@ export const NftCollection = (id: string) => {
 export const TNft = (id: string) => {
   const queryString = `
     query tNft {
-      tNft(id: "${id}") {
+      tNft(id: "${id.toLocaleLowerCase()}") {
         id
         name
         symbol
@@ -73,7 +73,7 @@ export const TNft = (id: string) => {
 export const UserNftCollection = (id: string) => {
   const queryString = `
     query userNftCollection {
-      userNftCollection(id: "${id}") {
+      userNftCollection(id: "${id.toLocaleLowerCase()}") {
         id
         tokens {
           id
@@ -88,7 +88,7 @@ export const UserNftCollection = (id: string) => {
 export const Reserve = (id: string) => {
   const queryString = `
     query reserve {
-      reserve(id: "${id}") {
+      reserve(id: "${id.toLocaleLowerCase()}") {
         id
       }
     }

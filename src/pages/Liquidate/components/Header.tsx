@@ -2,11 +2,11 @@ import Copy from 'components/Copy'
 import CollateralStat from './CollateralStat'
 import { styled } from '@mui/system'
 import { Box, Typography } from '@mui/material'
-import { abbrevAddress } from 'utils/abbrevAddres'
+import { liquidateAbbrevAddress } from 'utils/abbrevAddres'
 
 const CollateralStatsContainer = styled('div')`
   display: flex;
-  gap: 10px;
+  gap: 24px;
 `
 
 const Stats = styled('div')`
@@ -27,7 +27,7 @@ const CollateralAddress = styled(Box)`
   line-height: 160%;
   color: #a0a3bd;
   display: flex;
-  gap: 10px;
+  gap: 6px;
   align-items: center;
 
   > div {
@@ -42,32 +42,32 @@ const CollateralAddress = styled(Box)`
 `
 
 const RiskLevelContainer = styled('div')`
-  flex: 1;
+  padding: 3px 11px;
+  border: 1px solid rgba(225, 83, 108, 0.5);
+  filter: drop-shadow(0px 4px 8px rgba(221, 140, 140, 0.1));
+  border-radius: 35px;
+`
+
+const RiskLevel = styled(Typography)`
   font-family: 'Quicksand';
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
   line-height: 160%;
+  /* or 22px */
+
   text-align: center;
   text-transform: uppercase;
 
   color: #e1536c;
-  display: flex;
-  justify-content: flex-end;
-`
 
-const RiskLevel = styled(Typography)`
-  border: 1px solid #e1536c;
-  border-radius: 12px;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  padding-left: 10px;
-  padding-right: 10px;
+  /* Inside auto layout */
 `
 
 const InfoContainer = styled('div')`
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `
 
 type LiquidateHeaderType = {
@@ -95,7 +95,7 @@ const LiquidateHeader = ({
     <Stats>
       <InfoContainer>
         <CollateralAddress>
-          {abbrevAddress(address)}
+          {liquidateAbbrevAddress(address)}
           <Copy text={address} />
         </CollateralAddress>
         <RiskLevelContainer>

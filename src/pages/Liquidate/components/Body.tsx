@@ -12,9 +12,8 @@ import NFTItem from './NFTItem'
 import NFTItemSkeleton from './NftItemSkeleton'
 import { CollateralModel, TokenModel } from 'services/type/nft'
 import BigNumber from 'bignumber.js'
-import { useWalletBalance } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { desensitization, plus } from 'utils'
+import { desensitization, plus, times } from 'utils'
 import { gasLimit, WETH } from 'config'
 import { toast } from 'react-toastify'
 import { TransactionType } from 'state/transactions/types'
@@ -24,11 +23,22 @@ import { useParams } from 'react-router-dom'
 const Container = styled('div')`
   width: 1012px;
   margin: 0 auto;
-  background: linear-gradient(180deg, #ffffff 12.77%, rgba(255, 255, 255, 0) 63.61%);
+  position: relative;
   border-radius: 12px;
   min-height: 300px;
   margin-top: 16px;
-  padding: 29px 24px;
+  padding: 25px 25px 36px 24px;
+  z-index: 1;
+`
+const ContainerBg = styled('div')`
+  position: absolute;
+  width: 1012px;
+  height: 347px;
+  background: linear-gradient(180deg, #ffffff 12.77%, rgba(255, 255, 255, 0) 63.61%);
+  border-radius: 12px;
+  z-index: -1;
+  left: 0px;
+  top: 0px;
 `
 
 const Title = styled(Typography)`
@@ -52,13 +62,15 @@ const SubTitle = styled(Typography)`
 
 const TitleRow = styled('div')`
   display: flex;
+  align-items: center;
   justify-content: space-between;
 `
 
 const TotalLiqudationContainer = styled('div')`
   display: flex;
+  margin-top: 2px;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
   justify-content: flex-end;
 `
 
@@ -71,11 +83,10 @@ const TotalLiquidation = styled(Typography)`
   color: #14142a;
 `
 
-const NFTRow = styled('div')`
+const NFTRow = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 35px;
 `
 
 const NFTRowTitle = styled(Typography)`
@@ -90,7 +101,6 @@ const NFTRowTitle = styled(Typography)`
 const NFTCollaterals = styled('div')`
   display: grid;
   position: relative;
-  margin-top: 30px;
   grid-template-columns: repeat(auto-fit, minmax(305px, 1fr));
   grid-gap: 24px;
 `
@@ -117,13 +127,14 @@ const LiquidateBody = ({
   total,
   collaterals,
   loading,
+  totalDebt,
 }: {
   total: string
   collaterals: CollateralModel | null
   loading: boolean
+  totalDebt: string
 }) => {
   const { address } = useParams()
-  const balance = useWalletBalance()
   const contract = useLendingPool()
   const [tokenChecked, setTokenChecked] = useState<Array<string>>([])
   const [ethValue, setEthValue] = useState('0')
@@ -431,17 +442,6 @@ const LiquidateBody = ({
           tokenIds.push(el.id.split('-')[2])
           amounts.push(el.amount)
         })
-      console.log([
-        collections,
-        tokenIds,
-        amounts,
-        WETH,
-        address,
-        true,
-        {
-          gasLimit,
-        },
-      ])
       contract
         .liquidate(collections, tokenIds, amounts, WETH, address, true, {
           gasLimit,
@@ -462,10 +462,11 @@ const LiquidateBody = ({
   //-------js---------//
   return (
     <Container>
+      <ContainerBg></ContainerBg>
       <TitleRow>
         <Title>Liquidate</Title>
         <div>
-          <SubTitle>Total liquidation amount</SubTitle>
+          <SubTitle>Collaterals</SubTitle>
           <TotalLiqudationContainer>
             <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -480,38 +481,43 @@ const LiquidateBody = ({
           </TotalLiqudationContainer>
         </div>
       </TitleRow>
-      <NFTRow>
+      <NFTRow
+        marginTop={Collaterals.length > 9 ? '28px' : '35px'}
+        marginBottom={Collaterals.length > 9 ? '24px' : '30px'}
+      >
         <NFTRowTitle>{Collaterals.length || 0} NFT Collaterals</NFTRowTitle>
-        <FlexBox>
-          <CustomizedSelect
-            value={collectionFilter}
-            options={collectionOptions}
-            onChange={handleCollectionFilterChange}
-            startAdornment={
-              <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
-                <path d="M7 8H17" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M8 5H16" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            }
-            labelId="collateral-filter"
-            id="collateral-filter"
-          />
-          <Box width="36px"></Box>
-          <CustomizedSelect
-            value={sort}
-            options={sortOptions}
-            onChange={handleSortUpdate}
-            startAdornment={
-              <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8.5 18.5V5.5L5.5 8.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M14.5 5.5V18.5L17.5 15.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            }
-            labelId="collateral-sort"
-            id="collateral-sort"
-          />
-        </FlexBox>
+        {Collaterals.length > 9 && (
+          <FlexBox>
+            <CustomizedSelect
+              value={collectionFilter}
+              options={collectionOptions}
+              onChange={handleCollectionFilterChange}
+              startAdornment={
+                <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
+                  <path d="M7 8H17" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M8 5H16" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              }
+              labelId="collateral-filter"
+              id="collateral-filter"
+            />
+            <Box width="36px"></Box>
+            <CustomizedSelect
+              value={sort}
+              options={sortOptions}
+              onChange={handleSortUpdate}
+              startAdornment={
+                <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.5 18.5V5.5L5.5 8.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M14.5 5.5V18.5L17.5 15.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              }
+              labelId="collateral-sort"
+              id="collateral-sort"
+            />
+          </FlexBox>
+        )}
       </NFTRow>
       <NFTCollaterals>
         {loading ? LoadingCollaterals : Collaterals}
@@ -521,7 +527,7 @@ const LiquidateBody = ({
         handleAmount={(value: string) => {
           setEthValue(value)
         }}
-        max={balance}
+        max={times(totalDebt || '0', 0.5)}
         potentialProfit={3.6}
         subtotal={41.4}
         label="Profitable"
