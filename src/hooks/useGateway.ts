@@ -1,7 +1,9 @@
 import WETHGatewayAbi from 'abis/WETHGateway.json'
-import { GATEWAY_ADDRESSES } from 'config'
+import { getGatewayAddresses } from 'config'
 import { useContract } from './useContract'
+import { useActiveWeb3React } from './web3'
 
 export function useGateway() {
-  return useContract(GATEWAY_ADDRESSES, WETHGatewayAbi)
+  const { chainId } = useActiveWeb3React()
+  return useContract(getGatewayAddresses(chainId), WETHGatewayAbi)
 }

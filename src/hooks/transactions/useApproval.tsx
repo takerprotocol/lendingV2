@@ -1,5 +1,5 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import { WETH } from 'config'
+import { getWETH } from 'config'
 import { useContract } from 'hooks/useContract'
 import { useCallback, useEffect, useState } from 'react'
 import erc20 from 'abis/MockErc20.json'
@@ -9,6 +9,7 @@ import { useAddress } from 'state/user/hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useHasPendingApproval } from 'state/transactions/hooks'
 import BigNumber from 'bignumber.js'
+import { useActiveWeb3React } from 'hooks/web3'
 
 export enum ApprovalState {
   NOT_APPROVED = 'NOT_APPROVED',
@@ -23,10 +24,12 @@ export function useApproval(
   ApprovalState,
   () => Promise<{ response: TransactionResponse; tokenAddress: string; spenderAddress: string } | undefined>
 ] {
-  const tokenContract = useContract(WETH, erc20)
+  const { chainId } = useActiveWeb3React()
+
+  const tokenContract = useContract(getWETH(chainId), erc20)
   const [approvalState, setApprovalState] = useState(ApprovalState.NOT_APPROVED)
   const address = useAddress()
-  const hasPendingApproval = useHasPendingApproval(WETH, spender)
+  const hasPendingApproval = useHasPendingApproval(getWETH(chainId), spender)
   useEffect(() => {
     if (tokenContract && address && spender) {
       tokenContract.allowance(address, spender).then((allowance: BigNumber) => {
@@ -67,7 +70,7 @@ export function useApproval(
         setApprovalState(ApprovalState.PENDING)
         return {
           response,
-          tokenAddress: WETH,
+          tokenAddress: getWETH(chainId),
           amount,
           spenderAddress: spender,
         }
@@ -76,7 +79,7 @@ export function useApproval(
         logFailure(error)
         throw error
       })
-  }, [tokenContract, amount, spender])
+  }, [tokenContract, amount, spender, chainId])
 
   return [approvalState, approve]
 }

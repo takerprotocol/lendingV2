@@ -21,7 +21,7 @@ import {
   // setUserValues,
 } from 'state/user/reducer'
 import { bigNumberToString, div, stringFormat } from 'utils'
-import { WETH, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK, CHAIN_ID, COLLATERAL_MASK } from 'config'
+import { getWETH, getERC721Address, DECIMALS_MASK, LTV_MASK, COLLATERAL_MASK, CHAIN_IDs } from 'config'
 import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -64,14 +64,14 @@ export default function CustomizeRoutes() {
     )
   }, [transactions])
   useEffect(() => {
-    if (address && chainId && CHAIN_ID && chainId !== CHAIN_ID) {
+    if (address && chainId && !CHAIN_IDs.includes(chainId)) {
       toast.error('Please switch network')
     }
   }, [chainId, address])
   useEffect(() => {
-    if (contract && address && chainId === CHAIN_ID) {
+    if (contract && address && chainId && CHAIN_IDs.includes(chainId)) {
       contract
-        .getUserAssetValues(address, WETH)
+        .getUserAssetValues(address, getWETH(chainId))
         .then((res: Array<BigNumber>) => {
           dispatch(setLoading(false))
           dispatch(
@@ -88,14 +88,14 @@ export default function CustomizeRoutes() {
       contract.getUserConfig(address).then((res: any) => {
         dispatch(setUsedCollateral(new BN(res.toString()).and(new BN(COLLATERAL_MASK, 16)).toString() !== '0'))
       })
-      contract.getReserveConfig(WETH).then((res: any) => {
+      contract.getReserveConfig(getWETH(chainId)).then((res: any) => {
         dispatch(setDecimal(new BN(res.toString()).and(new BN(DECIMALS_MASK, 16)).shrn(32).toString()))
         dispatch(setErc20Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
       })
-      contract.getReserveConfig(ERC721_ADDRESS).then((res: any) => {
+      contract.getReserveConfig(getERC721Address(chainId)).then((res: any) => {
         dispatch(setErc721Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
       })
-      contract.getReserveData(WETH).then((res: any) => {
+      contract.getReserveData(getWETH(chainId)).then((res: any) => {
         dispatch(
           setReserveData({
             borrowRate: new BigNumber(div(fromWei(res.borrowRate.toString()), 10000)).decimalPlaces(2, 1).toString(),
@@ -130,7 +130,7 @@ export default function CustomizeRoutes() {
       //     })
       //   )
       // })
-      contract.getUserAssetValues(address, WETH).then((res: Array<BigNumber>) => {
+      contract.getUserAssetValues(address, getWETH(chainId)).then((res: Array<BigNumber>) => {
         dispatch(
           setUserEthAsset([
             fromWei(res[0].toString()).toString(),
@@ -186,7 +186,7 @@ export default function CustomizeRoutes() {
             if (res.data && res.data.userNftCollection) {
               depositedCollection.push(res.data)
             }
-            if (chainId === CHAIN_ID) {
+            if (chainId && CHAIN_IDs.includes(chainId)) {
               const balance = await ercContract.balanceOf(element.tNFT)
               item.totalValue = balance ? fromWei(balance.toString()) : '0'
             }

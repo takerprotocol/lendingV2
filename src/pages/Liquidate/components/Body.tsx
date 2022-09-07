@@ -14,11 +14,12 @@ import { CollateralModel, TokenModel } from 'services/type/nft'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { desensitization, plus, times } from 'utils'
-import { gasLimit, WETH } from 'config'
+import { gasLimit, getWETH } from 'config'
 import { toast } from 'react-toastify'
 import { TransactionType } from 'state/transactions/types'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useParams } from 'react-router-dom'
+import { useActiveWeb3React } from 'hooks/web3'
 
 const Container = styled('div')`
   width: 1012px;
@@ -139,6 +140,7 @@ const LiquidateBody = ({
   const [tokenChecked, setTokenChecked] = useState<Array<string>>([])
   const [ethValue, setEthValue] = useState('0')
   const addTransaction = useTransactionAdder()
+  const { chainId } = useActiveWeb3React()
 
   useEffect(() => {
     if (contract) {
@@ -443,7 +445,7 @@ const LiquidateBody = ({
           amounts.push(el.amount)
         })
       contract
-        .liquidate(collections, tokenIds, amounts, WETH, address, true, {
+        .liquidate(collections, tokenIds, amounts, getWETH(chainId), address, true, {
           gasLimit,
         })
         .then((res: any) => {

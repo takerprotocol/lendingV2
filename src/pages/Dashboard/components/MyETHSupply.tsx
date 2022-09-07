@@ -19,12 +19,13 @@ import {
 } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { toast } from 'react-toastify'
-import { WETH, gasLimit } from 'config'
+import { getWETH, gasLimit } from 'config'
 import { useAppDispatch } from 'state'
 import { setUsedCollateral } from 'state/user/reducer'
 import { fixedFormat } from 'utils'
 import BigNumber from 'bignumber.js'
 import TipsTooltip from './TipsTooltip'
+import { useActiveWeb3React } from 'hooks/web3'
 // import { useWalletBalance } from 'state/user/hooks'
 
 const MyETHSupplyBox = styled(Box)`
@@ -107,6 +108,7 @@ interface MyETHSupplyProps {
   loading: boolean
 }
 export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
+  const { chainId } = useActiveWeb3React()
   const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
   const [openMySupplyModal, setOpenMySupplyModal] = useState(false)
   const [dataType] = useState<boolean>(true)
@@ -126,7 +128,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   }, [ethDebt])
   const changeUsedAsCollateral = () => {
     if (contract) {
-      contract.setUserUsingAsCollateral(WETH, !usedCollateral, { gasLimit }).then(() => {
+      contract.setUserUsingAsCollateral(getWETH(chainId), !usedCollateral, { gasLimit }).then(() => {
         toast.success('success')
         dispatch(setUsedCollateral(!usedCollateral))
       })
