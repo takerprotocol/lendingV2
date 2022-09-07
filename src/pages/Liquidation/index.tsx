@@ -19,12 +19,12 @@ const Body = styled(Box)`
   background-color: #f7f7fc;
   background-image: url(${liquidationBg});
   background-repeat: no-repeat;
-  background-size: contain;
   width: 100%;
+  padding-bottom: 96px;
   position: -webkit-sticky; /* Safari */
-  position: sticky;
-  top: -284px;
-  margin-bottom: 304px;
+  // position: sticky;
+  // top: -284px;
+  // margin-bottom: 304px;
 `
 export default function Liquidation() {
   const { chainId } = useActiveWeb3React()

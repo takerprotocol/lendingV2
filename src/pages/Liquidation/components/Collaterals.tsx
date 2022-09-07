@@ -183,10 +183,10 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
     setSearch(String(e.currentTarget.value))
   }
   const [collectionFilter, setCollectionFilter] = useState(0)
-  const handleCollectionFilterChange = useCallback(
-    (event: any) => setCollectionFilter(event.target.value as number),
-    []
-  )
+  const handleCollectionFilterChange = useCallback((event: any) => {
+    setCollectionFilter(event.target.value as number)
+    setFilterType(false)
+  }, [])
   const collections = useMemo(() => collaterals.map((collateral: any) => collateral.collections).flat(), [collaterals])
   const uniqueCollections: any = useMemo(
     () => [...new Set(collections.map((collection: any) => collection.name))],
@@ -227,10 +227,10 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
   )
 
   const [debtFilter, setDebtFilter] = useState(0)
-  const handleDebtFilterChange = useCallback(
-    (event: SelectChangeEvent<unknown>, _child: ReactNode) => setDebtFilter(event.target.value as number),
-    []
-  )
+  const handleDebtFilterChange = useCallback((event: SelectChangeEvent<unknown>, _child: ReactNode) => {
+    setFilterType(false)
+    setDebtFilter(event.target.value as number)
+  }, [])
   const debtFilters = useMemo(() => {
     return [
       {
@@ -274,7 +274,10 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
   )
 
   const [sort, setSort] = useState(0)
-  const handleSortUpdate = useCallback((event: any) => setSort(event.target.value as number), [])
+  const handleSortUpdate = useCallback((event: any) => {
+    setFilterType(false)
+    setSort(event.target.value as number)
+  }, [])
   const sortOptions = useMemo(() => {
     return [
       {
@@ -340,9 +343,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
         : times(currentPage, 16),
     [collaterals.length, currentPage]
   )
-  console.log()
   //------------//
-
   const CollateralList = useMemo(() => {
     return collaterals
       .filter(collectionsFilterFunction)
@@ -358,17 +359,16 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
       })
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [collaterals, collectionFilter, debtFilter, sort, searchTerms])
-
   const CollateralSkeletonList = useMemo(() => {
     return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((collateral: any, index: number) => {
       return <CollateralItemSkeleton key={`collateral-${JSON.stringify(collateral)}${index}`} />
     })
   }, [])
-
+  console.log('collaterals', collaterals)
   const autocompleteOptions = useMemo(
     () =>
       collaterals
-        .map((collateral: any) => collateral.collections.map((collection: any) => collection.name))
+        .map((collateral: any) => collateral.collections.map((collection: any) => collection.__typename))
         .flat()
         .filter((collection: string, index: number, self: any) => self.indexOf(collection) === index),
     [collaterals]
@@ -413,6 +413,10 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
     // overflow: scroll;
   `
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [filterType, setFilterType] = React.useState<boolean>(false)
+  const filter = useMemo(() => {
+    return filterType && CollateralList.length === 0 && searchTerms.length !== 0
+  }, [CollateralList.length, filterType, searchTerms.length])
   const open = Boolean(anchorEl)
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget)
@@ -477,6 +481,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
               if (e.code === 'Tab' || e.code === 'Enter') {
                 handleAddSearchTerm(search)
                 e.target.blur()
+                setFilterType(true)
               }
             }}
           />
@@ -511,6 +516,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
           <FilterContainer>
             <CustomizedSelect
               value={collectionFilter}
+              filter={filter}
               options={collectionOptions}
               onChange={handleCollectionFilterChange}
               startAdornment={
@@ -526,6 +532,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
             <DebtFilterSelect
               value={debtFilter}
               options={debtFilters}
+              filter={filter}
               onChange={handleDebtFilterChange}
               startAdornment={
                 <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -555,6 +562,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
             <CustomizedSelect
               value={sort}
               options={sortOptions}
+              filter={filter}
               onChange={handleSortUpdate}
               startAdornment={
                 <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -564,16 +572,23 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
               }
               labelId="collateral-sort"
               id="collateral-sort"
+              disabled
             />
           </SortContainer>
         </SortFilterContainer>
         <CollateralItems>
-          {loading ? CollateralSkeletonList : !!collaterals.length ? CollateralList : <EmptyState />}
+          {loading ? (
+            CollateralSkeletonList
+          ) : CollateralList.length === 0 ? (
+            <EmptyState searchTerm={searchTerms} />
+          ) : (
+            CollateralList
+          )}
         </CollateralItems>
       </PaddingBox>
-      {collaterals.length !== 0 && (
+      {CollateralList.length !== 0 && (
         <CollateralPagination
-          collaterals={collaterals}
+          collaterals={CollateralList}
           setCurrentPage={setCurrentPage}
           onPageSelect={(number: number) => null}
         />

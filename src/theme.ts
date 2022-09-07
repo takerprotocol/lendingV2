@@ -321,11 +321,8 @@ export const theme = createTheme({
           .MuiSwitch-switchBase {
             width: 24px;
             height: 24px;
-            padding: 0px;
-          }
-          .MuiSwitch-switchBase {
-            width: 24px;
-            height: 24px;
+            color: #ffffff;
+            margin-right: 2px;
             display: block !important;
             padding: 2px;
           }

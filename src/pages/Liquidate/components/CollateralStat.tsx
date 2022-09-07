@@ -7,10 +7,10 @@ const CollateralStatContainer = styled('div')`
   background: #322f46;
   border-radius: 10px;
   padding-top: 26px;
-  padding-bottom: 26px;
+  padding-bottom: 20px;
   padding-left: 16px;
   padding-right: 24px;
-  margin-top: 32px;
+  margin-top: 24px;
   display: flex;
   gap: 10px;
   justify-content: space-between;
@@ -38,7 +38,8 @@ const CollateralStatValue = styled(Typography)`
 
 const CollateralStatValueContainer = styled('div')`
   display: flex;
-  gap: 10px;
+  gap: 4px;
+  width: 172px;
   align-items: center;
   margin-top: 8px;
 `

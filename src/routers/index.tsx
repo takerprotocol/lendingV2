@@ -17,8 +17,8 @@ import {
   setUserEthAsset,
   setUserNftConfig,
   setUserNftValues,
-  // setUserState,
-  // setUserValues,
+  setUserState,
+  setUserValues,
 } from 'state/user/reducer'
 import { bigNumberToString, div, stringFormat } from 'utils'
 import { WETH, ERC721_ADDRESS, DECIMALS_MASK, LTV_MASK, CHAIN_ID, COLLATERAL_MASK } from 'config'
@@ -111,25 +111,25 @@ export default function CustomizeRoutes() {
           })
         )
       })
-      // contract.getUserState(address).then((res: Array<BigNumber>) => {
-      //   dispatch(
-      //     setUserState({
-      //       loanToValue: div(res[0].toString(), 10000),
-      //       liquidationThreshold: div(res[1].toString(), 10000),
-      //       heathFactor: res[2].toString(),
-      //     })
-      //   )
-      // })
-      // contract.getUserValues(address).then((res: Array<BigNumber>) => {
-      //   dispatch(
-      //     setUserValues({
-      //       borrowLiquidity: fromWei(res[0].toString()),
-      //       NFTLiquidity: fromWei(res[1].toString()),
-      //       totalDebt: fromWei(res[2].toString()),
-      //       totalCollateral: fromWei(res[3].toString()),
-      //     })
-      //   )
-      // })
+      contract.getUserState(address).then((res: Array<BigNumber>) => {
+        dispatch(
+          setUserState({
+            loanToValue: div(res[0].toString(), 10000),
+            liquidationThreshold: div(res[1].toString(), 10000),
+            heathFactor: res[2].toString(),
+          })
+        )
+      })
+      contract.getUserValues(address).then((res: Array<BigNumber>) => {
+        dispatch(
+          setUserValues({
+            borrowLiquidity: fromWei(res[0].toString()),
+            NFTLiquidity: fromWei(res[1].toString()),
+            totalDebt: fromWei(res[2].toString()),
+            totalCollateral: fromWei(res[3].toString()),
+          })
+        )
+      })
       contract.getUserAssetValues(address, WETH).then((res: Array<BigNumber>) => {
         dispatch(
           setUserEthAsset([
