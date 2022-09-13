@@ -91,6 +91,9 @@ const LiquidateHeader = ({
   ethDebt,
   borrowings,
 }: LiquidateHeaderType) => {
+  console.log('totalDebt', totalDebt)
+  console.log('ethDebt', ethDebt)
+  console.log('borrowings', borrowings)
   return (
     <Stats>
       <InfoContainer>

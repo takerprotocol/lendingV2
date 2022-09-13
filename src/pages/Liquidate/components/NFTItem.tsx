@@ -11,6 +11,7 @@ const Container = styled(Box)`
   gap: 14px;
   align-items: center;
   cursor: pointer;
+  margin-bottom: 48px;
   user-select: none;
 `
 

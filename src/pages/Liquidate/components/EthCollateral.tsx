@@ -12,7 +12,6 @@ const EthCollateralsTitle = styled(Typography)`
   /* Cool Gray 800 */
 
   color: #14142a;
-  margin-top: 48px;
 `
 
 const EthCollateralsContainer = styled('div')`
@@ -30,6 +29,7 @@ const LiquidationAmountContainer = styled('div')`
   border-radius: 10px;
   flex: 1.5;
   padding: 16px;
+  height: 103px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -39,7 +39,7 @@ const PotentialProfitContainer = styled('div')`
   background: #f1f1f8;
   border-radius: 10px;
   flex: 1;
-  padding: 24px;
+  padding: 24px 16px 16px 16px;
   display: flex;
   justify-content: space-between;
 `
@@ -66,40 +66,56 @@ const LiquidationValue = styled(Typography)`
   /* identical to box height, or 45px */
 
   /* Cool Gray 800 */
-
+  margin-top: 4px;
   color: #14142a;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 4px;
   .MuiInputBase-root {
     font-size: 28px;
     line-height: 160%;
+  }
+  .MuiOutlinedInput-input {
+    font-family: 'Quicksand';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 160%;
+    color: #14142a;
   }
 `
 
 const MaxContainer = styled('div')`
   text-align: right;
   display: flex;
+  margin-top: 12px;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   align-items: flex-end;
 `
 
 const MaxText = styled(Typography)`
+  cursor: pointer;
+  color: #14142a;
+  padding: 2px 8px;
+  width: 42px;
+  height: 23px;
+  border: 1px solid #14142a;
+  border-radius: 4px;
   font-family: 'Quicksand';
   font-style: normal;
   font-weight: 700;
   font-size: 12px;
   line-height: 160%;
   text-align: center;
-  color: #14142a;
-  padding-right: 5px;
-  padding-left: 5px;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  border: 1px solid black;
-  border-radius: 3px;
-  width: 40px;
+  &.max {
+    color: #ffffff;
+    background: #14142a;
+  }
+  :hover {
+    color: #ffffff;
+    background: #14142a;
+  }
 `
 
 const MaxValue = styled(Typography)`
@@ -124,24 +140,24 @@ const ProfitableBadge = styled(Typography)`
   font-size: 14px;
   line-height: 160%;
   /* or 22px */
-
   /* Main color 2 */
-
   color: #7646ff;
-  padding-right: 5px;
-  padding-left: 5px;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  border: 1px solid rgba(118, 70, 255, 0.3);
+  padding-right: 8px;
+  padding-left: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   height: 25px;
-  border-radius: 3px;
+  width: 84px;
+  height: 30px;
+  border: 1px solid rgba(118, 70, 255, 0.5);
+  border-radius: 2px;
 `
 
 const EthCollateralProfitable = styled('div')`
   display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  height: 60px;
+  align-items: center;
+  gap: 16px;
+  height: 35px;
 `
 
 const PotentialProfitLabel = styled(Typography)`
@@ -160,13 +176,12 @@ const PotentialProfitLabel = styled(Typography)`
 const LabelContainer = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: 11px;
 `
 
 const ValueContainer = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 `
 
 const ProfitValue = styled(Typography)`
@@ -200,7 +215,6 @@ const SubtotalValue = styled(Typography)`
 
 const SubtotalValueContainer = styled('div')`
   display: flex;
-  gap: 6px;
   align-items: center;
 `
 
@@ -254,7 +268,7 @@ const EthCollateral = ({ handleAmount, max, potentialProfit, subtotal, label }: 
               </svg>
               <TextField
                 autoFocus={true}
-                sx={{ marginLeft: '7px', fontSize: '28px' }}
+                sx={{ fontSize: '28px' }}
                 placeholder="0.00"
                 value={amount}
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -272,13 +286,13 @@ const EthCollateral = ({ handleAmount, max, potentialProfit, subtotal, label }: 
         </LiquidationAmountContainer>
         <PotentialProfitContainer>
           <LabelContainer>
-            <PotentialProfitLabel>Potential Profit</PotentialProfitLabel>
+            <PotentialProfitLabel mb={'11px'}>Potential Profit</PotentialProfitLabel>
             <PotentialProfitLabel>Subtotal</PotentialProfitLabel>
           </LabelContainer>
           <ValueContainer>
             <ProfitValue>{potentialProfit} ETH</ProfitValue>
             <SubtotalValueContainer>
-              <SubtotalStrikeThroughValue>{subtotal}</SubtotalStrikeThroughValue>
+              <SubtotalStrikeThroughValue mr="8px">{subtotal}</SubtotalStrikeThroughValue>
               <svg width="13" height="23" viewBox="0 0 13 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M2 12.697L6.5 6L11 12.697L6.5 19L2 12.697Z"
@@ -288,7 +302,7 @@ const EthCollateral = ({ handleAmount, max, potentialProfit, subtotal, label }: 
                 />
                 <path d="M2 12L6.5 15L11 12" stroke="#A0A3BD" strokeWidth="1.2" strokeLinejoin="round" />
               </svg>
-              <SubtotalValue>41.4</SubtotalValue>
+              <SubtotalValue ml="4px">41.4</SubtotalValue>
             </SubtotalValueContainer>
           </ValueContainer>
         </PotentialProfitContainer>

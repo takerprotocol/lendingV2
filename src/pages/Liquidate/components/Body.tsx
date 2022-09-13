@@ -6,14 +6,14 @@ import { FlexBox } from 'styleds'
 import Collection1 from 'assets/images/png/liquidation/example/1.png'
 import Collection2 from 'assets/images/png/liquidation/example/2.png'
 import Collection3 from 'assets/images/png/liquidation/example/3.png'
-import EthCollateral from './EthCollateral'
+// import EthCollateral from './EthCollateral'
 import LiquidationBar from './LiquidationBar'
 import NFTItem from './NFTItem'
 import NFTItemSkeleton from './NftItemSkeleton'
 import { CollateralModel, TokenModel } from 'services/type/nft'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { desensitization, plus, times } from 'utils'
+import { desensitization, plus } from 'utils'
 import { gasLimit, getWETH } from 'config'
 import { toast } from 'react-toastify'
 import { TransactionType } from 'state/transactions/types'
@@ -28,7 +28,7 @@ const Container = styled('div')`
   border-radius: 12px;
   min-height: 300px;
   margin-top: 16px;
-  padding: 25px 25px 36px 24px;
+  padding: 25px 0px 36px 0px;
   z-index: 1;
 `
 const ContainerBg = styled('div')`
@@ -122,6 +122,9 @@ const CollectionSortItem = styled('div')`
     background-color: #7646ff;
     object-fit: cover;
   }
+`
+const PaddingBox = styled(Box)`
+  padding: 0px 24px 0px 25px;
 `
 //-------css-------//
 const LiquidateBody = ({
@@ -464,76 +467,78 @@ const LiquidateBody = ({
   //-------js---------//
   return (
     <Container>
-      <ContainerBg></ContainerBg>
-      <TitleRow>
-        <Title>Liquidate</Title>
-        <div>
-          <SubTitle>Collaterals</SubTitle>
-          <TotalLiqudationContainer>
-            <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M4 11.7121L8.5 4.5L13 11.7121L8.5 18.5L4 11.7121Z"
-                stroke="#14142A"
-                strokeWidth="1.5"
-                strokeLinejoin="round"
+      <PaddingBox>
+        <ContainerBg></ContainerBg>
+        <TitleRow>
+          <Title>Liquidate</Title>
+          <div>
+            <SubTitle>Collaterals</SubTitle>
+            <TotalLiqudationContainer>
+              <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M4 11.7121L8.5 4.5L13 11.7121L8.5 18.5L4 11.7121Z"
+                  stroke="#14142A"
+                  strokeWidth="1.5"
+                  strokeLinejoin="round"
+                />
+                <path d="M4 11.5L8.5 14L13 11.5" stroke="#14142A" strokeLinejoin="round" />
+              </svg>
+              <TotalLiquidation>{total}</TotalLiquidation>
+            </TotalLiqudationContainer>
+          </div>
+        </TitleRow>
+        <NFTRow
+          marginTop={Collaterals.length > 9 ? '28px' : '35px'}
+          marginBottom={Collaterals.length > 9 ? '24px' : '30px'}
+        >
+          <NFTRowTitle>{Collaterals.length || 0} NFT Collaterals</NFTRowTitle>
+          {Collaterals.length > 9 && (
+            <FlexBox>
+              <CustomizedSelect
+                value={collectionFilter}
+                options={collectionOptions}
+                onChange={handleCollectionFilterChange}
+                startAdornment={
+                  <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
+                    <path d="M7 8H17" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M8 5H16" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                }
+                labelId="collateral-filter"
+                id="collateral-filter"
               />
-              <path d="M4 11.5L8.5 14L13 11.5" stroke="#14142A" strokeLinejoin="round" />
-            </svg>
-            <TotalLiquidation>{total}</TotalLiquidation>
-          </TotalLiqudationContainer>
-        </div>
-      </TitleRow>
-      <NFTRow
-        marginTop={Collaterals.length > 9 ? '28px' : '35px'}
-        marginBottom={Collaterals.length > 9 ? '24px' : '30px'}
-      >
-        <NFTRowTitle>{Collaterals.length || 0} NFT Collaterals</NFTRowTitle>
-        {Collaterals.length > 9 && (
-          <FlexBox>
-            <CustomizedSelect
-              value={collectionFilter}
-              options={collectionOptions}
-              onChange={handleCollectionFilterChange}
-              startAdornment={
-                <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
-                  <path d="M7 8H17" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M8 5H16" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              }
-              labelId="collateral-filter"
-              id="collateral-filter"
-            />
-            <Box width="36px"></Box>
-            <CustomizedSelect
-              value={sort}
-              options={sortOptions}
-              onChange={handleSortUpdate}
-              startAdornment={
-                <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8.5 18.5V5.5L5.5 8.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M14.5 5.5V18.5L17.5 15.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              }
-              labelId="collateral-sort"
-              id="collateral-sort"
-            />
-          </FlexBox>
-        )}
-      </NFTRow>
-      <NFTCollaterals>
-        {loading ? LoadingCollaterals : Collaterals}
-        <Pager TypeKey={'liquidate'} list={loading ? [] : Collaterals}></Pager>
-      </NFTCollaterals>
-      <EthCollateral
-        handleAmount={(value: string) => {
-          setEthValue(value)
-        }}
-        max={times(totalDebt || '0', 0.5)}
-        potentialProfit={3.6}
-        subtotal={41.4}
-        label="Profitable"
-      />
+              <Box width="36px"></Box>
+              <CustomizedSelect
+                value={sort}
+                options={sortOptions}
+                onChange={handleSortUpdate}
+                startAdornment={
+                  <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.5 18.5V5.5L5.5 8.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M14.5 5.5V18.5L17.5 15.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                }
+                labelId="collateral-sort"
+                id="collateral-sort"
+              />
+            </FlexBox>
+          )}
+        </NFTRow>
+        <NFTCollaterals>
+          {loading ? LoadingCollaterals : Collaterals}
+          <Pager TypeKey={'liquidate'} list={loading ? [] : Collaterals}></Pager>
+        </NFTCollaterals>
+        {/* <EthCollateral
+          handleAmount={(value: string) => {
+            setEthValue(value)
+          }}
+          max={times(totalDebt || '0', 0.5)}
+          potentialProfit={3.6}
+          subtotal={41.4}
+          label="Profitable"
+        /> */}
+      </PaddingBox>
       <LiquidationBar
         total={plus(nftAmount, ethValue || '0')}
         nfts={tokenChecked.length}

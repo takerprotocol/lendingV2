@@ -4,14 +4,12 @@ const TotalLiquidationAmountContainer = styled('div')`
   background: #262338;
   box-shadow: 0px 10px 20px rgba(38, 35, 56, 0.1);
   border-radius: 12px;
+  padding: 0px 24px;
   margin: 0 auto;
-  padding: 24px;
-  padding-bottom: 18px;
   margin-top: 43px;
   display: flex;
-  gap: 40px;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 `
 
 const TotalLiqudiationTitle = styled(Typography)`
@@ -42,29 +40,32 @@ const TotalLiquidationAmount = styled(Typography)`
 
 const TotalLiquidationAmountWrapper = styled('div')`
   display: flex;
-  gap: 6px;
+  gap: 2px;
   align-items: center;
 `
 
 const LiquidateButton = styled(Button)`
+  margin-top: 24px;
   background: linear-gradient(82.51deg, #884bff 0%, #6865ff 42.39%, #4785ff 74.2%, #2fc1ff 100%) !important;
 `
 
 const LabelValueContainer = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  margin: 25px 0px 21.5px 0px;
+  gap: 8.5px;
 `
 
 const LabelValueContainerPrice = styled('div')`
   display: flex;
+  width: 144px;
   flex-direction: column;
-  gap: 8.5px;
+  margin: 25px 0px 17px 0px;
+  gap: 4px;
 `
 
 const StatsContainer = styled('div')`
   display: flex;
-  gap: 40px;
 `
 
 const TotalPrice = styled(Typography)`
@@ -121,7 +122,7 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit }: Liquidatio
       </LabelValueContainer>
       <StatsContainer>
         <LabelValueContainer>
-          <TotalLiqudiationTitle>{nfts} NFT</TotalLiqudiationTitle>
+          <TotalLiqudiationTitle width="119px">{nfts} NFT</TotalLiqudiationTitle>
           <TotalLiquidationAmountWrapper>
             <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -132,11 +133,11 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit }: Liquidatio
               />
               <path d="M4 10.5L8.5 13L13 10.5" stroke="#A0A3BD" strokeLinejoin="round" />
             </svg>
-            <TotalLiquidationAmount>{nftsValue}</TotalLiquidationAmount>
+            <TotalLiquidationAmount>{nftsValue || 0}</TotalLiquidationAmount>
           </TotalLiquidationAmountWrapper>
         </LabelValueContainer>
         <LabelValueContainer>
-          <TotalLiqudiationTitle>ETH</TotalLiqudiationTitle>
+          <TotalLiqudiationTitle width="86px">ETH</TotalLiqudiationTitle>
           <TotalLiquidationAmountWrapper>
             <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -172,7 +173,7 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit }: Liquidatio
             submit()
           }}
         >
-          Liquidate
+          LIQUIDATE
         </LiquidateButton>
       </StatsContainer>
     </TotalLiquidationAmountContainer>

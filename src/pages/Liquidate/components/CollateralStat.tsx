@@ -59,7 +59,7 @@ const SplitContainer = styled('div')`
 const SplitTitleContainer = styled('div')`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 4px;
   flex-direction: row;
 `
 
@@ -75,16 +75,16 @@ const Split1Title = styled(Typography)`
 
 const Split = styled('div')`
   display: flex;
-  align-items: center;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 `
 
 const SplitValue = styled('div')`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 8px;
+  gap: 2px;
+  margin-left: 8px;
   flex-direction: row;
   color: white;
 `
@@ -194,7 +194,7 @@ const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2
         </SplitContainer>
         <LineIndicatorContainer>
           <LineIndicator width={split1LineLength} color="#BB77FF" />
-          <LineIndicator width={split2LineLength} color="#72AAFF" />
+          <LineIndicator margin-left="1px" width={split2LineLength} color="#72AAFF" />
         </LineIndicatorContainer>
       </SplitStatContainer>
     </CollateralStatContainer>

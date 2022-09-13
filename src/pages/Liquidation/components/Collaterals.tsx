@@ -23,7 +23,6 @@ const CollateralsContainer = styled(Box)`
   margin: 0 auto;
   background-repeat: no-repeat;
   background-image: url(${collateralsBg});
-  backdrop-filter: blur(80px);
   background-size: cover;
   border-radius: 12px;
   z-index: 5;
@@ -180,7 +179,12 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
   const [search, setSearch] = useState('')
   const [searchTerms, setSearchTerms] = useState<string[]>([])
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
-    setSearch(String(e.currentTarget.value))
+    if (searchTerms[0]) {
+      setSearchTerms(searchTerms.filter((currentTerm: string) => currentTerm !== searchTerms[0]))
+      setSearch(searchTerms[0])
+    } else {
+      setSearch(String(e.currentTarget.value))
+    }
   }
   const [collectionFilter, setCollectionFilter] = useState(0)
   const handleCollectionFilterChange = useCallback((event: any) => {
@@ -401,6 +405,11 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
     align-items: center;
     gap: 18px;
   `
+  const TermTypography = styled(Typography)`
+    max-width: 227px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  `
 
   const CloseTermIcon = styled('svg')`
     cursor: pointer;
@@ -456,7 +465,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
           <TermsContainer>
             {searchTerms.map((term: string, index: number) => (
               <TermItem key={`${term}${index}`}>
-                <Typography variant="subtitle2">{term.length > 29 ? term.slice(0, 29).concat('...') : term}</Typography>
+                <TermTypography variant="subtitle2">{term}</TermTypography>
                 <CloseTermIcon
                   width="12"
                   height="12"
@@ -476,6 +485,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
           <KeywordSearchInput
             value={search}
             onChange={handleSearch}
+            onFocus={handleSearch}
             placeholder={!searchTerms.length ? 'Search keyword' : undefined}
             onKeyDown={(e: any) => {
               if (e.code === 'Tab' || e.code === 'Enter') {

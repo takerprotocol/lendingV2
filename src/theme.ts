@@ -163,7 +163,23 @@ export const theme = createTheme({
         root: `
         max-height: 265px;
         overflow: auto;
-        padding:12px 0px; 
+        padding:12px 0px 12px 0px;
+        &::-webkit-scrollbar {
+          display: block !important;
+          margin-right: 6px !important;
+          width: 12px !important;
+        }
+        &::-webkit-scrollbar-track {
+          width: 4px !important;
+          margin-right: 6px !important;
+        }
+        &::-webkit-scrollbar-thumb {
+          width: 4px !important;
+          margin-right: 6px !important;
+          background-color:  #EFF0F6 !important;
+          border-right: 6px solid #fff;
+          border-radius: 2px !important;
+        }
         `,
       },
     },

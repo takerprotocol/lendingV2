@@ -44,7 +44,7 @@ const StyledMenuItem = styled(MenuItem)`
   display: flex;
   border-radius: 6px;
   padding: 12px;
-  margin: 0 12px 0 12px;
+  margin: 0 0 0 12px;
   justify-content: flex-start;
   align-items: center;
   font-family: 'Quicksand';
@@ -94,7 +94,7 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
     () =>
       props.options.map((option: any) => (
         <StyledMenuItem
-          sx={{ marginRight: `${props.options[0].name === 'All Debt' ? '28px' : '12px'}` }}
+          sx={{ marginRight: `${props.options[0].name === 'Default Sort' ? '12px' : '28px'}` }}
           key={`${option.value}-item`}
           value={option.value}
         >

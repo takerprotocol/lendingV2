@@ -19,6 +19,7 @@ const Body = styled(Box)`
   background-color: #f7f7fc;
   background-image: url(${liquidationBg});
   background-repeat: no-repeat;
+  background-size: contain;
   width: 100%;
   padding-bottom: 96px;
   position: -webkit-sticky; /* Safari */
@@ -39,7 +40,7 @@ export default function Liquidation() {
     }
   }, [chainId])
   const getCollaterals = useCallback(async () => {
-    if (address) {
+    if (address && client) {
       const user = await client.query({
         query: AllUser(),
       })
