@@ -33,7 +33,6 @@ export default function Liquidation() {
   const [collaterals, setCollaterals] = useState<Array<CollateralModel>>([])
   const address = useAddress()
   const [client, setClient] = useState<any>(null)
-
   useEffect(() => {
     if (chainId) {
       setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : 42])

@@ -109,8 +109,55 @@ export const FIRST_COLLECTION = () => {
 
 export const AllUser = () => {
   const queryString = `
-    query users {
-      users {
+    query users ($offset: Int, $limit: Int) {
+      users(offset: 0, limit: 2, orderBy: totalDebt, orderDirection: desc) {
+        id
+        nftCollateral
+        reserveSupply
+        totalDebt
+        avgLtv
+        liqThreshold
+        reserves {
+          id
+          reserve {
+            tToken
+            debtToken
+            interestRateCalculator
+            liqThreshold
+            ltv
+            name
+            symbol
+          }
+          depositedAmount
+          borrowedAmount
+        }
+        collections {
+          id
+          collection {
+            id
+            tNFT
+            ercType
+            liqThreshold
+            ltv
+            name
+            symbol
+            floorPrice
+          }
+          tokens {
+            id
+            amount
+          }
+        }
+      }
+    }
+`
+  return gql(queryString)
+}
+
+export const ALL_USER = () => {
+  const queryString = `
+    query users ($id: String, $offset: Int, $limit: Int) {
+      users(offset: $offset, limit: $limit) {
         id
         nftCollateral
         reserveSupply
