@@ -109,8 +109,8 @@ export const FIRST_COLLECTION = () => {
 
 export const AllUser = () => {
   const queryString = `
-    query users ($offset: Int, $limit: Int) {
-      users(offset: 0, limit: 2, orderBy: totalDebt, orderDirection: desc) {
+    query users ($skip: Int, $limit: Int) {
+      users(skip: 0, limit: 2, orderBy: totalDebt, orderDirection: desc) {
         id
         nftCollateral
         reserveSupply
