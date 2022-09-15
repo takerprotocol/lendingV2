@@ -1,0 +1,18 @@
+{
+  "network": "goerli",
+  "LendingPool": {
+    "startBlock": 7595608,
+    "address": "0xA64611E1dCAC9301682037CBDc82E455f4098bce"
+  },
+  "PoolConfigurator": {
+    "startBlock": 7595608,
+    "address": "0x833AdEC65ae5E4B282f856bb21d2875D970f449C"
+  },
+  "NFTBankConsumer": {
+    "startBlock": 7595608,
+    "address": "0xE8C9B8F53afF59816fDb7D61cA15e74895c4b183"
+  },
+  "PriceOracle": {
+    "address": "0x8b6f792515AF7Ffc974b389707d17a0591D927A7"
+  }
+}

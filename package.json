@@ -10,7 +10,8 @@
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 lending-subgraph-2",
     "test": "graph test",
     "prepare:rinkeby": "mustache config/rinkeby.json subgraph.template.yaml > subgraph.yaml && mustache config/rinkeby.json src/lending-pool.templete.ts > src/lending-pool.ts",
-    "prepare:kovan": "mustache config/kovan.json subgraph.template.yaml > subgraph.yaml && mustache config/kovan.json src/lending-pool.templete.ts > src/lending-pool.ts"
+    "prepare:kovan": "mustache config/kovan.json subgraph.template.yaml > subgraph.yaml && mustache config/kovan.json src/lending-pool.templete.ts > src/lending-pool.ts",
+    "prepare:goerli": "mustache config/goerli.json subgraph.template.yaml > subgraph.yaml && mustache config/goerli.json src/lending-pool.templete.ts > src/lending-pool.ts"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.30.4",

@@ -14,8 +14,8 @@ type Reserve @entity {
   liqThreshold: BigInt!
   ltv: BigInt!
 
-  name: String!
-  symbol: String!
+  name: String
+  symbol: String
 
   users: [UserReserve!]! @derivedFrom(field: "reserve")
 }
@@ -29,9 +29,9 @@ type NftCollection @entity {
   liqThreshold: BigInt!
   ltv: BigInt!
 
-  name: String!
-  symbol: String!
-  floorPrice: BigInt!
+  name: String
+  symbol: String
+  floorPrice: BigInt
 
   users: [UserNftCollection!]! @derivedFrom(field: "collection")
 }
