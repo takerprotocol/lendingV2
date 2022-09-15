@@ -175,6 +175,7 @@ export const theme = createTheme({
         }
         &::-webkit-scrollbar-thumb {
           width: 4px !important;
+          height: 92px !important;
           margin-right: 6px !important;
           background-color:  #EFF0F6 !important;
           border-right: 6px solid #fff;

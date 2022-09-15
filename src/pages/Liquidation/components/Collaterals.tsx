@@ -13,7 +13,6 @@ import { FlexBox } from 'styleds'
 import CollateralsType from './CollateralsType'
 import { useCollateralsType } from 'state/user/hooks'
 import { CollateralModel, CollectionsModel } from 'services/type/nft'
-import BigNumber from 'bignumber.js'
 import { plus, minus, times } from 'utils'
 // import { setUserValues } from 'state/user/reducer'
 
@@ -174,10 +173,27 @@ const AutoCompleteItem = styled(Typography)`
     color: #14142a;
   }
 `
-
-const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<CollateralModel>; loading: boolean }) => {
+interface CollateralsProps {
+  collaterals: Array<CollateralModel>
+  loading: boolean
+  setSort: Function
+  sort: number
+  setDebtFilter: Function
+  debtFilter: number
+  setSearchTerms: Function
+  searchTerms: Array<string>
+}
+const Collaterals = ({
+  collaterals,
+  loading = false,
+  setSort,
+  sort,
+  setDebtFilter,
+  debtFilter,
+  setSearchTerms,
+  searchTerms,
+}: CollateralsProps) => {
   const [search, setSearch] = useState('')
-  const [searchTerms, setSearchTerms] = useState<string[]>([])
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
     if (searchTerms[0]) {
       setSearchTerms(searchTerms.filter((currentTerm: string) => currentTerm !== searchTerms[0]))
@@ -216,24 +232,24 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
       })),
     ]
   }, [uniqueCollections, collections])
-  const collectionsFilterFunction = useCallback(
-    (collateral: any) => {
-      if (!collectionFilter) {
-        return true
-      } else {
-        const filterCollection = String(uniqueCollections[collectionFilter - 1]).toLowerCase()
-        return Boolean(
-          collateral.collections.find((collection: any) => collection.name.toLowerCase() === filterCollection)
-        )
-      }
-    },
-    [collectionFilter, uniqueCollections]
-  )
+  // const collectionsFilterFunction = useCallback(
+  //   (collateral: any) => {
+  //     if (!collectionFilter) {
+  //       return true
+  //     } else {
+  //       const filterCollection = String(uniqueCollections[collectionFilter - 1]).toLowerCase()
+  //       return Boolean(
+  //         collateral.collections.find((collection: any) => collection.name.toLowerCase() === filterCollection)
+  //       )
+  //     }
+  //   },
+  //   [collectionFilter, uniqueCollections]
+  // )
 
-  const [debtFilter, setDebtFilter] = useState(0)
   const handleDebtFilterChange = useCallback((event: SelectChangeEvent<unknown>, _child: ReactNode) => {
     setFilterType(false)
     setDebtFilter(event.target.value as number)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const debtFilters = useMemo(() => {
     return [
@@ -259,28 +275,27 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
       },
     ]
   }, [])
-  const deptFilterFunction = useCallback(
-    (collateral: any) => {
-      switch (debtFilter) {
-        case 1:
-          return collateral.debt < 10
-        case 2:
-          return collateral.debt > 10 && collateral.debt < 30
-        case 3:
-          return collateral.debt > 30 && collateral.debt < 50
-        case 4:
-          return collateral.debt > 50
-        default:
-          return true
-      }
-    },
-    [debtFilter]
-  )
-
-  const [sort, setSort] = useState(0)
+  // const deptFilterFunction = useCallback(
+  //   (collateral: any) => {
+  //     switch (debtFilter) {
+  //       case 1:
+  //         return collateral.debt < 10
+  //       case 2:
+  //         return collateral.debt > 10 && collateral.debt < 30
+  //       case 3:
+  //         return collateral.debt > 30 && collateral.debt < 50
+  //       case 4:
+  //         return collateral.debt > 50
+  //       default:
+  //         return true
+  //     }
+  //   },
+  //   [debtFilter]
+  // )
   const handleSortUpdate = useCallback((event: any) => {
     setFilterType(false)
     setSort(event.target.value as number)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const sortOptions = useMemo(() => {
     return [
@@ -315,27 +330,27 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
     ]
   }, [])
 
-  const sortOptionsFunction = useCallback(
-    (collateralA: CollateralModel, collateralB: CollateralModel) => {
-      switch (sort) {
-        case 1:
-          return new BigNumber(collateralA.collateral).gt(collateralB.collateral) ? 1 : -1
-        case 2:
-          return new BigNumber(collateralB.collateral).gt(collateralA.collateral) ? 1 : -1
-        case 3:
-          return new BigNumber(collateralA.debt).gt(collateralB.debt) ? 1 : -1
-        case 4:
-          return new BigNumber(collateralB.debt).gt(collateralA.debt) ? 1 : -1
-        case 5:
-          return new BigNumber(collateralA.riskPercentage).gt(collateralB.riskPercentage) ? 1 : -1
-        case 6:
-          return new BigNumber(collateralB.riskPercentage).gt(collateralA.riskPercentage) ? 1 : -1
-        default:
-          return 0
-      }
-    },
-    [sort]
-  )
+  // const sortOptionsFunction = useCallback(
+  //   (collateralA: CollateralModel, collateralB: CollateralModel) => {
+  //     switch (sort) {
+  //       case 1:
+  //         return new BigNumber(collateralA.collateral).gt(collateralB.collateral) ? 1 : -1
+  //       case 2:
+  //         return new BigNumber(collateralB.collateral).gt(collateralA.collateral) ? 1 : -1
+  //       case 3:
+  //         return new BigNumber(collateralA.debt).gt(collateralB.debt) ? 1 : -1
+  //       case 4:
+  //         return new BigNumber(collateralB.debt).gt(collateralA.debt) ? 1 : -1
+  //       case 5:
+  //         return new BigNumber(collateralA.riskPercentage).gt(collateralB.riskPercentage) ? 1 : -1
+  //       case 6:
+  //         return new BigNumber(collateralB.riskPercentage).gt(collateralA.riskPercentage) ? 1 : -1
+  //       default:
+  //         return 0
+  //     }
+  //   },
+  //   [sort]
+  // )
 
   //------------//
 
@@ -347,20 +362,23 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
         : times(currentPage, 16),
     [collaterals.length, currentPage]
   )
+  console.log(currentPageIndex)
   //------------//
   const CollateralList = useMemo(() => {
-    return collaterals
-      .filter(collectionsFilterFunction)
-      .filter(deptFilterFunction)
-      .sort(sortOptionsFunction)
-      .slice(+times(minus(currentPage, 1), 16), +currentPageIndex)
-      .map((collateral: any, index: number) => {
-        const nfts = collateral.collections.reduce(
-          (acc: any, current: CollectionsModel) => acc + current.tokens.length,
-          0
-        )
-        return <CollateralItem key={`collateral-${JSON.stringify(collateral)}${index}`} {...collateral} nfts={nfts} />
-      })
+    return (
+      collaterals
+        // .filter(collectionsFilterFunction)
+        // .filter(deptFilterFunction)
+        // .sort(sortOptionsFunction)
+        // .slice(+times(minus(currentPage, 1), 16), +currentPageIndex)
+        .map((collateral: any, index: number) => {
+          const nfts = collateral.collections.reduce(
+            (acc: any, current: CollectionsModel) => acc + current.tokens.length,
+            0
+          )
+          return <CollateralItem key={`collateral-${JSON.stringify(collateral)}${index}`} {...collateral} nfts={nfts} />
+        })
+    )
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [collaterals, collectionFilter, debtFilter, sort, searchTerms])
   const CollateralSkeletonList = useMemo(() => {
@@ -368,7 +386,6 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
       return <CollateralItemSkeleton key={`collateral-${JSON.stringify(collateral)}${index}`} />
     })
   }, [])
-  console.log('collaterals', collaterals)
   const autocompleteOptions = useMemo(
     () =>
       collaterals
@@ -381,6 +398,7 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
   const handleAddSearchTerm = useCallback((term: string) => {
     setSearchTerms([term])
     setSearch('')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const TermsContainer = styled('div')`
@@ -553,7 +571,15 @@ const Collaterals = ({ collaterals, loading = false }: { collaterals: Array<Coll
               labelId="debt-filter"
               id="debt-filter"
             />
-            <FlexBox sx={{ cursor: 'pointer' }} ml="12px" width="120px">
+            <FlexBox
+              onClick={() => {
+                setSort(0)
+                setDebtFilter(0)
+              }}
+              sx={{ cursor: 'pointer' }}
+              ml="12px"
+              width="120px"
+            >
               <Typography fontStyle="16px" color="#4E4B66" fontWeight="700" lineHeight="22px" mr="4px">
                 Reset All
               </Typography>

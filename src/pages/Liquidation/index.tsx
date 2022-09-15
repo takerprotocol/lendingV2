@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import Header from './components/Header'
 import Collaterals from './components/Collaterals'
 import liquidationBg from 'assets/images/svg/liquidation/liquidation-icon.svg'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getClient } from 'apollo/client'
 import { AllUser } from 'apollo/queries'
 import { useAddress } from 'state/user/hooks'
@@ -33,6 +33,42 @@ export default function Liquidation() {
   const [collaterals, setCollaterals] = useState<Array<CollateralModel>>([])
   const address = useAddress()
   const [client, setClient] = useState<any>(null)
+  const [searchTerms, setSearchTerms] = useState<string[]>([]) //搜索value
+  const [sort, setSort] = useState(0) //排序方法
+  const [debtFilter, setDebtFilter] = useState(0) //过滤条件
+  const conditionDebtFilter = useMemo(() => {
+    switch (debtFilter) {
+      case 1:
+        return ['totalDebt_gt:10000000000000000000', 'totalDebt_gt:`10000000000000000000`']
+      case 2:
+        return ['totalDebt_gte:10000000000000000000', 'totalDebt_lt:30000000000000000000']
+      case 3:
+        return ['totalDebt_gte:30000000000000000000', 'totalDebt_lt:50000000000000000000']
+      case 4:
+        return ['totalDebt_gte:50000000000000000000', 'totalDebt_gte:50000000000000000000']
+      default:
+        return ['totalDebt_gte:0', 'totalDebt_gte:0']
+    }
+  }, [debtFilter])
+  console.log()
+  const conditionSort = useMemo(() => {
+    switch (sort) {
+      case 1:
+        return ['nftCollateral', 'desc']
+      case 2:
+        return ['nftCollateral', 'asc']
+      case 3:
+        return ['totalDebt', 'desc']
+      case 4:
+        return ['totalDebt', 'asc']
+      case 5:
+        return ['avgLtv', 'desc']
+      case 6:
+        return ['avgLtv', 'asc']
+      default:
+        return ['null', 'desc']
+    }
+  }, [sort])
   useEffect(() => {
     if (chainId) {
       setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : 42])
@@ -41,7 +77,7 @@ export default function Liquidation() {
   const getCollaterals = useCallback(async () => {
     if (address && client) {
       const user = await client.query({
-        query: AllUser(),
+        query: AllUser(searchTerms, conditionDebtFilter, conditionSort),
       })
       setLoading(false)
       if (user.data.users) {
@@ -72,7 +108,7 @@ export default function Liquidation() {
         setCollaterals(users)
       }
     }
-  }, [address, client])
+  }, [address, client, conditionDebtFilter, conditionSort, searchTerms])
 
   useEffect(() => {
     getCollaterals()
@@ -82,7 +118,16 @@ export default function Liquidation() {
     <Body className="header-padding">
       <Header />
       <Box height="308px"></Box>
-      <Collaterals loading={loading} collaterals={collaterals} />
+      <Collaterals
+        debtFilter={debtFilter}
+        setDebtFilter={setDebtFilter}
+        sort={sort}
+        setSort={setSort}
+        loading={loading}
+        collaterals={collaterals}
+        setSearchTerms={setSearchTerms}
+        searchTerms={searchTerms}
+      />
     </Body>
   )
 }
