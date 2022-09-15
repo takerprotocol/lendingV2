@@ -39,15 +39,15 @@ export default function Liquidation() {
   const conditionDebtFilter = useMemo(() => {
     switch (debtFilter) {
       case 1:
-        return ['totalDebt_gt:10000000000000000000', 'totalDebt_gt:`10000000000000000000`']
+        return ['totalDebt_gt:"10000000000000000000"', 'totalDebt_gt:"10000000000000000000"']
       case 2:
-        return ['totalDebt_gte:10000000000000000000', 'totalDebt_lt:30000000000000000000']
+        return ['totalDebt_gte:"10000000000000000000"', 'totalDebt_lt:"30000000000000000000"']
       case 3:
-        return ['totalDebt_gte:30000000000000000000', 'totalDebt_lt:50000000000000000000']
+        return ['totalDebt_gte:"30000000000000000000"', 'totalDebt_lt:"50000000000000000000"']
       case 4:
-        return ['totalDebt_gte:50000000000000000000', 'totalDebt_gte:50000000000000000000']
+        return ['totalDebt_gte:"50000000000000000000"', 'totalDebt_gte:"50000000000000000000"']
       default:
-        return ['totalDebt_gte:0', 'totalDebt_gte:0']
+        return ['totalDebt_gte:"0"', 'totalDebt_gte:"0"']
     }
   }, [debtFilter])
   console.log()

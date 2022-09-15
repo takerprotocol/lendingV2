@@ -114,7 +114,7 @@ export const AllUser = (
 ) => {
   const queryString = `
     query users ($skip: Int, $limit: Int) {
-      users(skip: 0, limit: 2, where: {id_in: [""], ${conditionDebtFilter[0]},${conditionDebtFilter[1]}},orderBy: ${conditionSort[0]}, orderDirection: ${conditionSort[1]}) {
+      users(skip: 0, limit: 2, where: {${conditionDebtFilter[0]},${conditionDebtFilter[1]}},orderBy: ${conditionSort[0]}, orderDirection: ${conditionSort[1]}) {
         id
         nftCollateral
         reserveSupply
