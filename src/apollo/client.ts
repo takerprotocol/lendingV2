@@ -8,6 +8,12 @@ export const clientEth = new ApolloClient({
   }),
   cache: new InMemoryCache(),
 })
+export const clientGoerli = new ApolloClient({
+  link: new HttpLink({
+    uri: 'https://api.studio.thegraph.com/query/29077/lending-subgraph-2/v0.0.91',
+  }),
+  cache: new InMemoryCache(),
+})
 export const clientRINKEBY = new ApolloClient({
   link: new HttpLink({
     uri: 'https://api.studio.thegraph.com/query/29077/lending-subgraph-2/0.0.94',
@@ -57,6 +63,7 @@ export const clientBsc1155 = new ApolloClient({
 export const getClient = () => {
   return {
     [SupportedChainId.MAINNET]: clientEth,
+    [SupportedChainId.GOERLI]: clientGoerli,
     [SupportedChainId.RINKEBY]: clientRINKEBY,
     [SupportedChainId.KOVAN]: clientKOVAN,
     [SupportedChainId.POLYGON_MAINNET]: clientPolygon,
