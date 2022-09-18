@@ -14,6 +14,7 @@ import CollateralsType from './CollateralsType'
 import { useCollateralsType } from 'state/user/hooks'
 import { CollateralModel, CollectionsModel } from 'services/type/nft'
 import { plus, minus, times } from 'utils'
+import { useCollections } from 'state/application/hooks'
 // import { setUserValues } from 'state/user/reducer'
 
 const CollateralsContainer = styled(Box)`
@@ -180,6 +181,8 @@ interface CollateralsProps {
   sort: number
   setDebtFilter: Function
   debtFilter: number
+  setCollectionFilter: Function
+  collectionFilter: number
   setSearchTerms: Function
   searchTerms: Array<string>
 }
@@ -192,8 +195,12 @@ const Collaterals = ({
   debtFilter,
   setSearchTerms,
   searchTerms,
+  setCollectionFilter,
+  collectionFilter,
 }: CollateralsProps) => {
   const [search, setSearch] = useState('')
+  const collection = useCollections()
+  console.log('collection', collection)
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
     if (searchTerms[0]) {
       setSearchTerms(searchTerms.filter((currentTerm: string) => currentTerm !== searchTerms[0]))
@@ -202,36 +209,33 @@ const Collaterals = ({
       setSearch(String(e.currentTarget.value))
     }
   }
-  const [collectionFilter, setCollectionFilter] = useState(0)
   const handleCollectionFilterChange = useCallback((event: any) => {
     setCollectionFilter(event.target.value as number)
     setFilterType(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  const collections = useMemo(() => collaterals.map((collateral: any) => collateral.collections).flat(), [collaterals])
-  const uniqueCollections: any = useMemo(
-    () => [...new Set(collections.map((collection: any) => collection.name))],
-    [collections]
-  )
+  // const collections = useMemo(() => collaterals.map((collateral: any) => collateral.collections).flat(), [collaterals])
+  // const uniqueCollections: any = useMemo(
+  //   () => [...new Set(collections.map((collection: any) => collection.name))],
+  //   [collections]
+  // )
   const collectionOptions = useMemo(() => {
     return [
       {
         value: 0,
         name: 'All Collections',
       },
-      ...uniqueCollections.map((collection: any, index: number) => ({
+      ...collection.map((collection: any, index: number) => ({
         value: index + 1,
         name: (
           <CollectionSortItem>
-            <img
-              alt={collection}
-              src={collections.find((findCollection: any) => findCollection.name === collection).image}
-            />
-            {collection}
+            <img alt={collection.name} src={collection.icon} />
+            {collection.name}
           </CollectionSortItem>
         ),
       })),
     ]
-  }, [uniqueCollections, collections])
+  }, [collection])
   // const collectionsFilterFunction = useCallback(
   //   (collateral: any) => {
   //     if (!collectionFilter) {
@@ -575,6 +579,7 @@ const Collaterals = ({
               onClick={() => {
                 setSort(0)
                 setDebtFilter(0)
+                setCollectionFilter(0)
               }}
               sx={{ cursor: 'pointer' }}
               ml="12px"

@@ -85,7 +85,7 @@ const Arrow = () => (
 )
 
 type CustomizedSelectProps = SelectProps & {
-  options: { value: any; name: string | JSX.Element }[]
+  options: any
   filter?: boolean
 }
 
