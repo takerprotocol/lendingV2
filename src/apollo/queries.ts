@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 export const LendingPool = (id: string) => {
   const queryString = `
     query lendingPool {
-      lendingPool(id: "${id.toLocaleLowerCase()}") {
+      lendingPools(id: "${id.toLocaleLowerCase()}") {
         id
         reserves {
           id

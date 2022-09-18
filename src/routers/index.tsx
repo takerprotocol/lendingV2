@@ -17,8 +17,8 @@ import {
   setUserEthAsset,
   setUserNftConfig,
   setUserNftValues,
-  // setUserState,
-  // setUserValues,
+  setUserState,
+  setUserValues,
 } from 'state/user/reducer'
 import { bigNumberToString, div, stringFormat } from 'utils'
 import { getWETH, getERC721Address, DECIMALS_MASK, LTV_MASK, COLLATERAL_MASK, CHAIN_IDs } from 'config'
@@ -111,25 +111,25 @@ export default function CustomizeRoutes() {
           })
         )
       })
-      // contract.getUserState(address).then((res: Array<BigNumber>) => {
-      //   dispatch(
-      //     setUserState({
-      //       loanToValue: div(res[0].toString(), 10000),
-      //       liquidationThreshold: div(res[1].toString(), 10000),
-      //       heathFactor: res[2].toString(),
-      //     })
-      //   )
-      // })
-      // contract.getUserValues(address).then((res: Array<BigNumber>) => {
-      //   dispatch(
-      //     setUserValues({
-      //       borrowLiquidity: fromWei(res[0].toString()),
-      //       NFTLiquidity: fromWei(res[1].toString()),
-      //       totalDebt: fromWei(res[2].toString()),
-      //       totalCollateral: fromWei(res[3].toString()),
-      //     })
-      //   )
-      // })
+      contract.getUserState(address).then((res: Array<BigNumber>) => {
+        dispatch(
+          setUserState({
+            loanToValue: div(res[0].toString(), 10000),
+            liquidationThreshold: div(res[1].toString(), 10000),
+            heathFactor: res[2].toString(),
+          })
+        )
+      })
+      contract.getUserValues(address).then((res: Array<BigNumber>) => {
+        dispatch(
+          setUserValues({
+            borrowLiquidity: fromWei(res[0].toString()),
+            NFTLiquidity: fromWei(res[1].toString()),
+            totalDebt: fromWei(res[2].toString()),
+            totalCollateral: fromWei(res[3].toString()),
+          })
+        )
+      })
       contract.getUserAssetValues(address, getWETH(chainId)).then((res: Array<BigNumber>) => {
         dispatch(
           setUserEthAsset([
@@ -163,7 +163,7 @@ export default function CustomizeRoutes() {
   }
 
   const getCollection = useCallback(async () => {
-    if (client) {
+    if (client && contract) {
       const lendingPoolRes = await client.query({
         query: LendingPool(
           contract
@@ -175,8 +175,8 @@ export default function CustomizeRoutes() {
       })
       const nfts: Array<any> = []
       const depositedCollection: Array<any> = []
-      if (lendingPoolRes.data && lendingPoolRes.data.lendingPool) {
-        lendingPoolRes.data.lendingPool.nfts.forEach(async (element: any) => {
+      if (lendingPoolRes.data && lendingPoolRes.data.lendingPools && lendingPoolRes.data.lendingPools.length > 0) {
+        lendingPoolRes.data.lendingPools[0].nfts.forEach(async (element: any) => {
           const item: any = {}
           const ercContract = new Contract(element.id, erc721abi, library)
           if (address) {
@@ -206,7 +206,7 @@ export default function CustomizeRoutes() {
           item.ltv = element.ltv
           item.tToken = element.tToken
           nfts.push(item)
-          if (nfts.length === lendingPoolRes.data.lendingPool.nfts.length) {
+          if (nfts.length === lendingPoolRes.data.lendingPools[0].nfts.length) {
             dispatch(setLoading(false))
             dispatch(setCollections(nfts))
             dispatch(setDepositedCollection(depositedCollection))
