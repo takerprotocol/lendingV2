@@ -107,12 +107,12 @@ export const FIRST_COLLECTION = () => {
   return gql(queryString)
 }
 
-export const AllUser = (searchTerms: Array<string>, conditionSort: Array<string>, allUserWhere: Array<string>) => {
+export const AllUser = (searchValue: string, conditionSort: Array<string>, allUserWhere: Array<string>) => {
   const queryString = `
     query users ($skip: Int, $limit: Int) {
-      users(skip: 0, limit: 2, where: {${[...allUserWhere]}},orderBy: ${conditionSort[0]}, orderDirection: ${
-    conditionSort[1]
-  }) {
+      users(skip: 0, limit: 2, where: {${[...allUserWhere]}},${searchValue}orderBy: ${
+    conditionSort[0]
+  }, orderDirection: ${conditionSort[1]}) {
         id
         nftCollateral
         reserveSupply

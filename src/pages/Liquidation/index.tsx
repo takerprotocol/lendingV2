@@ -39,14 +39,6 @@ export default function Liquidation() {
   const [sort, setSort] = useState(0) //排序方法
   const [debtFilter, setDebtFilter] = useState(0) //过滤条件
   const [collectionFilter, setCollectionFilter] = useState(0)
-  // const collectionId = useMemo(() => {
-  //   if (collectionFilter >= 1) {
-  //     return 'id_in:['.concat(collection[collectionFilter - 1].id).concat('],')
-  //   } else {
-  //     return ''
-  //   }
-  // }, [collection, collectionFilter])
-  // console.log(collectionId)
   const conditionDebtFilter = useMemo(() => {
     switch (debtFilter) {
       case 1:
@@ -79,6 +71,13 @@ export default function Liquidation() {
         return ['null', 'desc']
     }
   }, [sort])
+  const searchValue = useMemo(() => {
+    if (searchTerms.length !== 0) {
+      return `id_like:"${searchTerms[0]}",`
+    } else {
+      return ''
+    }
+  }, [searchTerms])
   const allUserWhere = useMemo(() => {
     if (collectionFilter === 0 && debtFilter === 0) {
       return ['']
@@ -98,7 +97,7 @@ export default function Liquidation() {
   const getCollaterals = useCallback(async () => {
     if (address && client) {
       const user = await client.query({
-        query: AllUser(searchTerms, conditionSort, allUserWhere),
+        query: AllUser(searchValue, conditionSort, allUserWhere),
       })
       setLoading(false)
       if (user.data.users) {
@@ -129,7 +128,7 @@ export default function Liquidation() {
         setCollaterals(users)
       }
     }
-  }, [address, client, allUserWhere, conditionSort, searchTerms])
+  }, [address, client, searchValue, conditionSort, allUserWhere])
 
   useEffect(() => {
     getCollaterals()
