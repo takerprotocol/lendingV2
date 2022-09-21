@@ -68,13 +68,13 @@ export default function CollateralsType({ open, anchorEl, setAnchorEl }: Collate
         }}
       >
         <StyledMenuItem
-          className={collateralsType === 'All Collaterals' ? 'selected' : ''}
+          className={collateralsType === 'All Borrowers' ? 'selected' : ''}
           onClick={() => {
             setAnchorEl(null)
-            dispatch(setCollateralsType('All Collaterals'))
+            dispatch(setCollateralsType('All Borrowers'))
           }}
         >
-          All Collaterals
+          All Borrowers
         </StyledMenuItem>
         <StyledMenuItem
           className={collateralsType === 'Liquidate' ? 'selected' : ''}

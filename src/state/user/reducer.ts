@@ -54,7 +54,7 @@ const initialState: ApplicationState = {
   usedCollateral: false,
   erc20Ltv: '0',
   erc721Ltv: '0',
-  collateralsType: 'All Collaterals',
+  collateralsType: 'All Borrowers',
   decimal: 18,
   dashboardType: 1,
   userValues: {
