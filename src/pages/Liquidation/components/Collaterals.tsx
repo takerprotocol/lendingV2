@@ -48,7 +48,7 @@ const CollateralSelectText = styled(Typography)`
   flex-grow: 0;
 `
 
-const CollateralsFilterHeader = styled('div')`
+const CollateralsFilterHeader = styled(Box)`
   padding-top: 27px;
   padding-left: 48px;
   padding-right: 50px;
@@ -62,7 +62,7 @@ const CollateralsFilterHeader = styled('div')`
   justify-content: space-between;
 `
 
-const InputContainer = styled('div')`
+const InputContainer = styled(Box)`
   position: relative;
 `
 
@@ -97,19 +97,19 @@ const SearchIcon = styled('svg')`
   left: 18px;
 `
 
-const SortFilterContainer = styled('div')`
+const SortFilterContainer = styled(Box)`
   width: 100%;
   display: flex;
   justify-content: space-between;
 `
 
-const FilterContainer = styled('div')`
+const FilterContainer = styled(Box)`
   display: flex;
   width: 100%;
   gap: 20px;
 `
 
-const SortContainer = styled('div')`
+const SortContainer = styled(Box)`
   display: flex;
   width: 100%;
   justify-content: flex-end;
@@ -119,14 +119,14 @@ const DebtFilterSelect = styled(CustomizedSelect)`
   margin-left: 2px;
 `
 
-const CollateralItems = styled('div')`
+const CollateralItems = styled(Box)`
   margin-top: 36px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 `
 
-const CollectionSortItem = styled('div')`
+const CollectionSortItem = styled(Box)`
   display: flex;
   gap: 6px;
   align-items: center;
@@ -143,7 +143,7 @@ const CollectionSortItem = styled('div')`
   }
 `
 
-const AutoCompleteContainer = styled('div')`
+const AutoCompleteContainer = styled(Box)`
   background: #ffffff;
   border: 1px solid #eff0f6;
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
@@ -169,7 +169,6 @@ const AutoCompleteItem = styled(Typography)`
     cursor: pointer;
     background: #f7f7fc;
   }
-
   .searchterm {
     color: #14142a;
   }
@@ -405,7 +404,7 @@ const Collaterals = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const TermsContainer = styled('div')`
+  const TermsContainer = styled(Box)`
     position: absolute;
     height: 100%;
     display: flex;
@@ -413,13 +412,10 @@ const Collaterals = ({
     left: 50px;
   `
 
-  const TermItem = styled('div')`
+  const TermItem = styled(Box)`
     height: 40px;
     left: 48px;
     top: 7px;
-
-    /* Cool Gray 100 */
-
     background: #f7f7fc;
     border-radius: 6px;
     padding: 8px 14px 8px 12px;
@@ -446,7 +442,11 @@ const Collaterals = ({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [filterType, setFilterType] = React.useState<boolean>(false)
   const filter = useMemo(() => {
-    return filterType && CollateralList.length === 0 && searchTerms.length !== 0
+    if (filterType && CollateralList.length === 0 && searchTerms.length !== 0) {
+      return 1
+    } else {
+      return 0
+    }
   }, [CollateralList.length, filterType, searchTerms.length])
   const open = Boolean(anchorEl)
   const handleClick = (event: any) => {
@@ -524,9 +524,9 @@ const Collaterals = ({
                   return (
                     <AutoCompleteItem
                       key={option}
-                      dangerouslySetInnerHTML={{
-                        __html: option.replace(new RegExp(search, 'i'), `<span class="searchterm">${search}</span>`),
-                      }}
+                      // dangerouslySetInnerHTML={{
+                      //   __html: option.replace(new RegExp(search, 'i'), `<span class="searchterm">${search}</span>`),
+                      // }}
                       onClick={() => handleAddSearchTerm(option)}
                     />
                   )

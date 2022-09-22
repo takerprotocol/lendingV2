@@ -16,6 +16,8 @@ import ToastSuccessIcon from 'assets/images/png/common/toast-success.png'
 import ToastErrorIcon from 'assets/images/png/common/toast-error.png'
 import CloseIcon from 'assets/images/svg/common/close.svg'
 import Footer from 'components/Footer'
+import MobileHerder from 'components/Footer/MobileHerder'
+import { useState } from 'react'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 if (!!window.ethereum) {
@@ -30,6 +32,7 @@ export default function App() {
       </>
     )
   }
+  const mobile = useState<boolean>(false)
   return (
     <ThemeProvider theme={theme}>
       <Provider store={store}>
@@ -54,9 +57,9 @@ export default function App() {
                 />
                 <Router>
                   <Updaters />
-                  <Header />
+                  {mobile ? <Header /> : <MobileHerder />}
                   <CustomizeRoutes></CustomizeRoutes>
-                  <Footer />
+                  {mobile && <Footer />}
                 </Router>
               </BlockNumberProvider>
             </Web3ReactManager>

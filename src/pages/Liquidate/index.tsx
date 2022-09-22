@@ -11,12 +11,23 @@ import BigNumber from 'bignumber.js'
 import { CollateralModel } from 'services/type/nft'
 import { useParams } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks/web3'
+import { useMobileType } from 'state/user/hooks'
+import MobileHeader from './components/mobileComponents/MobileHeader'
+import MobileMain from './components/mobileComponents/MobileMain'
+import MobileETHCollateral from './components/mobileComponents/MobileETHCollateral'
+import MobileNFTCollaterals from './components/mobileComponents/MobileNFTCollaterals'
+import MobileFooter from './components/mobileComponents/MobileFooter'
 
 const Body = styled(Box)`
   width: 100%;
   max-width: 1012px;
   margin: 0 auto;
   padding-top: 94px;
+`
+const MobileBody = styled(Box)`
+  width: 100%;
+  background: #e5e5e5;
+  position: relative;
 `
 
 const Liquidate = () => {
@@ -75,25 +86,38 @@ const Liquidate = () => {
   useEffect(() => {
     getCollaterals()
   }, [getCollaterals])
+  const mobile = useMobileType()
   return (
-    <Body>
-      <LiquidateHeader
-        address={address || ''}
-        riskPercentage={heath}
-        totalCollateral={totalCollateral}
-        nftCollateral={nftCollateral}
-        ethCollateral={minus(totalCollateral, nftCollateral)}
-        totalDebt={totalDebt}
-        ethDebt={totalDebt}
-        borrowings={totalDebt}
-      />
-      <LiquidateBody
-        totalDebt={totalDebt}
-        total={new BigNumber(totalDebt).gt(totalCollateral) ? minus(totalDebt, totalCollateral) : '0'}
-        collaterals={collaterals}
-        loading={loading}
-      />
-    </Body>
+    <>
+      {mobile ? (
+        <Body>
+          <LiquidateHeader
+            address={address || ''}
+            riskPercentage={heath}
+            totalCollateral={totalCollateral}
+            nftCollateral={nftCollateral}
+            ethCollateral={minus(totalCollateral, nftCollateral)}
+            totalDebt={totalDebt}
+            ethDebt={totalDebt}
+            borrowings={totalDebt}
+          />
+          <LiquidateBody
+            totalDebt={totalDebt}
+            total={new BigNumber(totalDebt).gt(totalCollateral) ? minus(totalDebt, totalCollateral) : '0'}
+            collaterals={collaterals}
+            loading={loading}
+          />
+        </Body>
+      ) : (
+        <MobileBody>
+          <MobileHeader></MobileHeader>
+          <MobileMain></MobileMain>
+          <MobileETHCollateral></MobileETHCollateral>
+          <MobileNFTCollaterals></MobileNFTCollaterals>
+          <MobileFooter></MobileFooter>
+        </MobileBody>
+      )}
+    </>
   )
 }
 

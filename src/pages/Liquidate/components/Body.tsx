@@ -140,6 +140,7 @@ const LiquidateBody = ({
 }) => {
   const { address } = useParams()
   const contract = useLendingPool()
+  const [filter] = useState<number>(1)
   const [tokenChecked, setTokenChecked] = useState<Array<string>>([])
   const [ethValue, setEthValue] = useState('0')
   const addTransaction = useTransactionAdder()
@@ -497,6 +498,7 @@ const LiquidateBody = ({
               <CustomizedSelect
                 value={collectionFilter}
                 options={collectionOptions}
+                filter={filter}
                 onChange={handleCollectionFilterChange}
                 startAdornment={
                   <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -511,6 +513,7 @@ const LiquidateBody = ({
               <Box width="36px"></Box>
               <CustomizedSelect
                 value={sort}
+                filter={filter}
                 options={sortOptions}
                 onChange={handleSortUpdate}
                 startAdornment={

@@ -76,14 +76,16 @@ const EmptyState = ({
       {searchTerm.length === 0 ? (
         <Explainer>Please reduce or reset your filters</Explainer>
       ) : (
-        <Explainer>
-          No results for{' '}
-          <Typography variant="body1" color="#262338" fontWeight="600" component="span">
-            &quot;{searchTerm[0]}&quot;
-          </Typography>
-          , please check your
+        <>
+          <Explainer>
+            No results for{' '}
+            <Typography variant="body1" color="#262338" fontWeight="600" component="span">
+              &quot;{searchTerm[0]}&quot;
+            </Typography>
+            , please check your
+          </Explainer>
           <Explainer> search or clear your search criteria.</Explainer>
-        </Explainer>
+        </>
       )}
       <ClearButton variant="contained" onClick={() => onClear()}>
         Clear Search

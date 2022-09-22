@@ -3,13 +3,16 @@ import Box from '@mui/material/Box'
 import Header from './components/Header'
 import Collaterals from './components/Collaterals'
 import liquidationBg from 'assets/images/svg/liquidation/liquidation-icon.svg'
+import mobileLiquidationBg from 'assets/images/svg/liquidation/mobileLiquidation-bg.svg'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getClient } from 'apollo/client'
 import { AllUser } from 'apollo/queries'
-import { useAddress } from 'state/user/hooks'
+import { useAddress, useMobileType } from 'state/user/hooks'
 import { useCollections } from 'state/application/hooks'
 import { CollateralModel } from 'services/type/nft'
 import { div, getRiskLevel, getRiskLevelTag, times } from 'utils'
+import MobileHeader from './components/mobileLiquidation/MobileHeader'
+import MobileCollateral from './components/mobileLiquidation/MobileCollateral'
 // import { WETH } from 'config'
 import { fromWei } from 'web3-utils'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -27,6 +30,13 @@ const Body = styled(Box)`
   // position: sticky;
   // top: -284px;
   // margin-bottom: 304px;
+`
+const MobileBody = styled(Box)`
+  background: #f7f7fc;
+  width: 100%;
+  padding: 0 1rem;
+  background-image: url(${mobileLiquidationBg});
+  background-repeat: no-repeat;
 `
 export default function Liquidation() {
   const { chainId } = useActiveWeb3React()
@@ -73,7 +83,7 @@ export default function Liquidation() {
   }, [sort])
   const searchValue = useMemo(() => {
     if (searchTerms.length !== 0) {
-      return `id_like:"${searchTerms[0]}",`
+      return `id_like:"${searchTerms[0].toLowerCase()}",`
     } else {
       return ''
     }
@@ -133,23 +143,32 @@ export default function Liquidation() {
   useEffect(() => {
     getCollaterals()
   }, [getCollaterals])
-
+  const mobile = useMobileType()
   return (
-    <Body className="header-padding">
-      <Header />
-      <Box height="308px"></Box>
-      <Collaterals
-        debtFilter={debtFilter}
-        setDebtFilter={setDebtFilter}
-        sort={sort}
-        setSort={setSort}
-        loading={loading}
-        collaterals={collaterals}
-        setSearchTerms={setSearchTerms}
-        searchTerms={searchTerms}
-        setCollectionFilter={setCollectionFilter}
-        collectionFilter={collectionFilter}
-      />
-    </Body>
+    <>
+      {mobile ? (
+        <Body className="header-padding">
+          <Header />
+          <Box height="308px"></Box>
+          <Collaterals
+            debtFilter={debtFilter}
+            setDebtFilter={setDebtFilter}
+            sort={sort}
+            setSort={setSort}
+            loading={loading}
+            collaterals={collaterals}
+            setSearchTerms={setSearchTerms}
+            searchTerms={searchTerms}
+            setCollectionFilter={setCollectionFilter}
+            collectionFilter={collectionFilter}
+          />
+        </Body>
+      ) : (
+        <MobileBody>
+          <MobileHeader></MobileHeader>
+          <MobileCollateral></MobileCollateral>
+        </MobileBody>
+      )}
+    </>
   )
 }

@@ -5,9 +5,13 @@ import DepositNFT from './components/DepositNFT'
 import { useMemo, useState } from 'react'
 import WithdrawNFT from './components/WithdrawNFT'
 import { useDepositableNfts } from 'services/module/deposit'
-import { useAddress } from 'state/user/hooks'
+import { useAddress, useMobileType } from 'state/user/hooks'
 import { useParams } from 'react-router-dom'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
+import MobileHeader from './components/mobileComponents/MobileHeader'
+import MobileDepositRoWithdraw from './components/mobileComponents/MobileDepositRoWithdraw'
+import MobileFooter from './components/mobileComponents/MobileFooter'
+import mobileDepositBg from 'assets/images/svg/deposit/mobileDeposit-bg.svg'
 
 const Body = styled(Box)`
   padding-top: 233px;
@@ -49,6 +53,24 @@ const OpacityBg = styled(Box)`
   left: 0;
   z-index: -1;
 `
+const MobileBody = styled(Box)`
+  margin-top: 6.375rem;
+  width: 100%;
+  background: #f7f7fc;
+`
+const MobileMain = styled(Box)`
+  padding: 0rem 1rem 0rem 1rem;
+  margin-top: -10.1875rem;
+  width: 100%;
+`
+const MobileHeaderBg = styled(Box)`
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 225px;
+  z-index: -1;
+`
 export default function Deposit() {
   const address = useAddress()
   const { id } = useParams()
@@ -73,28 +95,43 @@ export default function Deposit() {
       return null
     }
   }, [collections, id])
+  const mobile = useMobileType()
+  const [type, setType] = useState<number>(1)
   return (
-    <Body className="header-padding">
-      <HeaderBg sx={{ backgroundImage: `url(${collection?.icon})` }}></HeaderBg>
-      <FilterBg></FilterBg>
-      <OpacityBg></OpacityBg>
-      <Main>
-        <DepositHeader loading={loading}></DepositHeader>
-        <DepositNFT
-          loading={loading}
-          list={list}
-          setDepositType={setDepositType}
-          depositType={depositType}
-          withdrawType={withdrawType}
-        ></DepositNFT>
-        <WithdrawNFT
-          loading={loading}
-          list={depositedList}
-          depositType={depositType}
-          withdrawType={withdrawType}
-          setWithdrawType={setWithdrawType}
-        ></WithdrawNFT>
-      </Main>
-    </Body>
+    <>
+      {mobile ? (
+        <Body className="header-padding">
+          <HeaderBg sx={{ backgroundImage: `url(${collection?.icon})` }}></HeaderBg>
+          <FilterBg></FilterBg>
+          <OpacityBg></OpacityBg>
+          <Main>
+            <DepositHeader loading={loading}></DepositHeader>
+            <DepositNFT
+              loading={loading}
+              list={list}
+              setDepositType={setDepositType}
+              depositType={depositType}
+              withdrawType={withdrawType}
+            ></DepositNFT>
+            <WithdrawNFT
+              loading={loading}
+              list={depositedList}
+              depositType={depositType}
+              withdrawType={withdrawType}
+              setWithdrawType={setWithdrawType}
+            ></WithdrawNFT>
+          </Main>
+        </Body>
+      ) : (
+        <MobileBody>
+          <MobileHeaderBg sx={{ backgroundImage: `url(${mobileDepositBg})` }}></MobileHeaderBg>
+          <MobileMain>
+            <MobileHeader></MobileHeader>
+            <MobileDepositRoWithdraw type={type} setType={setType}></MobileDepositRoWithdraw>
+          </MobileMain>
+          <MobileFooter type={type}></MobileFooter>
+        </MobileBody>
+      )}
+    </>
   )
 }

@@ -14,6 +14,7 @@ interface WalletInfo {
   primary?: true
   mobile?: true
   mobileOnly?: true
+  type?: boolean
 }
 
 export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
@@ -41,5 +42,6 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Easy-to-use browser extension.',
     href: null,
     color: '#E8831D',
+    type: true,
   },
 }

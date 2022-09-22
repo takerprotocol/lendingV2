@@ -86,7 +86,7 @@ const Arrow = () => (
 
 type CustomizedSelectProps = SelectProps & {
   options: any
-  filter?: boolean
+  filter: number
 }
 
 export default function CustomizedSelect(props: CustomizedSelectProps) {
@@ -124,7 +124,7 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
         variant="standard"
         open={open}
         onClick={() => {
-          if (!props.filter) {
+          if (!(props.filter === 1)) {
             setOpen(!open)
           }
         }}
@@ -134,7 +134,7 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
         sx={{
           border: `${open ? '1px solid #7646ff !important' : 'border: 1px solid #d9dbe9;'}`,
         }}
-        disabled={props.filter}
+        disabled={props.filter === 1}
       >
         {Options}
       </StyledSelect>

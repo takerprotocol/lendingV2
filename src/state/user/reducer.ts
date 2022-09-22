@@ -32,6 +32,8 @@ export interface ApplicationState {
   readonly userValues: UserValues
   readonly erc20ReserveData: erc20ReserveData
   readonly userState: userState
+  readonly mobileMenuType: boolean
+  readonly mobileType: boolean
 }
 export interface TokenDecimals {
   symbol: string
@@ -80,6 +82,8 @@ const initialState: ApplicationState = {
     liquidationThreshold: '0',
     heathFactor: '0',
   },
+  mobileMenuType: true,
+  mobileType: true,
 }
 
 const applicationSlice = createSlice({
@@ -150,6 +154,12 @@ const applicationSlice = createSlice({
     setCollateralsType(state, action) {
       state.collateralsType = action.payload
     },
+    setMobileType(state, action) {
+      state.mobileType = action.payload
+    },
+    setMobileMenuType(state, action) {
+      state.mobileMenuType = action.payload
+    },
   },
 })
 
@@ -169,5 +179,7 @@ export const {
   setDashboardType,
   setUserValues,
   setCollateralsType,
+  setMobileType,
+  setMobileMenuType,
 } = applicationSlice.actions
 export default applicationSlice.reducer

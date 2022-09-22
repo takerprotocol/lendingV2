@@ -137,3 +137,9 @@ export function useCollateralRiskLevel(value?: string | number): string {
 export function useCollateralsType(): string {
   return useAppSelector((state: AppState) => state.user.collateralsType)
 }
+export function useMobileMenuType(): boolean {
+  return useAppSelector((state: AppState) => state.user.mobileMenuType)
+}
+export function useMobileType(): boolean {
+  return useAppSelector((state: AppState) => state.user.mobileType)
+}
