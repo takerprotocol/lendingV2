@@ -4,10 +4,10 @@ schema:
 dataSources:
   - kind: ethereum
     name: LendingPool
-    network: rinkeby
+    network: goerli
     source:
-      address: "0xEB6f6d0B528e0222B924dd5527117f8aa5f48AD0"
-      startBlock: 11010442
+      address: "0xA64611E1dCAC9301682037CBDc82E455f4098bce"
+      startBlock: 7595608
       abi: LendingPool
     mapping:
       kind: ethereum/events
@@ -46,10 +46,10 @@ dataSources:
 
   - kind: ethereum
     name: PoolConfigurator
-    network: rinkeby
+    network: goerli
     source:
-      address: "0x437A87f1C524ecBe66653f34A18c3b4DAb888C4f"
-      startBlock: 11010442
+      address: "0x833AdEC65ae5E4B282f856bb21d2875D970f449C"
+      startBlock: 7595608
       abi: PoolConfigurator
     mapping:
       kind: ethereum/events
@@ -81,12 +81,12 @@ dataSources:
       file: ./src/lending-pool.ts
 
   - kind: ethereum
-    name: NFTBankConsumer
-    network: rinkeby
+    name: IPriceOracleGetter
+    network: goerli
     source:
-      address: "0x8e29CCd90EBd9fe068788D4d9e1c2416EC22637f"
-      startBlock: 11010442
-      abi: NFTBankConsumer
+      address: "0x4fC4063440Fb9b1806f1E9dB0A9632AeE3d830c3"
+      startBlock: 7595608
+      abi: IPriceOracleGetter
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -94,8 +94,8 @@ dataSources:
       entities:
         - NftCollection
       abis:
-        - name: NFTBankConsumer
-          file: ./abis/NFTBankConsumer.json
+        - name: IPriceOracleGetter
+          file: ./abis/IPriceOracleGetter.json
       eventHandlers:
         - event: NewNFTPrice(indexed address,uint256)
           handler: handleNewNFTPrice

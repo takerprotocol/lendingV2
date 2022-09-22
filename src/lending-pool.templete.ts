@@ -14,11 +14,11 @@ import { log } from '@graphprotocol/graph-ts';
 import {ERC721} from "../generated/LendingPool/ERC721";
 import {ERC20} from "../generated/LendingPool/ERC20";
 import {ERC1155} from "../generated/LendingPool/ERC1155";
-import {NewNFTPrice} from "../generated/NFTBankConsumer/NFTBankConsumer";
+import {NewNFTPrice} from "../generated/IPriceOracleGetter/IPriceOracleGetter";
 import {IPriceOracleGetter} from "../generated/LendingPool/IPriceOracleGetter";
 
 const POOLID = "{{#LendingPool}}{{address}}{{/LendingPool}}";
-const ORACLE = "{{#PriceOracle}}{{address}}{{/PriceOracle}}";
+const ORACLE = "{{#IPriceOracleGetter}}{{address}}{{/IPriceOracleGetter}}";
 
 export function handleNftReserveInitialized(event: NftReserveInitialized): void{
   let poolId = POOLID;
@@ -114,6 +114,10 @@ export function handleDeposited(event: Deposited): void {
   }
 
   user.reserveSupply = user.reserveSupply.plus(event.params.amount);
+  if (userReserve.usedAsCollateral) {
+    user.totalCollateral = user.totalCollateral.plus(event.params.amount);
+    user = utils.updateUserState(user, event.params.amount, reserve.ltv, reserve.liqThreshold);
+  }
   userReserve.depositedAmount = userReserve.depositedAmount.plus(event.params.amount);
 
   user.save();
@@ -143,6 +147,10 @@ export function handleWithdrawn(event: Withdrawn): void {
   }
 
   user.reserveSupply = user.reserveSupply.minus(event.params.amount);
+  if (userReserve.usedAsCollateral) {
+    user.totalCollateral = user.totalCollateral.minus(event.params.amount);
+    user = utils.updateUserState(user, event.params.amount.neg(), reserve.ltv, reserve.liqThreshold);
+  }
   userReserve.depositedAmount = userReserve.depositedAmount.minus(event.params.amount);
 
   user.save();
@@ -173,6 +181,7 @@ export function handleBorrowed(event: Borrowed): void {
   }
 
   user.totalDebt = user.totalDebt.plus(event.params.amount);
+  user = utils.updateHealthFactor(user);
   userReserve.borrowedAmount = userReserve.borrowedAmount.plus(event.params.amount);
 
   user.save();
@@ -202,6 +211,7 @@ export function handleRepaid(event: Repaid): void {
   }
 
   user.totalDebt = user.totalDebt.minus(event.params.amount);
+  user = utils.updateHealthFactor(user);
   userReserve.borrowedAmount = userReserve.borrowedAmount.minus(event.params.amount);
 
   user.save();
@@ -234,12 +244,10 @@ export function handleCollateralStatusUpdated(event: CollateralStatusUpdated): v
 
   let newStatus = event.params.status;
   if(!userReserve.usedAsCollateral && newStatus){
-    user.avgLtv = user.avgLtv.plus(userReserve.depositedAmount.times(reserve.ltv));
-    user.liqThreshold = user.liqThreshold.plus(userReserve.depositedAmount.times(reserve.liqThreshold));
+    user = utils.updateUserState(user, userReserve.depositedAmount, reserve.ltv, reserve.liqThreshold);
   }
   if(userReserve.usedAsCollateral && !newStatus){
-    user.avgLtv = user.avgLtv.minus(userReserve.depositedAmount.times(reserve.ltv));
-    user.liqThreshold = user.liqThreshold.minus(userReserve.depositedAmount.times(reserve.liqThreshold));
+    user = utils.updateUserState(user, userReserve.depositedAmount.neg(), reserve.ltv, reserve.liqThreshold);
   }
   userReserve.usedAsCollateral = event.params.status;
 
@@ -281,8 +289,8 @@ export function handleLiquidated(event: Liquidated): void {
 
     let tokenValue = event.params.amounts[i].times(collection.floorPrice);
     user.nftCollateral = user.nftCollateral.minus(tokenValue);
-    user.avgLtv = user.avgLtv.minus(tokenValue.times(collection.ltv));
-    user.liqThreshold = user.liqThreshold.minus(tokenValue.times(collection.liqThreshold));
+    user.totalCollateral = user.totalCollateral.minus(tokenValue);
+    user = utils.updateUserState(user, tokenValue.neg(), collection.ltv, collection.liqThreshold);
   }
 
   let userReserve = UserReserve.load(userReserveId);
@@ -293,6 +301,7 @@ export function handleLiquidated(event: Liquidated): void {
   }
 
   user.totalDebt = user.totalDebt.minus(event.params.debtCovered);
+  user = utils.updateHealthFactor(user);
   userReserve.borrowedAmount = userReserve.borrowedAmount.minus(event.params.debtCovered);
 
   user.save();
@@ -329,8 +338,8 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
 
     let tokenValue = event.params.amounts[i].times(collection.floorPrice);
     user.nftCollateral = user.nftCollateral.plus(tokenValue);
-    user.avgLtv = user.avgLtv.plus(tokenValue.times(collection.ltv));
-    user.liqThreshold = user.liqThreshold.plus(tokenValue.times(collection.liqThreshold));
+    user.totalCollateral = user.totalCollateral.plus(tokenValue);
+    user = utils.updateUserState(user, tokenValue, collection.ltv, collection.liqThreshold);
   }
 
   user.save();
@@ -366,8 +375,8 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
 
     let tokenValue = event.params.amounts[i].times(collection.floorPrice);
     user.nftCollateral = user.nftCollateral.minus(tokenValue);
-    user.avgLtv = user.avgLtv.minus(tokenValue.times(collection.ltv));
-    user.liqThreshold = user.liqThreshold.minus(tokenValue.times(collection.liqThreshold));
+    user.totalCollateral = user.totalCollateral.minus(tokenValue);
+    user = utils.updateUserState(user, tokenValue.neg(), collection.ltv, collection.liqThreshold);
   }
 
   user.save();

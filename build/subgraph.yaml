@@ -4,10 +4,10 @@ schema:
 dataSources:
   - kind: ethereum
     name: LendingPool
-    network: kovan
+    network: goerli
     source:
-      startBlock: 33440978
-      address: "0xDb2d112963A0c320b6DE43AD732b0Fb815a3Bf27"
+      address: "0xA64611E1dCAC9301682037CBDc82E455f4098bce"
+      startBlock: 7595608
       abi: LendingPool
     mapping:
       kind: ethereum/events
@@ -41,13 +41,15 @@ dataSources:
           handler: handleRepaid
         - event: Withdrawn(indexed address,indexed address,indexed address,uint256)
           handler: handleWithdrawn
+        - event: CollateralStatusUpdated(indexed address,indexed address,bool)
+          handler: handleCollateralStatusUpdated
       file: LendingPool/LendingPool.wasm
   - kind: ethereum
     name: PoolConfigurator
-    network: kovan
+    network: goerli
     source:
-      startBlock: 33440978
-      address: "0x2ab524EEbA543Ee9dAe31fb6a9a96f138e467324"
+      address: "0x833AdEC65ae5E4B282f856bb21d2875D970f449C"
+      startBlock: 7595608
       abi: PoolConfigurator
     mapping:
       kind: ethereum/events
@@ -78,12 +80,12 @@ dataSources:
           handler: handleReserveInitialized
       file: LendingPool/LendingPool.wasm
   - kind: ethereum
-    name: NFTBankConsumer
-    network: kovan
+    name: IPriceOracleGetter
+    network: goerli
     source:
-      startBlock: 33440978
-      address: "0x6855Ce53c62695d7EF681232c7D6739ce8a11c28"
-      abi: NFTBankConsumer
+      address: "0x4fC4063440Fb9b1806f1E9dB0A9632AeE3d830c3"
+      startBlock: 7595608
+      abi: IPriceOracleGetter
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -91,8 +93,8 @@ dataSources:
       entities:
         - NftCollection
       abis:
-        - name: NFTBankConsumer
-          file: NFTBankConsumer/abis/NFTBankConsumer.json
+        - name: IPriceOracleGetter
+          file: IPriceOracleGetter/abis/IPriceOracleGetter.json
       eventHandlers:
         - event: NewNFTPrice(indexed address,uint256)
           handler: handleNewNFTPrice

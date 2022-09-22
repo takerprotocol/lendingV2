@@ -10,9 +10,10 @@
   },
   "NFTBankConsumer": {
     "startBlock": 7595608,
-    "address": "0xE8C9B8F53afF59816fDb7D61cA15e74895c4b183"
+    "address": "0x30A7D76a3939C3e99A2eC783bd5F4B92C2c965Dd"
   },
-  "PriceOracle": {
-    "address": "0x8b6f792515AF7Ffc974b389707d17a0591D927A7"
+  "IPriceOracleGetter": {
+    "startBlock": 7595608,
+    "address": "0x4fC4063440Fb9b1806f1E9dB0A9632AeE3d830c3"
   }
 }

@@ -146,22 +146,38 @@ export class Reserve extends Entity {
     this.set("ltv", Value.fromBigInt(value));
   }
 
-  get name(): string {
+  get name(): string | null {
     let value = this.get("name");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
+  set name(value: string | null) {
+    if (!value) {
+      this.unset("name");
+    } else {
+      this.set("name", Value.fromString(<string>value));
+    }
   }
 
-  get symbol(): string {
+  get symbol(): string | null {
     let value = this.get("symbol");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set symbol(value: string) {
-    this.set("symbol", Value.fromString(value));
+  set symbol(value: string | null) {
+    if (!value) {
+      this.unset("symbol");
+    } else {
+      this.set("symbol", Value.fromString(<string>value));
+    }
   }
 
   get users(): Array<string> {
@@ -250,22 +266,38 @@ export class NftCollection extends Entity {
     this.set("ltv", Value.fromBigInt(value));
   }
 
-  get name(): string {
+  get name(): string | null {
     let value = this.get("name");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
+  set name(value: string | null) {
+    if (!value) {
+      this.unset("name");
+    } else {
+      this.set("name", Value.fromString(<string>value));
+    }
   }
 
-  get symbol(): string {
+  get symbol(): string | null {
     let value = this.get("symbol");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set symbol(value: string) {
-    this.set("symbol", Value.fromString(value));
+  set symbol(value: string | null) {
+    if (!value) {
+      this.unset("symbol");
+    } else {
+      this.set("symbol", Value.fromString(<string>value));
+    }
   }
 
   get floorPrice(): BigInt {
@@ -336,6 +368,15 @@ export class User extends Entity {
     this.set("reserveSupply", Value.fromBigInt(value));
   }
 
+  get totalCollateral(): BigInt {
+    let value = this.get("totalCollateral");
+    return value!.toBigInt();
+  }
+
+  set totalCollateral(value: BigInt) {
+    this.set("totalCollateral", Value.fromBigInt(value));
+  }
+
   get totalDebt(): BigInt {
     let value = this.get("totalDebt");
     return value!.toBigInt();
@@ -361,6 +402,15 @@ export class User extends Entity {
 
   set liqThreshold(value: BigInt) {
     this.set("liqThreshold", Value.fromBigInt(value));
+  }
+
+  get healthFactor(): BigInt {
+    let value = this.get("healthFactor");
+    return value!.toBigInt();
+  }
+
+  set healthFactor(value: BigInt) {
+    this.set("healthFactor", Value.fromBigInt(value));
   }
 
   get reserves(): Array<string> {

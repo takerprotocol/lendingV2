@@ -81,12 +81,12 @@ dataSources:
       file: ./src/lending-pool.ts
 
   - kind: ethereum
-    name: NFTBankConsumer
+    name: IPriceOracleGetter
     network: {{network}}
     source:
-      address: "{{#NFTBankConsumer}}{{address}}{{/NFTBankConsumer}}"
-      startBlock: {{#NFTBankConsumer}}{{startBlock}}{{/NFTBankConsumer}}
-      abi: NFTBankConsumer
+      address: "{{#IPriceOracleGetter}}{{address}}{{/IPriceOracleGetter}}"
+      startBlock: {{#IPriceOracleGetter}}{{startBlock}}{{/IPriceOracleGetter}}
+      abi: IPriceOracleGetter
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -94,8 +94,8 @@ dataSources:
       entities:
         - NftCollection
       abis:
-        - name: NFTBankConsumer
-          file: ./abis/NFTBankConsumer.json
+        - name: IPriceOracleGetter
+          file: ./abis/IPriceOracleGetter.json
       eventHandlers:
         - event: NewNFTPrice(indexed address,uint256)
           handler: handleNewNFTPrice

@@ -10,6 +10,28 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class NewNFTPrice extends ethereum.Event {
+  get params(): NewNFTPrice__Params {
+    return new NewNFTPrice__Params(this);
+  }
+}
+
+export class NewNFTPrice__Params {
+  _event: NewNFTPrice;
+
+  constructor(event: NewNFTPrice) {
+    this._event = event;
+  }
+
+  get asset(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get price(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
 export class SetNFTBankConsumer extends ethereum.Event {
   get params(): SetNFTBankConsumer__Params {
     return new SetNFTBankConsumer__Params(this);

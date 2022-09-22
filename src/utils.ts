@@ -1,7 +1,7 @@
 import {
     LendingPool, Reserve, NftCollection, User, UserReserve, UserNftCollection
 } from "../generated/schema";
-import {BigInt} from "@graphprotocol/graph-ts";
+import {BigDecimal, BigInt} from "@graphprotocol/graph-ts";
 import { log } from '@graphprotocol/graph-ts';
 
 export function newUser(Id: string): User {
@@ -10,9 +10,11 @@ export function newUser(Id: string): User {
 
     user.nftCollateral = BigInt.zero();
     user.reserveSupply = BigInt.zero();
+    user.totalCollateral = BigInt.zero();
     user.totalDebt = BigInt.zero();
     user.avgLtv = BigInt.zero();
     user.liqThreshold = BigInt.zero();
+    user.healthFactor = BigInt.zero();
 
     return user;
 }
@@ -38,4 +40,30 @@ export function newUserNftCollection(Id: string): UserNftCollection {
     userNftCollection.collection = "";
 
     return userNftCollection;
+}
+
+export function updateUserState(user: User, assetPrice: BigInt, assetLtv: BigInt, assetLiqThresh: BigInt): User {
+    // totalCollateral should have been upgraded
+
+    user.avgLtv = user.avgLtv
+        .plus(assetPrice.times(assetLtv))
+        .div(user.totalCollateral);
+
+    user.liqThreshold = user.liqThreshold
+        .plus(assetPrice.times(assetLiqThresh))
+        .div(user.totalCollateral);
+
+    user.healthFactor = user.totalCollateral
+        .times(user.liqThreshold)
+        .div(user.totalDebt);
+
+    return user;
+}
+
+export function updateHealthFactor(user: User): User {
+    user.healthFactor = user.totalCollateral
+        .times(user.liqThreshold)
+        .div(user.totalDebt);
+
+    return user;
 }
