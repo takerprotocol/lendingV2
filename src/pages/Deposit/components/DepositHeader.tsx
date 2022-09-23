@@ -149,7 +149,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 <FlexBox mt="8px">
                   <img src={myCollateralIcon} alt="" />
                   <BigTypography ml="4px" variant="body1">
-                    {times(collection?.stats?.floorPrice || 0, div(collection.ltv, 10000))}
+                    {times(collection?.stats?.floorPrice || 0, div(collection?.ltv, 10000))}
                   </BigTypography>
                 </FlexBox>
                 <Typography mt="4px" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
