@@ -174,7 +174,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
         <WithdrawList>
           {data.map((el: NftTokenModel, index: number) => (
             <FlexBox mb="24px" key={index}>
-              <img width="48px" src={el.rawMetadata.image} alt="" />
+              <img width="48px" src={el.media[0]?.gateway || ''} alt="" />
               <Box width="232px" ml="12px" mr="24px">
                 <BodyTypography color="#6E7191 !important" fontWeight="600 !important">
                   {el.rawMetadata.name}
