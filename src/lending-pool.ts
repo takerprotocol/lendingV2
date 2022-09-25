@@ -4,7 +4,7 @@ import {
   NFTsWithdrawn, Paused, Repaid, ReserveDataUpdated, Unpaused, Withdrawn
 } from "../generated/LendingPool/LendingPool"
 import {
-  NftReserveInitialized, ReserveInitialized
+  NftReserveInitialized, ReserveDropped, ReserveInitialized
 } from "../generated/PoolConfigurator/PoolConfigurator"
 import {
   LendingPool, Reserve, NftCollection, User, UserReserve, UserNftCollection, NftToken
@@ -89,6 +89,20 @@ export function handleReserveInitialized(event: ReserveInitialized): void{
 
   reserve.save();
   log.info("New reserve from ReserveInitialized: {}", [reserve.id])
+}
+
+export function handleReserveDropped(event: ReserveDropped): void{
+  let id = event.params.asset.toHex();
+  let reserve = Reserve.load(id);
+  if (reserve) {
+    reserve.unset(id);
+    reserve.save();
+  }
+  let collection = NftCollection.load(id);
+  if (collection) {
+    collection.unset(id);
+    collection.save();
+  }
 }
 
 export function handleDeposited(event: Deposited): void {
