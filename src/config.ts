@@ -15,7 +15,7 @@ export const getGatewayAddresses = (chainId?: number) => {
     return '0x027a729ac4bf61a74fc2d18b117641b2e39b326f'
   }
   if (chainId === 5) {
-    return '0x21dc0d024164D66345d0d12a9F0Ffb8122c9B9fB'
+    return '0xFFfdd6603168dba8D4Cbac6C9D775E23630607a4'
   }
   return '0xf7dd823b1538eb76fedb40b765f60845461852b9'
 }
@@ -33,7 +33,7 @@ export const getWETH = (chainId?: number) => {
     return '0xee144f0bfc2b8665a17b14702a65c74cb0d0e95f'
   }
   if (chainId === 5) {
-    return '0xd2785B1a8Bb1B8965261c0222C99995D37AFBEA5'
+    return '0xDf4E3DbC777ac21912C1ab6A68296644d4ac992e'
   }
   return '0xc778417e063141139fce010982780140aa0cd5ab'
 }

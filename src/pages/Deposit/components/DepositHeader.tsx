@@ -198,7 +198,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
             <RightFlexBox>
               <FlexBox>
                 <Box width={'198px'}>
-                  <BigTypography> {div(collection.liqThreshold, 100)}%</BigTypography>
+                  <BigTypography> {div(collection?.liqThreshold, 100)}%</BigTypography>
                   <TokenTypography mt="4px" color="#A0A3BD !important">
                     Liquidation Threshold
                   </TokenTypography>

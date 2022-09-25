@@ -88,7 +88,7 @@ export default function CustomizeRoutes() {
       contract.getUserConfig(address).then((res: any) => {
         dispatch(setUsedCollateral(new BN(res.toString()).and(new BN(COLLATERAL_MASK, 16)).toString() !== '0'))
       })
-      contract.getReserveConfig(getWETH(chainId)).then((res: any) => {
+      contract.getReserveConfig(getWETH(chainId).toLocaleLowerCase()).then((res: any) => {
         dispatch(setDecimal(new BN(res.toString()).and(new BN(DECIMALS_MASK, 16)).shrn(32).toString()))
         dispatch(setErc20Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
       })
