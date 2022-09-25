@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { erc20ReserveData, userState, UserValues } from 'state/types'
-import { decimalFormat, div, minus, plus, times } from 'utils'
+import { decimalFormat, div, plus, times } from 'utils'
 import { AppState } from '../index'
 import { setAddress } from './reducer'
 
@@ -96,7 +96,7 @@ export function useDebtBorrowLimitUsed(value?: string | number): string {
   const ethDebt = useEthDebt()
   useEffect(() => {
     setDebtBorrowLimitUsed(
-      decimalFormat(div(minus(borrowLimit, new BigNumber(ethDebt).plus(value || 0).toNumber()), borrowLimit), 0, false)
+      decimalFormat(div(new BigNumber(ethDebt).plus(value || 0).toNumber(), borrowLimit), 0, false)
     )
   }, [borrowLimit, ethDebt, value])
   return debtBorrowLimitUsed
