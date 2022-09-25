@@ -122,7 +122,11 @@ export function useDebtRiskLevel(value?: string | number): string {
       0,
       false
     )
-    setDebtRiskLevel(new BigNumber(riskLevel).decimalPlaces(2, 1).toString())
+    if (new BigNumber(riskLevel).gt(200)) {
+      setDebtRiskLevel('200')
+    } else {
+      setDebtRiskLevel(new BigNumber(riskLevel).decimalPlaces(2, 1).toString())
+    }
   }, [ethDebt, userState.liquidationThreshold, userValue.totalCollateral, value])
   return debtRiskLevel
 }
