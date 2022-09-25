@@ -1,25 +1,28 @@
-import { getNftsForOwner, OwnedNftsResponse, getNftMetadata, NftTokenType } from '@alch/alchemy-sdk'
-import alchemy from 'constants/alchemy'
+import { getNftsForOwner, OwnedNftsResponse, getNftMetadata, NftTokenType, Alchemy } from '@alch/alchemy-sdk'
+import { useAlchemy } from 'hooks/useAlchemy'
 import { useCallback, useEffect, useState } from 'react'
 
 export function useDepositableNfts(address: string, id?: string) {
   // TODO check if NFT wasn't deposited yet
   const [list, setList] = useState<OwnedNftsResponse | any>([])
   const [loading, setLoading] = useState<boolean>(true)
+  const alchemy = useAlchemy()
   const getList = useCallback(async () => {
-    try {
-      const response = await getNftsForOwner(alchemy, address)
-      if (id) {
-        setList(response.ownedNfts.filter((el) => el.contract.address === id))
-      } else {
-        setList(response.ownedNfts)
+    if (alchemy) {
+      try {
+        const response = await getNftsForOwner(alchemy, address)
+        if (id) {
+          setList(response.ownedNfts.filter((el) => el.contract.address === id))
+        } else {
+          setList(response.ownedNfts)
+        }
+        setLoading(false)
+      } catch (e: any) {
+        setLoading(false)
+        console.error(`Error fetching nfts for ${address}`)
       }
-      setLoading(false)
-    } catch (e: any) {
-      setLoading(false)
-      console.error(`Error fetching nfts for ${address}`)
     }
-  }, [address, id])
+  }, [address, alchemy, id])
   useEffect(() => {
     if (address) {
       getList()
@@ -28,7 +31,7 @@ export function useDepositableNfts(address: string, id?: string) {
   return { loading, list }
 }
 
-export async function getAlchemyNftMetadata(collection: string, tokenId: string) {
+export async function getAlchemyNftMetadata(collection: string, tokenId: string, alchemy: Alchemy) {
   return await getNftMetadata(alchemy, {
     tokenId,
     tokenType: NftTokenType.ERC721,

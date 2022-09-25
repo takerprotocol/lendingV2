@@ -163,7 +163,12 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
               {supportNfts &&
                 supportNfts.map((el: any) => {
                   return (
-                    <Tooltip key={`collections${el.contract.address}`} title={el.title || ''} arrow placement="top">
+                    <Tooltip
+                      key={`support_collections_${el.contract.address}_${el.tokenId}`}
+                      title={el.title || ''}
+                      arrow
+                      placement="top"
+                    >
                       <ImgBox
                         src={el.media[0]?.gateway || ''}
                         alt=""
@@ -180,7 +185,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
               {collections &&
                 collections.map((el: any) => {
                   return (
-                    <Tooltip key={`collections${el.id}`} title={el.name || ''} arrow placement="top">
+                    <Tooltip key={`collections_${el.id}`} title={el.name || ''} arrow placement="top">
                       <ImgBox
                         src={el.icon || ''}
                         alt=""

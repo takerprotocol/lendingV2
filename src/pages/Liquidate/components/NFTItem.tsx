@@ -1,5 +1,6 @@
 import { Nft } from '@alch/alchemy-sdk'
 import { Box, Checkbox, styled, Typography } from '@mui/material'
+import { useAlchemy } from 'hooks/useAlchemy'
 import { useCallback, useEffect, useState } from 'react'
 import { getAlchemyNftMetadata } from 'services/module/deposit'
 
@@ -177,6 +178,7 @@ const NFTItem = ({ token, handle }: NFTItemProps) => {
   // const [max] = useState('')
   const [metadata, setMetadata] = useState<Nft | null>(null)
   const [checked, setChecked] = useState<boolean>(false)
+  const alchemy = useAlchemy()
   const handleCheck = useCallback(() => {
     handle(!checked)
     setChecked(!checked)
@@ -187,14 +189,14 @@ const NFTItem = ({ token, handle }: NFTItemProps) => {
   const [errorCollectionImage, setErrorCollectionImage] = useState(false)
   const handleCollectionImageError = useCallback(() => setErrorCollectionImage(true), [])
   useEffect(() => {
-    if (token) {
-      getAlchemyNftMetadata(token.split('-')[1], token.split('-')[2]).then((res) => {
+    if (token && alchemy) {
+      getAlchemyNftMetadata(token.split('-')[1], token.split('-')[2], alchemy).then((res) => {
         if (res) {
           setMetadata(res)
         }
       })
     }
-  }, [token])
+  }, [token, alchemy])
   return (
     <Container sx={{ border: `${checked ? '1px solid #a0a3bd' : ''}` }} onClick={handleCheck}>
       <StyledCheckbox checked={checked} onChange={handleCheck} />

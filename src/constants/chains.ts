@@ -35,6 +35,8 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
 ]
 export const chainIdList: any = {
   Ethereum: 4,
+  RINKEBY: 4,
+  Goerli: 5,
   BSC: 97,
   Polygon: 137,
 }
@@ -51,10 +53,22 @@ export const chainNodeList: any = {
 }
 export const chainAlchemyList: any = {
   [chainIdList.Ethereum]: 'https://eth-rinkeby.alchemyapi.io/v2/',
-  [chainIdList.Polygon]: 'https://polygon-mumbai.g.alchemyapi.io/v2/',
+  [chainIdList.RINKEBY]: 'https://eth-rinkeby.alchemyapi.io/v2/',
+  [chainIdList.Goerli]: 'https://eth-goerli.alchemyapi.io/v2/',
+}
+export const chainAlchemyApiKey: any = {
+  [chainIdList.Ethereum]: 'xWAFYafYHrxwUVkSmMM7cg6SZshnkx8W',
+  [chainIdList.Goerli]: 'd1hzznEBnSCJMt3heSMoqpBC5dufPFoM',
+  [chainIdList.RINKEBY]: 'xWAFYafYHrxwUVkSmMM7cg6SZshnkx8W',
+}
+export const chainAlchemyNetwork: any = {
+  [chainIdList.Ethereum]: 'ETH-RINKEBY',
+  [chainIdList.Goerli]: 'ETH-GOERLI',
+  [chainIdList.RINKEBY]: 'ETH-RINKEBY',
 }
 export const chainNameList: any = {
   [chainIdList.Ethereum]: 'Ethereum Testnet',
+  [chainIdList.Goerli]: 'Ethereum Goerli Testnet',
   [chainIdList.BSC]: 'Binance Smart Chain Testnet',
   [chainIdList.Polygon]: 'Mubai Testnet',
 }

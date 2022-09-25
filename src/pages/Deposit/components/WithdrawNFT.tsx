@@ -14,6 +14,7 @@ import { getAlchemyNftMetadata } from 'services/module/deposit'
 import { Nft } from '@alch/alchemy-sdk'
 import { useCollateralBorrowLimitUsed } from 'state/user/hooks'
 import WithdrawSelectedModal from './WithdrawSelectedModal'
+import { useAlchemy } from 'hooks/useAlchemy'
 const DepositedNFTsStyleBox = styled(Box)`
   margin-bottom: 200px;
 `
@@ -70,7 +71,7 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
   const [withdrawList, setWithdrawList] = useState<Array<Nft>>([])
   const [openSelect, setOpenSelect] = useState<boolean>(false)
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
-
+  const alchemy = useAlchemy()
   const withdrawAmount = useMemo(() => {
     let totalAmount = '0'
     checkedIndex.forEach((el) => {
@@ -96,13 +97,15 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
   }, [list])
 
   const getWithdrawList = useCallback(async () => {
-    const arr: Array<Nft> = []
-    for (let i = 0, length = list.length; i < length; i++) {
-      const nft = await getAlchemyNftMetadata(list[i].id.split('-')[1], list[i].id.split('-')[2])
-      arr.push(nft)
+    if (alchemy) {
+      const arr: Array<Nft> = []
+      for (let i = 0, length = list.length; i < length; i++) {
+        const nft = await getAlchemyNftMetadata(list[i].id.split('-')[1], list[i].id.split('-')[2], alchemy)
+        arr.push(nft)
+      }
+      setWithdrawList(arr)
     }
-    setWithdrawList(arr)
-  }, [list])
+  }, [alchemy, list])
   useEffect(() => {
     getWithdrawList()
   }, [getWithdrawList])

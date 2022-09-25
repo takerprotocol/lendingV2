@@ -16,11 +16,11 @@ import {
   setUsedCollateral,
   setUserEthAsset,
   setUserNftConfig,
-  setUserNftValues,
+  // setUserNftValues,
   setUserState,
   setUserValues,
 } from 'state/user/reducer'
-import { bigNumberToString, div, stringFormat } from 'utils'
+import { bigNumberToString, div } from 'utils'
 import { getWETH, getERC721Address, DECIMALS_MASK, LTV_MASK, COLLATERAL_MASK, CHAIN_IDs } from 'config'
 import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
@@ -70,21 +70,21 @@ export default function CustomizeRoutes() {
   }, [chainId, address])
   useEffect(() => {
     if (contract && address && chainId && CHAIN_IDs.includes(chainId)) {
-      contract
-        .getUserAssetValues(address, getWETH(chainId))
-        .then((res: Array<BigNumber>) => {
-          dispatch(setLoading(false))
-          dispatch(
-            setUserNftValues(
-              res.map((el) => {
-                return stringFormat(fromWei(el.toString()))
-              })
-            )
-          )
-        })
-        .catch((err: any) => {
-          console.log(err)
-        })
+      // contract
+      //   .getUserAssetValues(address, getWETH(chainId))
+      //   .then((res: Array<BigNumber>) => {
+      //     dispatch(setLoading(false))
+      //     dispatch(
+      //       setUserNftValues(
+      //         res.map((el) => {
+      //           return stringFormat(fromWei(el.toString()))
+      //         })
+      //       )
+      //     )
+      //   })
+      //   .catch((err: any) => {
+      //     console.log(err)
+      //   })
       contract.getUserConfig(address).then((res: any) => {
         dispatch(setUsedCollateral(new BN(res.toString()).and(new BN(COLLATERAL_MASK, 16)).toString() !== '0'))
       })

@@ -156,7 +156,6 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const erc20ReserveData = useErc20ReserveData()
   const addTransaction = useTransactionAdder()
   const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
-  console.log(approval)
   // const erc20Contract = useContract(ERC20_ADDRESS, erc20Abi)
   const decimal = useDecimal()
   // useEffect(() => {
