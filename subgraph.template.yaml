@@ -78,6 +78,8 @@ dataSources:
           handler: handleNftReserveInitialized
         - event: ReserveInitialized(indexed address,indexed address,address,address,uint256,uint256)
           handler: handleReserveInitialized
+        - event: ReserveDropped(indexed address)
+          handler: handleReserveDropped
       file: ./src/lending-pool.ts
 
   - kind: ethereum

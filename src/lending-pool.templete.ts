@@ -4,7 +4,7 @@ import {
   NFTsWithdrawn, Paused, Repaid, ReserveDataUpdated, Unpaused, Withdrawn
 } from "../generated/LendingPool/LendingPool"
 import {
-  NftReserveInitialized, ReserveInitialized
+  NftReserveInitialized, ReserveDropped, ReserveInitialized
 } from "../generated/PoolConfigurator/PoolConfigurator"
 import {
   LendingPool, Reserve, NftCollection, User, UserReserve, UserNftCollection, NftToken
@@ -17,8 +17,8 @@ import {ERC1155} from "../generated/LendingPool/ERC1155";
 import {NewNFTPrice} from "../generated/IPriceOracleGetter/IPriceOracleGetter";
 import {IPriceOracleGetter} from "../generated/LendingPool/IPriceOracleGetter";
 
-const POOLID = "{{#LendingPool}}{{address}}{{/LendingPool}}";
-const ORACLE = "{{#IPriceOracleGetter}}{{address}}{{/IPriceOracleGetter}}";
+export const POOLID = "{{#LendingPool}}{{address}}{{/LendingPool}}";
+export const ORACLE = "{{#IPriceOracleGetter}}{{address}}{{/IPriceOracleGetter}}";
 
 export function handleNftReserveInitialized(event: NftReserveInitialized): void{
   let poolId = POOLID;
@@ -89,6 +89,20 @@ export function handleReserveInitialized(event: ReserveInitialized): void{
 
   reserve.save();
   log.info("New reserve from ReserveInitialized: {}", [reserve.id])
+}
+
+export function handleReserveDropped(event: ReserveDropped): void{
+  let id = event.params.asset.toHex();
+  let reserve = Reserve.load(id);
+  if (reserve) {
+    reserve.unset(id);
+    reserve.save();
+  }
+  let collection = NftCollection.load(id);
+  if (collection) {
+    collection.unset(id);
+    collection.save();
+  }
 }
 
 export function handleDeposited(event: Deposited): void {
@@ -284,7 +298,7 @@ export function handleLiquidated(event: Liquidated): void {
       log.warning('Found Liquidated event for unknown userNftCollection - {}', [userNftCollectionId]);
       return;
     }
-    updateCollectionPrice(collection);
+    utils.updateCollectionPrice(collection);
     removeNftToken(userNftCollection, event.params.tokenIds[i], event.params.amounts[i]);
 
     let tokenValue = event.params.amounts[i].times(collection.floorPrice);
@@ -333,7 +347,7 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
       userNftCollection.save();
     }
 
-    updateCollectionPrice(collection);
+    utils.updateCollectionPrice(collection);
     addNftToken(userNftCollection, event.params.tokenIds[i], event.params.amounts[i]);
 
     let tokenValue = event.params.amounts[i].times(collection.floorPrice);
@@ -370,7 +384,7 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
       userNftCollection.collection = collectionId;
       userNftCollection.save();
     }
-    updateCollectionPrice(collection);
+    utils.updateCollectionPrice(collection);
     removeNftToken(userNftCollection, event.params.tokenIds[i], event.params.amounts[i]);
 
     let tokenValue = event.params.amounts[i].times(collection.floorPrice);
@@ -381,6 +395,18 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
 
   user.save();
 }
+
+export function handleNewNFTPrice(event: NewNFTPrice): void {
+  let collectionId = event.params.asset.toHex();
+  let collection = NftCollection.load(collectionId);
+  if (!collection) {
+    log.warning('NewNFTPrice for unknown collection  - {}', [collectionId]);
+    return
+  }
+  collection.floorPrice = event.params.price;
+  collection.save();
+}
+
 
 function addNftToken(userNftCollection: UserNftCollection, tokenId: BigInt, amount: BigInt): void {
   let nftTokenId = userNftCollection.id + '-' + tokenId.toString();
@@ -410,38 +436,3 @@ function removeNftToken(userNftCollection: UserNftCollection, tokenId: BigInt, a
   }
   nftToken.save();
 }
-
-function updateCollectionPrice(collection: NftCollection): void{
-  let addr = Address.fromString(collection.id);
-  let oracle = IPriceOracleGetter.bind(Address.fromString(ORACLE));
-
-  if (collection.ercType == BigInt.zero()) {
-    // ERC20
-    collection.floorPrice = oracle.try_getTokenizedNFTPrice(addr).value;
-  }
-  else if (collection.ercType == BigInt.fromI32(1)) {
-    // ERC721
-    collection.floorPrice = oracle.try_getNFTPrice(addr).value;
-  }
-  else if (collection.ercType == BigInt.fromI32(2)) {
-    // ERC1155
-    collection.floorPrice = oracle.try_getNFTPrice(addr).value;
-  }
-  else {
-    log.error("Unrecognized collection ERC type", [collection.id]);
-  }
-  collection.save();
-}
-
-
-export function handleNewNFTPrice(event: NewNFTPrice): void {
-  let collectionId = event.params.asset.toHex();
-  let collection = NftCollection.load(collectionId);
-  if (!collection) {
-    log.warning('NewNFTPrice for unknown collection  - {}', [collectionId]);
-    return
-  }
-  collection.floorPrice = event.params.price;
-  collection.save();
-}
-

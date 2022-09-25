@@ -1,8 +1,10 @@
 import {
     LendingPool, Reserve, NftCollection, User, UserReserve, UserNftCollection
 } from "../generated/schema";
-import {BigDecimal, BigInt} from "@graphprotocol/graph-ts";
+import {Address, BigDecimal, BigInt} from "@graphprotocol/graph-ts";
 import { log } from '@graphprotocol/graph-ts';
+import {IPriceOracleGetter} from "../generated/LendingPool/IPriceOracleGetter";
+import {ORACLE} from "./lending-pool";
 
 export function newUser(Id: string): User {
 
@@ -40,6 +42,28 @@ export function newUserNftCollection(Id: string): UserNftCollection {
     userNftCollection.collection = "";
 
     return userNftCollection;
+}
+
+export function updateCollectionPrice(collection: NftCollection): void{
+    let addr = Address.fromString(collection.id);
+    let oracle = IPriceOracleGetter.bind(Address.fromString(ORACLE));
+
+    if (collection.ercType == BigInt.zero()) {
+        // ERC20
+        collection.floorPrice = oracle.try_getTokenizedNFTPrice(addr).value;
+    }
+    else if (collection.ercType == BigInt.fromI32(1)) {
+        // ERC721
+        collection.floorPrice = oracle.try_getNFTPrice(addr).value;
+    }
+    else if (collection.ercType == BigInt.fromI32(2)) {
+        // ERC1155
+        collection.floorPrice = oracle.try_getNFTPrice(addr).value;
+    }
+    else {
+        log.error("Unrecognized collection ERC type", [collection.id]);
+    }
+    collection.save();
 }
 
 export function updateUserState(user: User, assetPrice: BigInt, assetLtv: BigInt, assetLiqThresh: BigInt): User {

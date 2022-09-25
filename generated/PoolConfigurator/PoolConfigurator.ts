@@ -10,6 +10,50 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
+export class AssetActiveUpdated extends ethereum.Event {
+  get params(): AssetActiveUpdated__Params {
+    return new AssetActiveUpdated__Params(this);
+  }
+}
+
+export class AssetActiveUpdated__Params {
+  _event: AssetActiveUpdated;
+
+  constructor(event: AssetActiveUpdated) {
+    this._event = event;
+  }
+
+  get asset(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get active(): boolean {
+    return this._event.parameters[1].value.toBoolean();
+  }
+}
+
+export class AssetFreezeUpdated extends ethereum.Event {
+  get params(): AssetFreezeUpdated__Params {
+    return new AssetFreezeUpdated__Params(this);
+  }
+}
+
+export class AssetFreezeUpdated__Params {
+  _event: AssetFreezeUpdated;
+
+  constructor(event: AssetFreezeUpdated) {
+    this._event = event;
+  }
+
+  get asset(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get freeze(): boolean {
+    return this._event.parameters[1].value.toBoolean();
+  }
+}
+
 export class BorrowParamsUpdated extends ethereum.Event {
   get params(): BorrowParamsUpdated__Params {
     return new BorrowParamsUpdated__Params(this);
@@ -88,25 +132,21 @@ export class NftReserveInitialized__Params {
   }
 }
 
-export class ReserveActiveUpdated extends ethereum.Event {
-  get params(): ReserveActiveUpdated__Params {
-    return new ReserveActiveUpdated__Params(this);
+export class ReserveDropped extends ethereum.Event {
+  get params(): ReserveDropped__Params {
+    return new ReserveDropped__Params(this);
   }
 }
 
-export class ReserveActiveUpdated__Params {
-  _event: ReserveActiveUpdated;
+export class ReserveDropped__Params {
+  _event: ReserveDropped;
 
-  constructor(event: ReserveActiveUpdated) {
+  constructor(event: ReserveDropped) {
     this._event = event;
   }
 
   get asset(): Address {
     return this._event.parameters[0].value.toAddress();
-  }
-
-  get active(): boolean {
-    return this._event.parameters[1].value.toBoolean();
   }
 }
 
@@ -129,28 +169,6 @@ export class ReserveFactorUpdated__Params {
 
   get reserveFactor(): BigInt {
     return this._event.parameters[1].value.toBigInt();
-  }
-}
-
-export class ReserveFreezeUpdated extends ethereum.Event {
-  get params(): ReserveFreezeUpdated__Params {
-    return new ReserveFreezeUpdated__Params(this);
-  }
-}
-
-export class ReserveFreezeUpdated__Params {
-  _event: ReserveFreezeUpdated;
-
-  constructor(event: ReserveFreezeUpdated) {
-    this._event = event;
-  }
-
-  get asset(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get freeze(): boolean {
-    return this._event.parameters[1].value.toBoolean();
   }
 }
 
@@ -470,6 +488,36 @@ export class PoolConfigurator extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+}
+
+export class DropReserveCall extends ethereum.Call {
+  get inputs(): DropReserveCall__Inputs {
+    return new DropReserveCall__Inputs(this);
+  }
+
+  get outputs(): DropReserveCall__Outputs {
+    return new DropReserveCall__Outputs(this);
+  }
+}
+
+export class DropReserveCall__Inputs {
+  _call: DropReserveCall;
+
+  constructor(call: DropReserveCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class DropReserveCall__Outputs {
+  _call: DropReserveCall;
+
+  constructor(call: DropReserveCall) {
+    this._call = call;
   }
 }
 
@@ -829,6 +877,74 @@ export class SetWETHGatewayCall__Outputs {
   }
 }
 
+export class UpdateAssetActiveCall extends ethereum.Call {
+  get inputs(): UpdateAssetActiveCall__Inputs {
+    return new UpdateAssetActiveCall__Inputs(this);
+  }
+
+  get outputs(): UpdateAssetActiveCall__Outputs {
+    return new UpdateAssetActiveCall__Outputs(this);
+  }
+}
+
+export class UpdateAssetActiveCall__Inputs {
+  _call: UpdateAssetActiveCall;
+
+  constructor(call: UpdateAssetActiveCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get active(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class UpdateAssetActiveCall__Outputs {
+  _call: UpdateAssetActiveCall;
+
+  constructor(call: UpdateAssetActiveCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateAssetFreezeCall extends ethereum.Call {
+  get inputs(): UpdateAssetFreezeCall__Inputs {
+    return new UpdateAssetFreezeCall__Inputs(this);
+  }
+
+  get outputs(): UpdateAssetFreezeCall__Outputs {
+    return new UpdateAssetFreezeCall__Outputs(this);
+  }
+}
+
+export class UpdateAssetFreezeCall__Inputs {
+  _call: UpdateAssetFreezeCall;
+
+  constructor(call: UpdateAssetFreezeCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get freeze(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class UpdateAssetFreezeCall__Outputs {
+  _call: UpdateAssetFreezeCall;
+
+  constructor(call: UpdateAssetFreezeCall) {
+    this._call = call;
+  }
+}
+
 export class UpdateBorrowParamsCall extends ethereum.Call {
   get inputs(): UpdateBorrowParamsCall__Inputs {
     return new UpdateBorrowParamsCall__Inputs(this);
@@ -867,44 +983,6 @@ export class UpdateBorrowParamsCall__Outputs {
   }
 }
 
-export class UpdateReserveActiveCall extends ethereum.Call {
-  get inputs(): UpdateReserveActiveCall__Inputs {
-    return new UpdateReserveActiveCall__Inputs(this);
-  }
-
-  get outputs(): UpdateReserveActiveCall__Outputs {
-    return new UpdateReserveActiveCall__Outputs(this);
-  }
-}
-
-export class UpdateReserveActiveCall__Inputs {
-  _call: UpdateReserveActiveCall;
-
-  constructor(call: UpdateReserveActiveCall) {
-    this._call = call;
-  }
-
-  get asset(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get active(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
-  }
-
-  get isNft(): boolean {
-    return this._call.inputValues[2].value.toBoolean();
-  }
-}
-
-export class UpdateReserveActiveCall__Outputs {
-  _call: UpdateReserveActiveCall;
-
-  constructor(call: UpdateReserveActiveCall) {
-    this._call = call;
-  }
-}
-
 export class UpdateReserveFactorCall extends ethereum.Call {
   get inputs(): UpdateReserveFactorCall__Inputs {
     return new UpdateReserveFactorCall__Inputs(this);
@@ -935,40 +1013,6 @@ export class UpdateReserveFactorCall__Outputs {
   _call: UpdateReserveFactorCall;
 
   constructor(call: UpdateReserveFactorCall) {
-    this._call = call;
-  }
-}
-
-export class UpdateReserveFreezeCall extends ethereum.Call {
-  get inputs(): UpdateReserveFreezeCall__Inputs {
-    return new UpdateReserveFreezeCall__Inputs(this);
-  }
-
-  get outputs(): UpdateReserveFreezeCall__Outputs {
-    return new UpdateReserveFreezeCall__Outputs(this);
-  }
-}
-
-export class UpdateReserveFreezeCall__Inputs {
-  _call: UpdateReserveFreezeCall;
-
-  constructor(call: UpdateReserveFreezeCall) {
-    this._call = call;
-  }
-
-  get asset(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get freeze(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
-  }
-}
-
-export class UpdateReserveFreezeCall__Outputs {
-  _call: UpdateReserveFreezeCall;
-
-  constructor(call: UpdateReserveFreezeCall) {
     this._call = call;
   }
 }
