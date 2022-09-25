@@ -4,7 +4,7 @@ import AddressIcon from 'assets/images/svg/wallet/address.svg'
 import WalletModal from 'components/WalletModal'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useToggleModal } from 'state/application/hooks'
-import { useAddress } from 'state/user/hooks'
+import { useAddress, useMobileType } from 'state/user/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { FlexBox } from 'styleds'
 import { desensitization } from 'utils'
@@ -13,6 +13,7 @@ import { PopperPlacementType } from '@mui/material/Popper'
 import HeaderPopper from './components/HeaderPopper'
 import theme from 'theme'
 import DashboardPopper from './components/DashboardPopper'
+import MobileHeader from './MobileHeader'
 
 const HeaderBox = styled(Box, {
   shouldForwardProp: (prop) => true,
@@ -89,12 +90,15 @@ export const Header = () => {
   }
   const navigate = useNavigate()
   const location = useLocation()
+  const mobile = useMobileType()
   const lightBackground = location.pathname.includes('/deposit') || location.pathname.includes('/liquidate')
   return (
-    <HeaderBox lightBackground={lightBackground}>
-      <HeaderLogo onClick={() => navigate('/')} alt="logo" src={LogoIcon} />
-      <FlexBox>
-        {/* <Link to="/">
+    <>
+      {mobile ? (
+        <HeaderBox lightBackground={lightBackground}>
+          <HeaderLogo onClick={() => navigate('/')} alt="logo" src={LogoIcon} />
+          <FlexBox>
+            {/* <Link to="/">
           <StyledLinkText
             color={String(location.pathname === '/' ? theme.palette.primary.main : theme.palette.text)}
             variant="button"
@@ -103,60 +107,64 @@ export const Header = () => {
             Home
           </StyledLinkText>
         </Link> */}
-        <Link to="/dashboard">
-          <StyledLinkText
-            color={String(location.pathname === '/dashboard' ? theme.palette.primary.main : theme.palette.text)}
-            variant="button"
-            marginRight="49px"
-            onMouseLeave={dashboardHandleClick('bottom')}
-            onMouseOver={dashboardHandleClick('bottom')}
-          >
-            Dashboard
-          </StyledLinkText>
-        </Link>
-        <Link to="/liquidation">
-          <StyledLinkText
-            color={String(location.pathname === '/liquidation' ? theme.palette.primary.main : theme.palette.text)}
-            variant="button"
-            marginRight="49px"
-          >
-            Liquidation
-          </StyledLinkText>
-        </Link>
-        <Link to="/faqs">
-          <StyledLinkText
-            color={String(location.pathname === '/faqs' ? theme.palette.primary.main : theme.palette.text)}
-            variant="button"
-            marginRight="49px"
-          >
-            FAQs
-          </StyledLinkText>
-        </Link>
-        {!address ? (
-          <WalletButton
-            variant="contained"
-            color="inherit"
-            onClick={() => {
-              toggleModal()
-            }}
-          >
-            <Typography>Connect Wallet</Typography>
-          </WalletButton>
-        ) : (
-          <AddressBox onMouseLeave={handleClick('bottom')} onMouseOver={handleClick('bottom')}>
-            <img alt="" src={AddressIcon}></img>
-            {desensitization(address)}
-          </AddressBox>
-        )}
-      </FlexBox>
-      <WalletModal></WalletModal>
-      <DashboardPopper
-        open={dashboardOpen}
-        anchorEl={anchorEl}
-        placement={placement}
-        setDashboardOpen={setDashboardOpen}
-      ></DashboardPopper>
-      <HeaderPopper open={open} anchorEl={anchorEl} placement={placement} setOpen={setOpen}></HeaderPopper>
-    </HeaderBox>
+            <Link to="/dashboard">
+              <StyledLinkText
+                color={String(location.pathname === '/dashboard' ? theme.palette.primary.main : theme.palette.text)}
+                variant="button"
+                marginRight="49px"
+                onMouseLeave={dashboardHandleClick('bottom')}
+                onMouseOver={dashboardHandleClick('bottom')}
+              >
+                Dashboard
+              </StyledLinkText>
+            </Link>
+            <Link to="/liquidation">
+              <StyledLinkText
+                color={String(location.pathname === '/liquidation' ? theme.palette.primary.main : theme.palette.text)}
+                variant="button"
+                marginRight="49px"
+              >
+                Liquidation
+              </StyledLinkText>
+            </Link>
+            <Link to="/faqs">
+              <StyledLinkText
+                color={String(location.pathname === '/faqs' ? theme.palette.primary.main : theme.palette.text)}
+                variant="button"
+                marginRight="49px"
+              >
+                FAQs
+              </StyledLinkText>
+            </Link>
+            {!address ? (
+              <WalletButton
+                variant="contained"
+                color="inherit"
+                onClick={() => {
+                  toggleModal()
+                }}
+              >
+                <Typography>Connect Wallet</Typography>
+              </WalletButton>
+            ) : (
+              <AddressBox onMouseLeave={handleClick('bottom')} onMouseOver={handleClick('bottom')}>
+                <img alt="" src={AddressIcon}></img>
+                {desensitization(address)}
+              </AddressBox>
+            )}
+          </FlexBox>
+          <WalletModal></WalletModal>
+          <DashboardPopper
+            open={dashboardOpen}
+            anchorEl={anchorEl}
+            placement={placement}
+            setDashboardOpen={setDashboardOpen}
+          ></DashboardPopper>
+          <HeaderPopper open={open} anchorEl={anchorEl} placement={placement} setOpen={setOpen}></HeaderPopper>
+        </HeaderBox>
+      ) : (
+        <MobileHeader></MobileHeader>
+      )}
+    </>
   )
 }

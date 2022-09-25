@@ -22,7 +22,7 @@ import { toast } from 'react-toastify'
 import { getWETH, gasLimit } from 'config'
 import { useAppDispatch } from 'state'
 import { setUsedCollateral } from 'state/user/reducer'
-import { fixedFormat } from 'utils'
+import { decimalFormat, fixedFormat } from 'utils'
 import BigNumber from 'bignumber.js'
 import TipsTooltip from './TipsTooltip'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -155,9 +155,9 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
                   setOpenMySupplySwitchModal(true)
                 } else {
                   if (!loanType && (+nftCollateral === 0 || new BigNumber(heath).lte(150))) {
-                    setSwitchType(0)
                     setSwitchUnableOffModal(true)
                   } else {
+                    setSwitchType(0)
                     setOpenMySupplySwitchModal(true)
                   }
                 }
@@ -247,7 +247,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
         openMySupplyModal={openMySupplyModal}
         setOpenMySupplyModal={setOpenMySupplyModal}
         type={typeModal}
-        mySupply={ethCollateral.replace(/,/g, '')}
+        mySupply={decimalFormat(ethCollateral.replace(/,/g, ''), 0)}
       ></MySupplyModal>
       <MySupplySwitchModal
         loanType={loanType}

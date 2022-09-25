@@ -8,6 +8,7 @@ const MobileNFTCollateralsBox = styled(Box)`
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
   border-radius: 12px;
   padding: 1rem;
+  margin: 0 1rem;
 `
 const CardBox = styled(Box)`
   border-radius: 10px;
@@ -62,7 +63,7 @@ export default function MobileNFTCollaterals() {
                 <Box>
                   <FlexBox>
                     <RadiusImg src={mobileNFT} alt="" />
-                    <Typography fontWeight="700" variant="body2">
+                    <Typography ml="0.375rem" fontWeight="700" variant="body2">
                       Cryptopunks
                     </Typography>
                   </FlexBox>

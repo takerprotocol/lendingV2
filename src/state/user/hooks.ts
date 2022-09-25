@@ -72,7 +72,9 @@ export function useBorrowLimit(value?: string | number): string {
   const userState = useUserState()
   const userValue = useUserValue()
   useEffect(() => {
-    setBorrowLimit(times(userState.loanToValue, plus(userValue.totalCollateral.toString(), value || 0)))
+    setBorrowLimit(
+      decimalFormat(times(userState.loanToValue, plus(userValue.totalCollateral.toString(), value || 0)), 0, false)
+    )
   }, [userState.loanToValue, userValue.totalCollateral, value])
   return borrowLimit
 }
@@ -93,7 +95,9 @@ export function useDebtBorrowLimitUsed(value?: string | number): string {
   const borrowLimit = useBorrowLimit()
   const ethDebt = useEthDebt()
   useEffect(() => {
-    setDebtBorrowLimitUsed(div(minus(borrowLimit, new BigNumber(ethDebt).plus(value || 0).toNumber()), borrowLimit))
+    setDebtBorrowLimitUsed(
+      decimalFormat(div(minus(borrowLimit, new BigNumber(ethDebt).plus(value || 0).toNumber()), borrowLimit), 0, false)
+    )
   }, [borrowLimit, ethDebt, value])
   return debtBorrowLimitUsed
 }
@@ -103,7 +107,7 @@ export function useCollateralBorrowLimitUsed(value?: string | number): string {
   const ethDebt = useEthDebt()
   const borrowLimit = useBorrowLimit(value || 0)
   useEffect(() => {
-    setBorrowLimitUsed(div(ethDebt, borrowLimit).toString())
+    setBorrowLimitUsed(decimalFormat(div(ethDebt, borrowLimit).toString(), 0, false))
   }, [borrowLimit, ethDebt, value])
   return borrowLimitUsed
 }
@@ -113,9 +117,10 @@ export function useDebtRiskLevel(value?: string | number): string {
   const userState = useUserState()
   const ethDebt = useEthDebt()
   useEffect(() => {
-    const riskLevel = times(
-      div(times(userValue.totalCollateral, userState.liquidationThreshold), plus(ethDebt, value || 0)),
-      100
+    const riskLevel = decimalFormat(
+      times(div(times(userValue.totalCollateral, userState.liquidationThreshold), plus(ethDebt, value || 0)), 100),
+      0,
+      false
     )
     setDebtRiskLevel(new BigNumber(riskLevel).decimalPlaces(2, 1).toString())
   }, [ethDebt, userState.liquidationThreshold, userValue.totalCollateral, value])
@@ -132,7 +137,7 @@ export function useCollateralRiskLevel(value?: string | number): string {
     } else {
       const riskLevel = times(plus(userValue.totalCollateral, value || 0), div(userState.liquidationThreshold, ethDebt))
       if (new BigNumber(riskLevel).lt(200)) {
-        setCollateralRiskLevel(times(riskLevel, 100))
+        setCollateralRiskLevel(decimalFormat(times(riskLevel, 100), 0, false))
       }
     }
   }, [ethDebt, userState.liquidationThreshold, userValue.totalCollateral, value])

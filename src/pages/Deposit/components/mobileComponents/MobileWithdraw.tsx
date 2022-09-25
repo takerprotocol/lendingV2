@@ -1,7 +1,9 @@
 import { Box, styled, Typography, Checkbox } from '@mui/material'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { SpaceBetweenBox, FlexBox, CenterBox } from 'styleds'
-
+import { Nft } from '@alch/alchemy-sdk'
+import { NftTokenModel } from 'services/type/nft'
+import BigNumber from 'bignumber.js'
 const DepositBox = styled(Box)`
   background: #ffffff;
   box-shadow: 0px 0.625rem 1.25rem rgba(218, 218, 238, 0.3);
@@ -25,41 +27,55 @@ const ImgBox = styled(`img`)`
   width: 3rem;
   height: 3rem;
   margin-right: 0.5rem;
-  background: #a31;
   border-radius: 0.25rem;
 `
-export default function MobileWithdraw() {
-  const [checkboxType, setCheckboxType] = useState<Array<string>>([])
-  const [list] = useState<boolean>(false)
-  console.log(checkboxType)
+interface MobileWithdrawProps {
+  list: any[]
+  setMobileWithdrawCheckedIndex: Function
+  mobileWithdrawCheckedIndex: Array<string>
+}
+export default function MobileWithdraw({
+  list,
+  setMobileWithdrawCheckedIndex,
+  mobileWithdrawCheckedIndex,
+}: MobileWithdrawProps) {
+  const [TypeKey] = useState<string>('mobileWithdraw')
+  const amount = useMemo(() => {
+    return list.reduce((total: string, current: NftTokenModel) => {
+      return new BigNumber(total).plus(current.balance || '0').toString()
+    }, '0')
+  }, [list])
   return (
     <DepositBox>
       <SpaceBetweenBox>
         <Typography variant="subtitle2">You Can Withdraw</Typography>
-        <Typography variant="body2" display={list ? '' : 'none'} fontWeight="600" color="#a0a3bd">
-          4 NFTs / 153.57 ETH
+        <Typography variant="body2" display={list.length === 0 ? 'none' : ''} fontWeight="600" color="#a0a3bd">
+          {list.length} NFTs / {amount} ETH
         </Typography>
       </SpaceBetweenBox>
-      {list ? (
+      {list.length !== 0 ? (
         <>
-          {[1, 2, 3, 4, 5, 6].map((el: any, index: number) => (
-            <CardBox className={checkboxType.includes(el) ? 'isCheck' : ' '} key={index}>
+          {list.map((el: NftTokenModel | Nft) => (
+            <CardBox
+              className={mobileWithdrawCheckedIndex.includes(el.tokenId) ? 'isCheck' : ' '}
+              key={`nft${TypeKey}-${el.tokenId}`}
+            >
               <FlexBox>
                 <Checkbox
-                  checked={checkboxType.includes(el)}
+                  checked={mobileWithdrawCheckedIndex.includes(el.tokenId)}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     if (event.target.checked) {
-                      setCheckboxType([...checkboxType, el])
+                      setMobileWithdrawCheckedIndex([...mobileWithdrawCheckedIndex, el.tokenId])
                     } else {
-                      setCheckboxType(checkboxType.filter((cel) => cel !== el))
+                      setMobileWithdrawCheckedIndex(mobileWithdrawCheckedIndex.filter((cel) => cel !== el.tokenId))
                     }
                   }}
                 ></Checkbox>
                 <Box>
                   <NameBox>
-                    <ImgBox></ImgBox>
+                    <ImgBox src={el.media[0]?.gateway || ''} alt={`nft-${el.title}`}></ImgBox>
                     <Typography fontWeight="700" variant="body1">
-                      CRYPTOPUNK #4728
+                      {el.title}
                     </Typography>
                   </NameBox>
                 </Box>

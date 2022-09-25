@@ -3,6 +3,7 @@ import { SpaceBetweenBox } from 'styleds'
 import DepositBefore from 'assets/images/svg/deposit/Deposit-before.svg'
 import MobileDeposit from './MobileDeposit'
 import MobileWithdraw from './MobileWithdraw'
+import { NftTokenModel } from 'services/type/nft'
 
 const MainBox = styled(SpaceBetweenBox)`
   width: 100%;
@@ -47,8 +48,23 @@ const BeforeImg = styled(`img`)`
 interface MobileDepositRoWithdrawProps {
   setType: Function
   type: number
+  withdrawList: NftTokenModel[]
+  depositedList: NftTokenModel[]
+  mobileWithdrawCheckedIndex: Array<string>
+  mobileDepositCheckedIndex: Array<string>
+  setMobileWithdrawCheckedIndex: Function
+  setMobileDepositCheckedIndex: Function
 }
-export default function MobileDepositRoWithdraw({ setType, type }: MobileDepositRoWithdrawProps) {
+export default function MobileDepositRoWithdraw({
+  setType,
+  type,
+  withdrawList,
+  depositedList,
+  mobileWithdrawCheckedIndex,
+  mobileDepositCheckedIndex,
+  setMobileWithdrawCheckedIndex,
+  setMobileDepositCheckedIndex,
+}: MobileDepositRoWithdrawProps) {
   return (
     <>
       <MainBox>
@@ -119,7 +135,19 @@ export default function MobileDepositRoWithdraw({ setType, type }: MobileDeposit
           {type === 2 && <BeforeImg src={DepositBefore} alt=""></BeforeImg>}
         </WithdrawBox>
       </MainBox>
-      {type === 1 ? <MobileDeposit></MobileDeposit> : <MobileWithdraw></MobileWithdraw>}
+      {type === 1 ? (
+        <MobileDeposit
+          depositedList={depositedList}
+          mobileDepositCheckedIndex={mobileDepositCheckedIndex}
+          setMobileDepositCheckedIndex={setMobileDepositCheckedIndex}
+        ></MobileDeposit>
+      ) : (
+        <MobileWithdraw
+          mobileWithdrawCheckedIndex={mobileWithdrawCheckedIndex}
+          setMobileWithdrawCheckedIndex={setMobileWithdrawCheckedIndex}
+          list={withdrawList}
+        ></MobileWithdraw>
+      )}
     </>
   )
 }

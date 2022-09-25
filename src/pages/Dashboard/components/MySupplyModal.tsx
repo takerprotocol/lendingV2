@@ -207,7 +207,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
       contract
         .withdraw(poolContract?.address, amountDecimal(amount, decimal), address, { gasLimit })
         .then((res: any) => {
-          toast.success(res.hash)
+          toast.success(desensitization(res.hash))
           addTransaction(res, {
             type: TransactionType.WITHDRAW,
             recipient: address,

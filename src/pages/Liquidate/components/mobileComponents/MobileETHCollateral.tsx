@@ -37,9 +37,7 @@ const SubtotalStrikeThroughValue = styled(Typography)`
   margin-right: 0.5rem;
   text-align: right;
   text-decoration-line: line-through;
-
   /* Cool Gray 400 */
-
   color: #a0a3bd;
 `
 export default function MobileETHCollateral() {
@@ -100,7 +98,7 @@ export default function MobileETHCollateral() {
       </SpaceBetweenBox>
       <SpaceBetweenBox>
         <Typography variant="body1" fontWeight="600" color="#A0A3BD">
-          Potential Profit
+          Subtotal
         </Typography>
         <FlexBox>
           <SubtotalStrikeThroughValue>46.00</SubtotalStrikeThroughValue>

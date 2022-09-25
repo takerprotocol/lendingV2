@@ -6,12 +6,13 @@ import mobileGrowthIcon from 'assets/images/svg/common/mobileGrowthIcon.svg'
 import theme from 'theme'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state'
-import { setMobileMenuType } from 'state/user/reducer'
+import { setDashboardType, setMobileMenuType } from 'state/user/reducer'
 import { useMobileMenuType } from 'state/user/hooks'
 const MobileMenuBox = styled(Box)`
   background: #ffffff;
   border-radius: 12px;
   padding: 1.5rem 1rem;
+  margin: 0 1rem;
 `
 const ButtonBox = styled(Box)`
   background: #f7f7fc;
@@ -25,7 +26,6 @@ export default function MobileMenu() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const menuType = useMobileMenuType()
-  console.log(location.pathname)
   return (
     <MobileMenuBox>
       <SpaceBetweenBox
@@ -45,13 +45,25 @@ export default function MobileMenu() {
         <img src={mobileMenu} alt="" />
       </SpaceBetweenBox>
       <SpaceBetweenBox mt="1rem" mb="2.25rem">
-        <ButtonBox>
+        <ButtonBox
+          onClick={() => {
+            dispatch(setDashboardType(1))
+            navigate('/dashboard')
+            dispatch(setMobileMenuType(!menuType))
+          }}
+        >
           <img src={mobileBlueChipIcon} alt="" />
           <Typography ml="0.25rem" variant="body1" fontWeight="600">
             Blue Chip NFTs
           </Typography>
         </ButtonBox>
-        <ButtonBox>
+        <ButtonBox
+          onClick={() => {
+            dispatch(setDashboardType(2))
+            navigate('/dashboard')
+            dispatch(setMobileMenuType(!menuType))
+          }}
+        >
           <img src={mobileGrowthIcon} alt="" />
           <Typography ml="0.25rem" mr="0.75rem" variant="body1" fontWeight="600">
             Growth NFTs

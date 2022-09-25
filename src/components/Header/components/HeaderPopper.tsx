@@ -29,16 +29,6 @@ const PopperBox = styled(Box)`
   position: relative;
   top: 24px;
 `
-// ::before {
-//     content: '';
-//     display: block;
-//     position: absolute;
-//     left: 267px;
-//     top: -30px;
-//     border-width: 15px 10px;
-//     border-style: dashed solid dashed dashed;
-//     border-color: transparent transparent #ffffff transparent;
-//   }
 const LogoutBox = styled(Box)`
   width: 326px;
   background: #f7f7fc;
@@ -73,11 +63,6 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
   const dispatch = useAppDispatch()
   const { deactivate } = useWeb3React()
   const transactions = useAllTransactions()
-  //  useEffect(() => {if (library) {
-  //     // const web3 = new Web3(library.provider)
-  //     // console.log(web3)
-  //  }}, [library])
-  //   }
   const getNoticeTitle = (transaction: TransactionDetails) => {
     switch (transaction.info.type) {
       case TransactionType.APPROVAL:
@@ -171,68 +156,6 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
                     {getNoticeTitle(transactions[hash])}
                   </Typography>
                 </FlexBox>
-                {/* <FlexBox m="8px 0px 8px 32px">
-                  <Box
-                    mr="4px"
-                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
-                  >
-                    <img width="24px" height="24px" src={NFT1} alt="" />
-                  </Box>
-                  <Box
-                    mr="4px"
-                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
-                  >
-                    <img width="24px" height="24px" src={NFT2} alt="" />
-                  </Box>
-                  <Box
-                    mr="4px"
-                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
-                  >
-                    <img width="24px" height="24px" src={NFT3} alt="" />
-                  </Box>
-                  <Box
-                    mr="4px"
-                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
-                  >
-                    <img width="24px" height="24px" src={NFT4} alt="" />
-                  </Box>
-                  <Box
-                    mr="4px"
-                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
-                  >
-                    <img width="24px" height="24px" src={NFT5} alt="" />
-                  </Box>
-                  <Box
-                    mr="4px"
-                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
-                  >
-                    <img width="24px" height="24px" src={NFT6} alt="" />
-                  </Box>
-                  <Box
-                    mr="4px"
-                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
-                  >
-                    <img width="24px" height="24px" src={NFT7} alt="" />
-                  </Box>
-                  <Box
-                    mr="4px"
-                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
-                  >
-                    <img width="24px" height="24px" src={NFT8} alt="" />
-                  </Box>
-                  <Box
-                    mr="4px"
-                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
-                  >
-                    <img width="24px" height="24px" src={NFT9} alt="" />
-                  </Box>
-                  <Box
-                    mr="4px"
-                    sx={{ width: '24px', height: '24px', border: '2px solid #FFFFFF', borderRadius: '4px' }}
-                  >
-                    <img width="24px" height="24px" src={NFT10} alt="" />
-                  </Box>
-                </FlexBox> */}
                 <FlexBox ml="34px">
                   <Typography variant="body2" component="h1" color="#4E4B66">
                     Txid

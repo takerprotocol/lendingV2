@@ -199,7 +199,6 @@ const Collaterals = ({
 }: CollateralsProps) => {
   const [search, setSearch] = useState('')
   const collection = useCollections()
-  console.log('collection', collection)
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
     if (searchTerms[0]) {
       setSearchTerms(searchTerms.filter((currentTerm: string) => currentTerm !== searchTerms[0]))

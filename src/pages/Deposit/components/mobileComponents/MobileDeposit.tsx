@@ -1,6 +1,9 @@
 import { Box, styled, Typography, Checkbox, TextField } from '@mui/material'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { Nft } from '@alch/alchemy-sdk'
 import { SpaceBetweenBox, FlexBox, CenterBox } from 'styleds'
+import { NftTokenModel } from 'services/type/nft'
+import BigNumber from 'bignumber.js'
 
 const DepositBox = styled(Box)`
   background: #ffffff;
@@ -25,7 +28,6 @@ const ImgBox = styled(`img`)`
   width: 3rem;
   height: 3rem;
   margin-right: 0.5rem;
-  background: #a31;
   border-radius: 0.25rem;
 `
 const MaxBox = styled(Box)`
@@ -41,53 +43,70 @@ const InputBox = styled(FlexBox)`
   border-radius: 6px;
   background: #eff0f6;
 `
-export default function MobileDeposit() {
-  const [checkboxType, setCheckboxType] = useState<Array<string>>([])
-  const [list] = useState<boolean>(false)
-  console.log(checkboxType)
+interface MobileDepositProps {
+  depositedList: NftTokenModel[]
+  mobileDepositCheckedIndex: Array<string>
+  setMobileDepositCheckedIndex: Function
+}
+export default function MobileDeposit({
+  depositedList,
+  mobileDepositCheckedIndex,
+  setMobileDepositCheckedIndex,
+}: MobileDepositProps) {
+  const [TypeKey] = useState<string>('mobileDeposit')
+  const amount = useMemo(() => {
+    return depositedList.reduce((total: string, current: NftTokenModel) => {
+      return new BigNumber(total).plus(current.balance || '0').toString()
+    }, '0')
+  }, [depositedList])
   return (
     <DepositBox>
       <SpaceBetweenBox>
         <Typography variant="subtitle2">You Can Deposit</Typography>
-        <Typography display={list ? '' : 'none'} variant="body2" fontWeight="600" color="#a0a3bd">
-          4 NFTs / 153.57 ETH
+        <Typography display={depositedList.length === 0 ? 'none' : ''} variant="body2" fontWeight="600" color="#a0a3bd">
+          {depositedList.length} NFTs / {amount} ETH
         </Typography>
       </SpaceBetweenBox>
-      {list ? (
+      {depositedList.length !== 0 ? (
         <>
-          {[1, 2, 3, 4, 5, 6].map((el: any, index: number) => (
-            <CardBox className={checkboxType.includes(el) ? 'isCheck' : ' '} key={index}>
+          {depositedList.map((el: NftTokenModel | Nft) => (
+            <CardBox
+              className={mobileDepositCheckedIndex.includes(el.tokenId) ? 'isCheck' : ' '}
+              key={`nft${TypeKey}-${el.tokenId}`}
+            >
               <FlexBox>
                 <Checkbox
-                  checked={checkboxType.includes(el)}
+                  checked={mobileDepositCheckedIndex.includes(el.tokenId)}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     if (event.target.checked) {
-                      setCheckboxType([...checkboxType, el])
+                      setMobileDepositCheckedIndex([...mobileDepositCheckedIndex, el.tokenId])
                     } else {
-                      setCheckboxType(checkboxType.filter((cel) => cel !== el))
+                      setMobileDepositCheckedIndex(mobileDepositCheckedIndex.filter((cel) => cel !== el.tokenId))
                     }
                   }}
                 ></Checkbox>
                 <Box>
                   <NameBox>
-                    <ImgBox></ImgBox>
+                    <ImgBox src={el.media[0]?.gateway || ''} alt={`nft-${el.title}`}></ImgBox>
                     <Typography fontWeight="700" variant="body1">
-                      CRYPTOPUNK #4728
+                      {el.title}
                     </Typography>
                   </NameBox>
-                  <FlexBox mt="1rem">
-                    <InputBox>
-                      <TextField variant="outlined" />
-                      <Typography ml="6px" component="span" variant="body1" color="#A0A3BD">
-                        NTFs
-                      </Typography>
-                    </InputBox>
-                    <MaxBox>
-                      <Typography variant="body1" color="#F7F7FC">
-                        Max 15
-                      </Typography>
-                    </MaxBox>
-                  </FlexBox>
+                  {el.tokenType === 'ERC1155' && (
+                    <FlexBox mt="1rem">
+                      <InputBox>
+                        <TextField variant="outlined" />
+                        <Typography ml="6px" component="span" variant="body1" color="#A0A3BD">
+                          NTFs
+                        </Typography>
+                      </InputBox>
+                      <MaxBox>
+                        <Typography variant="body1" color="#F7F7FC">
+                          Max 15
+                        </Typography>
+                      </MaxBox>
+                    </FlexBox>
+                  )}
                 </Box>
               </FlexBox>
             </CardBox>
@@ -99,7 +118,7 @@ export default function MobileDeposit() {
             <Typography variant="subtitle2">0 NFTs</Typography>
           </CenterBox>
           <CenterBox mt="0.5rem" mb="1.25rem">
-            <Typography display={list ? 'none' : ''} variant="body2" fontWeight="600" color="#a0a3bd">
+            <Typography display={depositedList ? 'none' : ''} variant="body2" fontWeight="600" color="#a0a3bd">
               You have no NFTs in this collection to deposit
             </Typography>
           </CenterBox>

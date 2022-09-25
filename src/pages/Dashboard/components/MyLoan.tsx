@@ -93,7 +93,6 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
   const ethDebt = useEthDebt()
   const borrowLimit = useBorrowLimit()
   const heath = useHeath()
-  const [sliderValue, setSliderValue] = useState<number>(+heath)
   const myLoanRiskLevel = useMemo(() => {
     return getRiskLevel(heath)
   }, [heath])
@@ -105,7 +104,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
   const BeforeImg = styled(`img`)`
     position: absolute;
     top: calc(100% - 10.5px);
-    left: ${`${times(3.57, sliderValue)}px`};
+    left: ${`${times(3.57, heath)}px`};
   `
   return (
     <MyLoanBox className={loading ? 'SkeletonBg' : ''}>
@@ -145,7 +144,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
             </RepayBox>
           </Box>
           <RiskLevelBox
-            sx={{ borderBottomLeftRadius: `${sliderValue === 0 ? '0px' : '6px'}` }}
+            sx={{ borderBottomLeftRadius: `${heath === '0' ? '0px' : '6px'}` }}
             className={datatype ? 'before' : ''}
           >
             {datatype ? (
@@ -196,11 +195,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
             )}
             <BeforeImg src={riskLevelBefore}></BeforeImg>
           </RiskLevelBox>
-          <CustomizedSlider
-            setSliderValue={setSliderValue}
-            sliderValue={sliderValue}
-            riskLevelTag={myLoanRiskLevelTag}
-          ></CustomizedSlider>
+          <CustomizedSlider sliderValue={Number(heath)} riskLevelTag={myLoanRiskLevelTag}></CustomizedSlider>
           <FlexEndBox mt="7px">
             <Typography variant="body1" color="#4E4B66">
               Borrow Limit {borrowLimit} ETH

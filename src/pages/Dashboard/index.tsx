@@ -18,7 +18,6 @@ import { useAppDispatch } from 'state/hooks'
 // import { TEST1 } from 'apollo/queries'
 import MobileBlueChipNFts from './components/mobileComponents/MobileBlueChipNFts'
 import MobileMyAssets from './components/mobileComponents/MobileMyAssets'
-import MobileMyLoan from './components/mobileComponents/MobileMyLoan'
 import MobileCollection from './components/mobileComponents/MobileCollection'
 import MobileMenu from 'components/Header/components/MobileMenu'
 import WalletMessage from 'components/Header/components/WalletMessage'
@@ -45,7 +44,6 @@ const MobileBody = styled(Box)`
 `
 const MobileMain = styled(Box)`
   width: 100%;
-  padding: 0px 1rem;
   margin: 0 auto;
 `
 const ConnectWalletBox = styled(Box)`
@@ -106,7 +104,6 @@ export default function Dashboard() {
               <>
                 <MobileBlueChipNFts></MobileBlueChipNFts>
                 <MobileMyAssets></MobileMyAssets>
-                <MobileMyLoan></MobileMyLoan>
                 <MobileCollection></MobileCollection>
               </>
             ) : (

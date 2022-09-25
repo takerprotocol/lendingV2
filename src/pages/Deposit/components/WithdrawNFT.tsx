@@ -59,14 +59,14 @@ const XButtonBox = styled(Box)`
   height: 44px;
   border-radius: 100%;
 `
-interface DepositedNftProps {
+interface WithdrawNFTProps {
   depositType: string
   withdrawType: string
   setWithdrawType: Function
   list: any[]
   loading: boolean
 }
-export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType, list, loading }: DepositedNftProps) {
+export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType, list, loading }: WithdrawNFTProps) {
   const [checkedIndex, setCheckedIndex] = useState<Array<string>>([])
   const [withdrawList, setWithdrawList] = useState<Array<Nft>>([])
   const [openSelect, setOpenSelect] = useState<boolean>(false)

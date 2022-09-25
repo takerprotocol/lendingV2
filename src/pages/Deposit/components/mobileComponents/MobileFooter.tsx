@@ -1,5 +1,6 @@
 import { Box, Button, styled, Typography } from '@mui/material'
-import { SpaceBetweenBox } from 'styleds'
+import { FlexBox, SpaceBetweenBox } from 'styleds'
+import { NftTokenModel } from 'services/type/nft'
 
 const FooterBox = styled(Box)`
   margin-top: 1rem;
@@ -14,12 +15,52 @@ const ResetButton = styled(Box)`
   display: flex;
   align-items: center;
 `
+const WithdrawButton = styled(Box)`
+  padding: 13px 16px;
+  background: rgba(225, 83, 108, 0.1);
+  border-radius: 6px;
+`
+const MobileAbsolute = styled(FlexBox)`
+  padding: 8px 8px 8px 16px;
+  background: rgba(225, 83, 108, 0.1);
+  backdrop-filter: blur(30px);
+  position: absolute;
+  border-radius: 4px;
+  bottom: 1rem;
+  right: 1rem;
+  left: 1rem;
+`
 interface MobileFooterProps {
   type: number
+  depositedList: NftTokenModel[]
+  withdrawList: NftTokenModel[]
+  withdrawLargeAmount: boolean
+  mobileWithdrawCheckedIndex: Array<string>
+  mobileDepositCheckedIndex: Array<string>
 }
-export default function MobileFooter({ type }: MobileFooterProps) {
+export default function MobileFooter({
+  type,
+  depositedList,
+  withdrawList,
+  withdrawLargeAmount,
+  mobileWithdrawCheckedIndex,
+  mobileDepositCheckedIndex,
+}: MobileFooterProps) {
   return (
-    <FooterBox>
+    <FooterBox
+      display={type === 1 ? (depositedList.length === 0 ? 'none' : '') : withdrawList.length === 0 ? 'none' : ''}
+    >
+      <MobileAbsolute display={type === 2 && withdrawLargeAmount ? '' : 'none'}>
+        <Typography variant="body2" fontWeight="600" mr="0.5rem" color="#E1536C">
+          The amount of withdraw is too large and it is easy to be liquidated
+        </Typography>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M14.4964 6.51071C14.7745 6.2326 14.7745 5.78169 14.4964 5.50357C14.2183 5.22546 13.7674 5.22546 13.4893 5.50357L10 8.99286L6.51071 5.50357C6.2326 5.22546 5.78169 5.22546 5.50357 5.50357C5.22546 5.78169 5.22546 6.2326 5.50357 6.51071L8.99286 10L5.50357 13.4893C5.22546 13.7674 5.22546 14.2183 5.50357 14.4964C5.78169 14.7745 6.2326 14.7745 6.51071 14.4964L10 11.0071L13.4893 14.4964C13.7674 14.7745 14.2183 14.7745 14.4964 14.4964C14.7745 14.2183 14.7745 13.7674 14.4964 13.4893L11.0071 10L14.4964 6.51071Z"
+            fill="#E1536C"
+          />
+        </svg>
+      </MobileAbsolute>
       <SpaceBetweenBox>
         <ResetButton>
           <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -42,7 +83,21 @@ export default function MobileFooter({ type }: MobileFooterProps) {
             Redo
           </Typography>
         </ResetButton>
-        <Button variant="contained">{type === 1 ? 'Deposit 2 NFTs' : 'Withdraw 1 NFT'}</Button>
+        {type === 1 ? (
+          <Button variant="contained">Deposit {mobileDepositCheckedIndex.length || 0} NFTs</Button>
+        ) : (
+          <>
+            {withdrawLargeAmount ? (
+              <WithdrawButton>
+                <Typography variant="body1" fontWeight="700" color="#E1536C">
+                  Withdraw {mobileWithdrawCheckedIndex.length || 0} NFT
+                </Typography>
+              </WithdrawButton>
+            ) : (
+              <Button variant="contained">Withdraw {mobileWithdrawCheckedIndex.length || 0} NFT</Button>
+            )}
+          </>
+        )}
       </SpaceBetweenBox>
     </FooterBox>
   )

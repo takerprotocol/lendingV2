@@ -56,10 +56,9 @@ const PrettoSlider = styled(Slider)({
 })
 interface CustomizedSliderProps {
   riskLevelTag: string
-  setSliderValue?: Function
   sliderValue?: number
 }
-export default function CustomizedSlider({ riskLevelTag, setSliderValue, sliderValue }: CustomizedSliderProps) {
+export default function CustomizedSlider({ riskLevelTag, sliderValue }: CustomizedSliderProps) {
   return (
     <PrettoSlider
       className={`Slider-${riskLevelTag}`}

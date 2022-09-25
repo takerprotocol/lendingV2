@@ -230,7 +230,8 @@ export default function CustomizeRoutes() {
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/deposit/:id" element={<Deposit />} />
-      <Route path="/liquidate/:address" element={<Liquidate />} />
+      <Route path="/liquidate" element={<Liquidate />} />
+      {/* <Route path="/liquidate/:address" element={<Liquidate />} /> */}
       <Route path="/liquidation" element={<Liquidation />} />
       <Route path="/liquidation/:page" element={<Liquidation />} />
       <Route path="*" element={<Dashboard />} />

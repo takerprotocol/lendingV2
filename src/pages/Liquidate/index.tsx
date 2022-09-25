@@ -28,6 +28,10 @@ const MobileBody = styled(Box)`
   width: 100%;
   background: #e5e5e5;
   position: relative;
+<<<<<<< HEAD
+  padding-bottom: 7.25rem;
+=======
+>>>>>>> 91619e6c210c1662e81a4be8514624613f7e3f67
 `
 
 const Liquidate = () => {

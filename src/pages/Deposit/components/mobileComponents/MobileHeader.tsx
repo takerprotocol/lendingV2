@@ -1,9 +1,12 @@
 import { Box, styled, Typography } from '@mui/material'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
-import mobileDepositBg from 'assets/images/svg/deposit/mobileDeposit-bg.svg'
 import RewardAdd from 'assets/images/svg/deposit/Reward-add.svg'
 import RewardRight from 'assets/images/svg/deposit/Reward-right.svg'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useCollections } from 'state/application/hooks'
+import { useParams } from 'react-router-dom'
+import { div, times } from 'utils'
+import { useErc20ReserveData } from 'state/user/hooks'
 
 const MainBox = styled(Box)`
   width: 100%;
@@ -79,16 +82,26 @@ const RewardBox = styled(Box)`
 `
 export default function MobileHeader() {
   const [details, setDetails] = useState<boolean>(false)
+  const { id } = useParams()
+  const erc20ReserveData = useErc20ReserveData()
+  const collections = useCollections()
+  const collection = useMemo(() => {
+    if (collections && id) {
+      return collections.find((el) => el.id.toLocaleLowerCase() === id.toLocaleLowerCase())
+    } else {
+      return null
+    }
+  }, [collections, id])
   return (
     <MainBox>
       <HeaderFlexBox>
-        <ImgBox src={mobileDepositBg} alt=""></ImgBox>
+        <ImgBox src={collection?.icon} alt=""></ImgBox>
         <Box ml="1.375rem">
           <Typography variant="subtitle1" lineHeight="1.375rem" fontWeight="700">
-            CRYPTOPUNKS
+            {collection?.symbol}
           </Typography>
           <Typography mt="0.5rem" variant="body2" lineHeight="0.875rem" color="#A0A3BD">
-            60 Active Users
+            {collection?.stats?.countOwners} Active Users
           </Typography>
         </Box>
         <ImgBoxBorder></ImgBoxBorder>
@@ -110,7 +123,7 @@ export default function MobileHeader() {
               <path d="M2 9L6.5 11.5L11 9" stroke="#4E4B66" strokeWidth="1.30263" strokeLinejoin="round" />
             </svg>
             <Typography ml="0.25rem" variant="subtitle1" color="#4E4B66" lineHeight="1.125rem">
-              4,726.2615
+              {collection?.stats?.totalValue || 0}
             </Typography>
           </FlexBox>
         </Box>
@@ -125,7 +138,7 @@ export default function MobileHeader() {
           </Typography>
           <FlexBox>
             <Typography mt="0.5rem" mr="0.25rem" variant="subtitle1" color="#4E4B66" lineHeight="1.125rem">
-              51.90
+              {collection?.stats?.floorPrice || 0}
             </Typography>
             <Typography mt="0.75rem" variant="body1" color="#4E4B66;" fontWeight="600" lineHeight="0.875rem">
               ETH
@@ -134,7 +147,7 @@ export default function MobileHeader() {
         </Box>
         <Box mr="2.875rem">
           <Typography variant="body2" color="#A0A3BD" lineHeight="0.75rem" fontWeight="500">
-            70% Loan to Value
+            {div(collection?.ltv, 100)}% Loan to Value
           </Typography>
           <FlexBox>
             <Typography
@@ -145,7 +158,7 @@ export default function MobileHeader() {
               fontWeight="700"
               lineHeight="1.125rem"
             >
-              38.42
+              {times(collection?.stats?.floorPrice || 0, div(collection?.ltv, 10000))}
             </Typography>
             <Typography mt="0.75rem" variant="body1" color="#7646FF" fontWeight="700" lineHeight="0.875rem">
               ETH
@@ -160,7 +173,7 @@ export default function MobileHeader() {
               Liquidation Threshold
             </Typography>
             <Typography variant="body2" fontWeight="600">
-              70%
+              {div(collection.liqThreshold, 100)}%
             </Typography>
           </SpaceBetweenBox>
           <SpaceBetweenBox m="0 0.75rem" mt="0.5rem">
@@ -181,13 +194,13 @@ export default function MobileHeader() {
               <img src={RewardAdd} alt="" />
               <Box ml="1.3125rem" width="3.5625rem">
                 <Typography variant="subtitle2" color="#6E7191">
-                  10%
+                  {erc20ReserveData.depositRate}%
                 </Typography>
               </Box>
               <img src={RewardRight} alt="" />
               <Box ml="1.3125rem">
                 <Typography variant="subtitle2" color="#4E4B66">
-                  10%
+                  {erc20ReserveData.depositRate}%
                 </Typography>
               </Box>
             </FlexBox>

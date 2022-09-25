@@ -166,7 +166,7 @@ export default function Liquidation() {
       ) : (
         <MobileBody>
           <MobileHeader></MobileHeader>
-          <MobileCollateral></MobileCollateral>
+          <MobileCollateral collaterals={collaterals}></MobileCollateral>
         </MobileBody>
       )}
     </>

@@ -8,6 +8,10 @@ const WalletBox = styled(Box)`
   background: #ffffff;
   border-radius: 0.75rem;
   padding: 1.5rem 1rem;
+<<<<<<< HEAD
+  margin: 0 1rem;
+=======
+>>>>>>> 91619e6c210c1662e81a4be8514624613f7e3f67
 `
 const ActiveBox = styled(Box)`
   .none {

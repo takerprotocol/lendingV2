@@ -19,6 +19,7 @@ const WalletMessageBox = styled(Box)`
   background: #ffffff;
   border-radius: 12px;
   padding: 1rem;
+  margin: 0 1rem;
   margin-top: 1rem;
 `
 const WalletBalanceBox = styled(Box)`

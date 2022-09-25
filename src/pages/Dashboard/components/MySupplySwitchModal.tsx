@@ -6,7 +6,13 @@ import Right from 'assets/images/svg/common/right.svg'
 import { CenterBox, SpaceBetweenBox } from 'styleds/index'
 import { useMemo } from 'react'
 import { fixedFormat, getRiskLevel, getRiskLevelTag, percent, plus, times } from 'utils'
-import { useBorrowLimit, useCollateralBorrowLimitUsed, useCollateralRiskLevel, useHeath } from 'state/user/hooks'
+import {
+  useBorrowLimit,
+  useCollateralBorrowLimitUsed,
+  useCollateralRiskLevel,
+  useHeath,
+  useUserValue,
+} from 'state/user/hooks'
 import BigNumber from 'bignumber.js'
 const style = {
   position: 'relative',
@@ -64,11 +70,13 @@ export default function MySupplySwitchModal({
   const ColorClass = getRiskLevelTag(collateralRiskLevel)
   const borrowLimitUsed = useCollateralBorrowLimitUsed()
   const borrowLimit = useBorrowLimit()
+  const userValue = useUserValue()
   const upBorrowLimit = useBorrowLimit(times(ETHCollateralType, -1))
   const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(ETHCollateralType, switchType === 1 ? 1 : -1))
   const modalType = useMemo(() => {
     return !loanType && +NFTCollateralType === 0 && new BigNumber(upBorrowLimitUsed).lte(150) && switchType === 0
   }, [NFTCollateralType, loanType, switchType, upBorrowLimitUsed])
+
   return (
     <Modal
       open={openMySupplySwitchModal}
@@ -171,11 +179,19 @@ export default function MySupplySwitchModal({
                 </Box>
                 <Box>
                   <Typography variant="body1" fontWeight="600" component="span" color="#A0A3BD">
-                    {fixedFormat(switchType === 1 ? NFTCollateralType : plus(ETHCollateralType, NFTCollateralType))}
+                    {fixedFormat(
+                      switchType === 1
+                        ? userValue.NFTLiquidity
+                        : plus(userValue.borrowLiquidity, userValue.NFTLiquidity)
+                    )}
                     {' >'}
                   </Typography>
                   <Typography ml="6px" variant="body1" fontWeight="700" component="span">
-                    {fixedFormat(switchType === 1 ? plus(ETHCollateralType, NFTCollateralType) : NFTCollateralType)}
+                    {fixedFormat(
+                      switchType === 1
+                        ? plus(userValue.borrowLiquidity, userValue.NFTLiquidity)
+                        : userValue.NFTLiquidity
+                    )}
                   </Typography>
                 </Box>
               </SpaceBetweenBox>

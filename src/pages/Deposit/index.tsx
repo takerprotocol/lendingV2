@@ -5,13 +5,14 @@ import DepositNFT from './components/DepositNFT'
 import { useMemo, useState } from 'react'
 import WithdrawNFT from './components/WithdrawNFT'
 import { useDepositableNfts } from 'services/module/deposit'
-import { useAddress, useMobileType } from 'state/user/hooks'
+import { useAddress, useCollateralBorrowLimitUsed, useMobileType } from 'state/user/hooks'
 import { useParams } from 'react-router-dom'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
 import MobileHeader from './components/mobileComponents/MobileHeader'
 import MobileDepositRoWithdraw from './components/mobileComponents/MobileDepositRoWithdraw'
 import MobileFooter from './components/mobileComponents/MobileFooter'
 import mobileDepositBg from 'assets/images/svg/deposit/mobileDeposit-bg.svg'
+import BigNumber from 'bignumber.js'
 
 const Body = styled(Box)`
   padding-top: 233px;
@@ -60,6 +61,7 @@ const MobileBody = styled(Box)`
 `
 const MobileMain = styled(Box)`
   padding: 0rem 1rem 0rem 1rem;
+  position: relative;
   margin-top: -10.1875rem;
   width: 100%;
 `
@@ -74,11 +76,11 @@ const MobileHeaderBg = styled(Box)`
 export default function Deposit() {
   const address = useAddress()
   const { id } = useParams()
+  const { list, loading } = useDepositableNfts(address, id)
   const [depositType, setDepositType] = useState<string>('shut')
   const [withdrawType, setWithdrawType] = useState<string>('shut')
-  const { list, loading } = useDepositableNfts(address, id)
   const depositedCollection = useDepositedCollection()
-  const depositedList = useMemo(() => {
+  const withdrawList = useMemo(() => {
     if (depositedCollection && id) {
       const collection = depositedCollection.find((el) => {
         return el.userNftCollection.id.split('-')[1] === id
@@ -97,6 +99,20 @@ export default function Deposit() {
   }, [collections, id])
   const mobile = useMobileType()
   const [type, setType] = useState<number>(1)
+  const [mobileWithdrawCheckedIndex, setMobileWithdrawCheckedIndex] = useState<Array<string>>([])
+  const [mobileDepositCheckedIndex, setMobileDepositCheckedIndex] = useState<Array<string>>([])
+  const withdrawAmount = useMemo(() => {
+    let totalAmount = '0'
+    mobileWithdrawCheckedIndex.forEach((el) => {
+      const checkedNft = list.find((nft: { id: string }) => nft.id.split('-')[2] === el)
+      totalAmount = new BigNumber(checkedNft.amount).plus(totalAmount).toString()
+    })
+    return totalAmount
+  }, [mobileWithdrawCheckedIndex, list])
+  const borrowLimitUsed = useCollateralBorrowLimitUsed(withdrawAmount)
+  const withdrawLargeAmount = useMemo(() => {
+    return new BigNumber(borrowLimitUsed).gte(1)
+  }, [borrowLimitUsed])
   return (
     <>
       {mobile ? (
@@ -115,7 +131,7 @@ export default function Deposit() {
             ></DepositNFT>
             <WithdrawNFT
               loading={loading}
-              list={depositedList}
+              list={withdrawList}
               depositType={depositType}
               withdrawType={withdrawType}
               setWithdrawType={setWithdrawType}
@@ -127,9 +143,25 @@ export default function Deposit() {
           <MobileHeaderBg sx={{ backgroundImage: `url(${mobileDepositBg})` }}></MobileHeaderBg>
           <MobileMain>
             <MobileHeader></MobileHeader>
-            <MobileDepositRoWithdraw type={type} setType={setType}></MobileDepositRoWithdraw>
+            <MobileDepositRoWithdraw
+              depositedList={list}
+              withdrawList={withdrawList}
+              type={type}
+              setType={setType}
+              mobileWithdrawCheckedIndex={mobileWithdrawCheckedIndex}
+              mobileDepositCheckedIndex={mobileDepositCheckedIndex}
+              setMobileWithdrawCheckedIndex={setMobileWithdrawCheckedIndex}
+              setMobileDepositCheckedIndex={setMobileDepositCheckedIndex}
+            ></MobileDepositRoWithdraw>
           </MobileMain>
-          <MobileFooter type={type}></MobileFooter>
+          <MobileFooter
+            mobileWithdrawCheckedIndex={mobileWithdrawCheckedIndex}
+            mobileDepositCheckedIndex={mobileDepositCheckedIndex}
+            depositedList={list}
+            withdrawLargeAmount={withdrawLargeAmount}
+            withdrawList={withdrawList}
+            type={type}
+          ></MobileFooter>
         </MobileBody>
       )}
     </>

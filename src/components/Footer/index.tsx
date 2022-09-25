@@ -5,6 +5,7 @@ import footer2 from 'assets/images/svg/common/footer-2.svg'
 import footer3 from 'assets/images/svg/common/footer-3.svg'
 import footer4 from 'assets/images/svg/common/footer-4.svg'
 import { useLocation } from 'react-router-dom'
+import { useMobileType } from 'state/user/hooks'
 
 const FooterStyleBox = styled(Box)`
   width: 100%;
@@ -24,9 +25,10 @@ const ImgBox = styled(Box)`
 
 export default function Footer() {
   const location = useLocation()
+  const mobile = useMobileType()
   const Liquidate = location.pathname.includes('/liquidate')
   return (
-    <FooterStyleBox display={Liquidate ? 'none' : ''}>
+    <FooterStyleBox display={Liquidate || !mobile ? 'none' : ''}>
       <FlexBox>
         <Box width="581px">
           <img src={footerTaker} alt="" />

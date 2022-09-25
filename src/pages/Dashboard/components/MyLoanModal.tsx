@@ -152,7 +152,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const [check, setCheck] = useState<number>(repayRoBorrow)
   const [amount, setAmount] = useState('')
   const heath = useHeath()
-  const [sliderValue, setSliderValue] = useState<number>(+heath)
+  const [sliderValue] = useState<number>(+heath)
   const debtRiskLevel = useDebtRiskLevel(times(amount, check === 1 ? 1 : -1))
   const borrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
   const TypographyRiskLevel = getRiskLevel(amount ? debtRiskLevel : heath)
@@ -370,7 +370,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Typography mt="8px" variant="body1" color="#14142A">
-                      {fixedFormat(borrowLimit)} ETH
+                      {fixedFormat(ethDebt)} ETH
                     </Typography>
                   </Box>
                 </Box>
@@ -379,11 +379,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             <BeforeImg src={loanModalBefore} alt=""></BeforeImg>
           </BorrowAmountBox>
           <Box mb="21px" mt="9px" height="8px" width="372px">
-            <CustomizedSlider
-              sliderValue={sliderValue}
-              setSliderValue={setSliderValue}
-              riskLevelTag={riskLevelTag}
-            ></CustomizedSlider>
+            <CustomizedSlider sliderValue={sliderValue} riskLevelTag={riskLevelTag}></CustomizedSlider>
           </Box>
           <SpaceBetweenBox mb="16.5px">
             <FlexBox>

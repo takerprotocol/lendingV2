@@ -4,8 +4,8 @@ import mobileCollaterals from 'assets/images/svg/liquidation/mobileCollaterals-b
 import mobileSearch from 'assets/images/svg/liquidation/mobileSearch-icon.svg'
 import SortIcon from 'assets/images/svg/liquidation/mobileSort-icon.svg'
 import FilterIcon from 'assets/images/svg/liquidation/mobileFilter-icon.svg'
+import { CollateralModel } from 'services/type/nft'
 import MobileCollateralList from './MobileCollateralList'
-import { useState } from 'react'
 import MobileCollateralPagination from './MobileCollateralPagination'
 const MobileCollateralBox = styled(Box)`
   background-image: url(${mobileCollaterals});
@@ -29,8 +29,12 @@ const SortAndFilterBox = styled(SpaceBetweenBox)`
   border-radius: 0.625rem;
   padding: 0.75rem 0.5rem;
 `
-export default function MobileCollateral() {
-  const [list] = useState([1, 2, 4, 5, 3, 6, 7, 8])
+
+interface MobileCollateralProps {
+  collaterals: Array<CollateralModel>
+}
+export default function MobileCollateral({ collaterals }: MobileCollateralProps) {
+  // console.log(collaterals)
   return (
     <MobileCollateralBox>
       <Box m="0 1rem">
@@ -74,10 +78,10 @@ export default function MobileCollateral() {
           </FlexBox>
         </SortAndFilterBox>
       </Box>
-      {list.map((el: number) => (
-        <MobileCollateralList key={el}></MobileCollateralList>
+      {collaterals.map((el: any, index: number) => (
+        <MobileCollateralList {...el} key={`collateral-${JSON.stringify(el)}${index}`}></MobileCollateralList>
       ))}
-      <MobileCollateralPagination collaterals={list} onPageSelect={(number: number) => null} />
+      <MobileCollateralPagination collaterals={collaterals} onPageSelect={(number: number) => null} />
     </MobileCollateralBox>
   )
 }

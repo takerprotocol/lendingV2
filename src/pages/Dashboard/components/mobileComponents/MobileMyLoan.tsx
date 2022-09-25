@@ -5,7 +5,9 @@ import mobileDown from 'assets/images/svg/dashboard/mobileDown.svg'
 import mobileUp from 'assets/images/svg/dashboard/mobileUp.svg'
 import CustomizedSlider from 'components/Slider'
 import { FlexBox, SpaceBetweenBox, FlexEndBox } from 'styleds'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useBorrowLimit, useEthDebt, useHeath } from 'state/user/hooks'
+import { fixedFormat, getRiskLevel, getRiskLevelTag } from 'utils'
 
 const MyAssetsBox = styled(Box)`
   width: 100%;
@@ -32,6 +34,19 @@ const RiskFlexBox = styled(Box)`
   display: flex;
   justify-content: space-between;
 `
+const MyAssetsBgBox = styled(Box)`
+  margin-top: 0.5rem;
+  padding: 0 1rem 1rem 1rem;
+  background: linear-gradient(180deg, rgba(247, 247, 252, 0) 0%, #e0dff3 100%);
+`
+const NoBorrowLimitRiskLevelBox = styled(Box)`
+  width: 100%;
+  background: #f3f3f8;
+  border-radius: 0.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  position: relative;
+`
 const RiskLevelBox = styled(Box)`
   width: 100%;
   background: #f3f3f8;
@@ -48,7 +63,8 @@ const RiskLevelBox = styled(Box)`
     top: 100%;
     border-width: 10.5px 7.5px;
     border-style: dashed solid dashed dashed;
-    border-color: #F3F3F8 transparent transparent transparent;
+    border-color: #f3f3f8 transparent transparent transparent;
+  }
 `
 const BorrowAPYBox = styled(Box)`
   background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
@@ -77,9 +93,19 @@ const FooterBox = styled(Box)`
 
 export default function MobileMyLoan() {
   const [myAssetsType, setMyAssetsType] = useState<boolean>(true)
+  const ethDebt = useEthDebt()
+  const heath = useHeath()
+  const borrowLimit = useBorrowLimit()
+  const [sliderValue] = useState<number>(+heath)
+  const myLoanRiskLevel = useMemo(() => {
+    return getRiskLevel(heath)
+  }, [heath])
 
+  const myLoanRiskLevelTag = useMemo(() => {
+    return getRiskLevelTag(heath)
+  }, [heath])
   return (
-    <Box mt="0.5rem">
+    <MyAssetsBgBox>
       <MyAssetsBox
         sx={{ background: `${myAssetsType ? '#ffffff' : 'linear-gradient(180deg, #FFFFFF 0%, #F7F7FC 100%)'}` }}
       >
@@ -95,11 +121,11 @@ export default function MobileMyLoan() {
             <img src={myAssetsType ? mobileDown : mobileUp} alt="" />
           </FlexBox>
           <ClaimBox>
-            <Typography mr="0.5rem" color="#4BC8B1" variant="body2" fontWeight="700">
-              HEALTHY
+            <Typography mr="0.5rem" className={myLoanRiskLevelTag} variant="body2" fontWeight="700">
+              {myLoanRiskLevel}
             </Typography>
             <Typography mr="0.5rem" color="#A0A3BD" variant="body2" fontWeight="600">
-              16.84
+              {heath}%
             </Typography>
             <img src={mobilePrompt2} alt="" />
           </ClaimBox>
@@ -113,17 +139,19 @@ export default function MobileMyLoan() {
               <FlexBox>
                 <img src={mobileBlackEthLogo} alt="" />
                 <Typography ml="0.4375rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
-                  22.4653
+                  {fixedFormat(ethDebt)}
                 </Typography>
               </FlexBox>
             </Box>
             <FlexBox>
-              <Button className="loanButton" variant="contained" color="secondary">
-                <Typography variant="body2" component="span" fontWeight="700">
-                  Repay {'>'}
-                </Typography>
-              </Button>
-              <Button className="loanButton" variant="contained">
+              <Box display={+ethDebt === 0 ? 'none' : ''}>
+                <Button className="loanButton" variant="contained" color="secondary">
+                  <Typography variant="body2" component="span" fontWeight="700">
+                    Repay {'>'}
+                  </Typography>
+                </Button>
+              </Box>
+              <Button disabled={+borrowLimit === 0} className="loanButton" variant="contained">
                 <Typography variant="body2" component="span" fontWeight="700" color="#ffffff">
                   Borrow {'>'}
                 </Typography>
@@ -140,48 +168,77 @@ export default function MobileMyLoan() {
                 <FlexBox>
                   <img src={mobileBlackEthLogo} alt="" />
                   <Typography ml="0.4375rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
-                    22.4653
+                    {fixedFormat(ethDebt)}
                   </Typography>
                 </FlexBox>
               </Box>
               <FlexBox>
-                <Button className="loanButton" variant="contained">
+                <Button disabled={+ethDebt === 0} className="loanButton" variant="contained">
                   <Typography variant="body2" component="span" fontWeight="700">
                     Repay {'>'}
                   </Typography>
                 </Button>
               </FlexBox>
             </SpaceBetweenBox>
-            <RiskLevelBox>
-              <RiskFlexBox>
-                <Box pt="1.1875rem">
-                  <Typography variant="body2" lineHeight="0.75rem" fontWeight="600">
-                    Risk Level
-                  </Typography>
-                  <Typography mt="0.5rem" variant="body1" color="#4BC8B1" fontSize="1.25rem" fontWeight="700">
-                    `HEALTHY
-                  </Typography>
-                </Box>
-                <Box m="0.5rem 0.5rem 0 0">
-                  <FlexEndBox>
-                    <img width="16px" height="16px" src={mobilePrompt2} alt="" />
-                  </FlexEndBox>
-                  <Typography mt="-0.25rem" variant="body1" color="#6E7191" fontWeight="600">
-                    180%
-                  </Typography>
-                  <Typography mt="-0.25rem" variant="body2" color=" #A0A3BD" fontWeight="600">
-                    Collateralization
-                  </Typography>
-                </Box>
-              </RiskFlexBox>
-            </RiskLevelBox>
-            <CustomizedSlider riskLevelTag={''}></CustomizedSlider>
+            {+borrowLimit === 0 ? (
+              <NoBorrowLimitRiskLevelBox>
+                <RiskFlexBox>
+                  <Box p="0.6875rem 0 0 1rem">
+                    <Typography fontWeight="700" variant="body1">
+                      No loan amount
+                    </Typography>
+                    <Typography lineHeight="1.125rem" variant="body2" color="#a0a3bd">
+                      You can try to mortgage some NFT or ETH
+                    </Typography>
+                    <Typography mb="0.625rem" lineHeight="1.125rem" variant="body2" color="#a0a3bd">
+                      to get a loan amount.
+                    </Typography>
+                  </Box>
+                  <Box m="0.5rem 0.5rem 0 0">
+                    <FlexEndBox>
+                      <img width="16px" height="16px" src={mobilePrompt2} alt="" />
+                    </FlexEndBox>
+                  </Box>
+                </RiskFlexBox>
+              </NoBorrowLimitRiskLevelBox>
+            ) : (
+              <RiskLevelBox>
+                <RiskFlexBox>
+                  <Box pt="1.1875rem">
+                    <Typography variant="body2" lineHeight="0.75rem" fontWeight="600">
+                      Risk Level
+                    </Typography>
+                    <Typography
+                      mt="0.5rem"
+                      variant="body1"
+                      className={myLoanRiskLevelTag}
+                      fontSize="1.25rem"
+                      fontWeight="700"
+                    >
+                      {myLoanRiskLevel}
+                    </Typography>
+                  </Box>
+                  <Box m="0.5rem 0.5rem 0 0">
+                    <FlexEndBox>
+                      <img width="16px" height="16px" src={mobilePrompt2} alt="" />
+                    </FlexEndBox>
+                    <Typography mt="-0.25rem" variant="body1" color="#6E7191" fontWeight="600">
+                      {heath}%
+                    </Typography>
+                    <Typography mt="-0.25rem" variant="body2" color=" #A0A3BD" fontWeight="600">
+                      Collateralization
+                    </Typography>
+                  </Box>
+                </RiskFlexBox>
+              </RiskLevelBox>
+            )}
+            <CustomizedSlider sliderValue={sliderValue} riskLevelTag={myLoanRiskLevelTag}></CustomizedSlider>
             <SpaceBetweenBox mt=".25rem" padding="0 1rem 0 1rem">
               <Typography variant="body1" color=" #4E4B66" fontWeight="600">
                 Borrow Limit
               </Typography>
               <Typography variant="body1" color="#4E4B66" fontWeight="600">
-                18.09 ETHs
+                {borrowLimit}
               </Typography>
             </SpaceBetweenBox>
             <BorrowAPYBox>
@@ -191,13 +248,13 @@ export default function MobileMyLoan() {
                     10%
                   </Typography>
                   <FlexBox>
-                    <Typography ml="0.25rem" variant="body2" color="#A0A3BD" lineHeight="1.125rem">
+                    <Typography variant="body2" color="#A0A3BD" lineHeight="1.125rem">
                       Net Borrow APY
                     </Typography>
                     <img src={mobilePrompt2} alt="" />
                   </FlexBox>
                 </Box>
-                <Button className="loanButton" variant="contained">
+                <Button disabled={+borrowLimit === 0} className="loanButton" variant="contained">
                   <Typography variant="body2" component="span" fontWeight="700" color="#ffffff">
                     Borrow {'>'}
                   </Typography>
@@ -216,6 +273,6 @@ export default function MobileMyLoan() {
           </>
         )}
       </MyAssetsBox>
-    </Box>
+    </MyAssetsBgBox>
   )
 }

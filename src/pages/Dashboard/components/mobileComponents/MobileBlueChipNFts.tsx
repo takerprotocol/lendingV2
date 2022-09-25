@@ -66,7 +66,7 @@ export default function MobileBlueChipNFts() {
   const type = useDashboardType()
   const dispatch = useAppDispatch()
   return (
-    <Box pt="0.5rem">
+    <Box p="0.5rem 1rem 0 1rem">
       <BlueChipStyleBox>
         <SpaceBetweenBox>
           <BlueChipBox
