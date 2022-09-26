@@ -123,12 +123,12 @@ export default function MobileHeader() {
               <path d="M2 9L6.5 11.5L11 9" stroke="#4E4B66" strokeWidth="1.30263" strokeLinejoin="round" />
             </svg>
             <Typography ml="0.25rem" variant="subtitle1" color="#4E4B66" lineHeight="1.125rem">
-              {collection?.stats?.totalValue || 0}
+              {collection?.stats?.volumeAll || 0}
             </Typography>
           </FlexBox>
         </Box>
         <Typography variant="body1" color="#A0A3BD" lineHeight="0.875rem" fontWeight="500">
-          9221 NFTs
+          {collection?.stats?.totalSupply || 0} NFTs
         </Typography>
       </TotalBox>
       <FloorBox>

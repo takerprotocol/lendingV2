@@ -121,7 +121,6 @@ export default function CustomizeRoutes() {
         )
       })
       contract.getUserValues(address).then((res: Array<BigNumber>) => {
-        console.log(res[0].toString())
         dispatch(
           setUserValues({
             borrowLiquidity: fromWei(res[0].toString()),
@@ -192,11 +191,10 @@ export default function CustomizeRoutes() {
               item.totalValue = balance ? fromWei(balance.toString()) : '0'
             }
           }
-
           // const info = await getCollectionInfo(element.id)
           // item.info = info.data
           item.icon = renderImg(element.symbol)
-          const stats = await getCollectionStats(element.id)
+          const stats = await getCollectionStats(element.id, chainId)
           item.stats = stats.data
           item.id = element.id
           item.name = element.name
@@ -232,7 +230,7 @@ export default function CustomizeRoutes() {
       <Route path="/" element={<Dashboard />} />
       <Route path="/deposit/:id" element={<Deposit />} />
       <Route path="/liquidate" element={<Liquidate />} />
-      {/* <Route path="/liquidate/:address" element={<Liquidate />} /> */}
+      <Route path="/liquidate/:address" element={<Liquidate />} />
       <Route path="/liquidation" element={<Liquidation />} />
       <Route path="/liquidation/:page" element={<Liquidation />} />
       <Route path="*" element={<Dashboard />} />

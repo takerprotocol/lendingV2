@@ -1,4 +1,5 @@
 import { Button, styled, Typography } from '@mui/material'
+import BigNumber from 'bignumber.js'
 
 const TotalLiquidationAmountContainer = styled('div')`
   background: #262338;
@@ -163,7 +164,7 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit }: Liquidatio
               />
               <path d="M4 10.5L8.5 13L13 10.5" stroke="#A0A3BD" strokeLinejoin="round" />
             </svg>
-            <TotalPriceValue>{ethValue + nftsValue}</TotalPriceValue>
+            <TotalPriceValue>{new BigNumber(ethValue).plus(nftsValue).toString()}</TotalPriceValue>
           </TotalLiquidationAmountWrapper>
         </LabelValueContainerPrice>
         <LiquidateButton

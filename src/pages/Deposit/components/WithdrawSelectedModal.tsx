@@ -157,11 +157,11 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
           <Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <BodyTypography>
-                {userValue.totalCollateral}
+                {new BigNumber(userValue.totalCollateral).toFixed(2, 1)}
                 {'>'}
               </BodyTypography>
               <BodyTypography ml="6px" fontWeight="700 !important" color="#14142A !important">
-                {minus(userValue.totalCollateral, amount)}
+                {new BigNumber(minus(userValue.totalCollateral, amount)).toFixed(2, 1)}
               </BodyTypography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">

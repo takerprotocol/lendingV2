@@ -116,7 +116,6 @@ export default function Liquidation() {
           // let depositedAmount = '0'
           // let borrowedAmount = '0'
           // let liqThreshold = '0'
-          console.log(element)
           // element.reserves.forEach((rel: any) => {
           //   if (rel.id.split('-')[1].toLocaleLowerCase() === WETH.toLocaleLowerCase()) {
           //     liqThreshold = rel.reserve.liqThreshold

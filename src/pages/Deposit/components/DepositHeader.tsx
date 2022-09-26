@@ -125,11 +125,11 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 <FlexBox mt="8px">
                   <img margin-top="15px" src={myCollateralIcon} alt="" />
                   <BigTypography ml="4px" variant="body1">
-                    {collection?.stats?.totalValue || 0}
+                    {collection?.stats?.volumeAll || 0}
                   </BigTypography>
                 </FlexBox>
                 <Typography mt="4px" component="p" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
-                  9221 NFTs
+                  {collection?.stats?.totalSupply || 0} NFTs
                 </Typography>
               </Box>
               <Box width="148px">
