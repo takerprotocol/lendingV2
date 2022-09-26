@@ -12,7 +12,7 @@ export function useDepositableNfts(address: string, id?: string) {
       try {
         const response = await getNftsForOwner(alchemy, address)
         if (id) {
-          setList(response.ownedNfts.filter((el) => el.contract.address === id))
+          setList(response.ownedNfts.filter((el) => el.contract.address.toLocaleLowerCase() === id.toLocaleLowerCase()))
         } else {
           setList(response.ownedNfts)
         }

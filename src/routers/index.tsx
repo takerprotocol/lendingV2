@@ -121,6 +121,7 @@ export default function CustomizeRoutes() {
         )
       })
       contract.getUserValues(address).then((res: Array<BigNumber>) => {
+        console.log(res[0].toString())
         dispatch(
           setUserValues({
             borrowLiquidity: fromWei(res[0].toString()),

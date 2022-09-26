@@ -77,13 +77,14 @@ export default function Deposit() {
   const address = useAddress()
   const { id } = useParams()
   const { list, loading } = useDepositableNfts(address, id)
+  console.log(list)
   const [depositType, setDepositType] = useState<string>('shut')
   const [withdrawType, setWithdrawType] = useState<string>('shut')
   const depositedCollection = useDepositedCollection()
   const withdrawList = useMemo(() => {
     if (depositedCollection && id) {
       const collection = depositedCollection.find((el) => {
-        return el.userNftCollection.id.split('-')[1] === id
+        return el.userNftCollection.id.split('-')[1].toLocaleLowerCase() === id.toLocaleLowerCase()
       })
       return collection ? collection.userNftCollection.tokens : []
     }
