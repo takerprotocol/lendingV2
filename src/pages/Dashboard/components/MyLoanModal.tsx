@@ -192,7 +192,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
           })
       } else {
         contract
-          .repay(poolContract?.address, amountDecimal(amount, decimal), address, { gasLimit })
+          .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
+            value: amountDecimal(amount, decimal),
+            gasLimit,
+          })
           .then((res: any) => {
             addTransaction(res, {
               type: TransactionType.REPAY,
@@ -210,7 +213,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const repaySubmit = () => {
     if (contract) {
       contract
-        .repay(poolContract?.address, amountDecimal(amount, decimal), address, { gasLimit })
+        .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
+          value: amountDecimal(amount, decimal),
+          gasLimit,
+        })
         .then((res: any) => {
           addTransaction(res, {
             type: TransactionType.REPAY,
