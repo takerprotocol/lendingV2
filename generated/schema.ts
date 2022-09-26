@@ -386,31 +386,31 @@ export class User extends Entity {
     this.set("totalDebt", Value.fromBigInt(value));
   }
 
-  get avgLtv(): BigInt {
+  get avgLtv(): BigDecimal {
     let value = this.get("avgLtv");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set avgLtv(value: BigInt) {
-    this.set("avgLtv", Value.fromBigInt(value));
+  set avgLtv(value: BigDecimal) {
+    this.set("avgLtv", Value.fromBigDecimal(value));
   }
 
-  get liqThreshold(): BigInt {
+  get liqThreshold(): BigDecimal {
     let value = this.get("liqThreshold");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set liqThreshold(value: BigInt) {
-    this.set("liqThreshold", Value.fromBigInt(value));
+  set liqThreshold(value: BigDecimal) {
+    this.set("liqThreshold", Value.fromBigDecimal(value));
   }
 
-  get healthFactor(): BigInt {
+  get healthFactor(): BigDecimal {
     let value = this.get("healthFactor");
-    return value!.toBigInt();
+    return value!.toBigDecimal();
   }
 
-  set healthFactor(value: BigInt) {
-    this.set("healthFactor", Value.fromBigInt(value));
+  set healthFactor(value: BigDecimal) {
+    this.set("healthFactor", Value.fromBigDecimal(value));
   }
 
   get reserves(): Array<string> {

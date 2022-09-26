@@ -42,9 +42,9 @@ type User @entity {
   reserveSupply: BigInt!
   totalCollateral: BigInt!
   totalDebt: BigInt!
-  avgLtv: BigInt!
-  liqThreshold: BigInt!
-  healthFactor: BigInt!
+  avgLtv: BigDecimal!
+  liqThreshold: BigDecimal!
+  healthFactor: BigDecimal!
 
   reserves: [UserReserve!]! @derivedFrom(field: "user")
   collections: [UserNftCollection!]! @derivedFrom(field: "user")

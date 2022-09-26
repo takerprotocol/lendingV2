@@ -14,9 +14,9 @@ export function newUser(Id: string): User {
     user.reserveSupply = BigInt.zero();
     user.totalCollateral = BigInt.zero();
     user.totalDebt = BigInt.zero();
-    user.avgLtv = BigInt.zero();
-    user.liqThreshold = BigInt.zero();
-    user.healthFactor = BigInt.zero();
+    user.avgLtv = BigDecimal.zero();
+    user.liqThreshold = BigDecimal.zero();
+    user.healthFactor = BigDecimal.zero();
 
     return user;
 }
@@ -69,25 +69,40 @@ export function updateCollectionPrice(collection: NftCollection): void{
 export function updateUserState(user: User, assetPrice: BigInt, assetLtv: BigInt, assetLiqThresh: BigInt): User {
     // totalCollateral should have been upgraded
 
+    let totalCollateral = user.totalCollateral.toBigDecimal();
+    let totalDebt = user.totalDebt.toBigDecimal();
+    if (totalCollateral.equals(BigDecimal.zero())  || totalDebt.equals(BigDecimal.zero())) {
+        user.avgLtv = BigDecimal.zero();
+        user.liqThreshold = BigDecimal.zero();
+        user.healthFactor = BigDecimal.zero();
+
+        return user;
+    }
     user.avgLtv = user.avgLtv
-        .plus(assetPrice.times(assetLtv))
-        .div(user.totalCollateral);
+        .plus(assetPrice.times(assetLtv).toBigDecimal())
+        .div(totalCollateral);
 
     user.liqThreshold = user.liqThreshold
-        .plus(assetPrice.times(assetLiqThresh))
-        .div(user.totalCollateral);
+        .plus(assetPrice.times(assetLiqThresh).toBigDecimal())
+        .div(totalCollateral);
 
-    user.healthFactor = user.totalCollateral
+    user.healthFactor = user.totalCollateral.toBigDecimal()
         .times(user.liqThreshold)
-        .div(user.totalDebt);
+        .div(totalDebt);
 
     return user;
 }
 
 export function updateHealthFactor(user: User): User {
-    user.healthFactor = user.totalCollateral
+    let totalDebt = user.totalDebt.toBigDecimal();
+    if (totalDebt.equals(BigDecimal.zero())) {
+        user.healthFactor = BigDecimal.zero();
+
+        return user;
+    }
+    user.healthFactor = user.totalCollateral.toBigDecimal()
         .times(user.liqThreshold)
-        .div(user.totalDebt);
+        .div(user.totalDebt.toBigDecimal());
 
     return user;
 }
