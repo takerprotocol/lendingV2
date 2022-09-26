@@ -108,9 +108,10 @@ export const FIRST_COLLECTION = () => {
 }
 
 export const AllUser = (searchValue: string, conditionSort: Array<string>, allUserWhere: Array<string>) => {
+  // users(skip: 0, limit: 2, where: {collections: {collection: {id: "0x01"}}},${searchValue}orderBy: ${
   const queryString = `
     query users ($skip: Int, $limit: Int) {
-      users(skip: 0, limit: 2, where: {${[...allUserWhere]}},${searchValue}orderBy: ${
+    users(skip: 0, limit: 10, where: {${[...allUserWhere]}},${searchValue}orderBy: ${
     conditionSort[0]
   }, orderDirection: ${conditionSort[1]}) {
         id
