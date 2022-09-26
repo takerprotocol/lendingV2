@@ -50,12 +50,12 @@ export const getERC721Address = (chainId?: number) => {
 
 export const getTToken = (chainId?: number) => {
   if (chainId === 42) {
-    return '0xD5163caF8739cF5cc5432De199d1d77654C95773'
+    return '0xa92FAF88c7051BAcCddDc28260c95D0ecC1f2f34'
   }
   if (chainId === 5) {
-    return '0xD5163caF8739cF5cc5432De199d1d77654C95773'
+    return '0xa92FAF88c7051BAcCddDc28260c95D0ecC1f2f34'
   }
-  return '0x6aAA410959E397A68f455e834F0166fBB57bB073'
+  return '0xa92FAF88c7051BAcCddDc28260c95D0ecC1f2f34'
 }
 
 // KOVAN

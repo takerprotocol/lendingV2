@@ -1,10 +1,10 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import { getTToken, getWETH } from 'config'
+import { getWETH } from 'config'
 import { useContract } from 'hooks/useContract'
 import { useCallback, useEffect, useState } from 'react'
 import erc20 from 'abis/MockErc20.json'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { useAddress } from 'state/user/hooks'
+import { useAddress, useErc20ReserveData } from 'state/user/hooks'
 // import BigNumber from 'bignumber.js'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useHasPendingApproval } from 'state/transactions/hooks'
@@ -91,12 +91,11 @@ export function useTWETHApproval(
   ApprovalState,
   () => Promise<{ response: TransactionResponse; tokenAddress: string; spenderAddress: string } | undefined>
 ] {
-  const { chainId } = useActiveWeb3React()
-
-  const tokenContract = useContract(getTToken(chainId), erc20)
+  const erc20ReserveData = useErc20ReserveData()
+  const tokenContract = useContract(erc20ReserveData.tTokenAddress, erc20)
   const [approvalState, setApprovalState] = useState(ApprovalState.NOT_APPROVED)
   const address = useAddress()
-  const hasPendingApproval = useHasPendingApproval(getTToken(chainId), spender)
+  const hasPendingApproval = useHasPendingApproval(erc20ReserveData.tTokenAddress, spender)
   useEffect(() => {
     if (tokenContract && address && spender) {
       tokenContract.allowance(address, spender).then((allowance: BigNumber) => {
@@ -137,7 +136,7 @@ export function useTWETHApproval(
         setApprovalState(ApprovalState.PENDING)
         return {
           response,
-          tokenAddress: getTToken(chainId),
+          tokenAddress: erc20ReserveData.tTokenAddress,
           amount,
           spenderAddress: spender,
         }
@@ -146,7 +145,7 @@ export function useTWETHApproval(
         logFailure(error)
         throw error
       })
-  }, [tokenContract, amount, spender, chainId])
+  }, [tokenContract, amount, spender, erc20ReserveData.tTokenAddress])
 
   return [approvalState, approve]
 }
