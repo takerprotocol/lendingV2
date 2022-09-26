@@ -217,6 +217,7 @@ const Collaterals = ({
   //   () => [...new Set(collections.map((collection: any) => collection.name))],
   //   [collections]
   // )
+  const [collectionValue, setCollectionValue] = useState<number>(0)
   const collectionOptions = useMemo(() => {
     return [
       {
@@ -253,6 +254,7 @@ const Collaterals = ({
     setDebtFilter(event.target.value as number)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  const [debtFiltersValue, setDebtFiltersValue] = useState<number>(0)
   const debtFilters = useMemo(() => {
     return [
       {
@@ -299,6 +301,7 @@ const Collaterals = ({
     setSort(event.target.value as number)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  const [sortValue, setSortValue] = useState<number>(0)
   const sortOptions = useMemo(() => {
     return [
       {
@@ -546,6 +549,8 @@ const Collaterals = ({
         <SortFilterContainer>
           <FilterContainer>
             <CustomizedSelect
+              valueIndex={collectionValue}
+              setValueIndex={setCollectionValue}
               value={collectionFilter}
               filter={filter}
               options={collectionOptions}
@@ -563,6 +568,8 @@ const Collaterals = ({
             <DebtFilterSelect
               value={debtFilter}
               options={debtFilters}
+              valueIndex={debtFiltersValue}
+              setValueIndex={setDebtFiltersValue}
               filter={filter}
               onChange={handleDebtFilterChange}
               startAdornment={
@@ -579,6 +586,9 @@ const Collaterals = ({
                 setSort(0)
                 setDebtFilter(0)
                 setCollectionFilter(0)
+                setCollectionValue(0)
+                setSortValue(0)
+                setDebtFiltersValue(0)
               }}
               sx={{ cursor: 'pointer' }}
               ml="12px"
@@ -600,6 +610,8 @@ const Collaterals = ({
           </FilterContainer>
           <SortContainer>
             <CustomizedSelect
+              valueIndex={sortValue}
+              setValueIndex={setSortValue}
               value={sort}
               options={sortOptions}
               filter={filter}

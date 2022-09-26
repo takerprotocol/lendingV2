@@ -7,7 +7,7 @@ import loanModalBefore from 'assets/images/svg/dashboard/loanModal-before.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { MAXBox } from './MySupplyModal'
-import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal, div } from 'utils'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal } from 'utils'
 import {
   useAddress,
   useBorrowLimit,
@@ -154,7 +154,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const heath = useHeath()
   const [sliderValue] = useState<number>(+heath)
   const debtRiskLevel = useDebtRiskLevel(times(amount, check === 1 ? 1 : -1))
-  const borrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
+  const upBorrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
+  const borrowLimitUsed = useDebtBorrowLimitUsed()
   const TypographyRiskLevel = getRiskLevel(amount ? debtRiskLevel : heath)
   const riskLevelTag = getRiskLevelTag(amount ? debtRiskLevel : heath)
   const contract = useGateway()
@@ -259,6 +260,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 mr="8px"
                 onClick={() => {
                   onClose(false)
+                  setAmount('')
                 }}
               >
                 <img src={greyShutOff} alt="" />
@@ -429,10 +431,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </Box>
             <FlexBox>
               <Typography variant="body1" fontWeight="600" color="#A0A3BD">
-                {new BigNumber(div(ethDebt, borrowLimit)).decimalPlaces(2, 1).toString()}% {'>'}
+                {new BigNumber(borrowLimitUsed).toFixed(2, 1)}% {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" fontWeight="700" color="#14142A">
-                {new BigNumber(borrowLimitUsed).decimalPlaces(2, 1).toString()}%
+                {new BigNumber(upBorrowLimitUsed).toFixed(2, 1)}%
               </Typography>
             </FlexBox>
           </SpaceBetweenBox>
@@ -490,8 +492,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             onClick={() => {
               if (check === 1) {
                 borrowSubmit()
+                setAmount('')
               } else {
                 repaySubmit()
+                setAmount('')
               }
             }}
           >

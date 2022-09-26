@@ -6,17 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import {
-  amountDecimal,
-  desensitization,
-  div,
-  fixedFormat,
-  getRiskLevel,
-  getRiskLevelTag,
-  percent,
-  plus,
-  times,
-} from 'utils'
+import { amountDecimal, desensitization, fixedFormat, getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import { useLendingPool } from 'hooks/useLendingPool'
@@ -28,7 +18,6 @@ import {
   useDecimal,
   useErc20ReserveData,
   useEthCollateral,
-  useEthDebt,
   useHeath,
   useUsedCollateral,
   useWalletBalance,
@@ -148,8 +137,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const collateralRiskLevel = useCollateralRiskLevel(times(amount, borrowOrRepay === 1 ? 1 : -1))
   const TypographyRiskLevel = getRiskLevel(collateralRiskLevel)
   const riskLevelTag = getRiskLevelTag(collateralRiskLevel)
-  const ethDebt = useEthDebt()
-  const borrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, borrowOrRepay === 1 ? 1 : -1))
+  const borrowLimitUsed = useCollateralBorrowLimitUsed()
+  const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, borrowOrRepay === 1 ? 1 : -1))
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
   const upBorrowLimit = useBorrowLimit(times(amount, borrowOrRepay === 1 ? 1 : -1)) //操作后的borrowLimit
   const usedCollateral = useUsedCollateral()
@@ -240,11 +229,11 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
 
   const overSupply = useMemo(() => {
     if (borrowOrRepay === 2) {
-      return new BigNumber(mySupply).lte(amount)
+      return new BigNumber(collateralRiskLevel).lt(110)
     } else {
       return false
     }
-  }, [amount, mySupply, borrowOrRepay])
+  }, [borrowOrRepay, collateralRiskLevel])
 
   const buttonDisabled = useMemo(() => {
     return borrowOrRepay === 1
@@ -275,6 +264,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 sx={{ display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }}
                 onClick={() => {
                   setOpenMySupplyModal(false)
+                  setAmount('')
                 }}
               >
                 <img src={greyShutOff} alt="" />
@@ -398,7 +388,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                   </Typography>
                   <Box>
                     <Typography variant="body1" fontWeight="600" component="span" color={'#A0A3BD'}>
-                      {borrowLimit} {'>'}
+                      {fixedFormat(borrowLimit)} {'>'}
                     </Typography>
                     <Typography
                       ml="6px"
@@ -407,7 +397,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       fontWeight="700"
                       color={overSupply ? '#E1536C' : '#14142A'}
                     >
-                      {upBorrowLimit}
+                      {fixedFormat(upBorrowLimit)}
                     </Typography>
                   </Box>
                 </SpaceBetweenBox>
@@ -417,7 +407,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                   </Typography>
                   <Box>
                     <Typography variant="body1" fontWeight="600" component="span" color="#A0A3BD">
-                      {percent(div(ethDebt, borrowLimit), 1)} {'>'}
+                      {new BigNumber(borrowLimitUsed).toFixed(2, 1)}% {'>'}
                     </Typography>
                     <Typography
                       ml="6px"
@@ -426,7 +416,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                       fontWeight="700"
                       color={overSupply ? '#E1536C' : '#14142A'}
                     >
-                      {percent(borrowLimitUsed, 1)}
+                      {new BigNumber(upBorrowLimitUsed).toFixed(2, 1)}%
                     </Typography>
                   </Box>
                 </SpaceBetweenBox>
@@ -517,8 +507,10 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               // supply
               if (borrowOrRepay === 1) {
                 supplySubmit()
+                setAmount('')
               } else {
                 withdrawSubmit()
+                setAmount('')
               }
             }}
           >

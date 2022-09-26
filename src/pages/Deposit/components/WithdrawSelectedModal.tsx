@@ -82,7 +82,6 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
   const ercContract = useContract(id, MockERC721Abi)
   const addTransaction = useTransactionAdder()
   const borrowLimitUsed = useCollateralBorrowLimitUsed()
-
   const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, -1))
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
   const upBorrowLimit = useBorrowLimit(times(amount, -1)) //操作后的borrowLimit
@@ -166,7 +165,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
               <BodyTypography>
-                {borrowLimit}
+                {new BigNumber(borrowLimit).toFixed(2, 1)}
                 {'>'}
               </BodyTypography>
               <BodyTypography
@@ -174,19 +173,19 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
                 fontWeight="700 !important"
                 color={riskLevelWarning ? '#E1536C !important' : '#14142A !important'}
               >
-                {upBorrowLimit}
+                {new BigNumber(upBorrowLimit).toFixed(2, 1)}
               </BodyTypography>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }} mt="16px">
               <BodyTypography>
-                {borrowLimitUsed}% {'>'}
+                {new BigNumber(borrowLimitUsed).toFixed(2, 1)}% {'>'}
               </BodyTypography>
               <BodyTypography
                 ml="6px"
                 fontWeight="700 !important"
                 color={riskLevelWarning ? '#E1536C !important' : '#14142A !important'}
               >
-                {upBorrowLimitUsed}%
+                {new BigNumber(upBorrowLimitUsed).toFixed(2, 1)}%
               </BodyTypography>
             </Box>
           </Box>

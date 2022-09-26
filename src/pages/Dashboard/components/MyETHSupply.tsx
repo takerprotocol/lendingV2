@@ -10,19 +10,21 @@ import { useMemo, useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
 import {
+  useBorrowLimit,
   useErc20ReserveData,
   useEthCollateral,
   useEthDebt,
-  useHeath,
-  useNftCollateral,
+  // useHeath,
+  // useNftCollateral,
   useUsedCollateral,
+  useUserValue,
 } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { toast } from 'react-toastify'
 import { getWETH, gasLimit } from 'config'
 import { useAppDispatch } from 'state'
 import { setUsedCollateral } from 'state/user/reducer'
-import { decimalFormat, fixedFormat } from 'utils'
+import { decimalFormat, fixedFormat, times } from 'utils'
 import BigNumber from 'bignumber.js'
 import TipsTooltip from './TipsTooltip'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -118,11 +120,13 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const erc20ReserveData = useErc20ReserveData()
   const contract = useLendingPool()
   const ethDebt = useEthDebt()
-  const heath = useHeath()
+  // const heath = useHeath()
   const ethCollateral = useEthCollateral()
-  const nftCollateral = useNftCollateral()
+  // const nftCollateral = useNftCollateral()
+  const userValue = useUserValue()
   const usedCollateral = useUsedCollateral()
   const dispatch = useAppDispatch()
+  const timesEthBorrowLimit = useBorrowLimit(times(ethCollateral, -1))
   const loanType = useMemo(() => {
     return +ethDebt === 0
   }, [ethDebt])
@@ -154,7 +158,8 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
                   setSwitchType(1)
                   setOpenMySupplySwitchModal(true)
                 } else {
-                  if (!loanType && (+nftCollateral === 0 || new BigNumber(heath).lte(150))) {
+                  // if (!loanType && (+nftCollateral === 0 || new BigNumber(heath).lte(150))) {
+                  if (!loanType && (+userValue.NFTLiquidity === 0 || new BigNumber(timesEthBorrowLimit).lt(ethDebt))) {
                     setSwitchUnableOffModal(true)
                   } else {
                     setSwitchType(0)
@@ -252,7 +257,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
       <MySupplySwitchModal
         loanType={loanType}
         ETHCollateralType={ethCollateral}
-        NFTCollateralType={nftCollateral}
+        NFTCollateralType={userValue.NFTLiquidity}
         switchType={switchType}
         openMySupplySwitchModal={openMySupplySwitchModal}
         handle={(type: string) => {
@@ -264,7 +269,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
       ></MySupplySwitchModal>
       <MySupplySwitchUnableOffModal
         switchUnableOffModal={switchUnableOffModal}
-        NFTCollateralType={nftCollateral}
+        NFTCollateralType={userValue.NFTLiquidity}
         setSwitchUnableOffModal={setSwitchUnableOffModal}
       ></MySupplySwitchUnableOffModal>
     </MyETHSupplyBox>

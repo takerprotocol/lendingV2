@@ -3,7 +3,7 @@ import shutOff from 'assets/images/svg/common/shutOff.svg'
 import redWarning from 'assets/images/svg/common/redWarning.svg'
 import { CenterBox } from 'styleds/index'
 import { useBorrowLimit, useEthCollateral, useEthDebt } from 'state/user/hooks'
-import { minus, times } from 'utils'
+import { fixedFormat, minus, times } from 'utils'
 const style = {
   width: '420px',
   background: '#FFFFFF',
@@ -53,7 +53,10 @@ export default function MySupplySwitchUnableOffModal({
           <Typography mt="4px" variant="subtitle2" component="span" color="#6E7191" fontWeight="500">
             Repayment of at least{' '}
             <Typography variant="subtitle2" component="span" color="rgba(20, 20, 42, 1)" fontWeight="600">
-              {+NFTCollateralType === 0 ? minus(ethDebt, borrowLimit) : minus(ethDebt, borrowLimit)} ETH
+              {+NFTCollateralType === 0
+                ? fixedFormat(minus(ethDebt, borrowLimit))
+                : fixedFormat(minus(ethDebt, borrowLimit))}{' '}
+              ETH
             </Typography>{' '}
             is required to turn off collateral mode
           </Typography>

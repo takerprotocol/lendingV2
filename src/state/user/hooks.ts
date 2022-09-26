@@ -72,9 +72,7 @@ export function useBorrowLimit(value?: string | number): string {
   const userState = useUserState()
   const userValue = useUserValue()
   useEffect(() => {
-    setBorrowLimit(
-      decimalFormat(times(userState.loanToValue, plus(userValue.totalCollateral.toString(), value || 0)), 0, false)
-    )
+    setBorrowLimit(times(userState.loanToValue, plus(userValue.totalCollateral.toString(), value || 0)))
   }, [userState.loanToValue, userValue.totalCollateral, value])
   return borrowLimit
 }
@@ -95,11 +93,9 @@ export function useDebtBorrowLimitUsed(value?: string | number): string {
   const borrowLimit = useBorrowLimit()
   const ethDebt = useEthDebt()
   useEffect(() => {
-    setDebtBorrowLimitUsed(
-      decimalFormat(div(new BigNumber(ethDebt).plus(value || 0).toNumber(), borrowLimit), 0, false)
-    )
+    setDebtBorrowLimitUsed(div(new BigNumber(ethDebt).plus(value || 0).toNumber(), borrowLimit))
   }, [borrowLimit, ethDebt, value])
-  return debtBorrowLimitUsed
+  return times(debtBorrowLimitUsed, 100)
 }
 
 export function useCollateralBorrowLimitUsed(value?: string | number): string {
@@ -107,9 +103,9 @@ export function useCollateralBorrowLimitUsed(value?: string | number): string {
   const ethDebt = useEthDebt()
   const borrowLimit = useBorrowLimit(value || 0)
   useEffect(() => {
-    setBorrowLimitUsed(decimalFormat(div(ethDebt, borrowLimit).toString(), 0, false))
+    setBorrowLimitUsed(div(ethDebt, borrowLimit).toString())
   }, [borrowLimit, ethDebt, value])
-  return borrowLimitUsed
+  return times(borrowLimitUsed, 100)
 }
 export function useDebtRiskLevel(value?: string | number): string {
   const [debtRiskLevel, setDebtRiskLevel] = useState('200')

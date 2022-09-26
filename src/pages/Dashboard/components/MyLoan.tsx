@@ -3,13 +3,12 @@ import { FlexBox, SpaceBetweenBox, CenterBox } from 'styleds'
 import rightBox from 'assets/images/svg/dashboard/rightBox.svg'
 import ButtonSupply from 'assets/images/svg/dashboard/Button-Supply.svg'
 import addBox from 'assets/images/svg/dashboard/addBox.svg'
-import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
 import riskLevelBefore from 'assets/images/svg/dashboard/riskLevelBefore.svg'
 import CustomizedSlider from 'components/Slider'
 import { useMemo, useState } from 'react'
 import MyLoanModal from './MyLoanModal'
-import { fixedFormat, getRiskLevel, getRiskLevelTag, times } from 'utils'
+import { minus, fixedFormat, getRiskLevel, getRiskLevelTag, times, decimalFormat, div } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import { useBorrowLimit, useErc20ReserveData, useEthDebt, useHeath } from 'state/user/hooks'
 import TipsTooltip from './TipsTooltip'
@@ -68,17 +67,15 @@ const RiskLevelBox = styled(Box)`
   width: 100%;
   height: 98px;
   background: #f3f3f8;
-  border-radius: 0.375rem;
+  border-radius: 6px;
   position: relative;
   margin-bottom: 11px;
   margin-top: 36px;
-  img {
-    display: none;
+  &.left {
+    border-bottom-left-radius: 0px !important;
   }
-  &.before {
-    img {
-      display: block;
-    }
+  &.right {
+    border-bottom-right-radius: 0px !important;
   }
 `
 interface MyLoanProps {
@@ -104,7 +101,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
   const BeforeImg = styled(`img`)`
     position: absolute;
     top: calc(100% - 10.5px);
-    left: ${`${times(3.57, heath)}px`};
+    left: ${`${times(3.57, div(heath, 2))}px`};
   `
   return (
     <MyLoanBox className={loading ? 'SkeletonBg' : ''}>
@@ -128,7 +125,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
               </Box>
               <Box mt="26px">
                 <Button
-                  disabled={!datatype}
+                  disabled={+ethDebt === 0}
                   className="Padding-button"
                   variant="contained"
                   onClick={() => {
@@ -143,14 +140,11 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
               </Box>
             </RepayBox>
           </Box>
-          <RiskLevelBox
-            sx={{ borderBottomLeftRadius: `${heath === '0' ? '0px' : '6px'}` }}
-            className={datatype ? 'before' : ''}
-          >
-            {datatype ? (
+          <RiskLevelBox className={heath === '200' ? 'right' : heath === '0' ? 'left' : ''}>
+            {+borrowLimit !== 0 ? (
               <>
                 <FlexStartBox ml="10px">
-                  <Box width="220px" mt="14px">
+                  <Box width="220px" mt="12px">
                     <Typography mb="12px" lineHeight="14px" fontWeight="600" variant="body1">
                       Risk Level
                     </Typography>
@@ -160,8 +154,8 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                   </Box>
                   <Box>
                     <Box>
-                      <FlexEndBox mt="2px" mr="2px">
-                        <TipsTooltip size="16" grey="grey" value={'1111111'}></TipsTooltip>
+                      <FlexEndBox>
+                        <TipsTooltip size="16px" grey="grey" value={'1111111'}></TipsTooltip>
                       </FlexEndBox>
                       <Box mr="24px">
                         <Typography component="p" variant="subtitle2" color="#6E7191">
@@ -173,32 +167,32 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                       </Box>
                     </Box>
                   </Box>
+                  <BeforeImg src={riskLevelBefore}></BeforeImg>
                 </FlexStartBox>
               </>
             ) : (
               <Box ml="10px">
                 <FlexStartBox mb="4px">
-                  <Typography mt="4px" variant="subtitle1" fontWeight="700">
+                  <Typography variant="subtitle1" fontWeight="700">
                     No loan amount
                   </Typography>
-                  <Box width="16px" height="16px" mt="2px">
-                    <img src={greyPrompt} alt="" />
-                  </Box>
+                  <FlexEndBox>
+                    <TipsTooltip size="16px" grey="grey" value={'1111111'}></TipsTooltip>
+                  </FlexEndBox>
                 </FlexStartBox>
-                <Typography variant="body2" color="#A0A3BD">
+                <Typography variant="body2" lineHeight="18px" color="#A0A3BD">
                   You can try to mortgage some NFT or ETH
                 </Typography>
-                <Typography variant="body2" color="#A0A3BD">
+                <Typography variant="body2" mb="5px" lineHeight="18px" color="#A0A3BD">
                   to get a loan amount.
                 </Typography>
               </Box>
             )}
-            <BeforeImg src={riskLevelBefore}></BeforeImg>
           </RiskLevelBox>
           <CustomizedSlider sliderValue={Number(heath)} riskLevelTag={myLoanRiskLevelTag}></CustomizedSlider>
           <FlexEndBox mt="7px">
             <Typography variant="body1" color="#4E4B66">
-              Borrow Limit {borrowLimit} ETH
+              Borrow Limit {fixedFormat(borrowLimit)} ETH
             </Typography>
           </FlexEndBox>
           <BottomBox>
@@ -243,7 +237,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
             <SpaceBetweenBox mr="24px" mt="16px">
               <Box pt="1px">
                 <Typography variant="subtitle2" fontWeight="700" color="#262338">
-                  0.00 ETH
+                  {decimalFormat(minus(borrowLimit, ethDebt), 0, false, 4)} ETH
                 </Typography>
                 <Typography mt="2px" variant="body2" fontWeight="600" color="#A0A3BD">
                   Remaining loanable

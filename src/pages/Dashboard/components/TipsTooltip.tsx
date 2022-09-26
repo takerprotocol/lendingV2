@@ -2,8 +2,6 @@ import { Box, styled, Tooltip } from '@mui/material'
 import TopLiquidity from 'assets/images/svg/dashboard/Tips-liquidity.svg'
 import greyPrompt from 'assets/images/svg/common/greyPrompt.svg'
 
-import * as React from 'react'
-
 const ImgBox = styled(Box)`
   display: flex;
   align-items: center;
@@ -16,7 +14,7 @@ interface TipsTooltipProps {
 export default function TipsTooltip({ value, grey, size }: TipsTooltipProps) {
   return (
     <Tooltip title={value} arrow placement="top">
-      <ImgBox sx={{ width: `${size}` }}>
+      <ImgBox sx={{ width: `${size}`, height: `${size}` }}>
         <img width={size} height={size} src={grey === 'grey' ? greyPrompt : TopLiquidity} alt="" />
       </ImgBox>
     </Tooltip>

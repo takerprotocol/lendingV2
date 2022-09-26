@@ -1,6 +1,6 @@
-import React, { ReactNode, useCallback, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { styled } from '@mui/material/styles'
-import { MenuItem, Select, SelectChangeEvent, SelectProps } from '@mui/material'
+import { MenuItem, Select, SelectProps } from '@mui/material'
 
 const StyledSelect = styled(Select)`
   .MuiPaper-elevation {
@@ -87,9 +87,12 @@ const Arrow = () => (
 type CustomizedSelectProps = SelectProps & {
   options: any
   filter: number
+  valueIndex?: number
+  setValueIndex?: Function
 }
 
 export default function CustomizedSelect(props: CustomizedSelectProps) {
+  const [open, setOpen] = useState(false)
   const Options = useMemo(
     () =>
       props.options.map((option: any) => (
@@ -97,18 +100,19 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
           sx={{ marginRight: `${props.options[0].name === 'Default Sort' ? '12px' : '28px'}` }}
           key={`${option.value}-item`}
           value={option.value}
+          onClick={() => {
+            if (props.setValueIndex) {
+              props.setValueIndex(option.value)
+            }
+          }}
         >
           {option.name}
         </StyledMenuItem>
       )),
-    [props.options]
+    [props]
   )
-  const [open, setOpen] = useState(false)
-
-  const [value, setValue] = useState('0')
   const onChange = useCallback(
-    (event: SelectChangeEvent<unknown>, child: ReactNode) => {
-      setValue(event.target.value as string)
+    (event: any, child: ReactNode) => {
       if (props.onChange) {
         props.onChange(event, child)
       }
@@ -129,7 +133,7 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
           }
         }}
         // className={props.startAdornment ? 'withicon' : ''}
-        value={value}
+        value={props.valueIndex}
         onChange={onChange}
         sx={{
           border: `${open ? '1px solid #7646ff !important' : 'border: 1px solid #d9dbe9;'}`,

@@ -247,6 +247,7 @@ export const getRiskLevelTag = (value: string | number) => {
   }
 }
 export const percent = (dividend: number | string, divisor: number | string) => {
+  console.log('dividend', dividend)
   return new BigNumber(dividend).div(divisor).times(100).toFixed(2, 1) + '%'
 }
 
