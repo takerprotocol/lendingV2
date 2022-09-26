@@ -37,6 +37,7 @@ export const getWETH = (chainId?: number) => {
   }
   return '0xc778417e063141139fce010982780140aa0cd5ab'
 }
+
 export const getERC721Address = (chainId?: number) => {
   if (chainId === 42) {
     return '0x2809c94dd3948abb869af008d84935028fd560ed'
@@ -46,6 +47,17 @@ export const getERC721Address = (chainId?: number) => {
   }
   return '0x5CeB7116100fBAF2AEA73Bf964eD435f7D816c37'
 }
+
+export const getTToken = (chainId?: number) => {
+  if (chainId === 42) {
+    return '0xD5163caF8739cF5cc5432De199d1d77654C95773'
+  }
+  if (chainId === 5) {
+    return '0xD5163caF8739cF5cc5432De199d1d77654C95773'
+  }
+  return '0x6aAA410959E397A68f455e834F0166fBB57bB073'
+}
+
 // KOVAN
 const LTV_MASK = '0x000000000000000000000000000000000000000000000000000000000000FFFF'
 const DECIMALS_MASK = '0X000000000000000000000000000000000000000000000000000000FF00000000'

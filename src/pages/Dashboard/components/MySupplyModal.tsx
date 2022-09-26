@@ -41,7 +41,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { useGateway } from 'hooks/useGateway'
 import { SpaceBetweenBox } from 'styleds'
-import { useApproveCallback } from 'hooks/transactions/useApproveCallback'
+import { useApproveCallback, useTTokenApproveCallback } from 'hooks/transactions/useApproveCallback'
 import { ApprovalState } from 'hooks/transactions/useApproval'
 // import { useContract } from 'hooks/useContract'
 // import erc20Abi from 'abis/MockErc20.json'
@@ -156,6 +156,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const erc20ReserveData = useErc20ReserveData()
   const addTransaction = useTransactionAdder()
   const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
+  const [tokenApproval, tokenApproveCallback] = useTTokenApproveCallback(amount, contract?.address)
   // const erc20Contract = useContract(ERC20_ADDRESS, erc20Abi)
   const decimal = useDecimal()
   // useEffect(() => {
@@ -198,27 +199,31 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
       }
     }
   }
-  const withdrawSubmit = () => {
+  const withdrawSubmit = async () => {
     if (new BigNumber(amount).lte(0)) {
       toast.error('Minimum supply 0')
       return
     }
     if (contract && address) {
-      contract
-        .withdraw(poolContract?.address, amountDecimal(amount, decimal), address, { gasLimit })
-        .then((res: any) => {
-          toast.success(desensitization(res.hash))
-          addTransaction(res, {
-            type: TransactionType.WITHDRAW,
-            recipient: address,
-            amount,
+      if (tokenApproval !== ApprovalState.APPROVED) {
+        await tokenApproveCallback()
+      } else {
+        contract
+          .withdraw(poolContract?.address, amountDecimal(amount, decimal), address, { gasLimit })
+          .then((res: any) => {
+            toast.success(desensitization(res.hash))
+            addTransaction(res, {
+              type: TransactionType.WITHDRAW,
+              recipient: address,
+              amount,
+            })
+            setAmount('')
+            setOpenMySupplyModal(false)
           })
-          setAmount('')
-          setOpenMySupplyModal(false)
-        })
-        .catch((error: any) => {
-          toast.error(error.message)
-        })
+          .catch((error: any) => {
+            toast.error(error.message)
+          })
+      }
     }
   }
   const nonCollateral = useMemo(() => {
@@ -523,7 +528,11 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 : approval === ApprovalState.PENDING
                 ? 'Pending'
                 : 'Approve'
-              : 'Withdraw'}
+              : tokenApproval === ApprovalState.APPROVED || !amount
+              ? 'Withdraw'
+              : tokenApproval === ApprovalState.PENDING
+              ? 'Pending'
+              : 'Approve'}
           </Button>
         </BottomBox>
       </Box>
