@@ -170,6 +170,8 @@ export const ALL_USER = () => {
         totalDebt
         avgLtv
         liqThreshold
+        healthFactor
+        totalCollateral
         reserves {
           id
           reserve {
