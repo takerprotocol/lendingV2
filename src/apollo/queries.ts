@@ -120,9 +120,12 @@ export const AllUser = (searchValue: string, conditionSort: Array<string>, allUs
         totalDebt
         avgLtv
         liqThreshold
+        healthFactor
+        totalCollateral
         reserves {
           id
           reserve {
+            id
             tToken
             debtToken
             interestRateCalculator
@@ -136,7 +139,7 @@ export const AllUser = (searchValue: string, conditionSort: Array<string>, allUs
         }
         collections {
           id
-          collection {
+          collection(id: "0x9b73acc52a3c6ba40c2296362f5d89bf8731a76f") {
             id
             tNFT
             ercType

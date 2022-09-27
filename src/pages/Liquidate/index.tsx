@@ -6,7 +6,7 @@ import LiquidateHeader from './components/Header'
 import { getClient } from 'apollo/client'
 import { User } from 'apollo/queries'
 import { fromWei } from 'web3-utils'
-import { div, getRiskLevel, getRiskLevelTag, minus, times } from 'utils'
+import { getRiskLevel, getRiskLevelTag, minus } from 'utils'
 import BigNumber from 'bignumber.js'
 import { CollateralModel } from 'services/type/nft'
 import { useParams } from 'react-router-dom'
@@ -67,11 +67,10 @@ const Liquidate = () => {
         //   })
         // })
       }
-      const _heath = div(times(user.data.user.reserveSupply, user.data.user.liqThreshold), user.data.user.totalDebt)
-
+      const _heath = new BigNumber(fromWei(user.data.user.healthFactor)).toFixed(2, 1)
       setCollaterals({
         address,
-        collateral: fromWei(user.data.user.reserveSupply),
+        collateral: fromWei(user.data.user.totalCollateral),
         collections: user.data.user.collections,
         debt: fromWei(user.data.user.totalDebt),
         riskPercentage: _heath,
@@ -81,7 +80,7 @@ const Liquidate = () => {
       setNftCollateral(fromWei(user.data.user.nftCollateral))
       setHeath(_heath)
       setTotalDebt(fromWei(user.data.user.totalDebt))
-      setTotalCollateral(fromWei(user.data.user.reserveSupply))
+      setTotalCollateral(fromWei(user.data.user.totalCollateral))
     }
   }, [address, client])
   useEffect(() => {

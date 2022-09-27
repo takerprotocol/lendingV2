@@ -10,12 +10,13 @@ import { AllUser } from 'apollo/queries'
 import { useAddress, useMobileType } from 'state/user/hooks'
 import { useCollections } from 'state/application/hooks'
 import { CollateralModel } from 'services/type/nft'
-import { div, getRiskLevel, getRiskLevelTag, times } from 'utils'
+import { getRiskLevel, getRiskLevelTag } from 'utils'
 import MobileHeader from './components/mobileLiquidation/MobileHeader'
 import MobileCollateral from './components/mobileLiquidation/MobileCollateral'
 // import { WETH } from 'config'
 import { fromWei } from 'web3-utils'
 import { useActiveWeb3React } from 'hooks/web3'
+import BigNumber from 'bignumber.js'
 
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 
@@ -123,10 +124,10 @@ export default function Liquidation() {
           //   depositedAmount = plus(depositedAmount, rel.depositedAmount)
           //   borrowedAmount = plus(borrowedAmount, rel.borrowedAmount)
           // })
-          const heath = div(times(element.reserveSupply, element.liqThreshold), element.totalDebt)
+          const heath = new BigNumber(fromWei(element.healthFactor)).toFixed(2, 1)
           users.push({
             address: element.id,
-            collateral: fromWei(element.reserveSupply),
+            collateral: fromWei(element.totalCollateral),
             collections: element.collections,
             debt: fromWei(element.totalDebt),
             riskPercentage: heath,
