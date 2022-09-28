@@ -2,11 +2,11 @@ import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import { SelectChangeEvent, Typography } from '@mui/material'
 import CustomizedSelect from 'components/Select'
+import BigNumber from 'bignumber.js'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import CollateralItem from './CollateralItem'
 import CollateralItemSkeleton from './CollateralItemSkeleton'
 import EmptyState from './EmptyState'
-import collateralsBg from 'assets/images/svg/liquidation/collaterals-Bg.svg'
 import CollateralPagination from './CollateralPagination'
 import React from 'react'
 import { FlexBox } from 'styleds'
@@ -15,17 +15,35 @@ import { useCollateralsType } from 'state/user/hooks'
 import { CollateralModel, CollectionsModel } from 'services/type/nft'
 import { plus, minus, times } from 'utils'
 import { useCollections } from 'state/application/hooks'
+import { useAppDispatch } from 'state/hooks'
+import { setCollateralsType } from 'state/user/reducer'
 // import { setUserValues } from 'state/user/reducer'
 
-const CollateralsContainer = styled(Box)`
+const CollateralsBox = styled(Box)`
   width: calc(100% - 280px);
-  min-height: 100vh;
+  overflow-x: scroll;
   margin: 0 auto;
-  background-repeat: no-repeat;
-  background-image: url(${collateralsBg});
-  background-size: cover;
   border-radius: 12px;
+`
+const CollateralsContainer = styled(Box)`
+  width: 1160px;
+  min-width: 1160px;
+  margin: 0 auto;
+  border-radius: 12px;
+  position: relative;
   z-index: 5;
+`
+const CollateralsBg = styled(Box)`
+  width: 100%;
+  max-height: 856px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 15.73%, rgba(255, 255, 255, 0) 78.72%);
+  margin: 0 auto;
+  top: 0px;
+  left: 0px;
+  position: absolute;
+  border-radius: 12px;
+  z-index: -1;
 `
 
 const CollateralSelectText = styled(Typography)`
@@ -198,7 +216,17 @@ const Collaterals = ({
   collectionFilter,
 }: CollateralsProps) => {
   const [search, setSearch] = useState('')
+  const dispatch = useAppDispatch()
   const collection = useCollections()
+  const allFilterType = useMemo(() => {
+    return (
+      new BigNumber(sort).eq(0) &&
+      new BigNumber(debtFilter).eq(0) &&
+      new BigNumber(collectionFilter).eq(0) &&
+      new BigNumber(collaterals.length).eq(0) &&
+      !new BigNumber(searchTerms.length).eq(0)
+    )
+  }, [collaterals.length, collectionFilter, debtFilter, searchTerms.length, sort])
   const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
     if (searchTerms[0]) {
       setSearchTerms(searchTerms.filter((currentTerm: string) => currentTerm !== searchTerms[0]))
@@ -296,11 +324,16 @@ const Collaterals = ({
   //   },
   //   [debtFilter]
   // )
-  const handleSortUpdate = useCallback((event: any) => {
-    setFilterType(false)
-    setSort(event.target.value as number)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const handleSortUpdate = useCallback(
+    (event: any) => {
+      setFilterType(false)
+      setSort(event.target.value as number)
+      if (sort === 5 || sort === 6) {
+        dispatch(setCollateralsType('All Borrowers'))
+      }
+    },
+    [dispatch, setSort, sort]
+  )
   const [sortValue, setSortValue] = useState<number>(0)
   const sortOptions = useMemo(() => {
     return [
@@ -457,196 +490,226 @@ const Collaterals = ({
   const collateralsType = useCollateralsType()
   //---------------//
   return (
-    <CollateralsContainer>
-      <CollateralsFilterHeader>
-        <FlexBox
-          mt="4px"
-          sx={{ cursor: 'pointer' }}
-          id="basic-button"
-          aria-controls={open ? 'basic-menu' : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
-          onClick={handleClick}
-        >
-          <CollateralSelectText mr="8px">{collateralsType}</CollateralSelectText>
-          {open ? (
-            <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M18 17L11 10L4 17"
-                stroke="#14142A"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          ) : (
-            <svg width="18" height="11" viewBox="0 0 18 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16 2L9 9L2 2" stroke="#14142A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          )}
-        </FlexBox>
-        <InputContainer>
-          <TermsContainer>
-            {searchTerms.map((term: string, index: number) => (
-              <TermItem key={`${term}${index}`}>
-                <TermTypography variant="subtitle2">{term}</TermTypography>
-                <CloseTermIcon
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  onClick={() => setSearchTerms(searchTerms.filter((currentTerm: string) => currentTerm !== term))}
-                >
-                  <path
-                    d="M11.3957 1.81286C11.7295 1.47912 11.7295 0.938023 11.3957 0.604285C11.062 0.270548 10.5209 0.270548 10.1871 0.604286L6 4.79143L1.81286 0.604285C1.47912 0.270547 0.938023 0.270548 0.604286 0.604285C0.270548 0.938023 0.270548 1.47912 0.604286 1.81286L4.79143 6L0.604285 10.1871C0.270547 10.5209 0.270548 11.062 0.604286 11.3957C0.938023 11.7294 1.47912 11.7294 1.81286 11.3957L6 7.20857L10.1871 11.3957C10.5209 11.7294 11.062 11.7294 11.3957 11.3957C11.7295 11.062 11.7295 10.5209 11.3957 10.1871L7.20857 6L11.3957 1.81286Z"
-                    fill="#A0A3BD"
-                  />
-                </CloseTermIcon>
-              </TermItem>
-            ))}
-          </TermsContainer>
-          <KeywordSearchInput
-            value={search}
-            onChange={handleSearch}
-            onFocus={handleSearch}
-            placeholder={!searchTerms.length ? 'Search keyword' : undefined}
-            onKeyDown={(e: any) => {
-              if (e.code === 'Tab' || e.code === 'Enter') {
-                handleAddSearchTerm(search)
-                e.target.blur()
-                setFilterType(true)
+    <CollateralsBox>
+      <CollateralsContainer>
+        <CollateralsBg></CollateralsBg>
+        <CollateralsFilterHeader>
+          <FlexBox
+            mt="4px"
+            sx={{ cursor: `${sort === 5 || sort === 6 ? 'pointer' : ''}` }}
+            id="basic-button"
+            aria-controls={open ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={(event: any) => {
+              if (sort === 5 || sort === 6) {
+                handleClick(event)
               }
             }}
-          />
-          {search && autocompleteOptions.find((option: string) => option.toLowerCase().includes(search.toLowerCase())) && (
-            <AutoCompleteContainer>
-              {autocompleteOptions.map((option: string) => {
-                if (option.toLowerCase().includes(search.toLowerCase())) {
-                  return (
-                    <AutoCompleteItem
-                      key={option}
-                      // dangerouslySetInnerHTML={{
-                      //   __html: option.replace(new RegExp(search, 'i'), `<span class="searchterm">${search}</span>`),
-                      // }}
-                      onClick={() => handleAddSearchTerm(option)}
+          >
+            <CollateralSelectText mr="8px">{collateralsType}</CollateralSelectText>
+            {(sort === 5 || sort === 6) && (
+              <>
+                {open ? (
+                  <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M18 17L11 10L4 17"
+                      stroke="#14142A"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
-                  )
-                }
-                return null
-              })}
-            </AutoCompleteContainer>
-          )}
-          <SearchIcon width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M20.7104 19.29L17.0004 15.61C18.4405 13.8144 19.1379 11.5353 18.9492 9.24133C18.7605 6.94733 17.7001 4.81281 15.9859 3.27667C14.2718 1.74053 12.0342 0.919537 9.73332 0.982497C7.43243 1.04546 5.24311 1.98759 3.61553 3.61517C1.98795 5.24275 1.04582 7.43207 0.982863 9.73295C0.919903 12.0338 1.7409 14.2714 3.27704 15.9855C4.81318 17.6997 6.94769 18.7601 9.24169 18.9488C11.5357 19.1375 13.8148 18.4401 15.6104 17L19.2904 20.68C19.3834 20.7738 19.494 20.8481 19.6158 20.8989C19.7377 20.9497 19.8684 20.9758 20.0004 20.9758C20.1324 20.9758 20.2631 20.9497 20.385 20.8989C20.5068 20.8481 20.6174 20.7738 20.7104 20.68C20.8906 20.4936 20.9914 20.2444 20.9914 19.985C20.9914 19.7257 20.8906 19.4765 20.7104 19.29V19.29ZM10.0004 17C8.61592 17 7.26255 16.5895 6.1114 15.8203C4.96026 15.0511 4.06305 13.9579 3.53324 12.6788C3.00342 11.3997 2.8648 9.99226 3.1349 8.63439C3.40499 7.27653 4.07168 6.02925 5.05065 5.05028C6.02961 4.07131 7.27689 3.40463 8.63476 3.13453C9.99263 2.86443 11.4001 3.00306 12.6792 3.53287C13.9583 4.06268 15.0515 4.95989 15.8207 6.11103C16.5899 7.26218 17.0004 8.61556 17.0004 10C17.0004 11.8565 16.2629 13.637 14.9501 14.9498C13.6374 16.2625 11.8569 17 10.0004 17V17Z"
-              fill="#A0A3BD"
-            />
-          </SearchIcon>
-        </InputContainer>
-      </CollateralsFilterHeader>
-      <PaddingBox>
-        <SortFilterContainer>
-          <FilterContainer>
-            <CustomizedSelect
-              valueIndex={collectionValue}
-              setValueIndex={setCollectionValue}
-              value={collectionFilter}
-              filter={filter}
-              options={collectionOptions}
-              onChange={handleCollectionFilterChange}
-              startAdornment={
-                <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
-                  <path d="M7 8H17" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M8 5H16" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              }
-              labelId="collateral-filter"
-              id="collateral-filter"
-            />
-            <DebtFilterSelect
-              value={debtFilter}
-              options={debtFilters}
-              valueIndex={debtFiltersValue}
-              setValueIndex={setDebtFiltersValue}
-              filter={filter}
-              onChange={handleDebtFilterChange}
-              startAdornment={
-                <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 11.7576L11.5 3L17 11.7576L11.5 20L6 11.7576Z" stroke="#6E7191" strokeLinejoin="round" />
-                  <path d="M6 11.5L11.5 15L17 11.5" stroke="#6E7191" strokeLinejoin="round" />
-                </svg>
-              }
-              labelId="debt-filter"
-              id="debt-filter"
-            />
-            <FlexBox
-              onClick={() => {
-                setSort(0)
-                setDebtFilter(0)
-                setCollectionFilter(0)
-                setCollectionValue(0)
-                setSortValue(0)
-                setDebtFiltersValue(0)
+                  </svg>
+                ) : (
+                  <svg width="18" height="11" viewBox="0 0 18 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M16 2L9 9L2 2"
+                      stroke="#14142A"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </>
+            )}
+          </FlexBox>
+          <InputContainer>
+            <TermsContainer>
+              {searchTerms.map((term: string, index: number) => (
+                <TermItem key={`${term}${index}`}>
+                  <TermTypography variant="subtitle2">{term}</TermTypography>
+                  <CloseTermIcon
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={() => {
+                      setSearchTerms(searchTerms.filter((currentTerm: string) => currentTerm !== term))
+                    }}
+                  >
+                    <path
+                      d="M11.3957 1.81286C11.7295 1.47912 11.7295 0.938023 11.3957 0.604285C11.062 0.270548 10.5209 0.270548 10.1871 0.604286L6 4.79143L1.81286 0.604285C1.47912 0.270547 0.938023 0.270548 0.604286 0.604285C0.270548 0.938023 0.270548 1.47912 0.604286 1.81286L4.79143 6L0.604285 10.1871C0.270547 10.5209 0.270548 11.062 0.604286 11.3957C0.938023 11.7294 1.47912 11.7294 1.81286 11.3957L6 7.20857L10.1871 11.3957C10.5209 11.7294 11.062 11.7294 11.3957 11.3957C11.7295 11.062 11.7295 10.5209 11.3957 10.1871L7.20857 6L11.3957 1.81286Z"
+                      fill="#A0A3BD"
+                    />
+                  </CloseTermIcon>
+                </TermItem>
+              ))}
+            </TermsContainer>
+            <KeywordSearchInput
+              value={search}
+              onChange={handleSearch}
+              onFocus={handleSearch}
+              placeholder={!searchTerms.length ? 'Search keyword' : undefined}
+              onBlur={() => {
+                handleAddSearchTerm(search)
+                setFilterType(true)
               }}
-              sx={{ cursor: 'pointer' }}
-              ml="12px"
-              width="120px"
-            >
-              <Typography fontStyle="16px" color="#4E4B66" fontWeight="700" lineHeight="22px" mr="4px">
-                Reset All
-              </Typography>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12 18C8.68629 18 6 15.3137 6 12C6 9.99247 6.98593 8.21523 8.5 7.12605L5 8M12 6C15.3137 6 18 8.68629 18 12C18 14.0075 17.0141 15.7848 15.5 16.874L19 16"
-                  stroke="#6E7191"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </FlexBox>
-          </FilterContainer>
-          <SortContainer>
-            <CustomizedSelect
-              valueIndex={sortValue}
-              setValueIndex={setSortValue}
-              value={sort}
-              options={sortOptions}
-              filter={filter}
-              onChange={handleSortUpdate}
-              startAdornment={
-                <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8.5 18.5V5.5L5.5 8.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M14.5 5.5V18.5L17.5 15.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              }
-              labelId="collateral-sort"
-              id="collateral-sort"
-              disabled
+              onKeyDown={(e: any) => {
+                if (e.code === 'Tab' || e.code === 'Enter') {
+                  handleAddSearchTerm(search)
+                  e.target.blur()
+                  setFilterType(true)
+                }
+              }}
             />
-          </SortContainer>
-        </SortFilterContainer>
-        <CollateralItems>
-          {loading ? (
-            CollateralSkeletonList
-          ) : CollateralList.length === 0 ? (
-            <EmptyState searchTerm={searchTerms} />
-          ) : (
-            CollateralList
-          )}
-        </CollateralItems>
-      </PaddingBox>
-      {CollateralList.length !== 0 && (
-        <CollateralPagination
-          collaterals={CollateralList}
-          setCurrentPage={setCurrentPage}
-          onPageSelect={(number: number) => null}
-        />
-      )}
-      <CollateralsType open={open} anchorEl={anchorEl} setAnchorEl={setAnchorEl}></CollateralsType>
-    </CollateralsContainer>
+            {search &&
+              autocompleteOptions.find((option: string) => option.toLowerCase().includes(search.toLowerCase())) && (
+                <AutoCompleteContainer>
+                  {autocompleteOptions.map((option: string) => {
+                    if (option.toLowerCase().includes(search.toLowerCase())) {
+                      return (
+                        <AutoCompleteItem
+                          key={option}
+                          // dangerouslySetInnerHTML={{
+                          //   __html: option.replace(new RegExp(search, 'i'), `<span class="searchterm">${search}</span>`),
+                          // }}
+                          onClick={() => handleAddSearchTerm(option)}
+                        />
+                      )
+                    }
+                    return null
+                  })}
+                </AutoCompleteContainer>
+              )}
+            <SearchIcon width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M20.7104 19.29L17.0004 15.61C18.4405 13.8144 19.1379 11.5353 18.9492 9.24133C18.7605 6.94733 17.7001 4.81281 15.9859 3.27667C14.2718 1.74053 12.0342 0.919537 9.73332 0.982497C7.43243 1.04546 5.24311 1.98759 3.61553 3.61517C1.98795 5.24275 1.04582 7.43207 0.982863 9.73295C0.919903 12.0338 1.7409 14.2714 3.27704 15.9855C4.81318 17.6997 6.94769 18.7601 9.24169 18.9488C11.5357 19.1375 13.8148 18.4401 15.6104 17L19.2904 20.68C19.3834 20.7738 19.494 20.8481 19.6158 20.8989C19.7377 20.9497 19.8684 20.9758 20.0004 20.9758C20.1324 20.9758 20.2631 20.9497 20.385 20.8989C20.5068 20.8481 20.6174 20.7738 20.7104 20.68C20.8906 20.4936 20.9914 20.2444 20.9914 19.985C20.9914 19.7257 20.8906 19.4765 20.7104 19.29V19.29ZM10.0004 17C8.61592 17 7.26255 16.5895 6.1114 15.8203C4.96026 15.0511 4.06305 13.9579 3.53324 12.6788C3.00342 11.3997 2.8648 9.99226 3.1349 8.63439C3.40499 7.27653 4.07168 6.02925 5.05065 5.05028C6.02961 4.07131 7.27689 3.40463 8.63476 3.13453C9.99263 2.86443 11.4001 3.00306 12.6792 3.53287C13.9583 4.06268 15.0515 4.95989 15.8207 6.11103C16.5899 7.26218 17.0004 8.61556 17.0004 10C17.0004 11.8565 16.2629 13.637 14.9501 14.9498C13.6374 16.2625 11.8569 17 10.0004 17V17Z"
+                fill="#A0A3BD"
+              />
+            </SearchIcon>
+          </InputContainer>
+        </CollateralsFilterHeader>
+        <PaddingBox>
+          <SortFilterContainer>
+            <FilterContainer>
+              <CustomizedSelect
+                allFilterType={allFilterType ? 1 : 0}
+                valueIndex={collectionValue}
+                setValueIndex={setCollectionValue}
+                value={collectionFilter}
+                filter={filter}
+                options={collectionOptions}
+                onChange={handleCollectionFilterChange}
+                startAdornment={
+                  <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="11" width="12" height="8" stroke="#6E7191" strokeLinejoin="round" />
+                    <path d="M7 8H17" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M8 5H16" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                }
+                labelId="collateral-filter"
+                id="collateral-filter"
+              />
+              <DebtFilterSelect
+                value={debtFilter}
+                allFilterType={allFilterType ? 1 : 0}
+                options={debtFilters}
+                valueIndex={debtFiltersValue}
+                setValueIndex={setDebtFiltersValue}
+                filter={filter}
+                onChange={handleDebtFilterChange}
+                startAdornment={
+                  <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 11.7576L11.5 3L17 11.7576L11.5 20L6 11.7576Z" stroke="#6E7191" strokeLinejoin="round" />
+                    <path d="M6 11.5L11.5 15L17 11.5" stroke="#6E7191" strokeLinejoin="round" />
+                  </svg>
+                }
+                labelId="debt-filter"
+                id="debt-filter"
+              />
+              {!allFilterType && (
+                <FlexBox
+                  onClick={() => {
+                    setSort(0)
+                    setDebtFilter(0)
+                    setCollectionFilter(0)
+                    setCollectionValue(0)
+                    setSortValue(0)
+                    setDebtFiltersValue(0)
+                    dispatch(setCollateralsType('All Borrowers'))
+                  }}
+                  sx={{ cursor: 'pointer' }}
+                  ml="12px"
+                  width="120px"
+                >
+                  <Typography fontStyle="16px" color="#4E4B66" fontWeight="700" lineHeight="22px" mr="4px">
+                    Reset All
+                  </Typography>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M12 18C8.68629 18 6 15.3137 6 12C6 9.99247 6.98593 8.21523 8.5 7.12605L5 8M12 6C15.3137 6 18 8.68629 18 12C18 14.0075 17.0141 15.7848 15.5 16.874L19 16"
+                      stroke="#6E7191"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </FlexBox>
+              )}
+            </FilterContainer>
+            <SortContainer>
+              <CustomizedSelect
+                valueIndex={sortValue}
+                allFilterType={allFilterType ? 1 : 0}
+                setValueIndex={setSortValue}
+                value={sort}
+                options={sortOptions}
+                filter={filter}
+                onChange={handleSortUpdate}
+                startAdornment={
+                  <svg width="35" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.5 18.5V5.5L5.5 8.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M14.5 5.5V18.5L17.5 15.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                }
+                labelId="collateral-sort"
+                id="collateral-sort"
+                disabled
+              />
+            </SortContainer>
+          </SortFilterContainer>
+          <CollateralItems>
+            {loading ? (
+              CollateralSkeletonList
+            ) : CollateralList.length === 0 ? (
+              <EmptyState searchTerm={searchTerms} />
+            ) : (
+              CollateralList
+            )}
+          </CollateralItems>
+        </PaddingBox>
+        {CollateralList.length !== 0 && (
+          <CollateralPagination
+            collaterals={CollateralList}
+            setCurrentPage={setCurrentPage}
+            onPageSelect={(number: number) => null}
+          />
+        )}
+        <CollateralsType open={open} anchorEl={anchorEl} setAnchorEl={setAnchorEl}></CollateralsType>
+      </CollateralsContainer>
+    </CollateralsBox>
   )
 }
 

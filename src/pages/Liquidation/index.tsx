@@ -7,7 +7,7 @@ import mobileLiquidationBg from 'assets/images/svg/liquidation/mobileLiquidation
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getClient } from 'apollo/client'
 import { AllUser } from 'apollo/queries'
-import { useAddress, useMobileType } from 'state/user/hooks'
+import { useAddress, useCollateralsType, useMobileType } from 'state/user/hooks'
 import { useCollections } from 'state/application/hooks'
 import { CollateralModel } from 'services/type/nft'
 import { getRiskLevel, getRiskLevelTag } from 'utils'
@@ -22,15 +22,21 @@ import BigNumber from 'bignumber.js'
 
 const Body = styled(Box)`
   background-color: #f7f7fc;
+  width: 100%;
+  z-index: -1;
+  padding-bottom: 363px;
+`
+const BodyBg = styled(Box)`
   background-image: url(${liquidationBg});
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: 100%;
+  max-height: 952.03px;
+  height: 952.03px;
+  top: 0px;
+  left: 0px;
+  position: absolute;
+  z-index: 1;
   width: 100%;
-  padding-bottom: 96px;
-  position: -webkit-sticky; /* Safari */
-  // position: sticky;
-  // top: -284px;
-  // margin-bottom: 304px;
 `
 const MobileBody = styled(Box)`
   background: #f7f7fc;
@@ -50,6 +56,7 @@ export default function Liquidation() {
   const [sort, setSort] = useState(0) //排序方法
   const [debtFilter, setDebtFilter] = useState(0) //过滤条件
   const [collectionFilter, setCollectionFilter] = useState(0)
+  const collateralsType = useCollateralsType()
   const conditionDebtFilter = useMemo(() => {
     switch (debtFilter) {
       case 1:
@@ -84,20 +91,31 @@ export default function Liquidation() {
   }, [sort])
   const searchValue = useMemo(() => {
     if (searchTerms.length !== 0) {
-      return `id_like:"${searchTerms[0].toLowerCase()}",`
+      return `collections_: {collection_contains: "${searchTerms[0].toLowerCase()}"}`
     } else {
       return ''
     }
   }, [searchTerms])
+  const healthFactor = useMemo(() => {
+    if (collateralsType === 'All Borrowers') {
+      return ''
+    } else {
+      if (collateralsType !== 'Liquidate') {
+        return 'healthFactor_gt: 110,'
+      } else {
+        return 'healthFactor_lt: 110,'
+      }
+    }
+  }, [collateralsType])
   const allUserWhere = useMemo(() => {
     if (collectionFilter === 0 && debtFilter === 0) {
       return ['']
     } else if (collectionFilter === 0) {
       return [...conditionDebtFilter]
     } else if (debtFilter === 0) {
-      return [`id_in: ["${collection[collectionFilter - 1].id}"]`]
+      return [`collections_: {collection_contains: "${collection[collectionFilter - 1].id}"}`]
     } else {
-      return [`id_in: ["${collection[collectionFilter - 1].id}"]`, ...conditionDebtFilter]
+      return [`collections_: {collection_contains: "${collection[collectionFilter - 1].id}"}`, ...conditionDebtFilter]
     }
   }, [collection, collectionFilter, conditionDebtFilter, debtFilter])
   useEffect(() => {
@@ -108,7 +126,7 @@ export default function Liquidation() {
   const getCollaterals = useCallback(async () => {
     if (address && client) {
       const user = await client.query({
-        query: AllUser(searchValue, conditionSort, allUserWhere),
+        query: AllUser(healthFactor, searchValue, conditionSort, allUserWhere),
       })
       setLoading(false)
       if (user.data.users) {
@@ -138,7 +156,7 @@ export default function Liquidation() {
         setCollaterals(users)
       }
     }
-  }, [address, client, searchValue, conditionSort, allUserWhere])
+  }, [address, client, healthFactor, searchValue, conditionSort, allUserWhere])
 
   useEffect(() => {
     getCollaterals()
@@ -148,6 +166,7 @@ export default function Liquidation() {
     <>
       {mobile ? (
         <Body className="header-padding">
+          <BodyBg></BodyBg>
           <Header />
           <Box height="308px"></Box>
           <Collaterals

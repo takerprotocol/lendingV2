@@ -35,7 +35,7 @@ const Body = styled(Box)`
 const Main = styled(Box)`
   width: 1208px;
   margin: 0 auto;
-  margin-bottom: 72px;
+  margin-bottom: 339px;
 `
 const MobileBody = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});

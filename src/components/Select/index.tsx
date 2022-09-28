@@ -87,8 +87,9 @@ const Arrow = () => (
 type CustomizedSelectProps = SelectProps & {
   options: any
   filter: number
-  valueIndex?: number
-  setValueIndex?: Function
+  valueIndex: number
+  setValueIndex: Function
+  allFilterType?: number
 }
 
 export default function CustomizedSelect(props: CustomizedSelectProps) {
@@ -97,7 +98,9 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
     () =>
       props.options.map((option: any) => (
         <StyledMenuItem
-          sx={{ marginRight: `${props.options[0].name === 'Default Sort' ? '12px' : '28px'}` }}
+          sx={{
+            marginRight: `${props.options[0].name === 'Default Sort' ? '12px' : '28px'}`,
+          }}
           key={`${option.value}-item`}
           value={option.value}
           onClick={() => {
@@ -123,13 +126,15 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
     <div>
       <StyledSelect
         className={open ? 'focus' : ''}
-        {...props}
+        startAdornment={props.startAdornment}
         IconComponent={Arrow}
         variant="standard"
         open={open}
         onClick={() => {
           if (!(props.filter === 1)) {
-            setOpen(!open)
+            if (props.allFilterType === 0) {
+              setOpen(!open)
+            }
           }
         }}
         // className={props.startAdornment ? 'withicon' : ''}
@@ -137,6 +142,7 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
         onChange={onChange}
         sx={{
           border: `${open ? '1px solid #7646ff !important' : 'border: 1px solid #d9dbe9;'}`,
+          opacity: `${props.allFilterType === 1 ? '0.4' : '1'}`,
         }}
         disabled={props.filter === 1}
       >

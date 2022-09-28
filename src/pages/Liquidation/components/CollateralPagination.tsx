@@ -25,8 +25,7 @@ const PaginationButton = styled('div', {
   cursor: 'pointer',
   color: selected ? '#ffffff' : 'initial',
   '&:hover': {
-    background:
-      'linear-gradient(61.18deg, rgba(102, 166, 232, 0) 0%, rgba(135, 143, 248, 0.098) 51.07%, rgba(105, 165, 233, 0.2) 97.23%), #262338',
+    background: '#6E7191',
     boxShadow: '0px 4px 8px rgba(75, 75, 122, 0.1), inset 0px 2px 2px rgba(75, 86, 132, 0.5)',
     color: '#ffffff',
   },

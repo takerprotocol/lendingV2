@@ -13,6 +13,8 @@ const Card = styled('div')(({ theme }) => ({
   border: '1px solid #eff0f6',
   borderRadius: 12,
   width: '100%',
+  // minWidth: '1060px',
+  // overflow: 'scroll',
   padding: 24,
   paddingTop: 22,
   paddingBottom: 22,
@@ -267,7 +269,7 @@ const CollateralItem = ({
       </DataItem>
       <Button
         onClick={() => navigate(`/liquidate/${address}`)}
-        disabled={+riskPercentage <= 120 ? false : true}
+        disabled={+riskPercentage > 120}
         variant="contained"
         color="primary"
       >

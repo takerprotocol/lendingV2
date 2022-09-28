@@ -129,7 +129,7 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
         ) : (
           <FlexBox mb="43px">
             <>
-              {list.length === 0 ? (
+              {list.length !== 0 ? (
                 <FlexStartBox>
                   <Typography lineHeight="38px" color="#4E4B66" fontWeight="700" fontSize=" 24px">
                     You can withdraw
@@ -141,7 +141,7 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
               ) : (
                 <FlexStartBox>
                   <Typography lineHeight="38px" color="#4E4B66" fontWeight="700" fontSize=" 24px">
-                    0 Deposited NFTs
+                    0 withdraw NFTs
                   </Typography>
                   <Typography mt="12px" ml="16px" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
                     0.00 ETH

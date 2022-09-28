@@ -10,8 +10,12 @@ import { useMobileType } from 'state/user/hooks'
 const FooterStyleBox = styled(Box)`
   width: 100%;
   height: 267px;
+  position: relative;
+  /* bottom: 0px;
+  left: 0px; */
   background: #14142a;
   padding: 48px 140px;
+  z-index: 10;
 `
 const FlexBox = styled(Box)`
   display: flex;
@@ -26,7 +30,7 @@ const ImgBox = styled(Box)`
 export default function Footer() {
   const location = useLocation()
   const mobile = useMobileType()
-  const Liquidate = location.pathname.includes('/liquidate')
+  const Liquidate = location.pathname.includes('/liquidate') || location.pathname.includes('/deposit')
   return (
     <FooterStyleBox display={Liquidate || !mobile ? 'none' : ''}>
       <FlexBox>

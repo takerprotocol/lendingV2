@@ -24,14 +24,14 @@ const StyledCheckbox = styled(Checkbox)(() => ({
 }))
 const NftBox = styled(Box)`
   width: 305px;
-  height: 144px;
-  padding: 11px;
+  padding: 12px;
   background: #ffffff;
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
   border-radius: 10px;
   margin-right: 24px;
   margin-bottom: 24px;
   &.isCheck {
+    padding: 11px;
     border: 1px solid #a0a3bd;
   }
 `
@@ -94,6 +94,7 @@ export default function NFTsList({ list, loading, depositType, onChange, TypeKey
     //   console.log(nftName)
     // }
   }, [checked, list])
+  console.log('list', list)
   return (
     <>
       <ListBox>

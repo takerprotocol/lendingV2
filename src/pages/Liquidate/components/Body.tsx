@@ -145,7 +145,7 @@ const LiquidateBody = ({
   const [ethValue, setEthValue] = useState('0')
   const addTransaction = useTransactionAdder()
   const { chainId } = useActiveWeb3React()
-
+  const [value, setValue] = useState<number>(0)
   useEffect(() => {
     if (contract) {
       // contract.getUserState(address).then((res: Array<BigNumber>) => {
@@ -498,6 +498,8 @@ const LiquidateBody = ({
               <CustomizedSelect
                 value={collectionFilter}
                 options={collectionOptions}
+                valueIndex={value}
+                setValueIndex={setValue}
                 filter={filter}
                 onChange={handleCollectionFilterChange}
                 startAdornment={
@@ -514,6 +516,8 @@ const LiquidateBody = ({
               <CustomizedSelect
                 value={sort}
                 filter={filter}
+                valueIndex={value}
+                setValueIndex={setValue}
                 options={sortOptions}
                 onChange={handleSortUpdate}
                 startAdornment={

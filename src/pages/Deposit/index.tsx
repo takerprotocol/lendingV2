@@ -77,7 +77,6 @@ export default function Deposit() {
   const address = useAddress()
   const { id } = useParams()
   const { list, loading } = useDepositableNfts(address, id)
-  console.log(list)
   const [depositType, setDepositType] = useState<string>('shut')
   const [withdrawType, setWithdrawType] = useState<string>('shut')
   const depositedCollection = useDepositedCollection()
