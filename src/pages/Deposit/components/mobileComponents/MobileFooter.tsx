@@ -1,6 +1,9 @@
 import { Box, Button, styled, Typography } from '@mui/material'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
 import { NftTokenModel } from 'services/type/nft'
+import { Nft } from '@alch/alchemy-sdk'
+import MobileWithdrawSelectedModal from './MobileWithdrawSelectedModal'
+import { useMemo, useState } from 'react'
 
 const FooterBox = styled(Box)`
   margin-top: 1rem;
@@ -26,14 +29,17 @@ const MobileAbsolute = styled(FlexBox)`
   backdrop-filter: blur(30px);
   position: absolute;
   border-radius: 4px;
-  bottom: 1rem;
+  bottom: 6.75rem;
   right: 1rem;
   left: 1rem;
+  display: none;
 `
 interface MobileFooterProps {
   type: number
   depositedList: NftTokenModel[]
   withdrawList: NftTokenModel[]
+  withdrawAmount: string
+  TestWithdrawList: Array<Nft>
   withdrawLargeAmount: boolean
   mobileWithdrawCheckedIndex: Array<string>
   mobileDepositCheckedIndex: Array<string>
@@ -41,16 +47,24 @@ interface MobileFooterProps {
 export default function MobileFooter({
   type,
   depositedList,
+  withdrawAmount,
+  TestWithdrawList,
   withdrawList,
   withdrawLargeAmount,
   mobileWithdrawCheckedIndex,
   mobileDepositCheckedIndex,
 }: MobileFooterProps) {
+  const [openSelect, setOpenSelect] = useState<boolean>(false)
+  const modalType = useMemo(() => {
+    return type === 1 ? 'deposit' : 'withdraw'
+  }, [type])
   return (
     <FooterBox
       display={type === 1 ? (depositedList.length === 0 ? 'none' : '') : withdrawList.length === 0 ? 'none' : ''}
     >
-      <MobileAbsolute display={type === 2 && withdrawLargeAmount ? '' : 'none'}>
+      <MobileAbsolute
+      // display={type === 2 && withdrawLargeAmount ? '' : 'none'}
+      >
         <Typography variant="body2" fontWeight="600" mr="0.5rem" color="#E1536C">
           The amount of withdraw is too large and it is easy to be liquidated
         </Typography>
@@ -84,21 +98,52 @@ export default function MobileFooter({
           </Typography>
         </ResetButton>
         {type === 1 ? (
-          <Button variant="contained">Deposit {mobileDepositCheckedIndex.length || 0} NFTs</Button>
+          <Button
+            onClick={() => {
+              setOpenSelect(true)
+            }}
+            variant="contained"
+          >
+            Deposit {mobileDepositCheckedIndex.length || 0} NFTs
+          </Button>
         ) : (
           <>
             {withdrawLargeAmount ? (
               <WithdrawButton>
-                <Typography variant="body1" fontWeight="700" color="#E1536C">
+                <Typography
+                  onClick={() => {
+                    setOpenSelect(true)
+                  }}
+                  variant="body1"
+                  fontWeight="700"
+                  color="#E1536C"
+                >
                   Withdraw {mobileWithdrawCheckedIndex.length || 0} NFT
                 </Typography>
               </WithdrawButton>
             ) : (
-              <Button variant="contained">Withdraw {mobileWithdrawCheckedIndex.length || 0} NFT</Button>
+              <Button
+                onClick={() => {
+                  setOpenSelect(true)
+                }}
+                variant="contained"
+              >
+                Withdraw {mobileWithdrawCheckedIndex.length || 0} NFT
+              </Button>
             )}
           </>
         )}
       </SpaceBetweenBox>
+      <MobileWithdrawSelectedModal
+        type={modalType}
+        checkedIndex={type === 1 ? mobileDepositCheckedIndex : mobileWithdrawCheckedIndex}
+        amount={withdrawAmount}
+        amountList={withdrawList.filter((el) => mobileWithdrawCheckedIndex.includes(el.id.split('-')[2]))}
+        data={TestWithdrawList.filter((el) => mobileWithdrawCheckedIndex.includes(el.tokenId))}
+        depositData={depositedList.filter((el) => mobileDepositCheckedIndex.includes(el.tokenId))}
+        open={openSelect}
+        close={setOpenSelect}
+      ></MobileWithdrawSelectedModal>
     </FooterBox>
   )
 }

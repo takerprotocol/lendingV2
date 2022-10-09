@@ -8,6 +8,7 @@ import { FlexBox, SpaceBetweenBox, FlexEndBox } from 'styleds'
 import { useMemo, useState } from 'react'
 import { useBorrowLimit, useEthDebt, useHeath } from 'state/user/hooks'
 import { fixedFormat, getRiskLevel, getRiskLevelTag } from 'utils'
+import MobileMyLoanModal from './MobileMyLoanModal'
 
 const MyAssetsBox = styled(Box)`
   width: 100%;
@@ -95,6 +96,8 @@ export default function MobileMyLoan() {
   const [myAssetsType, setMyAssetsType] = useState<boolean>(true)
   const ethDebt = useEthDebt()
   const heath = useHeath()
+  const [open, setOpen] = useState<boolean>(false)
+  const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
   const borrowLimit = useBorrowLimit()
   const [sliderValue] = useState<number>(+heath)
   const myLoanRiskLevel = useMemo(() => {
@@ -145,13 +148,29 @@ export default function MobileMyLoan() {
             </Box>
             <FlexBox>
               <Box display={+ethDebt === 0 ? 'none' : ''}>
-                <Button className="loanButton" variant="contained" color="secondary">
+                <Button
+                  onClick={() => {
+                    setRepayRoBorrow(2)
+                    setOpen(true)
+                  }}
+                  className="loanButton"
+                  variant="contained"
+                  color="secondary"
+                >
                   <Typography variant="body2" component="span" fontWeight="700">
                     Repay {'>'}
                   </Typography>
                 </Button>
               </Box>
-              <Button disabled={+borrowLimit === 0} className="loanButton" variant="contained">
+              <Button
+                disabled={+borrowLimit === 0}
+                onClick={() => {
+                  setRepayRoBorrow(1)
+                  setOpen(true)
+                }}
+                className="loanButton"
+                variant="contained"
+              >
                 <Typography variant="body2" component="span" fontWeight="700" color="#ffffff">
                   Borrow {'>'}
                 </Typography>
@@ -173,7 +192,15 @@ export default function MobileMyLoan() {
                 </FlexBox>
               </Box>
               <FlexBox>
-                <Button disabled={+ethDebt === 0} className="loanButton" variant="contained">
+                <Button
+                  disabled={+ethDebt === 0}
+                  onClick={() => {
+                    setOpen(true)
+                    setRepayRoBorrow(2)
+                  }}
+                  className="loanButton"
+                  variant="contained"
+                >
                   <Typography variant="body2" component="span" fontWeight="700">
                     Repay {'>'}
                   </Typography>
@@ -248,13 +275,21 @@ export default function MobileMyLoan() {
                     10%
                   </Typography>
                   <FlexBox>
-                    <Typography variant="body2" color="#A0A3BD" lineHeight="1.125rem">
+                    <Typography variant="body2" mr="0.25rem" color="#A0A3BD" lineHeight="1.125rem">
                       Net Borrow APY
                     </Typography>
                     <img src={mobilePrompt2} alt="" />
                   </FlexBox>
                 </Box>
-                <Button disabled={+borrowLimit === 0} className="loanButton" variant="contained">
+                <Button
+                  disabled={+borrowLimit === 0}
+                  onClick={() => {
+                    setRepayRoBorrow(1)
+                    setOpen(true)
+                  }}
+                  className="loanButton"
+                  variant="contained"
+                >
                   <Typography variant="body2" component="span" fontWeight="700" color="#ffffff">
                     Borrow {'>'}
                   </Typography>
@@ -263,7 +298,7 @@ export default function MobileMyLoan() {
               <FooterBox>
                 <Typography variant="body2" component="span" color="#4E4B66">
                   Borrow ETH to earn{' '}
-                  <Typography variant="body2" component="span" color="#29C3A8">
+                  <Typography variant="body2" fontWeight="700" component="span" color="#29C3A8">
                     +20%
                   </Typography>{' '}
                   token reward
@@ -273,6 +308,7 @@ export default function MobileMyLoan() {
           </>
         )}
       </MyAssetsBox>
+      <MobileMyLoanModal open={open} repayRoBorrow={repayRoBorrow} onClose={() => setOpen(false)}></MobileMyLoanModal>
     </MyAssetsBgBox>
   )
 }

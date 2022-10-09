@@ -9,7 +9,10 @@ const LiquidateBox = styled(Box)`
   border-top-left-radius: 0.75rem;
   border-top-right-radius: 0.75rem;
 `
-export default function MobileMain() {
+interface MobileMainProps {
+  totalDebt: string
+}
+export default function MobileMain({ totalDebt }: MobileMainProps) {
   return (
     <MobileMainBox>
       <LiquidateBox>
@@ -28,7 +31,7 @@ export default function MobileMain() {
               <path d="M4 11.5L8.5 14L13 11.5" stroke="#7646FF" strokeLinejoin="round" />
             </svg>
             <Typography ml="0.375rem" fontWeight="700" color="#7646FF" variant="subtitle2">
-              233.7965
+              {totalDebt}
             </Typography>
           </FlexBox>
         </SpaceBetweenBox>

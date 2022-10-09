@@ -47,10 +47,12 @@ interface MobileDepositProps {
   depositedList: NftTokenModel[]
   mobileDepositCheckedIndex: Array<string>
   setMobileDepositCheckedIndex: Function
+  onChange: Function
 }
 export default function MobileDeposit({
   depositedList,
   mobileDepositCheckedIndex,
+  onChange,
   setMobileDepositCheckedIndex,
 }: MobileDepositProps) {
   const [TypeKey] = useState<string>('mobileDeposit')

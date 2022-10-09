@@ -2,17 +2,20 @@ import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import DepositHeader from 'pages/Deposit/components/DepositHeader'
 import DepositNFT from './components/DepositNFT'
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Nft } from '@alch/alchemy-sdk'
 import WithdrawNFT from './components/WithdrawNFT'
 import { useDepositableNfts } from 'services/module/deposit'
 import { useAddress, useCollateralBorrowLimitUsed, useMobileType } from 'state/user/hooks'
 import { useParams } from 'react-router-dom'
+import { getAlchemyNftMetadata } from 'services/module/deposit'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
 import MobileHeader from './components/mobileComponents/MobileHeader'
 import MobileDepositRoWithdraw from './components/mobileComponents/MobileDepositRoWithdraw'
 import MobileFooter from './components/mobileComponents/MobileFooter'
 import mobileDepositBg from 'assets/images/svg/deposit/mobileDeposit-bg.svg'
 import BigNumber from 'bignumber.js'
+import { useAlchemy } from 'hooks/useAlchemy'
 
 const Body = styled(Box)`
   padding-top: 233px;
@@ -76,7 +79,9 @@ const MobileHeaderBg = styled(Box)`
 export default function Deposit() {
   const address = useAddress()
   const { id } = useParams()
+  const alchemy = useAlchemy()
   const { list, loading } = useDepositableNfts(address, id)
+  const [TestWithdrawList, setWithdrawList] = useState<Array<Nft>>([])
   const [depositType, setDepositType] = useState<string>('shut')
   const [withdrawType, setWithdrawType] = useState<string>('shut')
   const depositedCollection = useDepositedCollection()
@@ -113,6 +118,19 @@ export default function Deposit() {
   const withdrawLargeAmount = useMemo(() => {
     return new BigNumber(borrowLimitUsed).gte(1)
   }, [borrowLimitUsed])
+  const getWithdrawList = useCallback(async () => {
+    if (alchemy) {
+      const arr: Array<Nft> = []
+      for (let i = 0, length = list.length; i < length; i++) {
+        const nft = await getAlchemyNftMetadata(list[i].id.split('-')[1], list[i].id.split('-')[2], alchemy)
+        arr.push(nft)
+      }
+      setWithdrawList(arr)
+    }
+  }, [alchemy, list])
+  useEffect(() => {
+    getWithdrawList()
+  }, [getWithdrawList])
   return (
     <>
       {mobile ? (
@@ -158,6 +176,8 @@ export default function Deposit() {
             mobileWithdrawCheckedIndex={mobileWithdrawCheckedIndex}
             mobileDepositCheckedIndex={mobileDepositCheckedIndex}
             depositedList={list}
+            TestWithdrawList={TestWithdrawList}
+            withdrawAmount={withdrawAmount}
             withdrawLargeAmount={withdrawLargeAmount}
             withdrawList={withdrawList}
             type={type}

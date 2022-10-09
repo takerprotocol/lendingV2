@@ -10,9 +10,15 @@ import { useMobileType } from 'state/user/hooks'
 const FooterStyleBox = styled(Box)`
   width: 100%;
   height: 267px;
+<<<<<<< Updated upstream
   position: relative;
   /* bottom: 0px;
   left: 0px; */
+=======
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+>>>>>>> Stashed changes
   background: #14142a;
   padding: 48px 140px;
   z-index: 10;

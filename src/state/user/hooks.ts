@@ -152,3 +152,6 @@ export function useMobileMenuType(): boolean {
 export function useMobileType(): boolean {
   return useAppSelector((state: AppState) => state.user.mobileType)
 }
+export function useLoginWalletType(): boolean {
+  return useAppSelector((state: AppState) => state.user.loginWalletType)
+}

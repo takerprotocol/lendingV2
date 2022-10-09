@@ -112,7 +112,7 @@ export default function MobileCollateralList({
           <Copy text={address} />
         </CenterBox>
         <Typography
-          onClick={() => navigate('/liquidate')}
+          onClick={() => navigate(`/liquidate/${address}`)}
           mr="0.375rem"
           variant="body1"
           fontWeight="600"

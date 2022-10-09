@@ -1,4 +1,4 @@
-import { Box, Button, styled, Typography } from '@mui/material'
+import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
 import Copy from 'components/Copy'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -89,7 +89,11 @@ const StyledCollectionPlaceholder = styled('div')(({ theme }) => ({
 const CollectionImage = (props: any & { src?: string; overflow?: boolean }) => {
   const [error, setError] = useState(false)
   if (props.src || error) {
-    return <StyledCollectionImage onLoad={() => setError(false)} onError={() => setError(true)} {...props} />
+    return (
+      <Tooltip title={'123456'} arrow placement="top">
+        <StyledCollectionImage onLoad={() => setError(false)} onError={() => setError(true)} {...props} />
+      </Tooltip>
+    )
   } else {
     return <StyledCollectionPlaceholder />
   }

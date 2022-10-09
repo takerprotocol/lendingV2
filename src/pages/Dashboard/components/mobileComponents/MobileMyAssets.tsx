@@ -9,14 +9,25 @@ import mobileUp from 'assets/images/svg/dashboard/mobileUp.svg'
 import { FlexBox, SpaceBetweenBox, CenterBox } from 'styleds'
 import OverviewIcon from 'assets/images/svg/dashboard/overview-icon.svg'
 import mobileWallet from 'assets/images/svg/dashboard/mobileWallet-icon.svg'
-import { useState } from 'react'
-import { useAddress, useDashboardType, useDecimal, useWalletBalance } from 'state/user/hooks'
+import { useState, useEffect } from 'react'
+import {
+  useAddress,
+  useDashboardType,
+  useDecimal,
+  useEthCollateral,
+  // useUserValue,
+  useWalletBalance,
+} from 'state/user/hooks'
 import MobileMyETHCollateral from './MobileMyETHCollateral'
 import MobileMyNFTCollateral from './MobileMyNFTCollateral'
 import { useNavigate } from 'react-router-dom'
 import MobileMyLoan from './MobileMyLoan'
 import { decimalFormat, plus } from 'utils'
 import { usePoolValues } from 'state/application/hooks'
+import { useAppDispatch } from 'state/hooks'
+import { setLoginWalletType, setMobileMenuType } from 'state/user/reducer'
+import MobileMyAssetsModal from './MobileMyAssetsModal'
+// import MobileMyAssetsModal from './MobileMyAssetsModal'
 
 const TotalBox = styled(Box)`
   width: 100%;
@@ -87,8 +98,19 @@ export default function MobileMyAssets() {
   const poolValues = usePoolValues()
   const decimal = useDecimal()
   const balance = useWalletBalance()
-  const address = useAddress()
+  // const userValue = useUserValue()
+  const ethCollateral = useEthCollateral()
+  const [openMySupplyModal, setOpenMySupplyModal] = useState(false)
   const type = useDashboardType()
+  const address = useAddress()
+  const dispatch = useAppDispatch()
+  const [typeModal, setTypeModal] = useState<number>(1) // MySupplyModal State Supply(1) ro Withdraw(2)
+  useEffect(() => {
+    if (address) {
+      dispatch(setLoginWalletType(true))
+      dispatch(setMobileMenuType(true))
+    }
+  }, [address, dispatch])
   return (
     <Box mt="0.5rem">
       <Box p="0 1rem">
@@ -187,7 +209,16 @@ export default function MobileMyAssets() {
                       >
                         ETH
                       </Typography>
-                      <Typography variant="body2" fontWeight="700" color="rgba(255, 255, 255)" lineHeight="1.0625rem">
+                      <Typography
+                        variant="body2"
+                        onClick={() => {
+                          setTypeModal(1)
+                          setOpenMySupplyModal(true)
+                        }}
+                        fontWeight="700"
+                        color="rgba(255, 255, 255)"
+                        lineHeight="1.0625rem"
+                      >
                         Supply {'>'}
                       </Typography>
                     </ETHBox>
@@ -220,7 +251,10 @@ export default function MobileMyAssets() {
                     </Box>
                   </SpaceBetweenBox>
                   <MobileMyNFTCollateral></MobileMyNFTCollateral>
-                  <MobileMyETHCollateral></MobileMyETHCollateral>
+                  <MobileMyETHCollateral
+                    setOpenMySupplyModal={setOpenMySupplyModal}
+                    setTypeModal={setTypeModal}
+                  ></MobileMyETHCollateral>
                 </Box>
               )}
             </MyAssetsBox>
@@ -245,17 +279,39 @@ export default function MobileMyAssets() {
           </CenterBox>
           <CenterBox mt="2rem">
             {type === 2 ? (
-              <ConnectWalletButton variant="contained" color="primary">
+              <ConnectWalletButton
+                onClick={() => {
+                  dispatch(setLoginWalletType(false))
+                  dispatch(setMobileMenuType(false))
+                  dispatch(setLoginWalletType(false))
+                }}
+                variant="contained"
+                color="primary"
+              >
                 Connect Wallet
               </ConnectWalletButton>
             ) : (
-              <PrimaryButton variant="contained" color="primary">
+              <PrimaryButton
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  dispatch(setLoginWalletType(false))
+                  dispatch(setMobileMenuType(false))
+                  dispatch(setLoginWalletType(false))
+                }}
+              >
                 Connect Wallet
               </PrimaryButton>
             )}
           </CenterBox>
         </ConnectWalletBox>
       )}
+      <MobileMyAssetsModal
+        openMySupplyModal={openMySupplyModal}
+        setOpenMySupplyModal={setOpenMySupplyModal}
+        type={typeModal}
+        mySupply={decimalFormat(ethCollateral.replace(/,/g, ''), 0)}
+      ></MobileMyAssetsModal>
     </Box>
   )
 }

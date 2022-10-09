@@ -1,4 +1,5 @@
-import { Box, styled, Typography } from '@mui/material'
+import { Box, styled, TextField, Typography } from '@mui/material'
+import { useState } from 'react'
 import { SpaceBetweenBox, FlexBox, FlexEndBox } from 'styleds'
 
 const MobileETHCollateralBox = styled(Box)`
@@ -40,7 +41,22 @@ const SubtotalStrikeThroughValue = styled(Typography)`
   /* Cool Gray 400 */
   color: #a0a3bd;
 `
+// interface EthCollateralProps {
+//   handleAmount: Function
+//   max: string
+//   potentialProfit: number
+//   subtotal: number
+//   label: string
+// }
+// export default function MobileETHCollateral({
+//   handleAmount,
+//   max,
+//   potentialProfit,
+//   subtotal,
+//   label,
+// }: EthCollateralProps) {
 export default function MobileETHCollateral() {
+  const [amount] = useState('')
   return (
     <MobileETHCollateralBox>
       <FlexBox>
@@ -69,9 +85,17 @@ export default function MobileETHCollateral() {
                   <path d="M3 11.5L8.5 15L14 11.5" stroke="#14142A" strokeWidth="1.5" strokeLinejoin="round" />
                 </g>
               </svg>
-              <Typography ml="0.25rem" variant="h5" fontWeight="500" lineHeight="130%">
-                46.00
-              </Typography>
+              <TextField
+                autoFocus={true}
+                sx={{ fontSize: '28px' }}
+                placeholder="0.00"
+                value={amount}
+                // onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                //   event.target.value = event.target.value.replace(/^\D*(\d*(?:\.\d{0,10})?).*$/g, '$1')
+                //   handleAmount(event.target.value)
+                //   setAmount(event.target.value)
+                // }}
+              />
             </FlexBox>
           </Box>
           <Box>

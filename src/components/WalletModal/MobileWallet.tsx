@@ -4,14 +4,13 @@ import mobileMetaMask from 'assets/images/svg/common/mobileMetaMask-icon.svg'
 import mobileActive from 'assets/images/svg/common/mobileActive-icon.svg'
 import mobileWalletConnect from 'assets/images/svg/common/mobileWalletConnect-icon.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
+import { useAppDispatch } from 'state/hooks'
+import { setLoginWalletType } from 'state/user/reducer'
 const WalletBox = styled(Box)`
   background: #ffffff;
   border-radius: 0.75rem;
   padding: 1.5rem 1rem;
-<<<<<<< HEAD
   margin: 0 1rem;
-=======
->>>>>>> 91619e6c210c1662e81a4be8514624613f7e3f67
 `
 const ActiveBox = styled(Box)`
   .none {
@@ -30,14 +29,15 @@ const ActiveBox = styled(Box)`
   }
   padding: 0.75rem 1.25rem;
 `
-interface MobileWalletProps {
-  setLoginWallet: Function
-}
-export default function MobileWallet({ setLoginWallet }: MobileWalletProps) {
+// interface MobileWalletProps {
+
+// }
+export default function MobileWallet() {
+  const dispatch = useAppDispatch()
   return (
     <WalletBox>
       <FlexBox mb="2.25rem">
-        <img src={mobileWallet} alt="" onClick={() => setLoginWallet(true)} />
+        <img src={mobileWallet} alt="" onClick={() => dispatch(setLoginWalletType(true))} />
         <Typography variant="subtitle1" ml="4.25rem" lineHeight="1.125rem" fontWeight="700" color="#262338">
           Select a wallet
         </Typography>

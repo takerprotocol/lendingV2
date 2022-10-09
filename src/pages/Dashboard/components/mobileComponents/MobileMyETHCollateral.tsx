@@ -1,9 +1,21 @@
 import { Box, styled, Typography, Button, Checkbox } from '@mui/material'
 import mobileButtonRight from 'assets/images/svg/dashboard/mobileButtonRight.svg'
 import mobileMyETHCollateralPrompt from 'assets/images/svg/dashboard/mobileMyETHCollateralPrompt.svg'
-import { useEthCollateral, useUsedCollateral } from 'state/user/hooks'
-import { SpaceBox, FlexEndBox } from 'styleds'
-import { fixedFormat } from 'utils'
+import mobileChecked from 'assets/images/svg/dashboard/mobileChecked-Icon.svg'
+import mobileChecked2 from 'assets/images/svg/dashboard/mobileChecked2-Icon.svg'
+import { useMemo, useState } from 'react'
+import { useBorrowLimit, useEthCollateral, useEthDebt, useUsedCollateral, useUserValue } from 'state/user/hooks'
+import { SpaceBox } from 'styleds'
+import { fixedFormat, times } from 'utils'
+import { toast } from 'react-toastify'
+import BigNumber from 'bignumber.js'
+import { getWETH, gasLimit } from 'config'
+import MobileMySupplySwitchModal from './MobileMySupplySwitchModal'
+import { useActiveWeb3React } from 'hooks/web3'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { useAppDispatch } from 'state/hooks'
+import { setUsedCollateral } from 'state/user/reducer'
+import MobileMySupplySwitchUnableOffModal from './MobileMySupplySwitchUnableOffModal'
 
 const MyETHCollateralBox = styled(Box)`
   background: linear-gradient(249.47deg, #6aa2f7 0%, #627eea 100%);
@@ -22,6 +34,11 @@ const MyETHCollateralBox = styled(Box)`
     padding: 0;
     margin: 0;
   }
+`
+const FlexEndBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 `
 const NFTsBox = styled(Box)`
   width: 80.2%;
@@ -65,9 +82,35 @@ const NetSupplyBox = styled(Box)`
   padding: 0.375rem 0.5rem 0.375rem 0.6875rem;
   margin-top: 0.25rem;
 `
-export default function MobileMyETHCollateral() {
+const CheckboxImg = styled(`img`)``
+interface MobileMyETHCollateralProps {
+  setOpenMySupplyModal: Function
+  setTypeModal: Function
+}
+export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeModal }: MobileMyETHCollateralProps) {
   const ethCollateral = useEthCollateral()
   const usedCollateral = useUsedCollateral()
+  const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
+  const [openMySupplySwitchModal, setOpenMySupplySwitchModal] = useState<boolean>(false)
+  const { chainId } = useActiveWeb3React()
+  const ethDebt = useEthDebt()
+  const contract = useLendingPool()
+  const [dataType] = useState<boolean>(true)
+  const userValue = useUserValue()
+  const dispatch = useAppDispatch()
+  const timesEthBorrowLimit = useBorrowLimit(times(ethCollateral, -1))
+  const [switchType, setSwitchType] = useState<number>(0) // SwitchModal 关->开 ro 开->关
+  const loanType = useMemo(() => {
+    return +ethDebt === 0
+  }, [ethDebt])
+  const changeUsedAsCollateral = () => {
+    if (contract) {
+      contract.setUserUsingAsCollateral(getWETH(chainId), !usedCollateral, { gasLimit }).then(() => {
+        toast.success('success')
+        dispatch(setUsedCollateral(!usedCollateral))
+      })
+    }
+  }
   return (
     <MyETHCollateralBox>
       <SpaceBox>
@@ -99,7 +142,12 @@ export default function MobileMyETHCollateral() {
               <img src={mobileMyETHCollateralPrompt} alt="" />
             </NetSupplyBox>
           ) : (
-            <NFTsBox>
+            <NFTsBox
+              onClick={() => {
+                setOpenMySupplyModal(true)
+                setTypeModal(2)
+              }}
+            >
               <Typography variant="body2" fontWeight="600" lineHeight="0.75rem" color="#ffffff">
                 Withdraw {'>'}
               </Typography>
@@ -109,7 +157,7 @@ export default function MobileMyETHCollateral() {
         <MyETHRightBox>
           <FlexEndBox>
             {usedCollateral ? (
-              <Typography mr="0.5rem" variant="body2" fontWeight="700" color="#ffffff">
+              <Typography mt="-0.5rem" mr="0.5rem" variant="body2" fontWeight="700" color="#ffffff">
                 Used as Collateral
               </Typography>
             ) : (
@@ -123,10 +171,38 @@ export default function MobileMyETHCollateral() {
                 Use as Collateral
               </Typography>
             )}
-            <Checkbox defaultChecked checked={usedCollateral} />
+            <Checkbox
+              sx={{ width: '1rem', height: '1rem' }}
+              disabled={!dataType}
+              icon={<CheckboxImg src={mobileChecked2} alt="" />}
+              checkedIcon={<CheckboxImg src={mobileChecked} alt="" />}
+              checked={usedCollateral}
+              onClick={() => {
+                if (!usedCollateral) {
+                  setSwitchType(1)
+                  setOpenMySupplySwitchModal(true)
+                } else {
+                  // if (!loanType && (+nftCollateral === 0 || new BigNumber(heath).lte(150))) {
+                  if (!loanType && (+userValue.NFTLiquidity === 0 || new BigNumber(timesEthBorrowLimit).lt(ethDebt))) {
+                    setSwitchUnableOffModal(true)
+                  } else {
+                    setSwitchType(0)
+                    setOpenMySupplySwitchModal(true)
+                  }
+                }
+              }}
+            />
           </FlexEndBox>
           <FlexEndBox mb={!usedCollateral ? '0.25rem' : '0'} mt="2.0625rem">
-            <Button className="Padding-button" variant="contained" color="secondary">
+            <Button
+              onClick={() => {
+                setOpenMySupplyModal(true)
+                setTypeModal(1)
+              }}
+              className="Padding-button"
+              variant="contained"
+              color="secondary"
+            >
               <Typography variant="body2" component="span" fontWeight="700" color="#578AEB">
                 Supply
               </Typography>
@@ -155,6 +231,24 @@ export default function MobileMyETHCollateral() {
           </NetSupplyAPYBox>
         </FlexEndBox>
       )}
+      <MobileMySupplySwitchModal
+        loanType={loanType}
+        ETHCollateralType={ethCollateral}
+        NFTCollateralType={userValue.NFTLiquidity}
+        switchType={switchType}
+        openMySupplySwitchModal={openMySupplySwitchModal}
+        handle={(type: string) => {
+          setOpenMySupplySwitchModal(!openMySupplySwitchModal)
+          if (type === 'enable') {
+            changeUsedAsCollateral()
+          }
+        }}
+      ></MobileMySupplySwitchModal>
+      <MobileMySupplySwitchUnableOffModal
+        switchUnableOffModal={switchUnableOffModal}
+        NFTCollateralType={userValue.NFTLiquidity}
+        setSwitchUnableOffModal={setSwitchUnableOffModal}
+      ></MobileMySupplySwitchUnableOffModal>
     </MyETHCollateralBox>
   )
 }

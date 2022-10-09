@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box, styled, Typography } from '@mui/material'
 import theme from 'theme'
+import mobileWallet from 'assets/images/svg/common/mobileWallet-Left.svg'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { useModalOpen, useWalletModalToggle } from 'state/application/hooks'
@@ -9,16 +10,23 @@ import usePrevious from 'hooks/usePrevious'
 import { injected } from 'connectors'
 import { SUPPORTED_WALLETS } from 'constants/wallet'
 import { isMobile } from 'utils/userAgent'
-
 import MetamaskIcon from 'assets/images/png/metamask.png'
-
 import Option from './Option'
 import Modal from 'components/Modal'
-import { useAppDispatch } from 'state/hooks'
 import { Web3Provider } from '@ethersproject/providers'
 import { formatEther } from 'ethers/lib/utils'
 import { setAccountBalance, setAddress } from 'state/user/reducer'
-import { useAddress } from 'state/user/hooks'
+import { useAddress, useMobileType } from 'state/user/hooks'
+import { FlexBox } from 'styleds'
+import { useAppDispatch } from 'state/hooks'
+import { setLoginWalletType } from 'state/user/reducer'
+
+const WalletBox = styled(Box)`
+  background: #ffffff;
+  border-radius: 0.75rem;
+  padding: 1.625rem 1rem;
+  margin: 0 1rem;
+`
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -28,14 +36,15 @@ const WALLET_VIEWS = {
 }
 
 export default function WalletModal() {
+  const dispatch = useAppDispatch()
   const { account, connector, activate, error, chainId } = useWeb3React()
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
   const previousAccount = usePrevious(account)
+  const mobile = useMobileType()
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const address = useAddress()
   const previousWalletView = usePrevious(walletView)
-  const dispatch = useAppDispatch()
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
       toggleWalletModal()
@@ -100,27 +109,29 @@ export default function WalletModal() {
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
       if (isMobile) {
-        if (!window.web3 && !window.ethereum && option.mobile) {
+        if (option.name !== 'Injected') {
           return (
-            <Option
-              onClickEvt={() => {
-                option.connector !== connector && !option.href && tryActivation(option.connector)
-              }}
-              key={key}
-              link={option.href}
-              header={option.name}
-              icon={option.iconURL}
-            />
+            !option.mobileOnly && (
+              <Option
+                onClickEvt={() => {
+                  option.connector !== connector && !option.href && tryActivation(option.connector)
+                }}
+                key={key}
+                link={option.href}
+                header={option.name}
+                icon={option.iconURL}
+              />
+            )
           )
         }
         return null
       }
-
       // overwrite injected when needed
       if (option.connector === injected) {
         // don't show injected if there's no injected provider
         if (!(window.web3 || window.ethereum)) {
           if (option.name === 'MetaMask') {
+            console.log('----')
             return (
               <Option key={key} header={<p>Install Metamask</p>} link={'https://metamask.io/'} icon={MetamaskIcon} />
             )
@@ -137,8 +148,6 @@ export default function WalletModal() {
           return null
         }
       }
-
-      // return rest of options
       return (
         !isMobile &&
         !option.mobileOnly && (
@@ -205,8 +214,22 @@ export default function WalletModal() {
     return <Box>{getOptions()}</Box>
   }
   return (
-    <Modal isOpen={walletModalOpen} onClose={toggleWalletModal} isTitle={!error} title="Select a wallet">
-      <Box padding={'32px 16px 12px 16px'}>{getModalContent()}</Box>
-    </Modal>
+    <>
+      {mobile ? (
+        <Modal isOpen={walletModalOpen} onClose={toggleWalletModal} isTitle={!error} title="Select a wallet">
+          <Box padding={'32px 16px 12px 16px'}>{getModalContent()}</Box>
+        </Modal>
+      ) : (
+        <WalletBox>
+          <FlexBox mb="2.25rem">
+            <img src={mobileWallet} alt="" onClick={() => dispatch(setLoginWalletType(true))} />
+            <Typography variant="subtitle1" ml="4.25rem" lineHeight="1.125rem" fontWeight="700" color="#262338">
+              Select a wallet
+            </Typography>
+          </FlexBox>
+          <Box>{getModalContent()}</Box>
+        </WalletBox>
+      )}
+    </>
   )
 }

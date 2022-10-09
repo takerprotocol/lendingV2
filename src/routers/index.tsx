@@ -38,6 +38,9 @@ import Azuki from 'assets/images/png/collection/azuki.png'
 import Bayc from 'assets/images/png/collection/bayc.png'
 import Mayc from 'assets/images/png/collection/mayc.png'
 import { Contract } from '@ethersproject/contracts'
+import { setMobileType } from 'state/user/reducer'
+import { isMobile } from 'utils/userAgent'
+
 export default function CustomizeRoutes() {
   const location = useLocation()
   useLayoutEffect(() => {
@@ -221,7 +224,9 @@ export default function CustomizeRoutes() {
       }
     }
   }, [client, contract, library, address, chainId, dispatch])
-
+  useEffect(() => {
+    dispatch(setMobileType(!isMobile))
+  }, [dispatch])
   useEffect(() => {
     getCollection()
   }, [getCollection])

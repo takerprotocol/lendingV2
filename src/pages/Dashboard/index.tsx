@@ -6,10 +6,11 @@ import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
 import DataNFTs from './components/DataNFTs'
 import { useLoading } from 'state/application/hooks'
-import { useAddress, useDashboardType, useMobileMenuType, useMobileType } from 'state/user/hooks'
+import { useAddress, useDashboardType, useLoginWalletType, useMobileMenuType, useMobileType } from 'state/user/hooks'
 import { useDepositableNfts } from 'services/module/deposit'
-import { useEffect, useState } from 'react'
-import { setAccountNfts } from 'state/user/reducer'
+import { useEffect } from 'react'
+import { isMobile } from 'utils/userAgent'
+import { setAccountNfts, setLoginWalletType, setMobileType } from 'state/user/reducer'
 import { useAppDispatch } from 'state/hooks'
 // import Footer from 'components/Footer'
 
@@ -24,7 +25,7 @@ import WalletMessage from 'components/Header/components/WalletMessage'
 import WalletModal from 'components/WalletModal'
 import MobileGrowthBg from 'assets/images/svg/dashboard/MobileGrowthBg.svg'
 import MobileBgIcon from 'assets/images/svg/dashboard/MobileBgIcon.svg'
-import MobileWallet from 'components/WalletModal/MobileWallet'
+// import MobileWallet from 'components/WalletModal/MobileWallet'
 import { Typography } from '@mui/material'
 
 const Body = styled(Box)`
@@ -50,8 +51,8 @@ const ConnectWalletBox = styled(Box)`
   background: linear-gradient(95.08deg, #7646ff 2.49%, #297ac9 49.84%, #00dfd2 97.19%);
   box-shadow: 0px 0.5rem 1rem rgba(40, 127, 202, 0.2), inset 0px 0.125rem 0.125rem rgba(255, 255, 255, 0.1);
   border-radius: 1.6875rem;
-  margin-top: 1rem;
   padding: 0.875rem;
+  margin: 1rem 1rem 0 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,12 +64,12 @@ export default function Dashboard() {
   const mobileMenuType = useMobileMenuType()
   const dispatch = useAppDispatch()
   const { list } = useDepositableNfts(address)
-  const [loginWalletType, setLoginWalletType] = useState<boolean>(true)
+  const loginWalletType = useLoginWalletType()
   function ConnectWallet() {
     return (
       <ConnectWalletBox
         onClick={() => {
-          setLoginWalletType(false)
+          dispatch(setLoginWalletType(false))
         }}
       >
         <Typography variant="subtitle2" color="#ffffff" fontWeight="600">
@@ -79,6 +80,7 @@ export default function Dashboard() {
   }
   useEffect(() => {
     dispatch(setAccountNfts(list))
+    dispatch(setMobileType(!isMobile))
   }, [dispatch, list])
   const mobile = useMobileType()
   return (
@@ -114,12 +116,11 @@ export default function Dashboard() {
                     {address ? <WalletMessage></WalletMessage> : <>{ConnectWallet()}</>}
                   </>
                 ) : (
-                  <MobileWallet setLoginWallet={setLoginWalletType}></MobileWallet>
+                  <WalletModal></WalletModal>
                 )}
               </>
             )}
           </MobileMain>
-          <WalletModal></WalletModal>
         </MobileBody>
       )}
     </>

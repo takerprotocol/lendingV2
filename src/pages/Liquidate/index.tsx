@@ -87,6 +87,7 @@ const Liquidate = () => {
     getCollaterals()
   }, [getCollaterals])
   const mobile = useMobileType()
+  console.log('---------==', new BigNumber(totalDebt).gt(totalCollateral) ? minus(totalDebt, totalCollateral) : '0')
   return (
     <>
       {mobile ? (
@@ -110,8 +111,17 @@ const Liquidate = () => {
         </Body>
       ) : (
         <MobileBody>
-          <MobileHeader></MobileHeader>
-          <MobileMain></MobileMain>
+          <MobileHeader
+            address={address || ''}
+            riskPercentage={heath}
+            totalCollateral={totalCollateral}
+            nftCollateral={nftCollateral}
+            ethCollateral={minus(totalCollateral, nftCollateral)}
+            totalDebt={totalDebt}
+            ethDebt={totalDebt}
+            borrowings={totalDebt}
+          ></MobileHeader>
+          <MobileMain totalDebt={totalDebt}></MobileMain>
           <MobileETHCollateral></MobileETHCollateral>
           <MobileNFTCollaterals></MobileNFTCollaterals>
           <MobileFooter></MobileFooter>

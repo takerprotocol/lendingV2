@@ -32,12 +32,14 @@ const ImgBox = styled(`img`)`
 interface MobileWithdrawProps {
   list: any[]
   setMobileWithdrawCheckedIndex: Function
+  onChange: Function
   mobileWithdrawCheckedIndex: Array<string>
 }
 export default function MobileWithdraw({
   list,
   setMobileWithdrawCheckedIndex,
   mobileWithdrawCheckedIndex,
+  onChange,
 }: MobileWithdrawProps) {
   const [TypeKey] = useState<string>('mobileWithdraw')
   const amount = useMemo(() => {

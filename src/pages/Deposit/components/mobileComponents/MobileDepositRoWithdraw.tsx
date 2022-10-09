@@ -140,12 +140,18 @@ export default function MobileDepositRoWithdraw({
           depositedList={depositedList}
           mobileDepositCheckedIndex={mobileDepositCheckedIndex}
           setMobileDepositCheckedIndex={setMobileDepositCheckedIndex}
+          onChange={(data: Array<string>) => {
+            setMobileDepositCheckedIndex(data)
+          }}
         ></MobileDeposit>
       ) : (
         <MobileWithdraw
           mobileWithdrawCheckedIndex={mobileWithdrawCheckedIndex}
           setMobileWithdrawCheckedIndex={setMobileWithdrawCheckedIndex}
           list={withdrawList}
+          onChange={(data: Array<string>) => {
+            setMobileWithdrawCheckedIndex(data)
+          }}
         ></MobileWithdraw>
       )}
     </>

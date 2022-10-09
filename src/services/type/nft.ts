@@ -1,4 +1,5 @@
 export interface NftTokenModel {
+  [x: string]: any
   tokenId: string
   tokenType: string
   contract: { address: string }

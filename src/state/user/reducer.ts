@@ -34,6 +34,7 @@ export interface ApplicationState {
   readonly userState: userState
   readonly mobileMenuType: boolean
   readonly mobileType: boolean
+  readonly loginWalletType: boolean
 }
 export interface TokenDecimals {
   symbol: string
@@ -83,7 +84,8 @@ const initialState: ApplicationState = {
     heathFactor: '0',
   },
   mobileMenuType: true,
-  mobileType: true,
+  mobileType: false,
+  loginWalletType: true,
 }
 
 const applicationSlice = createSlice({
@@ -160,6 +162,9 @@ const applicationSlice = createSlice({
     setMobileMenuType(state, action) {
       state.mobileMenuType = action.payload
     },
+    setLoginWalletType(state, action) {
+      state.loginWalletType = action.payload
+    },
   },
 })
 
@@ -181,5 +186,6 @@ export const {
   setCollateralsType,
   setMobileType,
   setMobileMenuType,
+  setLoginWalletType,
 } = applicationSlice.actions
 export default applicationSlice.reducer
