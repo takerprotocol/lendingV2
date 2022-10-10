@@ -1,5 +1,7 @@
 import { Box, Typography, Link } from '@mui/material'
 import Copy from 'components/Copy'
+import { chainScanUrlList } from 'constants/chains'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import React from 'react'
 import { colors } from 'theme'
 import { desensitization } from 'utils'
@@ -11,6 +13,7 @@ interface ToastProps {
 }
 
 export default function Toast({ title, message, txId }: ToastProps) {
+  const { chainId } = useActiveWeb3React()
   return (
     <Box>
       {txId ? (
@@ -30,7 +33,7 @@ export default function Toast({ title, message, txId }: ToastProps) {
               variant="subtitle2"
               sx={{ textDecorationColor: colors.white, marginLeft: '8px' }}
               color="#7646FF"
-              href={`https://rinkeby.etherscan.io/tx/${txId}`}
+              href={`${chainId ? chainScanUrlList[chainId] : ''}/tx/${txId}`}
             >
               {desensitization(txId)}
             </Link>

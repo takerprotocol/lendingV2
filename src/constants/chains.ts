@@ -34,7 +34,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.POLYGON_TESTNET,
 ]
 export const chainIdList: any = {
-  Ethereum: 4,
+  Ethereum: 1,
   RINKEBY: 4,
   Goerli: 5,
   BSC: 97,
@@ -42,7 +42,9 @@ export const chainIdList: any = {
 }
 
 export const chainScanUrlList: any = {
-  [chainIdList.Ethereum]: 'https://rinkeby.etherscan.io/',
+  [chainIdList.Ethereum]: 'https://etherscan.io/',
+  [chainIdList.Goerli]: 'https://goerli.etherscan.io/',
+  [chainIdList.RINKEBY]: 'https://rinkeby.etherscan.io/',
   [chainIdList.BSC]: 'https://testnet.bscscan.com/',
   [chainIdList.Polygon]: 'https://mumbai.polygonscan.com/',
 }

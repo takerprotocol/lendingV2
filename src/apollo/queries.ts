@@ -12,6 +12,9 @@ export const LendingPool = (id: string) => {
           interestRateCalculator
           liqThreshold
           ltv
+          users {
+            id
+          }
         }
         nfts {
           id
