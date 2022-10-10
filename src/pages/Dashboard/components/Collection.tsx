@@ -219,7 +219,7 @@ export default function Collection({ type, loading }: CollectionType) {
                   </CollectionFlexBox> */}
                   <CollectionFlexBox sx={{ width: '248px' }}>
                     <Typography component="span" variant="body1" fontWeight="700">
-                      {el?.stats?.countOwners || '0'}
+                      {el?.activeUser}
                     </Typography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '172px' }}>

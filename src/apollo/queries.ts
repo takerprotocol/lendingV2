@@ -25,6 +25,9 @@ export const LendingPool = (id: string) => {
           symbol
           floorPrice
           ltv
+          users {
+            id
+          }
         }
       }
     }

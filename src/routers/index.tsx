@@ -199,6 +199,7 @@ export default function CustomizeRoutes() {
           item.icon = renderImg(element.symbol)
           const stats = await getCollectionStats(element.id, chainId)
           item.stats = stats.data
+          item.activeUser = element.users ? element.users.length : 0
           item.id = element.id
           item.name = element.name
           item.symbol = element.symbol
