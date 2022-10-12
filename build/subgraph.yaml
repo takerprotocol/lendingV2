@@ -3,12 +3,12 @@ schema:
   file: schema.graphql
 dataSources:
   - kind: ethereum
-    name: LendingPool
+    name: ILendingPool
     network: goerli
     source:
-      address: "0xA64611E1dCAC9301682037CBDc82E455f4098bce"
-      startBlock: 7595608
-      abi: LendingPool
+      address: "0xf2989DAEEEc632BfdF87afC5C56b17b3e527425C"
+      startBlock: 7746778
+      abi: ILendingPool
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -21,10 +21,10 @@ dataSources:
         - UserNftCollection
         - NftToken
       abis:
-        - name: LendingPool
-          file: LendingPool/abis/LendingPool.json
+        - name: ILendingPool
+          file: ILendingPool/abis/ILendingPool.json
         - name: IPriceOracleGetter
-          file: LendingPool/abis/IPriceOracleGetter.json
+          file: ILendingPool/abis/IPriceOracleGetter.json
       eventHandlers:
         - event: Borrowed(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleBorrowed
@@ -43,13 +43,13 @@ dataSources:
           handler: handleWithdrawn
         - event: CollateralStatusUpdated(indexed address,indexed address,bool)
           handler: handleCollateralStatusUpdated
-      file: LendingPool/LendingPool.wasm
+      file: ILendingPool/ILendingPool.wasm
   - kind: ethereum
     name: PoolConfigurator
     network: goerli
     source:
-      address: "0x833AdEC65ae5E4B282f856bb21d2875D970f449C"
-      startBlock: 7595608
+      address: "0x1874dE12836B35A61708708c22c433132E72754F"
+      startBlock: 7746778
       abi: PoolConfigurator
     mapping:
       kind: ethereum/events
@@ -80,13 +80,13 @@ dataSources:
           handler: handleReserveInitialized
         - event: ReserveDropped(indexed address)
           handler: handleReserveDropped
-      file: LendingPool/LendingPool.wasm
+      file: ILendingPool/ILendingPool.wasm
   - kind: ethereum
     name: IPriceOracleGetter
     network: goerli
     source:
-      address: "0x4fC4063440Fb9b1806f1E9dB0A9632AeE3d830c3"
-      startBlock: 7595608
+      address: "0xA1b32782F2cFedE04E444Ae13aEAEFfEC12A6916"
+      startBlock: 7746778
       abi: IPriceOracleGetter
     mapping:
       kind: ethereum/events
@@ -100,4 +100,25 @@ dataSources:
       eventHandlers:
         - event: NewNFTPrice(indexed address,uint256)
           handler: handleNewNFTPrice
-      file: LendingPool/LendingPool.wasm
+      file: ILendingPool/ILendingPool.wasm
+  - kind: ethereum
+    name: IWETHGateway
+    network: goerli
+    source:
+      address: "0x1Db1011e880664A43009661d8A647A37c6789234"
+      startBlock: 7746778
+      abi: IWETHGateway
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - UserReserve
+      abis:
+        - name: IWETHGateway
+          file: IWETHGateway/abis/IWETHGateway.json
+      eventHandlers:
+        - event: Withdrawn(indexed address,indexed address,uint256)
+          handler: handleGatewayWithdrawn
+      file: ILendingPool/ILendingPool.wasm

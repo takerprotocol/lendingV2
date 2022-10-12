@@ -4,7 +4,6 @@ import {
 import {Address, BigDecimal, BigInt} from "@graphprotocol/graph-ts";
 import { log } from '@graphprotocol/graph-ts';
 import {IPriceOracleGetter} from "../generated/LendingPool/IPriceOracleGetter";
-import {ORACLE} from "./lending-pool";
 
 export function newUser(Id: string): User {
 
@@ -44,9 +43,8 @@ export function newUserNftCollection(Id: string): UserNftCollection {
     return userNftCollection;
 }
 
-export function updateCollectionPrice(collection: NftCollection): void{
+export function updateCollectionPrice(collection: NftCollection, oracle: IPriceOracleGetter): void{
     let addr = Address.fromString(collection.id);
-    let oracle = IPriceOracleGetter.bind(Address.fromString(ORACLE));
 
     if (collection.ercType == BigInt.zero()) {
         // ERC20
