@@ -3,12 +3,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: LendingPool
+    name: ILendingPool
     network: {{network}}
     source:
       address: "{{#LendingPool}}{{address}}{{/LendingPool}}"
       startBlock: {{#LendingPool}}{{startBlock}}{{/LendingPool}}
-      abi: LendingPool
+      abi: ILendingPool
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -21,8 +21,8 @@ dataSources:
         - UserNftCollection
         - NftToken
       abis:
-        - name: LendingPool
-          file: ./abis/LendingPool.json
+        - name: ILendingPool
+          file: ./abis/ILendingPool.json
         - name: IPriceOracleGetter
           file: ./abis/IPriceOracleGetter.json
       eventHandlers:
@@ -101,4 +101,26 @@ dataSources:
       eventHandlers:
         - event: NewNFTPrice(indexed address,uint256)
           handler: handleNewNFTPrice
+      file: ./src/lending-pool.ts
+
+  - kind: ethereum
+    name: IWETHGateway
+    network: {{network}}
+    source:
+      address: "{{#WETHGateway}}{{address}}{{/WETHGateway}}"
+      startBlock: {{#WETHGateway}}{{startBlock}}{{/WETHGateway}}
+      abi: IWETHGateway
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - UserReserve
+      abis:
+        - name: IWETHGateway
+          file: ./abis/IWETHGateway.json
+      eventHandlers:
+        - event: Withdrawn(indexed address,indexed address,uint256)
+          handler: handleGatewayWithdrawn
       file: ./src/lending-pool.ts

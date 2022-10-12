@@ -1,24 +1,30 @@
-import {Address, BigInt} from "@graphprotocol/graph-ts"
+import {Address, BigInt, store, log} from "@graphprotocol/graph-ts";
 import {
   Borrowed, CollateralStatusUpdated, Deposited, Initialized, Liquidated, NFTsDeposited,
   NFTsWithdrawn, Paused, Repaid, ReserveDataUpdated, Unpaused, Withdrawn
-} from "../generated/LendingPool/LendingPool"
+} from "../generated/LendingPool/LendingPool";
 import {
   NftReserveInitialized, ReserveDropped, ReserveInitialized
-} from "../generated/PoolConfigurator/PoolConfigurator"
+} from "../generated/PoolConfigurator/PoolConfigurator";
+import {ERC721} from "../generated/LendingPool/ERC721";
+import {ERC20} from "../generated/LendingPool/ERC20";
+import {ERC1155} from "../generated/LendingPool/ERC1155";
+import {IPriceOracleGetter, NewNFTPrice} from "../generated/LendingPool/IPriceOracleGetter";
+import {Withdrawn as GatewayWithdrawn} from "../generated/IWETHGateway/IWETHGateway";
 import {
   LendingPool, Reserve, NftCollection, User, UserReserve, UserNftCollection, NftToken
 } from "../generated/schema";
 import * as utils from "./utils";
-import { log } from '@graphprotocol/graph-ts';
-import {ERC721} from "../generated/LendingPool/ERC721";
-import {ERC20} from "../generated/LendingPool/ERC20";
-import {ERC1155} from "../generated/LendingPool/ERC1155";
-import {NewNFTPrice} from "../generated/IPriceOracleGetter/IPriceOracleGetter";
-import {IPriceOracleGetter} from "../generated/LendingPool/IPriceOracleGetter";
+
 
 export const POOLID = "{{#LendingPool}}{{address}}{{/LendingPool}}";
+
 export const ORACLE = "{{#IPriceOracleGetter}}{{address}}{{/IPriceOracleGetter}}";
+export const OLD_ORACLE = "{{#OldOracle}}{{address}}{{/OldOracle}}";
+
+// toLowerCase for comparison
+export const GATEWAY = "{{#WETHGateway}}{{address}}{{/WETHGateway}}".toLowerCase();
+export const WETH = "{{#WETH}}{{address}}{{/WETH}}".toLowerCase();
 
 export function handleNftReserveInitialized(event: NftReserveInitialized): void{
   let poolId = POOLID;
@@ -34,7 +40,8 @@ export function handleNftReserveInitialized(event: NftReserveInitialized): void{
   collection.liqThreshold = event.params.liqThreshold;
   collection.ltv = event.params.ltv;
 
-  let oracle = IPriceOracleGetter.bind(Address.fromString(ORACLE));
+  let oracle = event.block.number >= BigInt.fromString("{{#IPriceOracleGetter}}{{startBlock}}{{/IPriceOracleGetter}}") ?
+    IPriceOracleGetter.bind(Address.fromString(ORACLE)) : IPriceOracleGetter.bind(Address.fromString(OLD_ORACLE));
 
   if (collection.ercType == BigInt.zero()) {
     // ERC20
@@ -95,13 +102,11 @@ export function handleReserveDropped(event: ReserveDropped): void{
   let id = event.params.asset.toHex();
   let reserve = Reserve.load(id);
   if (reserve) {
-    reserve.unset(id);
-    reserve.save();
+    store.remove('Reserve', id);
   }
   let collection = NftCollection.load(id);
   if (collection) {
-    collection.unset(id);
-    collection.save();
+    store.remove("NftCollection", id);
   }
 }
 
@@ -140,6 +145,11 @@ export function handleDeposited(event: Deposited): void {
 
 export function handleWithdrawn(event: Withdrawn): void {
   let userId = event.params.user.toHex();
+  // User deposit ETH through gateway
+  // handled through handleGatewayWithdrawn
+  if (userId == GATEWAY && event.params.to.toHex() == GATEWAY) {
+    return;
+  }
   let reserveId = event.params.asset.toHex();
   let userReserveId = userId + "-" + reserveId;
 
@@ -171,6 +181,38 @@ export function handleWithdrawn(event: Withdrawn): void {
   userReserve.save();
 }
 
+export function handleGatewayWithdrawn(event: GatewayWithdrawn): void {
+  let userId = event.params.to.toHex();
+  let reserveId = WETH;
+  let userReserveId = userId + "-" + reserveId;
+
+  let user = User.load(userId);
+  let reserve = Reserve.load(reserveId);
+  let userReserve = UserReserve.load(userReserveId);
+  if (!user){
+    log.warning('Found Withdrawn event for unknown user - {}', [userId]);
+    user = utils.newUser(userId);
+  }
+  if (!reserve) {
+    log.warning('Found Withdrawn event for unknown reserve - {}', [reserveId]);
+    return;
+  }
+  if (!userReserve) {
+    userReserve = utils.newUserReserve(userReserveId);
+    userReserve.user = userId;
+    userReserve.reserve = reserveId;
+  }
+
+  user.reserveSupply = user.reserveSupply.minus(event.params.amount);
+  if (userReserve.usedAsCollateral) {
+    user.totalCollateral = user.totalCollateral.minus(event.params.amount);
+    user = utils.updateUserState(user, event.params.amount.neg(), reserve.ltv, reserve.liqThreshold);
+  }
+  userReserve.depositedAmount = userReserve.depositedAmount.minus(event.params.amount);
+
+  user.save();
+  userReserve.save();
+}
 
 export function handleBorrowed(event: Borrowed): void {
   let userId = event.params.from.toHex();
@@ -298,7 +340,11 @@ export function handleLiquidated(event: Liquidated): void {
       log.warning('Found Liquidated event for unknown userNftCollection - {}', [userNftCollectionId]);
       return;
     }
-    utils.updateCollectionPrice(collection);
+
+    let oracle = event.block.number >= BigInt.fromString("{{#IPriceOracleGetter}}{{startBlock}}{{/IPriceOracleGetter}}") ?
+        IPriceOracleGetter.bind(Address.fromString(ORACLE)) : IPriceOracleGetter.bind(Address.fromString(OLD_ORACLE));
+    utils.updateCollectionPrice(collection, oracle);
+
     removeNftToken(userNftCollection, event.params.tokenIds[i], event.params.amounts[i]);
 
     let tokenValue = event.params.amounts[i].times(collection.floorPrice);
@@ -347,7 +393,10 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
       userNftCollection.save();
     }
 
-    utils.updateCollectionPrice(collection);
+    let oracle = event.block.number >= BigInt.fromString("{{#IPriceOracleGetter}}{{startBlock}}{{/IPriceOracleGetter}}") ?
+        IPriceOracleGetter.bind(Address.fromString(ORACLE)) : IPriceOracleGetter.bind(Address.fromString(OLD_ORACLE));
+    utils.updateCollectionPrice(collection, oracle);
+
     addNftToken(userNftCollection, event.params.tokenIds[i], event.params.amounts[i]);
 
     let tokenValue = event.params.amounts[i].times(collection.floorPrice);
@@ -384,7 +433,11 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
       userNftCollection.collection = collectionId;
       userNftCollection.save();
     }
-    utils.updateCollectionPrice(collection);
+
+    let oracle = event.block.number >= BigInt.fromString("{{#IPriceOracleGetter}}{{startBlock}}{{/IPriceOracleGetter}}") ?
+        IPriceOracleGetter.bind(Address.fromString(ORACLE)) : IPriceOracleGetter.bind(Address.fromString(OLD_ORACLE));
+    utils.updateCollectionPrice(collection, oracle);
+
     removeNftToken(userNftCollection, event.params.tokenIds[i], event.params.amounts[i]);
 
     let tokenValue = event.params.amounts[i].times(collection.floorPrice);

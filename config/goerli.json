@@ -1,19 +1,30 @@
 {
   "network": "goerli",
   "LendingPool": {
-    "startBlock": 7595608,
-    "address": "0xA64611E1dCAC9301682037CBDc82E455f4098bce"
+    "startBlock": 7746778,
+    "address": "0xf2989DAEEEc632BfdF87afC5C56b17b3e527425C"
   },
   "PoolConfigurator": {
-    "startBlock": 7595608,
-    "address": "0x833AdEC65ae5E4B282f856bb21d2875D970f449C"
+    "startBlock": 7746778,
+    "address": "0x1874dE12836B35A61708708c22c433132E72754F"
   },
   "NFTBankConsumer": {
     "startBlock": 7595608,
     "address": "0x30A7D76a3939C3e99A2eC783bd5F4B92C2c965Dd"
   },
   "IPriceOracleGetter": {
-    "startBlock": 7595608,
+    "startBlock": 7746778,
+    "address": "0xA1b32782F2cFedE04E444Ae13aEAEFfEC12A6916"
+  },
+  "OldOracle": {
     "address": "0x4fC4063440Fb9b1806f1E9dB0A9632AeE3d830c3"
+  },
+  "WETHGateway": {
+    "startBlock": 7746778,
+    "address": "0x1Db1011e880664A43009661d8A647A37c6789234"
+  },
+  "WETH": {
+    "startBlock": 7746778,
+    "address": "0x3Ec409985520Ddf917b0e1b210faf8B26C372804"
   }
 }
