@@ -244,7 +244,6 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const buttonDisabled = useMemo(() => {
     return check === 1 ? !amount || new BigNumber(amount).gt(borrowLimit) : !amount || new BigNumber(amount).gt(ethDebt)
   }, [amount, borrowLimit, check, ethDebt])
-
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -513,13 +512,15 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </Typography>
           </FlexBox>
           {check === 1 && +debtRiskLevel < 110 ? (
-            <LiquidatedBox
-              onClick={() => {
-                borrowSubmit()
-                setAmount('')
-              }}
-            >
-              <Typography variant="body1" fontWeight="700" color="#E1536C">
+            <LiquidatedBox>
+              <Typography
+                sx={{
+                  cursor: 'not-allowed',
+                }}
+                variant="body1"
+                fontWeight="700"
+                color="#E1536C"
+              >
                 Borrow
               </Typography>
             </LiquidatedBox>

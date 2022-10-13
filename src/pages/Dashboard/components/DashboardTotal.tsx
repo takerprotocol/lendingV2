@@ -103,7 +103,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
               <Box marginTop="16px">
                 <img src={BottomLiquidity} alt="" />
                 <Typography component="span" variant="h4" marginLeft="6px" fontWeight="600" lineHeight="28px">
-                  {decimalFormat(poolValues[0].toString(), decimal)}
+                  {decimalFormat(poolValues[2].toString(), decimal)}
                 </Typography>
               </Box>
             </Box>

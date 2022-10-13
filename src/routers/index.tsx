@@ -115,6 +115,7 @@ export default function CustomizeRoutes() {
         )
       })
       contract.getUserState(address).then((res: Array<BigNumber>) => {
+        console.log(res)
         dispatch(
           setUserState({
             loanToValue: div(res[0].toString(), 10000),
@@ -146,7 +147,6 @@ export default function CustomizeRoutes() {
       //   console.log('getReserveConfig', res)
       // })
       contract.getUserConfig(address).then((res: BigNumber) => {
-        console.log(res)
         dispatch(setLoading(false))
         dispatch(setUserNftConfig(bigNumberToString(res)))
       })
