@@ -146,6 +146,7 @@ export default function CustomizeRoutes() {
       //   console.log('getReserveConfig', res)
       // })
       contract.getUserConfig(address).then((res: BigNumber) => {
+        console.log(res)
         dispatch(setLoading(false))
         dispatch(setUserNftConfig(bigNumberToString(res)))
       })

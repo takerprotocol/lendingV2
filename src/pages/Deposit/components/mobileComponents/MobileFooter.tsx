@@ -4,6 +4,7 @@ import { NftTokenModel } from 'services/type/nft'
 import { Nft } from '@alch/alchemy-sdk'
 import MobileWithdrawSelectedModal from './MobileWithdrawSelectedModal'
 import { useMemo, useState } from 'react'
+import MobileSureModal from './MobileSureModal'
 
 const FooterBox = styled(Box)`
   margin-top: 1rem;
@@ -40,6 +41,8 @@ interface MobileFooterProps {
   withdrawList: NftTokenModel[]
   withdrawAmount: string
   TestWithdrawList: Array<Nft>
+  setMobileDepositCheckedIndex: Function
+  setMobileWithdrawCheckedIndex: Function
   withdrawLargeAmount: boolean
   mobileWithdrawCheckedIndex: Array<string>
   mobileDepositCheckedIndex: Array<string>
@@ -48,6 +51,8 @@ export default function MobileFooter({
   type,
   depositedList,
   withdrawAmount,
+  setMobileWithdrawCheckedIndex,
+  setMobileDepositCheckedIndex,
   TestWithdrawList,
   withdrawList,
   withdrawLargeAmount,
@@ -55,6 +60,7 @@ export default function MobileFooter({
   mobileDepositCheckedIndex,
 }: MobileFooterProps) {
   const [openSelect, setOpenSelect] = useState<boolean>(false)
+  const [openSureModal, setOpenSureModal] = useState<boolean>(false)
   const modalType = useMemo(() => {
     return type === 1 ? 'deposit' : 'withdraw'
   }, [type])
@@ -76,7 +82,11 @@ export default function MobileFooter({
         </svg>
       </MobileAbsolute>
       <SpaceBetweenBox>
-        <ResetButton>
+        <ResetButton
+          onClick={() => {
+            setOpenSureModal(true)
+          }}
+        >
           <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="30" height="30" rx="15" fill="#EFF0F6" />
             <path
@@ -93,7 +103,7 @@ export default function MobileFooter({
               strokeLinejoin="round"
             />
           </svg>
-          <Typography ml="0.5rem" variant="body1" fontWeight="600">
+          <Typography ml="0.5rem" color="#A0A3BD" variant="body1" fontWeight="600">
             Redo
           </Typography>
         </ResetButton>
@@ -144,6 +154,13 @@ export default function MobileFooter({
         open={openSelect}
         close={setOpenSelect}
       ></MobileWithdrawSelectedModal>
+      <MobileSureModal
+        type={modalType}
+        setOpenSureModal={setOpenSureModal}
+        openSureModal={openSureModal}
+        setMobileWithdrawCheckedIndex={setMobileWithdrawCheckedIndex}
+        setMobileDepositCheckedIndex={setMobileDepositCheckedIndex}
+      ></MobileSureModal>
     </FooterBox>
   )
 }

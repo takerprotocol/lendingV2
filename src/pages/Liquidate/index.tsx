@@ -22,7 +22,7 @@ const Body = styled(Box)`
   width: 100%;
   max-width: 1012px;
   margin: 0 auto;
-  padding-top: 94px;
+  padding-top: 5.125rem;
 `
 const MobileBody = styled(Box)`
   width: 100%;

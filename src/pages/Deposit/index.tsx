@@ -58,7 +58,7 @@ const OpacityBg = styled(Box)`
   z-index: -1;
 `
 const MobileBody = styled(Box)`
-  margin-top: 6.375rem;
+  margin-top: 3.125rem;
   width: 100%;
   background: #f7f7fc;
 `
@@ -178,6 +178,8 @@ export default function Deposit() {
             depositedList={list}
             TestWithdrawList={TestWithdrawList}
             withdrawAmount={withdrawAmount}
+            setMobileWithdrawCheckedIndex={setMobileWithdrawCheckedIndex}
+            setMobileDepositCheckedIndex={setMobileDepositCheckedIndex}
             withdrawLargeAmount={withdrawLargeAmount}
             withdrawList={withdrawList}
             type={type}

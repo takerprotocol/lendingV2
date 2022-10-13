@@ -1,7 +1,7 @@
 import { Box, styled, Typography } from '@mui/material'
 import { CenterBox } from 'styleds'
 const HeaderCenterBox = styled(Box)`
-  padding-top: 7.5rem;
+  padding-top: 5.375rem;
   padding-bottom: 5.375rem;
 `
 const FoundTypography = styled(Typography)`

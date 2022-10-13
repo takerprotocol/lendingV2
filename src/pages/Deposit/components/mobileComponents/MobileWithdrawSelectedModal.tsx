@@ -331,16 +331,6 @@ export default function MobileWithdrawSelectedModal({
               </defs>
             </svg>
           </RightFlexBox>
-          <Box mb="16px" display={riskLevelWarning ? '' : 'none'}>
-            <FlexBox>
-              <Box mr="8px" pt="1px" height="38px">
-                <img src={redPrompt} alt="" />
-              </Box>
-              <Typography color="#E1536C" fontWeight="600" variant="body2">
-                If you withdraw the maximum amount of collateral ETH, your collateral will be easily liquidated
-              </Typography>
-            </FlexBox>
-          </Box>
           <Button
             variant="contained"
             sx={{ width: '100%', height: '3rem' }}
@@ -355,6 +345,16 @@ export default function MobileWithdrawSelectedModal({
           >
             {type === 'Withdraw' ? type : isApproved === 2 ? 'Deposit' : isApproved === 1 ? 'Pending' : 'Approve'}
           </Button>
+          <Box mb="1rem" display={riskLevelWarning ? '' : 'none'}>
+            <FlexBox>
+              <Box mr="0.5rem" pt="0.1875rem" height="3.5625rem">
+                <img src={redPrompt} alt="" />
+              </Box>
+              <Typography color="#E1536C" variant="body2">
+                If you withdraw the maximum amount of collateral ETH, your collateral will be easily liquidated
+              </Typography>
+            </FlexBox>
+          </Box>
         </MainBox>
       </Box>
     </Modal>

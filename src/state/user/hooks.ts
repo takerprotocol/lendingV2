@@ -155,3 +155,6 @@ export function useMobileType(): boolean {
 export function useLoginWalletType(): boolean {
   return useAppSelector((state: AppState) => state.user.loginWalletType)
 }
+export function useMobileSecondHeaderName(): string {
+  return useAppSelector((state: AppState) => state.user.mobileSecondHeaderName)
+}

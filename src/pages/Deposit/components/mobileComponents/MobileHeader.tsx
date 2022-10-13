@@ -2,11 +2,13 @@ import { Box, styled, Typography } from '@mui/material'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
 import RewardAdd from 'assets/images/svg/deposit/Reward-add.svg'
 import RewardRight from 'assets/images/svg/deposit/Reward-right.svg'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useCollections } from 'state/application/hooks'
 import { useParams } from 'react-router-dom'
 import { div, times } from 'utils'
 import { useErc20ReserveData } from 'state/user/hooks'
+import { useAppDispatch } from 'state'
+import { setMobileSecondHeaderName } from 'state/user/reducer'
 
 const MainBox = styled(Box)`
   width: 100%;
@@ -82,8 +84,9 @@ const RewardBox = styled(Box)`
 `
 export default function MobileHeader() {
   const [details, setDetails] = useState<boolean>(false)
-  const { id } = useParams()
   const erc20ReserveData = useErc20ReserveData()
+  const { id } = useParams()
+  const dispatch = useAppDispatch()
   const collections = useCollections()
   const collection = useMemo(() => {
     if (collections && id) {
@@ -92,6 +95,10 @@ export default function MobileHeader() {
       return null
     }
   }, [collections, id])
+  useEffect(() => {
+    dispatch(setMobileSecondHeaderName(collection?.symbol))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <MainBox>
       <HeaderFlexBox>

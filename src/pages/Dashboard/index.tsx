@@ -82,6 +82,10 @@ export default function Dashboard() {
     dispatch(setAccountNfts(list))
     dispatch(setMobileType(!isMobile))
   }, [dispatch, list])
+  useEffect(() => {
+    dispatch(setMobileType(!isMobile))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const mobile = useMobileType()
   return (
     <>
@@ -98,7 +102,7 @@ export default function Dashboard() {
         </Body>
       ) : (
         <MobileBody
-          pt="6.375rem"
+          pt="3.625rem"
           sx={{ backgroundImage: `${type === 1 ? `url(${MobileBgIcon})` : `url(${MobileGrowthBg})`}` }}
         >
           <MobileMain>

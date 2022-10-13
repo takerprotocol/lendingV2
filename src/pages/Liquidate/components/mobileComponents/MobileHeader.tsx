@@ -6,7 +6,7 @@ import { liquidateAbbrevAddress } from 'utils/abbrevAddres'
 const MobileHeaderBox = styled(Box)`
   background: #262338;
   width: 100%;
-  padding-top: 7.875rem;
+  padding-top: 5.125rem;
   padding-bottom: 1.8125rem;
 `
 const HealthBox = styled(Box)`

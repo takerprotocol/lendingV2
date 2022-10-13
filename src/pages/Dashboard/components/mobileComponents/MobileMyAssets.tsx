@@ -23,10 +23,12 @@ import MobileMyNFTCollateral from './MobileMyNFTCollateral'
 import { useNavigate } from 'react-router-dom'
 import MobileMyLoan from './MobileMyLoan'
 import { decimalFormat, plus } from 'utils'
-import { usePoolValues } from 'state/application/hooks'
+import { useLoading, usePoolValues } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { setLoginWalletType, setMobileMenuType } from 'state/user/reducer'
 import MobileMyAssetsModal from './MobileMyAssetsModal'
+import MobileTotalSkeleton from '../mobileDashboardSkeleton/MobileTotalSkeleton'
+import MobileMyAssetsSkeleton from '../mobileDashboardSkeleton/MobileMyAssetsSkeleton'
 // import MobileMyAssetsModal from './MobileMyAssetsModal'
 
 const TotalBox = styled(Box)`
@@ -38,7 +40,7 @@ const TotalBox = styled(Box)`
 const MyAssetsBox = styled(Box)`
   width: 100%;
   padding: 1rem;
-  margin-top: -0.8125rem;
+  margin-top: -0.75rem;
   border-radius: 0.75rem;
 `
 const NFTBox = styled(Box)`
@@ -96,6 +98,7 @@ export default function MobileMyAssets() {
   const [myAssetsType, setMyAssetsType] = useState<boolean>(true)
   const navigate = useNavigate()
   const poolValues = usePoolValues()
+  const loading = useLoading()
   const decimal = useDecimal()
   const balance = useWalletBalance()
   // const userValue = useUserValue()
@@ -114,119 +117,74 @@ export default function MobileMyAssets() {
   return (
     <Box mt="0.5rem">
       <Box p="0 1rem">
-        <TotalBox>
-          <FlexBox>
-            <Box width="54.517%">
-              <FlexBox>
-                <Typography mr="0.5rem" variant="body2" fontWeight="600" lineHeight="0.75rem" color="#6E7191">
-                  Total Liquidity
-                </Typography>
-                <img src={mobilePrompt} alt="" />
-              </FlexBox>
-              <FlexBox mt="0.75rem">
-                <img src={type === 1 ? mobileEth : mobilePurpleETH} alt="" />
-                <Typography ml="0.375rem" variant="subtitle1" fontWeight="600" lineHeight="1.125rem" color="#262338">
-                  {decimalFormat(plus(poolValues[1].toString(), poolValues[0].toString()), decimal)}
-                </Typography>
-              </FlexBox>
-            </Box>
-            <Box>
-              <FlexBox>
-                <Typography mr="0.5rem" variant="body2" fontWeight="600" lineHeight="0.8125rem" color="#6E7191">
-                  Total Borrowed
-                </Typography>
-              </FlexBox>
-              <FlexBox mt="0.8125rem">
-                <img src={type === 1 ? mobileEth : mobilePurpleETH} alt="" />
-                <Typography ml="0.375rem" variant="subtitle1" fontWeight="600" lineHeight="1.125rem" color="#262338">
-                  {decimalFormat(poolValues[0].toString(), decimal)}
-                </Typography>
-              </FlexBox>
-            </Box>
-          </FlexBox>
-        </TotalBox>
+        {loading ? (
+          <MobileTotalSkeleton></MobileTotalSkeleton>
+        ) : (
+          <TotalBox>
+            <FlexBox>
+              <Box width="54.517%">
+                <FlexBox>
+                  <Typography mr="0.5rem" variant="body2" fontWeight="600" lineHeight="0.75rem" color="#6E7191">
+                    Total Liquidity
+                  </Typography>
+                  <img src={mobilePrompt} alt="" />
+                </FlexBox>
+                <FlexBox mt="0.75rem">
+                  <img src={type === 1 ? mobileEth : mobilePurpleETH} alt="" />
+                  <Typography ml="0.375rem" variant="subtitle1" fontWeight="600" lineHeight="1.125rem" color="#262338">
+                    {decimalFormat(plus(poolValues[1].toString(), poolValues[0].toString()), decimal)}
+                  </Typography>
+                </FlexBox>
+              </Box>
+              <Box>
+                <FlexBox>
+                  <Typography mr="0.5rem" variant="body2" fontWeight="600" lineHeight="0.8125rem" color="#6E7191">
+                    Total Borrowed
+                  </Typography>
+                </FlexBox>
+                <FlexBox mt="0.8125rem">
+                  <img src={type === 1 ? mobileEth : mobilePurpleETH} alt="" />
+                  <Typography ml="0.375rem" variant="subtitle1" fontWeight="600" lineHeight="1.125rem" color="#262338">
+                    {decimalFormat(poolValues[0].toString(), decimal)}
+                  </Typography>
+                </FlexBox>
+              </Box>
+            </FlexBox>
+          </TotalBox>
+        )}
       </Box>
       {address ? (
         <>
           <Box p="0 1rem">
-            <MyAssetsBox
-              sx={{ background: `${myAssetsType ? '#ffffff' : 'linear-gradient(180deg, #FFFFFF 0%, #F7F7FC 100%)'}` }}
-            >
-              <SpaceBetweenBox>
-                <FlexBox
-                  onClick={() => {
-                    setMyAssetsType(!myAssetsType)
-                  }}
-                >
-                  <Typography mr="0.5rem" variant="subtitle2" fontWeight="700">
-                    My Assets
-                  </Typography>
-                  <img src={myAssetsType ? mobileDown : mobileUp} alt="" />
-                </FlexBox>
-                <ClaimBox>
-                  <img src={OverviewIcon} alt="" />
-                  <Typography ml="0.25rem" mr="0.5rem" variant="body2" fontWeight="600">
-                    16.84
-                  </Typography>
-                  <Typography variant="body2" fontWeight="700">
-                    Claim {'>'}
-                  </Typography>
-                </ClaimBox>
-              </SpaceBetweenBox>
-              {myAssetsType ? (
-                <SpaceBetweenBox mt="1rem">
-                  <Box ml="0.375rem">
-                    <Typography variant="body2" color="#A0A3BD">
+            {loading ? (
+              <MobileMyAssetsSkeleton></MobileMyAssetsSkeleton>
+            ) : (
+              <MyAssetsBox
+                sx={{ background: `${myAssetsType ? '#ffffff' : 'linear-gradient(180deg, #FFFFFF 0%, #F7F7FC 100%)'}` }}
+              >
+                <SpaceBetweenBox>
+                  <FlexBox
+                    onClick={() => {
+                      setMyAssetsType(!myAssetsType)
+                    }}
+                  >
+                    <Typography mr="0.5rem" variant="subtitle2" fontWeight="700">
                       My Assets
                     </Typography>
-                    <FlexBox>
-                      <img src={mobileBlackEthLogo} alt="" />
-                      <Typography ml="0.4375rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
-                        {balance}
-                      </Typography>
-                    </FlexBox>
-                  </Box>
-                  <FlexBox>
-                    <NFTBox onClick={() => navigate('/Deposit')}>
-                      <Typography
-                        variant="body2"
-                        fontWeight="700"
-                        color="rgba(255, 255, 255, 0.5)"
-                        lineHeight="1.0625rem"
-                      >
-                        NFT
-                      </Typography>
-                      <Typography variant="body2" fontWeight="700" color="rgba(255, 255, 255)" lineHeight="1.0625rem">
-                        Deposit {'>'}
-                      </Typography>
-                    </NFTBox>
-                    <ETHBox>
-                      <Typography
-                        variant="body2"
-                        fontWeight="700"
-                        color="rgba(255, 255, 255, 0.5)"
-                        lineHeight="1.0625rem"
-                      >
-                        ETH
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        onClick={() => {
-                          setTypeModal(1)
-                          setOpenMySupplyModal(true)
-                        }}
-                        fontWeight="700"
-                        color="rgba(255, 255, 255)"
-                        lineHeight="1.0625rem"
-                      >
-                        Supply {'>'}
-                      </Typography>
-                    </ETHBox>
+                    <img src={myAssetsType ? mobileDown : mobileUp} alt="" />
                   </FlexBox>
+                  <ClaimBox>
+                    <img src={OverviewIcon} alt="" />
+                    <Typography ml="0.25rem" mr="0.5rem" variant="body2" fontWeight="600">
+                      16.84
+                    </Typography>
+                    <Typography variant="body2" fontWeight="700">
+                      Claim {'>'}
+                    </Typography>
+                  </ClaimBox>
                 </SpaceBetweenBox>
-              ) : (
-                <Box>
-                  <SpaceBetweenBox mt="1rem" mr="2.75rem">
+                {myAssetsType ? (
+                  <SpaceBetweenBox mt="1rem">
                     <Box ml="0.375rem">
                       <Typography variant="body2" color="#A0A3BD">
                         My Assets
@@ -238,26 +196,79 @@ export default function MobileMyAssets() {
                         </Typography>
                       </FlexBox>
                     </Box>
-                    <Box>
-                      <Typography variant="body1" fontWeight="600" color="#A0A3BD">
-                        15%
-                      </Typography>
-                      <FlexBox>
-                        <Typography mr="0.25rem" variant="body2" color="#A0A3BD">
-                          Net APY
+                    <FlexBox>
+                      <NFTBox onClick={() => navigate('/Deposit')}>
+                        <Typography
+                          variant="body2"
+                          fontWeight="700"
+                          color="rgba(255, 255, 255, 0.5)"
+                          lineHeight="1.0625rem"
+                        >
+                          NFT
                         </Typography>
-                        <img src={mobilePrompt2} alt="" />
-                      </FlexBox>
-                    </Box>
+                        <Typography variant="body2" fontWeight="700" color="rgba(255, 255, 255)" lineHeight="1.0625rem">
+                          Deposit {'>'}
+                        </Typography>
+                      </NFTBox>
+                      <ETHBox>
+                        <Typography
+                          variant="body2"
+                          fontWeight="700"
+                          color="rgba(255, 255, 255, 0.5)"
+                          lineHeight="1.0625rem"
+                        >
+                          ETH
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          onClick={() => {
+                            setTypeModal(1)
+                            setOpenMySupplyModal(true)
+                          }}
+                          fontWeight="700"
+                          color="rgba(255, 255, 255)"
+                          lineHeight="1.0625rem"
+                        >
+                          Supply {'>'}
+                        </Typography>
+                      </ETHBox>
+                    </FlexBox>
                   </SpaceBetweenBox>
-                  <MobileMyNFTCollateral></MobileMyNFTCollateral>
-                  <MobileMyETHCollateral
-                    setOpenMySupplyModal={setOpenMySupplyModal}
-                    setTypeModal={setTypeModal}
-                  ></MobileMyETHCollateral>
-                </Box>
-              )}
-            </MyAssetsBox>
+                ) : (
+                  <Box>
+                    <SpaceBetweenBox mt="1rem" mr="2.75rem">
+                      <Box ml="0.375rem">
+                        <Typography variant="body2" color="#A0A3BD">
+                          My Assets
+                        </Typography>
+                        <FlexBox>
+                          <img src={mobileBlackEthLogo} alt="" />
+                          <Typography ml="0.4375rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
+                            {balance}
+                          </Typography>
+                        </FlexBox>
+                      </Box>
+                      <Box>
+                        <Typography variant="body1" fontWeight="600" color="#A0A3BD">
+                          15%
+                        </Typography>
+                        <FlexBox>
+                          <Typography mr="0.25rem" variant="body2" color="#A0A3BD">
+                            Net APY
+                          </Typography>
+                          <img src={mobilePrompt2} alt="" />
+                        </FlexBox>
+                      </Box>
+                    </SpaceBetweenBox>
+                    <MobileMyNFTCollateral></MobileMyNFTCollateral>
+                    <MobileMyETHCollateral
+                      setOpenMySupplyModal={setOpenMySupplyModal}
+                      setTypeModal={setTypeModal}
+                    ></MobileMyETHCollateral>
+                  </Box>
+                )}
+              </MyAssetsBox>
+            )}
           </Box>
           <MobileMyLoan></MobileMyLoan>
         </>

@@ -7,7 +7,7 @@ import mobileLiquidationBg from 'assets/images/svg/liquidation/mobileLiquidation
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getClient } from 'apollo/client'
 import { AllUser } from 'apollo/queries'
-import { useAddress, useCollateralsType, useMobileType } from 'state/user/hooks'
+import { useAddress, useCollateralsType, useLoginWalletType, useMobileMenuType, useMobileType } from 'state/user/hooks'
 import { useCollections } from 'state/application/hooks'
 import { CollateralModel } from 'services/type/nft'
 import { getRiskLevel, getRiskLevelTag } from 'utils'
@@ -17,6 +17,13 @@ import MobileCollateral from './components/mobileLiquidation/MobileCollateral'
 import { fromWei } from 'web3-utils'
 import { useActiveWeb3React } from 'hooks/web3'
 import BigNumber from 'bignumber.js'
+import { Typography } from '@mui/material'
+import { setLoginWalletType } from 'state/user/reducer'
+import MobileMenu from 'components/Header/components/MobileMenu'
+import WalletMessage from 'components/Header/components/WalletMessage'
+import WalletModal from 'components/WalletModal'
+import { useAppDispatch } from 'state/hooks'
+import MobileCollateralSkeleton from './components/MobileLiquidationSkeleton/MobileCollateralSkeleton'
 
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 
@@ -41,11 +48,22 @@ const BodyBg = styled(Box)`
 const MobileBody = styled(Box)`
   background: #f7f7fc;
   width: 100%;
-  padding: 0 1rem;
   background-image: url(${mobileLiquidationBg});
   background-repeat: no-repeat;
 `
+const ConnectWalletBox = styled(Box)`
+  background: linear-gradient(95.08deg, #7646ff 2.49%, #297ac9 49.84%, #00dfd2 97.19%);
+  box-shadow: 0px 0.5rem 1rem rgba(40, 127, 202, 0.2), inset 0px 0.125rem 0.125rem rgba(255, 255, 255, 0.1);
+  border-radius: 1.6875rem;
+  padding: 0.875rem;
+  margin: 1rem 1rem 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
 export default function Liquidation() {
+  const mobileMenuType = useMobileMenuType()
+  const loginWalletType = useLoginWalletType()
   const { chainId } = useActiveWeb3React()
   const [loading, setLoading] = useState(true)
   const [collaterals, setCollaterals] = useState<Array<CollateralModel>>([])
@@ -57,6 +75,20 @@ export default function Liquidation() {
   const [debtFilter, setDebtFilter] = useState(0) //过滤条件
   const [collectionFilter, setCollectionFilter] = useState(0)
   const collateralsType = useCollateralsType()
+  const dispatch = useAppDispatch()
+  function ConnectWallet() {
+    return (
+      <ConnectWalletBox
+        onClick={() => {
+          dispatch(setLoginWalletType(false))
+        }}
+      >
+        <Typography variant="subtitle2" color="#ffffff" fontWeight="600">
+          Connect Wallet
+        </Typography>
+      </ConnectWalletBox>
+    )
+  }
   const conditionDebtFilter = useMemo(() => {
     switch (debtFilter) {
       case 1:
@@ -184,8 +216,37 @@ export default function Liquidation() {
         </Body>
       ) : (
         <MobileBody>
-          <MobileHeader></MobileHeader>
-          <MobileCollateral collaterals={collaterals}></MobileCollateral>
+          {mobileMenuType ? (
+            <Box p="0 1rem">
+              <MobileHeader></MobileHeader>
+              {loading ? (
+                <MobileCollateralSkeleton></MobileCollateralSkeleton>
+              ) : (
+                <MobileCollateral
+                  sort={sort}
+                  setSort={setSort}
+                  debtFilter={debtFilter}
+                  setDebtFilter={setDebtFilter}
+                  collectionFilter={collectionFilter}
+                  setCollectionFilter={setCollectionFilter}
+                  searchTerms={searchTerms}
+                  setSearchTerms={setSearchTerms}
+                  collaterals={collaterals}
+                ></MobileCollateral>
+              )}
+            </Box>
+          ) : (
+            <Box sx={{ minHeight: '41.6875rem' }} p="3.625rem 0 10rem 0">
+              {loginWalletType ? (
+                <>
+                  <MobileMenu></MobileMenu>
+                  {address ? <WalletMessage></WalletMessage> : <>{ConnectWallet()}</>}
+                </>
+              ) : (
+                <WalletModal></WalletModal>
+              )}
+            </Box>
+          )}
         </MobileBody>
       )}
     </>

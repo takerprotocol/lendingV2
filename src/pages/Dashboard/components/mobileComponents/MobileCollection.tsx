@@ -9,9 +9,10 @@ import { CenterBox, FlexBox, SpaceBetweenBox } from 'styleds'
 import { useState } from 'react'
 import { fromWei } from 'web3-utils'
 import { useNavigate } from 'react-router-dom'
-import { useCollections, useDepositedCollection } from 'state/application/hooks'
+import { useCollections, useDepositedCollection, useLoading } from 'state/application/hooks'
 import { div, times } from 'utils'
 import { useAddress } from 'state/user/hooks'
+import MobileCollectionSkeleton from '../mobileDashboardSkeleton/MobileCollectionSkeleton'
 const Collection = styled(Box)`
   background: linear-gradient(180deg, #9574f5 0%, #857dfc 100%);
   width: 100%;
@@ -69,6 +70,7 @@ export default function MobileCollection() {
   const [type, setType] = useState<number | null>(1)
   const collection = useCollections()
   const address = useAddress()
+  const loading = useLoading()
   const navigate = useNavigate()
   const depositedCollection = useDepositedCollection()
   const deposited = (id: string) => {
@@ -82,137 +84,149 @@ export default function MobileCollection() {
   }
   return (
     <CollectionBgBox display={collection.length === 0 ? 'none' : ''}>
-      <Collection>
-        <Typography variant="subtitle2" fontWeight="700" color="#ffffff">
-          Collection Supported
-        </Typography>
-        <Typography mt="0.125rem" variant="body2" component="span" fontWeight="600" color="#C8B9FA">
-          Deposit NFTs to earn{' '}
-          <Typography variant="body2" component="span" fontWeight="700" color="#ffffff">
-            +20{' '}
-          </Typography>
-          borrow reward
-        </Typography>
-        {collection.map((el: any) => (
-          <CardBox key={`${el.id}collection`}>
-            <NftBox>
-              <LabelBox display={type ? '' : 'none'}>
-                <Typography variant="body1" color="#ffffff" lineHeight="150%" fontWeight="700">
-                  Can Deposit
-                </Typography>
-              </LabelBox>
-              <FlexBox>
-                <ImgBox src={el.icon} alt="" />
-                <Box ml="0.5rem">
-                  <Typography variant="body1" lineHeight="1.125rem" fontWeight="700">
-                    {el?.name}
-                  </Typography>
+      {loading ? (
+        <MobileCollectionSkeleton></MobileCollectionSkeleton>
+      ) : (
+        <>
+          <Collection>
+            <Typography variant="subtitle2" fontWeight="700" color="#ffffff">
+              Collection Supported
+            </Typography>
+            <Typography mt="0.125rem" variant="body2" component="span" fontWeight="600" color="#C8B9FA">
+              Deposit NFTs to earn{' '}
+              <Typography variant="body2" component="span" fontWeight="700" color="#ffffff">
+                +20{' '}
+              </Typography>
+              borrow reward
+            </Typography>
+            {collection.map((el: any) => (
+              <CardBox key={`${el.id}collection`}>
+                <NftBox>
+                  <LabelBox display={type ? '' : 'none'}>
+                    <Typography variant="body1" color="#ffffff" lineHeight="150%" fontWeight="700">
+                      Can Deposit
+                    </Typography>
+                  </LabelBox>
                   <FlexBox>
-                    <Typography variant="body2" lineHeight="1.125rem" color="#A0A3BD">
-                      60 Users
-                    </Typography>
-                    <Typography ml={'0.5rem'} variant="body2" lineHeight="1.125rem" color="#A0A3BD">
-                      230 NFTs
-                    </Typography>
+                    <ImgBox src={el.icon} alt="" />
+                    <Box ml="0.5rem">
+                      <Typography variant="body1" lineHeight="1.125rem" fontWeight="700">
+                        {el?.name}
+                      </Typography>
+                      <FlexBox>
+                        <Typography variant="body2" lineHeight="1.125rem" color="#A0A3BD">
+                          60 Users
+                        </Typography>
+                        <Typography ml={'0.5rem'} variant="body2" lineHeight="1.125rem" color="#A0A3BD">
+                          230 NFTs
+                        </Typography>
+                      </FlexBox>
+                    </Box>
                   </FlexBox>
-                </Box>
-              </FlexBox>
-              <SpaceBetweenBox mt="1rem">
-                <FlexBox>
-                  <Box>
-                    <Typography variant="body2" color="#A0A3BD">
-                      Floor Price
-                    </Typography>
-                    <FlexBox mt="0.125rem">
-                      <img src={mobileBlackEthLogo2} alt="" />
-                      <Typography ml="0.3125rem" variant="body1" fontWeight="700" lineHeight="1.25rem">
-                        {fromWei(el?.floorPrice || 0)}
-                      </Typography>
-                    </FlexBox>
-                  </Box>
-                  <Box ml="1.94rem">
-                    <Typography variant="body2" color="#A0A3BD">
-                      Loan to value
-                    </Typography>
-                    <FlexBox mt="0.125rem">
-                      <img src={mobileBlackEthLogo2} alt="" />
-                      <Typography ml="0.3125rem" variant="body1" fontWeight="700" lineHeight="1.25rem">
-                        {times(fromWei(el?.floorPrice || 0), div(el.ltv, 10000))}
-                      </Typography>
-                      <Typography ml="0.25rem" variant="body1" color="#A0A3BD" fontWeight="700" lineHeight="1.25rem">
-                        {div(el.ltv, 100)}%
-                      </Typography>
-                    </FlexBox>
-                  </Box>
-                </FlexBox>
-                <img
-                  src={address ? mobileCollateralRight : mobileCollateralRight2}
-                  alt=""
-                  onClick={() => {
-                    navigate(`/deposit/${el.id}`)
-                  }}
-                />
-              </SpaceBetweenBox>
-            </NftBox>
-            <NftFooterBox>
-              {el === type && (
-                <Box>
-                  <SpaceBetweenBox marginY="0.5rem">
-                    <Typography variant="body2" color="#A0A3BD">
-                      Liquidation Threshold
-                    </Typography>
-                    <Typography variant="body2" fontWeight="600">
-                      {div(el.liqThreshold, 100)}%
-                    </Typography>
-                  </SpaceBetweenBox>
-                  <SpaceBetweenBox>
-                    <Typography variant="body2" color="#A0A3BD">
-                      Liquidation Profit
-                    </Typography>
-                    <Typography variant="body2" fontWeight="600">
-                      20%
-                    </Typography>
-                  </SpaceBetweenBox>
-                  <MyDepositedBox>
-                    <SpaceBetweenBox>
+                  <SpaceBetweenBox mt="1rem">
+                    <FlexBox>
                       <Box>
-                        <Typography variant="body1" color="#7646FF" fontWeight="700">
-                          {deposited(el.id)}
-                        </Typography>
                         <Typography variant="body2" color="#A0A3BD">
-                          My Deposited
+                          Floor Price
                         </Typography>
+                        <FlexBox mt="0.125rem">
+                          <img src={mobileBlackEthLogo2} alt="" />
+                          <Typography ml="0.3125rem" variant="body1" fontWeight="700" lineHeight="1.25rem">
+                            {fromWei(el?.floorPrice || 0)}
+                          </Typography>
+                        </FlexBox>
                       </Box>
-                      <Box mr="2.75rem">
-                        <Typography variant="body1" color="#7646FF" fontWeight="700">
-                          10 NFTs
-                        </Typography>
+                      <Box ml="1.94rem">
                         <Typography variant="body2" color="#A0A3BD">
-                          I Can Deposit
+                          Loan to value
                         </Typography>
+                        <FlexBox mt="0.125rem">
+                          <img src={mobileBlackEthLogo2} alt="" />
+                          <Typography ml="0.3125rem" variant="body1" fontWeight="700" lineHeight="1.25rem">
+                            {times(fromWei(el?.floorPrice || 0), div(el.ltv, 10000))}
+                          </Typography>
+                          <Typography
+                            ml="0.25rem"
+                            variant="body1"
+                            color="#A0A3BD"
+                            fontWeight="700"
+                            lineHeight="1.25rem"
+                          >
+                            {div(el.ltv, 100)}%
+                          </Typography>
+                        </FlexBox>
                       </Box>
-                    </SpaceBetweenBox>
-                  </MyDepositedBox>
-                </Box>
-              )}
-              <CenterBox
-                onClick={() => {
-                  if (el === type) {
-                    setType(null)
-                  } else {
-                    setType(el)
-                  }
-                }}
-              >
-                <Typography variant="body2" color="#A7A5D1">
-                  Show Details
-                </Typography>
-                <img src={type ? mobileCollateralUp : mobileCollateralDown} alt="" />
-              </CenterBox>
-            </NftFooterBox>
-          </CardBox>
-        ))}
-      </Collection>
+                    </FlexBox>
+                    <img
+                      src={address ? mobileCollateralRight : mobileCollateralRight2}
+                      alt=""
+                      onClick={() => {
+                        navigate(`/deposit/${el.id}`)
+                      }}
+                    />
+                  </SpaceBetweenBox>
+                </NftBox>
+                <NftFooterBox>
+                  {el === type && (
+                    <Box>
+                      <SpaceBetweenBox marginY="0.5rem">
+                        <Typography variant="body2" color="#A0A3BD">
+                          Liquidation Threshold
+                        </Typography>
+                        <Typography variant="body2" fontWeight="600">
+                          {div(el.liqThreshold, 100)}%
+                        </Typography>
+                      </SpaceBetweenBox>
+                      <SpaceBetweenBox>
+                        <Typography variant="body2" color="#A0A3BD">
+                          Liquidation Profit
+                        </Typography>
+                        <Typography variant="body2" fontWeight="600">
+                          20%
+                        </Typography>
+                      </SpaceBetweenBox>
+                      <MyDepositedBox>
+                        <SpaceBetweenBox>
+                          <Box>
+                            <Typography variant="body1" color="#7646FF" fontWeight="700">
+                              {deposited(el.id)}
+                            </Typography>
+                            <Typography variant="body2" color="#A0A3BD">
+                              My Deposited
+                            </Typography>
+                          </Box>
+                          <Box mr="2.75rem">
+                            <Typography variant="body1" color="#7646FF" fontWeight="700">
+                              10 NFTs
+                            </Typography>
+                            <Typography variant="body2" color="#A0A3BD">
+                              I Can Deposit
+                            </Typography>
+                          </Box>
+                        </SpaceBetweenBox>
+                      </MyDepositedBox>
+                    </Box>
+                  )}
+                  <CenterBox
+                    onClick={() => {
+                      if (el === type) {
+                        setType(null)
+                      } else {
+                        setType(el)
+                      }
+                    }}
+                  >
+                    <Typography variant="body2" color="#A7A5D1">
+                      Show Details
+                    </Typography>
+                    <img src={type ? mobileCollateralUp : mobileCollateralDown} alt="" />
+                  </CenterBox>
+                </NftFooterBox>
+              </CardBox>
+            ))}
+          </Collection>
+        </>
+      )}
     </CollectionBgBox>
   )
 }

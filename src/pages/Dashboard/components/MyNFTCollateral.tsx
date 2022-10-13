@@ -2,11 +2,14 @@ import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
 import MyNFTCollateralBg from 'assets/images/svg/dashboard/MyNFTCollateralBg.svg'
 import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
 import { FlexBox, SpaceBetweenBox, SpaceBox } from 'styleds'
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAccountNfts, useUserNftConfig, useUserValue } from 'state/user/hooks'
+import { useAccountNfts, useAddress, useUserValue } from 'state/user/hooks'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
 import ERC721 from 'assets/images/png/collection/721.png'
+import { useActiveWeb3React } from 'hooks/web3'
+import { getClient } from 'apollo/client'
+import { User } from 'apollo/queries'
 
 // import ILendingPoolAddressesProviderAbi from 'abis/MockERC721.json'
 // import { useContract } from 'hooks/useContract'
@@ -89,8 +92,16 @@ interface MyNFTCollateralProps {
   loading: boolean
 }
 export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps) {
+  const { chainId } = useActiveWeb3React()
+  const address = useAddress()
+  const [client, setClient] = useState<any>(null)
+  useEffect(() => {
+    if (chainId) {
+      setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : chainId === 5 ? 5 : 42])
+    }
+  }, [chainId])
   const navigate = useNavigate()
-  const nftConfig = useUserNftConfig()
+  const [nftCount, setNftCount] = useState(0)
   const [dataType] = useState<boolean>(true)
   const userValue = useUserValue()
   const collections = useCollections()
@@ -106,6 +117,25 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   //     })
   //   }
   // }
+  const getUser = useCallback(async () => {
+    if (client && address) {
+      const userRes = await client.query({
+        query: User(`${address}`),
+      })
+      let _nftCount = 0
+      if (userRes.data && userRes.data.user && userRes.data.user.collections) {
+        userRes.data.user.collections.forEach((cel: any) => {
+          if (cel.tokens) {
+            _nftCount += cel.tokens.length
+          }
+        })
+      }
+      setNftCount(_nftCount)
+    }
+  }, [client, address])
+  useEffect(() => {
+    getUser()
+  }, [getUser])
 
   const renderImg = (id: string) => {
     const item = collections.find((el) => el.id.toLocaleLowerCase() === id.split('-')[1].toLocaleLowerCase())
@@ -230,7 +260,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
           </Box>
           {dataType && (
             <ButtonBox>
-              <TypographyButton>{+nftConfig} NFTs</TypographyButton>
+              <TypographyButton>{nftCount} NFTs</TypographyButton>
             </ButtonBox>
           )}
         </SpaceBox>
