@@ -1,6 +1,5 @@
 import lendingPoolAbi from 'abis/ILendingPool.json'
 import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
-import { CHAIN_IDs } from 'config'
 import { useContract } from 'hooks/useContract'
 import { useEffect, useState } from 'react'
 import { useAddress } from 'state/user/hooks'
@@ -14,7 +13,7 @@ export function useLendingPool() {
   const contract = useContract(getProxyAddressesProvider(chainId), ILendingPoolAddressesProviderAbi)
   const lendingPoolContract = useContract(address, lendingPoolAbi)
   useEffect(() => {
-    if (contract && !address && account && chainId && CHAIN_IDs.includes(chainId)) {
+    if (contract && !address) {
       contract.getLendingPool().then((res: string) => {
         if (res) {
           setAddress(res)

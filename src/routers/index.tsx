@@ -54,7 +54,7 @@ export default function CustomizeRoutes() {
   const [client, setClient] = useState<any>(null)
   useEffect(() => {
     if (chainId) {
-      setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : chainId === 5 ? 5 : 42])
+      setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
   }, [chainId])
   const flag = useMemo(() => {
@@ -115,7 +115,6 @@ export default function CustomizeRoutes() {
         )
       })
       contract.getUserState(address).then((res: Array<BigNumber>) => {
-        console.log(res)
         dispatch(
           setUserState({
             loanToValue: div(res[0].toString(), 10000),
@@ -150,6 +149,10 @@ export default function CustomizeRoutes() {
         dispatch(setLoading(false))
         dispatch(setUserNftConfig(bigNumberToString(res)))
       })
+    } else {
+      if (dispatch) {
+        dispatch(setLoading(false))
+      }
     }
   }, [contract, address, dispatch, chainId, flag])
 
