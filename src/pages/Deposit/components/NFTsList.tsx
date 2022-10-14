@@ -61,7 +61,14 @@ const Image = (props: any) => {
   const [imageLoaded, setImageLoaded] = useState(false)
   return (
     <>
-      <NftImage loaded={imageLoaded} onLoad={() => setImageLoaded(true)} {...props} />
+      <NftImage
+        onError={(e: any) => {
+          e.target.src = props.src
+        }}
+        loaded={imageLoaded}
+        onLoad={() => setImageLoaded(true)}
+        {...props}
+      />
       {!imageLoaded && <NftImageLoading variant="rectangular" />}
     </>
   )
