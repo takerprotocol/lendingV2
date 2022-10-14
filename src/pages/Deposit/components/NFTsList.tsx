@@ -101,7 +101,6 @@ export default function NFTsList({ list, loading, depositType, onChange, TypeKey
     //   console.log(nftName)
     // }
   }, [checked, list])
-  console.log('list', list)
   return (
     <>
       <ListBox>

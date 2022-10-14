@@ -100,8 +100,13 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
     if (alchemy) {
       const arr: Array<Nft> = []
       for (let i = 0, length = list.length; i < length; i++) {
-        const nft = await getAlchemyNftMetadata(list[i].id.split('-')[1], list[i].id.split('-')[2], alchemy)
-        arr.push(nft)
+        if (list[i].id) {
+          const nft = await getAlchemyNftMetadata(list[i].id.split('-')[1], list[i].id.split('-')[2], alchemy)
+          arr.push(nft)
+        } else {
+          const nft = await getAlchemyNftMetadata(list[i].contract.address, list[i].tokenId, alchemy)
+          arr.push(nft)
+        }
       }
       setWithdrawList(arr)
     }
