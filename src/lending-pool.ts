@@ -300,9 +300,11 @@ export function handleCollateralStatusUpdated(event: CollateralStatusUpdated): v
 
   let newStatus = event.params.status;
   if(!userReserve.usedAsCollateral && newStatus){
+    user.totalCollateral = user.totalCollateral.plus(userReserve.depositedAmount);
     user = utils.updateUserState(user, userReserve.depositedAmount, reserve.ltv, reserve.liqThreshold);
   }
   if(userReserve.usedAsCollateral && !newStatus){
+    user.totalCollateral = user.totalCollateral.minus(userReserve.depositedAmount);
     user = utils.updateUserState(user, userReserve.depositedAmount.neg(), reserve.ltv, reserve.liqThreshold);
   }
   userReserve.usedAsCollateral = event.params.status;

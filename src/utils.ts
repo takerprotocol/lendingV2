@@ -15,7 +15,7 @@ export function newUser(Id: string): User {
     user.totalDebt = BigInt.zero();
     user.avgLtv = BigDecimal.zero();
     user.liqThreshold = BigDecimal.zero();
-    user.healthFactor = BigDecimal.zero();
+    user.healthFactor = BigInt.fromU64(u64.MAX_VALUE).toBigDecimal();
 
     return user;
 }
@@ -66,27 +66,33 @@ export function updateCollectionPrice(collection: NftCollection, oracle: IPriceO
 
 export function updateUserState(user: User, assetPrice: BigInt, assetLtv: BigInt, assetLiqThresh: BigInt): User {
     // totalCollateral should have been upgraded
-
     let totalCollateral = user.totalCollateral.toBigDecimal();
     let totalDebt = user.totalDebt.toBigDecimal();
-    if (totalCollateral.equals(BigDecimal.zero())  || totalDebt.equals(BigDecimal.zero())) {
+
+    if (totalCollateral.notEqual(BigDecimal.zero())) {
+        // Weighted avg of ltv & threshold
+        user.avgLtv = user.avgLtv
+            .plus(assetPrice.times(assetLtv).toBigDecimal())
+            .div(totalCollateral);
+
+        user.liqThreshold = user.liqThreshold
+            .plus(assetPrice.times(assetLiqThresh).toBigDecimal())
+            .div(totalCollateral);
+    } else {
+        // Can't borrow anything.
+        // avtLtv = 0/0, liqThresh = 0/0
         user.avgLtv = BigDecimal.zero();
         user.liqThreshold = BigDecimal.zero();
-        user.healthFactor = BigDecimal.zero();
-
-        return user;
     }
-    user.avgLtv = user.avgLtv
-        .plus(assetPrice.times(assetLtv).toBigDecimal())
-        .div(totalCollateral);
-
-    user.liqThreshold = user.liqThreshold
-        .plus(assetPrice.times(assetLiqThresh).toBigDecimal())
-        .div(totalCollateral);
-
-    user.healthFactor = user.totalCollateral.toBigDecimal()
-        .times(user.liqThreshold)
-        .div(totalDebt);
+    if (totalDebt.notEqual(BigDecimal.zero())) {
+        // Hf = Allowance / Borrowed
+        user.healthFactor = user.totalCollateral.toBigDecimal()
+            .times(user.liqThreshold)
+            .div(totalDebt);
+    } else {
+        // Hf = allowance / 0
+        user.healthFactor = BigInt.fromU64(u64.MAX_VALUE).toBigDecimal();
+    }
 
     return user;
 }
@@ -94,8 +100,7 @@ export function updateUserState(user: User, assetPrice: BigInt, assetLtv: BigInt
 export function updateHealthFactor(user: User): User {
     let totalDebt = user.totalDebt.toBigDecimal();
     if (totalDebt.equals(BigDecimal.zero())) {
-        user.healthFactor = BigDecimal.zero();
-
+        user.healthFactor = BigInt.fromU64(u64.MAX_VALUE).toBigDecimal();
         return user;
     }
     user.healthFactor = user.totalCollateral.toBigDecimal()
