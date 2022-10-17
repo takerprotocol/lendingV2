@@ -57,14 +57,20 @@ const PrettoSlider = styled(Slider)({
 interface CustomizedSliderProps {
   riskLevelTag: string
   sliderValue?: number
+  setSlider?: Function
 }
-export default function CustomizedSlider({ riskLevelTag, sliderValue }: CustomizedSliderProps) {
+export default function CustomizedSlider({ setSlider, riskLevelTag, sliderValue }: CustomizedSliderProps) {
   return (
     <PrettoSlider
       className={`Slider-${riskLevelTag}`}
       valueLabelDisplay="off"
       value={sliderValue}
       aria-label="pretto slider"
+      onChange={(el: any) => {
+        if (setSlider) {
+          setSlider(el.target.value)
+        }
+      }}
     />
   )
 }

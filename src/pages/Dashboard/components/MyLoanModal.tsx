@@ -189,6 +189,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const borrowLimitUsed = useDebtBorrowLimitUsed()
   const TypographyRiskLevel = getRiskLevel(amount ? debtRiskLevel : heath)
   const riskLevelTag = getRiskLevelTag(amount ? debtRiskLevel : heath)
+  const [slider, setSlider] = useState<number>(Number(borrowLimitUsed))
   const contract = useGateway()
   const poolContract = useLendingPool()
   const erc20ReserveData = useErc20ReserveData()
@@ -275,6 +276,9 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const buttonDisabled = useMemo(() => {
     return check === 1 ? !amount || new BigNumber(amount).gt(borrowLimit) : !amount || new BigNumber(amount).gt(ethDebt)
   }, [amount, borrowLimit, check, ethDebt])
+  useEffect(() => {
+    setAmount(new BigNumber(borrowLimit).times(new BigNumber(slider).div(100)).toFixed(2, 1))
+  }, [borrowLimit, slider])
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -386,7 +390,15 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                     value={amount}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                       event.target.value = event.target.value.replace(/^\D*(\d*(?:\.\d{0,10})?).*$/g, '$1')
-                      setAmount(event.target.value)
+                      if (check === 2) {
+                        if (new BigNumber(event.target.value).gt(ethDebt)) {
+                          setAmount(ethDebt)
+                        } else {
+                          setAmount(event.target.value)
+                        }
+                      } else {
+                        setAmount(event.target.value)
+                      }
                     }}
                   />
                 </CenterBox>
@@ -428,7 +440,11 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             <BeforeImg src={loanModalBefore} alt=""></BeforeImg>
           </BorrowAmountBox>
           <Box mb="21px" mt="9px" height="8px" width="372px">
-            <CustomizedSlider sliderValue={Number(BeforeValue)} riskLevelTag={riskLevelTag}></CustomizedSlider>
+            <CustomizedSlider
+              setSlider={setSlider}
+              sliderValue={Number(upBorrowLimitUsed)}
+              riskLevelTag={riskLevelTag}
+            ></CustomizedSlider>
           </Box>
           <SpaceBetweenBox mb="16.5px">
             <FlexBox>
