@@ -6,7 +6,6 @@ import rightIcon from 'assets/images/svg/common/right.svg'
 import loanModalBefore from 'assets/images/svg/dashboard/loanModal-before.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { MAXBox } from './MySupplyModal'
 import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal } from 'utils'
 import {
   useAddress,
@@ -45,6 +44,24 @@ const TopBox = styled(Box)`
   .BorrowOrRepay {
     color: #ffffff;
     background: #ffffff;
+  }
+`
+const MAXBox = styled(Box)`
+  width: 42px;
+  height: 23px;
+  border: 1px solid #14142a;
+  border-radius: 4px;
+  margin-top: 12px;
+  padding: 2px 8px;
+  cursor: pointer;
+  color: #14142a;
+  &.max {
+    color: #ffffff;
+    background: #14142a;
+  }
+  :hover {
+    color: #ffffff;
+    background: #14142a;
   }
 `
 const BottomBox = styled(Box)`
@@ -141,6 +158,12 @@ const BorrowAmountBox = styled(Box)`
   border-radius: 10px;
   padding: 16px;
   position: relative;
+  &.left {
+    border-bottom-left-radius: 0px !important;
+  }
+  &.right {
+    border-bottom-right-radius: 0px !important;
+  }
 `
 const LiquidatedBox = styled(Box)`
   width: 100%;
@@ -161,7 +184,6 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const [check, setCheck] = useState<number>(repayRoBorrow)
   const [amount, setAmount] = useState('')
   const heath = useHeath()
-  const [sliderValue] = useState<number>(+heath)
   const debtRiskLevel = useDebtRiskLevel(times(amount, check === 1 ? 1 : -1))
   const upBorrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
   const borrowLimitUsed = useDebtBorrowLimitUsed()
@@ -175,11 +197,20 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const address = useAddress()
   const ethDebt = useEthDebt()
   const addTransaction = useTransactionAdder()
+  const BeforeValue = useMemo(() => {
+    if (new BigNumber(upBorrowLimitUsed).gte(100)) {
+      return 100
+    } else if (new BigNumber(upBorrowLimitUsed).lte(0)) {
+      return 0
+    } else {
+      return upBorrowLimitUsed
+    }
+  }, [upBorrowLimitUsed])
   const BeforeImg = styled('img')`
     position: absolute;
     display: block;
     top: calc(100% - 10.5px);
-    left: ${`${plus(times(3.57, sliderValue), 25)}px`};
+    left: ${`${times(3.56, BeforeValue)}px`};
   `
   useEffect(() => {
     setCheck(repayRoBorrow)
@@ -338,7 +369,9 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
           </Box>
         </TopBox>
         <BottomBox>
-          <BorrowAmountBox>
+          <BorrowAmountBox
+            className={new BigNumber(BeforeValue).gte(99) ? 'right' : new BigNumber(BeforeValue).lte(1) ? 'left' : ''}
+          >
             <SpaceBetweenBox>
               <Box width={'200px'}>
                 <Typography variant="body1" component="p" color="#14142A">
@@ -395,7 +428,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             <BeforeImg src={loanModalBefore} alt=""></BeforeImg>
           </BorrowAmountBox>
           <Box mb="21px" mt="9px" height="8px" width="372px">
-            <CustomizedSlider sliderValue={sliderValue} riskLevelTag={riskLevelTag}></CustomizedSlider>
+            <CustomizedSlider sliderValue={Number(BeforeValue)} riskLevelTag={riskLevelTag}></CustomizedSlider>
           </Box>
           <SpaceBetweenBox mb="16.5px">
             <FlexBox>
@@ -493,25 +526,27 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </FlexBox>
           </RightFlexBox>
           {/* <FlexBox display={+debtRiskLevel < 110 ? '' : 'none'}> */}
-          <FlexBox display={new BigNumber(amount).gt(borrowLimit) ? '' : 'none'}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clipPath="url(#clip0_741_8707)">
-                <circle cx="7" cy="7" r="6.5" stroke="#E1536C" />
-                <path
-                  d="M7.00908 8.34798C6.73708 8.34798 6.58908 8.19598 6.56508 7.89198L6.21708 3.47598C6.20108 3.22798 6.26508 3.01998 6.40908 2.85198C6.56108 2.68398 6.75708 2.59998 6.99708 2.59998C7.23708 2.59998 7.43308 2.68398 7.58508 2.85198C7.73708 3.01998 7.80108 3.22798 7.77708 3.47598L7.44108 7.89198C7.41708 8.19598 7.27308 8.34798 7.00908 8.34798ZM6.92508 11C6.69308 11 6.51308 10.94 6.38508 10.82C6.26508 10.692 6.20508 10.512 6.20508 10.28V10.076C6.20508 9.84398 6.26508 9.66798 6.38508 9.54798C6.51308 9.41998 6.69308 9.35598 6.92508 9.35598H7.08108C7.31308 9.35598 7.48908 9.41998 7.60908 9.54798C7.73708 9.66798 7.80108 9.84398 7.80108 10.076V10.28C7.80108 10.512 7.73708 10.692 7.60908 10.82C7.48908 10.94 7.31308 11 7.08108 11H6.92508Z"
-                  fill="#E1536C"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_741_8707">
-                  <rect width="14" height="14" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-            <Typography ml="0.5rem" variant="body2" fontWeight="600" color="#E1536C">
-              Your collateral can easily be liquidated if the borrowing limit is reached
-            </Typography>
-          </FlexBox>
+          {new BigNumber(amount).gt(borrowLimit) && check === 1 && (
+            <FlexBox m="24px 0 16px 0">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clipPath="url(#clip0_741_8707)">
+                  <circle cx="7" cy="7" r="6.5" stroke="#E1536C" />
+                  <path
+                    d="M7.00908 8.34798C6.73708 8.34798 6.58908 8.19598 6.56508 7.89198L6.21708 3.47598C6.20108 3.22798 6.26508 3.01998 6.40908 2.85198C6.56108 2.68398 6.75708 2.59998 6.99708 2.59998C7.23708 2.59998 7.43308 2.68398 7.58508 2.85198C7.73708 3.01998 7.80108 3.22798 7.77708 3.47598L7.44108 7.89198C7.41708 8.19598 7.27308 8.34798 7.00908 8.34798ZM6.92508 11C6.69308 11 6.51308 10.94 6.38508 10.82C6.26508 10.692 6.20508 10.512 6.20508 10.28V10.076C6.20508 9.84398 6.26508 9.66798 6.38508 9.54798C6.51308 9.41998 6.69308 9.35598 6.92508 9.35598H7.08108C7.31308 9.35598 7.48908 9.41998 7.60908 9.54798C7.73708 9.66798 7.80108 9.84398 7.80108 10.076V10.28C7.80108 10.512 7.73708 10.692 7.60908 10.82C7.48908 10.94 7.31308 11 7.08108 11H6.92508Z"
+                    fill="#E1536C"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_741_8707">
+                    <rect width="14" height="14" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+              <Typography ml="0.5rem" variant="body2" fontWeight="600" color="#E1536C">
+                Your collateral can easily be liquidated if the borrowing limit is reached
+              </Typography>
+            </FlexBox>
+          )}
           {check === 1 && new BigNumber(amount).gt(borrowLimit) ? (
             // {check === 1 && +debtRiskLevel < 110 ? (
             <LiquidatedBox>

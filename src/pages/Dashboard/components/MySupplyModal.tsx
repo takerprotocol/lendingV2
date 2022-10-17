@@ -97,9 +97,11 @@ const BorrowAmountBox = styled(Box)`
   padding: 16px;
 `
 export const MAXBox = styled(Box)`
-  padding: 0.0625rem 0.5rem;
-  background: #d9dbe9;
-  border-radius: 0.25rem;
+  width: 42px;
+  height: 23px;
+  border: 1px solid #14142a;
+  border-radius: 4px;
+  padding: 2px 8px;
   cursor: pointer;
   color: #14142a;
   &.max {

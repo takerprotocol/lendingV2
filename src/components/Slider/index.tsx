@@ -65,7 +65,6 @@ export default function CustomizedSlider({ riskLevelTag, sliderValue }: Customiz
       valueLabelDisplay="off"
       value={sliderValue}
       aria-label="pretto slider"
-      defaultValue={20}
     />
   )
 }

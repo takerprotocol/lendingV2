@@ -40,6 +40,7 @@ export function useUserNftConfig(): string {
 }
 export function useHeath(): string {
   const value = decimalFormat(times(useUserState().heathFactor, 100), Number(useDecimal()), false)
+  console.log('useHeath', value)
   if (new BigNumber(value).gt(200)) {
     return '200'
   } else {

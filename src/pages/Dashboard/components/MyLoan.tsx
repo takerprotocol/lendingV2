@@ -6,11 +6,12 @@ import addBox from 'assets/images/svg/dashboard/addBox.svg'
 import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
 import riskLevelBefore from 'assets/images/svg/dashboard/riskLevelBefore.svg'
 import CustomizedSlider from 'components/Slider'
+import BigNumber from 'bignumber.js'
 import { useMemo, useState } from 'react'
 import MyLoanModal from './MyLoanModal'
-import { minus, fixedFormat, getRiskLevel, getRiskLevelTag, times, decimalFormat, div } from 'utils'
+import { minus, fixedFormat, getRiskLevel, getRiskLevelTag, times, decimalFormat } from 'utils'
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
-import { useBorrowLimit, useErc20ReserveData, useEthDebt, useHeath } from 'state/user/hooks'
+import { useBorrowLimit, useDebtBorrowLimitUsed, useErc20ReserveData, useEthDebt, useHeath } from 'state/user/hooks'
 import TipsTooltip from './TipsTooltip'
 // import { useContract } from 'hooks/useContract'
 // import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
@@ -89,6 +90,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
   const erc20ReserveData = useErc20ReserveData()
   const ethDebt = useEthDebt()
   const borrowLimit = useBorrowLimit()
+  const borrowLimitUsed = useDebtBorrowLimitUsed()
   const heath = useHeath()
   const myLoanRiskLevel = useMemo(() => {
     return getRiskLevel(heath)
@@ -101,7 +103,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
   const BeforeImg = styled(`img`)`
     position: absolute;
     top: calc(100% - 10.5px);
-    left: ${`${times(3.57, div(heath, 2))}px`};
+    left: ${`${times(3.57, borrowLimitUsed)}px`};
   `
   return (
     <MyLoanBox className={loading ? 'SkeletonBg' : ''}>
@@ -140,7 +142,11 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
               </Box>
             </RepayBox>
           </Box>
-          <RiskLevelBox className={heath === '200' ? 'right' : heath === '0' ? 'left' : ''}>
+          <RiskLevelBox
+            className={
+              new BigNumber(borrowLimitUsed).gte(199) ? 'right' : new BigNumber(borrowLimitUsed).lte(1) ? 'left' : ''
+            }
+          >
             {+borrowLimit !== 0 ? (
               <>
                 <FlexStartBox ml="10px">
@@ -189,7 +195,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
               </Box>
             )}
           </RiskLevelBox>
-          <CustomizedSlider sliderValue={Number(heath)} riskLevelTag={myLoanRiskLevelTag}></CustomizedSlider>
+          <CustomizedSlider sliderValue={Number(borrowLimitUsed)} riskLevelTag={myLoanRiskLevelTag}></CustomizedSlider>
           <FlexEndBox mt="7px">
             <Typography variant="body1" color="#4E4B66">
               Borrow Limit {fixedFormat(borrowLimit)} ETH
