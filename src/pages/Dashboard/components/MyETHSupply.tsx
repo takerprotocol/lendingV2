@@ -14,6 +14,7 @@ import {
   useErc20ReserveData,
   useEthCollateral,
   useEthDebt,
+  useEthLiquidity,
   // useHeath,
   // useNftCollateral,
   useUsedCollateral,
@@ -122,6 +123,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const ethDebt = useEthDebt()
   // const heath = useHeath()
   const ethCollateral = useEthCollateral()
+  const ethLiquidity = useEthLiquidity()
   // const nftCollateral = useNftCollateral()
   const userValue = useUserValue()
   const usedCollateral = useUsedCollateral()
@@ -228,7 +230,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
             </Typography>
             <FlexEndBox height={24}>
               <Typography variant="h5" mr="8px" fontWeight="600" color="#ffffff" lineHeight="22px">
-                {fixedFormat(ethCollateral)}
+                {fixedFormat(ethLiquidity)}
               </Typography>
               <Typography variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
                 {' '}
