@@ -42,6 +42,8 @@ dataSources:
           handler: handleWithdrawn
         - event: CollateralStatusUpdated(indexed address,indexed address,bool)
           handler: handleCollateralStatusUpdated
+        - event: ReserveDataUpdated(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleReserveDataUpdated
       file: ./src/lending-pool.ts
 
   - kind: ethereum

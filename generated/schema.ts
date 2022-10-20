@@ -146,6 +146,42 @@ export class Reserve extends Entity {
     this.set("ltv", Value.fromBigInt(value));
   }
 
+  get liquidityIndex(): BigDecimal {
+    let value = this.get("liquidityIndex");
+    return value!.toBigDecimal();
+  }
+
+  set liquidityIndex(value: BigDecimal) {
+    this.set("liquidityIndex", Value.fromBigDecimal(value));
+  }
+
+  get debtIndex(): BigDecimal {
+    let value = this.get("debtIndex");
+    return value!.toBigDecimal();
+  }
+
+  set debtIndex(value: BigDecimal) {
+    this.set("debtIndex", Value.fromBigDecimal(value));
+  }
+
+  get depositRate(): BigDecimal {
+    let value = this.get("depositRate");
+    return value!.toBigDecimal();
+  }
+
+  set depositRate(value: BigDecimal) {
+    this.set("depositRate", Value.fromBigDecimal(value));
+  }
+
+  get borrowRate(): BigDecimal {
+    let value = this.get("borrowRate");
+    return value!.toBigDecimal();
+  }
+
+  set borrowRate(value: BigDecimal) {
+    this.set("borrowRate", Value.fromBigDecimal(value));
+  }
+
   get name(): string | null {
     let value = this.get("name");
     if (!value || value.kind == ValueKind.NULL) {
@@ -386,22 +422,22 @@ export class User extends Entity {
     this.set("totalDebt", Value.fromBigInt(value));
   }
 
-  get avgLtv(): BigDecimal {
-    let value = this.get("avgLtv");
-    return value!.toBigDecimal();
+  get ltvAcc(): BigInt {
+    let value = this.get("ltvAcc");
+    return value!.toBigInt();
   }
 
-  set avgLtv(value: BigDecimal) {
-    this.set("avgLtv", Value.fromBigDecimal(value));
+  set ltvAcc(value: BigInt) {
+    this.set("ltvAcc", Value.fromBigInt(value));
   }
 
-  get liqThreshold(): BigDecimal {
-    let value = this.get("liqThreshold");
-    return value!.toBigDecimal();
+  get liqThreshAcc(): BigInt {
+    let value = this.get("liqThreshAcc");
+    return value!.toBigInt();
   }
 
-  set liqThreshold(value: BigDecimal) {
-    this.set("liqThreshold", Value.fromBigDecimal(value));
+  set liqThreshAcc(value: BigInt) {
+    this.set("liqThreshAcc", Value.fromBigInt(value));
   }
 
   get healthFactor(): BigDecimal {

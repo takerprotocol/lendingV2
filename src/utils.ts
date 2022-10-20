@@ -13,8 +13,8 @@ export function newUser(Id: string): User {
     user.reserveSupply = BigInt.zero();
     user.totalCollateral = BigInt.zero();
     user.totalDebt = BigInt.zero();
-    user.avgLtv = BigDecimal.zero();
-    user.liqThreshold = BigDecimal.zero();
+    user.ltvAcc = BigInt.zero();
+    user.liqThreshAcc = BigInt.zero();
     user.healthFactor = BigInt.fromU64(u64.MAX_VALUE).toBigDecimal();
 
     return user;
@@ -71,23 +71,18 @@ export function updateUserState(user: User, assetPrice: BigInt, assetLtv: BigInt
 
     if (totalCollateral.notEqual(BigDecimal.zero())) {
         // Weighted avg of ltv & threshold
-        user.avgLtv = user.avgLtv
-            .plus(assetPrice.times(assetLtv).toBigDecimal())
-            .div(totalCollateral);
-
-        user.liqThreshold = user.liqThreshold
-            .plus(assetPrice.times(assetLiqThresh).toBigDecimal())
-            .div(totalCollateral);
+        user.ltvAcc = user.ltvAcc.plus(assetPrice.times(assetLtv));
+        user.liqThreshAcc = user.liqThreshAcc.plus(assetPrice.times(assetLiqThresh))
     } else {
         // Can't borrow anything.
         // avtLtv = 0/0, liqThresh = 0/0
-        user.avgLtv = BigDecimal.zero();
-        user.liqThreshold = BigDecimal.zero();
+        user.ltvAcc = BigInt.zero();
+        user.liqThreshAcc = BigInt.zero();
     }
     if (totalDebt.notEqual(BigDecimal.zero())) {
         // Hf = Allowance / Borrowed
         user.healthFactor = user.totalCollateral.toBigDecimal()
-            .times(user.liqThreshold)
+            .times(user.liqThreshAcc.toBigDecimal())
             .div(totalDebt);
     } else {
         // Hf = allowance / 0
@@ -103,8 +98,8 @@ export function updateHealthFactor(user: User): User {
         user.healthFactor = BigInt.fromU64(u64.MAX_VALUE).toBigDecimal();
         return user;
     }
-    user.healthFactor = user.totalCollateral.toBigDecimal()
-        .times(user.liqThreshold)
+    user.healthFactor = user.liqThreshAcc.toBigDecimal()
+        .div(BigDecimal.fromString("10000"))
         .div(user.totalDebt.toBigDecimal());
 
     return user;

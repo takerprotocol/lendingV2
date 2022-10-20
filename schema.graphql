@@ -13,6 +13,11 @@ type Reserve @entity {
   interestRateCalculator: Bytes! #library
   liqThreshold: BigInt!
   ltv: BigInt!
+  liquidityIndex: BigDecimal!
+  debtIndex: BigDecimal!
+  depositRate: BigDecimal!
+  borrowRate: BigDecimal!
+
 
   name: String
   symbol: String
@@ -42,8 +47,8 @@ type User @entity {
   reserveSupply: BigInt!
   totalCollateral: BigInt!
   totalDebt: BigInt!
-  avgLtv: BigDecimal!
-  liqThreshold: BigDecimal!
+  ltvAcc: BigInt!
+  liqThreshAcc: BigInt!
   healthFactor: BigDecimal!
 
   reserves: [UserReserve!]! @derivedFrom(field: "user")

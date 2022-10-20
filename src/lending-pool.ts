@@ -1,4 +1,4 @@
-import {Address, BigInt, store, log} from "@graphprotocol/graph-ts";
+import {Address, BigInt, store, log, BigDecimal} from "@graphprotocol/graph-ts";
 import {
   Borrowed, CollateralStatusUpdated, Deposited, Initialized, Liquidated, NFTsDeposited,
   NFTsWithdrawn, Paused, Repaid, ReserveDataUpdated, Unpaused, Withdrawn
@@ -18,13 +18,14 @@ import * as utils from "./utils";
 
 
 export const POOLID = "0xf2989DAEEEc632BfdF87afC5C56b17b3e527425C";
-
 export const ORACLE = "0xA1b32782F2cFedE04E444Ae13aEAEFfEC12A6916";
 export const OLD_ORACLE = "0x4fC4063440Fb9b1806f1E9dB0A9632AeE3d830c3";
-
 // toLowerCase for comparison
 export const GATEWAY = "0x1Db1011e880664A43009661d8A647A37c6789234".toLowerCase();
 export const WETH = "0x3Ec409985520Ddf917b0e1b210faf8B26C372804".toLowerCase();
+
+const RAY =  BigDecimal.fromString("1e27");
+const WAD =  BigDecimal.fromString("1e18");
 
 export function handleNftReserveInitialized(event: NftReserveInitialized): void{
   let poolId = POOLID;
@@ -89,6 +90,10 @@ export function handleReserveInitialized(event: ReserveInitialized): void{
   reserve.interestRateCalculator = event.params.interestRateStrategyAddress;
   reserve.liqThreshold = event.params.liqThreshold;
   reserve.ltv = event.params.ltv;
+  reserve.liquidityIndex = BigDecimal.fromString("1");
+  reserve.debtIndex = BigDecimal.fromString("1");
+  reserve.depositRate = BigDecimal.zero();
+  reserve.borrowRate = BigDecimal.zero();
 
   let reserveContract = ERC20.bind(event.params.asset);
   reserve.name = reserveContract.try_name().value;
@@ -108,6 +113,20 @@ export function handleReserveDropped(event: ReserveDropped): void{
   if (collection) {
     store.remove("NftCollection", id);
   }
+}
+
+export function handleReserveDataUpdated(event: ReserveDataUpdated): void{
+  let id = event.params.asset.toHex();
+  let reserve = Reserve.load(id);
+  if (!reserve){
+    log.warning('Found ReserveDataUpdated event for unknown reserve - {}', [id]);
+    return;
+  }
+  reserve.liquidityIndex = event.params.liquidityIndex.toBigDecimal().div(RAY);
+  reserve.debtIndex = event.params.debtIndex.toBigDecimal().div(RAY);
+  reserve.depositRate = event.params.depositRate.toBigDecimal().div(WAD);
+  reserve.borrowRate = event.params.borrowRate.toBigDecimal().div(WAD);
+  reserve.save();
 }
 
 export function handleDeposited(event: Deposited): void {
@@ -147,7 +166,7 @@ export function handleWithdrawn(event: Withdrawn): void {
   let userId = event.params.user.toHex();
   // User deposit ETH through gateway
   // handled through handleGatewayWithdrawn
-  if (userId == GATEWAY && event.params.to.toHex() == GATEWAY) {
+  if (event.params.to.toHex() == GATEWAY) {
     return;
   }
   let reserveId = event.params.asset.toHex();
@@ -300,11 +319,9 @@ export function handleCollateralStatusUpdated(event: CollateralStatusUpdated): v
 
   let newStatus = event.params.status;
   if(!userReserve.usedAsCollateral && newStatus){
-    user.totalCollateral = user.totalCollateral.plus(userReserve.depositedAmount);
     user = utils.updateUserState(user, userReserve.depositedAmount, reserve.ltv, reserve.liqThreshold);
   }
   if(userReserve.usedAsCollateral && !newStatus){
-    user.totalCollateral = user.totalCollateral.minus(userReserve.depositedAmount);
     user = utils.updateUserState(user, userReserve.depositedAmount.neg(), reserve.ltv, reserve.liqThreshold);
   }
   userReserve.usedAsCollateral = event.params.status;
