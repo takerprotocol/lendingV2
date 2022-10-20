@@ -53,8 +53,9 @@ export const NftCollection = (id: string) => {
             id
           }
           collection
-          tokenIds
-          amounts
+          tokens {
+            id
+          }
         }
       }
     }

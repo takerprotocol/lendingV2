@@ -20,7 +20,7 @@ import {
   setUserState,
   setUserValues,
 } from 'state/user/reducer'
-import { bigNumberToString, div } from 'utils'
+import { bigNumberToString, div, times } from 'utils'
 import { getWETH, getERC721Address, DECIMALS_MASK, LTV_MASK, COLLATERAL_MASK, CHAIN_IDs } from 'config'
 import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
@@ -30,7 +30,7 @@ import { isTransactionRecent, useAllTransactions } from 'state/transactions/hook
 import { TransactionType } from 'state/transactions/types'
 import { getClient } from 'apollo/client'
 import { LendingPool, UserNftCollection } from 'apollo/queries'
-import { getCollectionStats } from 'services/module/collection'
+// import { getCollectionStats } from 'services/module/collection'
 import erc721abi from 'abis/MockERC721.json'
 import { setCollections, setDepositedCollection, setLoading } from 'state/application/reducer'
 import ERC721 from 'assets/images/png/collection/721.png'
@@ -99,13 +99,18 @@ export default function CustomizeRoutes() {
         dispatch(setErc721Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
       })
       contract.getReserveData(getWETH(chainId)).then((res: any) => {
+        console.log(res.borrowRate.toString())
+        console.log(
+          new BigNumber(div(fromWei(res.borrowRate.toString()), 10000)).decimalPlaces(2, 1).toString(),
+          'getReserveData'
+        )
         dispatch(
           setReserveData({
-            borrowRate: new BigNumber(div(fromWei(res.borrowRate.toString()), 10000)).decimalPlaces(2, 1).toString(),
+            borrowRate: new BigNumber(times(fromWei(res.borrowRate.toString()), 100)).decimalPlaces(2, 1).toString(),
             configuration: res.configuration.toString(),
             debtIndex: res.debtIndex.toString(),
             debtTokenAddress: res.debtTokenAddress.toString(),
-            depositRate: new BigNumber(div(fromWei(res.depositRate.toString()), 10000)).decimalPlaces(2, 1).toString(),
+            depositRate: new BigNumber(times(fromWei(res.depositRate.toString()), 100)).decimalPlaces(2, 1).toString(),
             interestRateCalculatorAddress: res.interestRateCalculatorAddress.toString(),
             tTokenAddress: res.tTokenAddress.toString(),
             treasury: res.treasury.toString(),
@@ -201,8 +206,8 @@ export default function CustomizeRoutes() {
           // const info = await getCollectionInfo(element.id)
           // item.info = info.data
           item.icon = renderImg(element.symbol)
-          const stats = await getCollectionStats(element.id, chainId)
-          item.stats = stats.data
+          // const stats = await getCollectionStats(element.id, chainId)
+          // item.stats = stats.data
           item.activeUser = element.users ? element.users.length : 0
           item.id = element.id
           item.name = element.name

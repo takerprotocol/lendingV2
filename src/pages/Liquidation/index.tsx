@@ -7,16 +7,22 @@ import mobileLiquidationBg from 'assets/images/svg/liquidation/mobileLiquidation
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getClient } from 'apollo/client'
 import { AllUser } from 'apollo/queries'
-import { useAddress, useCollateralsType, useLoginWalletType, useMobileMenuType, useMobileType } from 'state/user/hooks'
+import {
+  useAddress,
+  useCollateralsType,
+  useDecimal,
+  useLoginWalletType,
+  useMobileMenuType,
+  useMobileType,
+} from 'state/user/hooks'
 import { useCollections } from 'state/application/hooks'
 import { CollateralModel } from 'services/type/nft'
-import { getRiskLevel, getRiskLevelTag } from 'utils'
+import { decimalFormat, getRiskLevel, getRiskLevelTag } from 'utils'
 import MobileHeader from './components/mobileLiquidation/MobileHeader'
 import MobileCollateral from './components/mobileLiquidation/MobileCollateral'
 // import { WETH } from 'config'
 import { fromWei } from 'web3-utils'
 import { useActiveWeb3React } from 'hooks/web3'
-import BigNumber from 'bignumber.js'
 import { Typography } from '@mui/material'
 import { setLoginWalletType } from 'state/user/reducer'
 import MobileMenu from 'components/Header/components/MobileMenu'
@@ -65,6 +71,7 @@ export default function Liquidation() {
   const mobileMenuType = useMobileMenuType()
   const loginWalletType = useLoginWalletType()
   const { chainId } = useActiveWeb3React()
+  const decimal = useDecimal()
   const [loading, setLoading] = useState(true)
   const [collaterals, setCollaterals] = useState<Array<CollateralModel>>([])
   const address = useAddress()
@@ -174,7 +181,7 @@ export default function Liquidation() {
           //   depositedAmount = plus(depositedAmount, rel.depositedAmount)
           //   borrowedAmount = plus(borrowedAmount, rel.borrowedAmount)
           // })
-          const heath = new BigNumber(fromWei(element.healthFactor)).toFixed(2, 1)
+          const heath = decimalFormat(element.healthFactor, decimal, false)
           users.push({
             address: element.id,
             collateral: fromWei(element.totalCollateral),
@@ -188,7 +195,7 @@ export default function Liquidation() {
         setCollaterals(users)
       }
     }
-  }, [address, client, healthFactor, searchValue, conditionSort, allUserWhere])
+  }, [address, client, healthFactor, searchValue, conditionSort, allUserWhere, decimal])
 
   useEffect(() => {
     getCollaterals()

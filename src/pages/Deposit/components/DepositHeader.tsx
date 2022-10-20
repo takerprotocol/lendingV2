@@ -4,11 +4,18 @@ import myCollateralIcon from 'assets/images/svg/dashboard/myCollateral-icon.svg'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import DepositHeaderSkeleton from './depositSkeleton/DepositHeaderSkeleton'
-import { useDecimal, useErc20ReserveData } from 'state/user/hooks'
+import { useDecimal } from 'state/user/hooks'
 import { useCollections } from 'state/application/hooks'
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { decimalFormat, div, times } from 'utils'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { fromWei } from 'web3-utils'
+import BigNumber from 'bignumber.js'
+import { useActiveWeb3React } from 'hooks/web3'
+import { getClient } from 'apollo/client'
+import { NftCollection } from 'apollo/queries'
+
 // import { percent } from 'utils'
 const HeaderBox = styled(Box)`
   width: 1012px;
@@ -89,10 +96,20 @@ interface DepositHeaderProps {
 }
 
 export default function DepositHeader({ loading }: DepositHeaderProps) {
-  const erc20ReserveData = useErc20ReserveData()
+  const { chainId } = useActiveWeb3React()
   const collections = useCollections()
   const decimal = useDecimal()
+  const [totalValue, setTotalValue] = useState('')
+  const [borrowRate, setBorrowRate] = useState('')
+  const [total, setTotal] = useState(0)
   const { id } = useParams()
+  const contract = useLendingPool()
+  const [client, setClient] = useState<any>(null)
+  useEffect(() => {
+    if (chainId) {
+      setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
+    }
+  }, [chainId])
   const collection = useMemo(() => {
     if (collections && id) {
       return collections.find((el) => el.id.toLocaleLowerCase() === id.toLocaleLowerCase())
@@ -100,6 +117,33 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
       return null
     }
   }, [collections, id])
+  useEffect(() => {
+    if (contract && id) {
+      contract.getAssetValues(id).then((res: any) => {
+        setTotalValue(decimalFormat(res[0].toString(), decimal))
+      })
+      contract.getReserveData(id).then((res: any) => {
+        setBorrowRate(new BigNumber(times(fromWei(res.borrowRate.toString()), 100)).decimalPlaces(2, 1).toString())
+      })
+    }
+  }, [contract, decimal, id])
+  const getCollection = useCallback(async () => {
+    if (client && id) {
+      const res = await client.query({
+        query: NftCollection(id),
+      })
+      let count = 0
+      if (res && res.data && res.data.nftCollection) {
+        res.data.nftCollection.users.array.forEach((element: any) => {
+          count = count + element.tokens.length
+        })
+      }
+      setTotal(count)
+    }
+  }, [client, id])
+  useEffect(() => {
+    getCollection()
+  }, [getCollection])
   return (
     <Box>
       {loading ? (
@@ -117,7 +161,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 {collection?.symbol}
               </Typography>
               <Typography mt="12px" variant="subtitle2" fontWeight="500" lineHeight="16px" color="#A0A3BD">
-                {collection?.stats?.countOwners} Active Users
+                {collection?.activeUser} Active Users
               </Typography>
             </Box>
             <FlexEndBox>
@@ -126,11 +170,11 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 <FlexBox mt="8px">
                   <img margin-top="15px" src={myCollateralIcon} alt="" />
                   <BigTypography ml="4px" variant="body1">
-                    {collection?.stats?.volumeAll || 0}
+                    {totalValue || 0}
                   </BigTypography>
                 </FlexBox>
                 <Typography mt="4px" component="p" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
-                  {collection?.stats?.totalSupply || 0} NFTs
+                  {total || 0} NFTs
                 </Typography>
               </Box>
               <Box width="148px">
@@ -172,7 +216,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 </Box>
                 <Box width={'86px'}>
                   <BigTypography variant="h1" color="#6E7191 !important">
-                    {erc20ReserveData.depositRate}%
+                    {borrowRate}%
                   </BigTypography>
                 </Box>
                 <Box width="60px">
@@ -181,7 +225,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                   </BgFlexBox>
                 </Box>
                 <Box>
-                  <BigTypography>{erc20ReserveData.depositRate}%</BigTypography>
+                  <BigTypography>{borrowRate}%</BigTypography>
                 </Box>
               </FlexBox>
               <FlexBox mt="4px">
