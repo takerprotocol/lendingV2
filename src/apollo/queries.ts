@@ -130,8 +130,8 @@ export const AllUser = (
         nftCollateral
         reserveSupply
         totalDebt
-        avgLtv
-        liqThreshold
+        ltvAcc
+        liqThreshAcc
         healthFactor
         totalCollateral
         reserves {
@@ -180,8 +180,8 @@ export const ALL_USER = () => {
         nftCollateral
         reserveSupply
         totalDebt
-        avgLtv
-        liqThreshold
+        ltvAcc
+        liqThreshAcc
         healthFactor
         totalCollateral
         reserves {
@@ -229,8 +229,8 @@ export const User = (id: string) => {
         nftCollateral
         reserveSupply
         totalDebt
-        avgLtv
-        liqThreshold
+        ltvAcc
+        liqThreshAcc
         healthFactor
         reserves {
           id

@@ -42,9 +42,9 @@ const Body = styled(Box)`
 const BodyBg = styled(Box)`
   background-image: url(${liquidationBg});
   background-repeat: no-repeat;
-  background-size: 100%;
-  max-height: 952.03px;
-  height: 952.03px;
+  background-size: cover;
+  max-height: 66.11319444444445vw;
+  height: 66.11319444444445vw;
   top: 0px;
   left: 0px;
   position: absolute;
@@ -121,9 +121,9 @@ export default function Liquidation() {
       case 4:
         return ['totalDebt', 'asc']
       case 5:
-        return ['avgLtv', 'desc']
+        return ['healthFactor', 'desc']
       case 6:
-        return ['avgLtv', 'asc']
+        return ['healthFactor', 'asc']
       default:
         return ['null', 'desc']
     }
