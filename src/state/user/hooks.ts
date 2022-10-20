@@ -40,8 +40,8 @@ export function useUserNftConfig(): string {
 }
 export function useHeath(): string {
   const value = decimalFormat(times(useUserState().heathFactor, 100), Number(useDecimal()), false)
-  if (new BigNumber(value).gt(200)) {
-    return '200'
+  if (new BigNumber(value).gt(1000)) {
+    return '1000'
   } else {
     return value
   }
@@ -108,7 +108,7 @@ export function useCollateralBorrowLimitUsed(value?: string | number): string {
   return times(borrowLimitUsed, 100)
 }
 export function useDebtRiskLevel(value?: string | number): string {
-  const [debtRiskLevel, setDebtRiskLevel] = useState('200')
+  const [debtRiskLevel, setDebtRiskLevel] = useState('1000')
   const userValue = useUserValue()
   const userState = useUserState()
   const ethDebt = useEthDebt()
@@ -118,8 +118,8 @@ export function useDebtRiskLevel(value?: string | number): string {
       0,
       false
     )
-    if (new BigNumber(riskLevel).gt(200)) {
-      setDebtRiskLevel('200')
+    if (new BigNumber(riskLevel).gt(1000)) {
+      setDebtRiskLevel('1000')
     } else {
       setDebtRiskLevel(new BigNumber(riskLevel).decimalPlaces(2, 1).toString())
     }
@@ -127,16 +127,16 @@ export function useDebtRiskLevel(value?: string | number): string {
   return debtRiskLevel
 }
 export function useCollateralRiskLevel(value?: string | number): string {
-  const [collateralRiskLevel, setCollateralRiskLevel] = useState('200')
+  const [collateralRiskLevel, setCollateralRiskLevel] = useState('1000')
   const userValue = useUserValue()
   const userState = useUserState()
   const ethDebt = useEthDebt()
   useEffect(() => {
     if (new BigNumber(ethDebt).lte(0)) {
-      setCollateralRiskLevel('200')
+      setCollateralRiskLevel('1000')
     } else {
       const riskLevel = times(plus(userValue.totalCollateral, value || 0), div(userState.liquidationThreshold, ethDebt))
-      if (new BigNumber(riskLevel).lt(200)) {
+      if (new BigNumber(riskLevel).lt(1000)) {
         setCollateralRiskLevel(decimalFormat(times(riskLevel, 100), 0, false))
       }
     }
