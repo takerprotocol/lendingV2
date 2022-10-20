@@ -17,6 +17,8 @@ export enum TransactionType {
   APPROVAL = 0,
   DEPOSIT,
   WITHDRAW,
+  DEPOSIT_NFT,
+  WITHDRAW_NFT,
   BORROW,
   REPAY,
   APPROVAL_NFT,
@@ -31,6 +33,12 @@ export interface DepositTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.DEPOSIT | TransactionType.WITHDRAW
   recipient: string
   amount: string
+}
+export interface DepositNftTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.DEPOSIT_NFT | TransactionType.WITHDRAW_NFT
+  recipient: string
+  amount: string
+  count: number
 }
 export interface BorrowTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.BORROW
@@ -64,6 +72,7 @@ export interface LiquidateTransactionInfo extends BaseTransactionInfo {
 export type TransactionInfo =
   | ApproveTransactionInfo
   | DepositTransactionInfo
+  | DepositNftTransactionInfo
   | BorrowTransactionInfo
   | RepayTransactionInfo
   | ApproveNFTTransactionInfo

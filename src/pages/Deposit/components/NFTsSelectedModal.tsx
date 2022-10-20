@@ -126,9 +126,10 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             if (res && res.hash) {
               setOpenSelectedModal(false)
               addTransaction(res, {
-                type: TransactionType.DEPOSIT,
+                type: TransactionType.DEPOSIT_NFT,
                 recipient: address,
                 amount,
+                count: data.length,
               })
               toast.success('success')
             }

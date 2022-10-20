@@ -4,11 +4,11 @@ import myCollateralIcon from 'assets/images/svg/dashboard/myCollateral-icon.svg'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import DepositHeaderSkeleton from './depositSkeleton/DepositHeaderSkeleton'
-import { useErc20ReserveData } from 'state/user/hooks'
+import { useDecimal, useErc20ReserveData } from 'state/user/hooks'
 import { useCollections } from 'state/application/hooks'
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { div, times } from 'utils'
+import { decimalFormat, div, times } from 'utils'
 // import { percent } from 'utils'
 const HeaderBox = styled(Box)`
   width: 1012px;
@@ -91,6 +91,7 @@ interface DepositHeaderProps {
 export default function DepositHeader({ loading }: DepositHeaderProps) {
   const erc20ReserveData = useErc20ReserveData()
   const collections = useCollections()
+  const decimal = useDecimal()
   const { id } = useParams()
   const collection = useMemo(() => {
     if (collections && id) {
@@ -138,7 +139,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                   <FlexBox>
                     <img src={myCollateralIcon} alt="" />
                     <BigTypography ml="4px" variant="body1">
-                      {collection?.stats?.floorPrice || 0}
+                      {decimalFormat(collection?.floorPrice || 0, decimal)}
                     </BigTypography>
                   </FlexBox>
                   <Box height={'22px'}></Box>
@@ -149,7 +150,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 <FlexBox mt="8px">
                   <img src={myCollateralIcon} alt="" />
                   <BigTypography ml="4px" variant="body1">
-                    {times(collection?.stats?.floorPrice || 0, div(collection?.ltv, 10000))}
+                    {decimalFormat(times(collection?.floorPrice || 0, div(collection?.ltv, 10000)), decimal)}
                   </BigTypography>
                 </FlexBox>
                 <Typography mt="4px" variant="subtitle1" lineHeight="18px" color="#A0A3BD">

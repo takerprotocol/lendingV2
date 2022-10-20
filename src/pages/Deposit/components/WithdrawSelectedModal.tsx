@@ -99,9 +99,10 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
           if (res && res.hash) {
             close(false)
             addTransaction(res, {
-              type: TransactionType.WITHDRAW,
+              type: TransactionType.WITHDRAW_NFT,
               recipient: address,
               amount,
+              count: data.length,
             })
             toast.success('success')
           }
