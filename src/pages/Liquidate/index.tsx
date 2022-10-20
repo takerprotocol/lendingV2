@@ -67,7 +67,11 @@ const Liquidate = () => {
         //   })
         // })
       }
-      const _heath = new BigNumber(fromWei(user.data.user.healthFactor)).toFixed(2, 1)
+      console.log(user.data)
+      let _heath = '0'
+      if (user.data.user.healthFactor) {
+        _heath = new BigNumber(fromWei(user.data.user.healthFactor)).toFixed(2, 1)
+      }
       setCollaterals({
         address,
         collateral: fromWei(user.data.user.totalCollateral),
@@ -87,7 +91,6 @@ const Liquidate = () => {
     getCollaterals()
   }, [getCollaterals])
   const mobile = useMobileType()
-  console.log('---------==', new BigNumber(totalDebt).gt(totalCollateral) ? minus(totalDebt, totalCollateral) : '0')
   return (
     <>
       {mobile ? (

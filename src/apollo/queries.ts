@@ -231,6 +231,7 @@ export const User = (id: string) => {
         totalDebt
         avgLtv
         liqThreshold
+        healthFactor
         reserves {
           id
           reserve {

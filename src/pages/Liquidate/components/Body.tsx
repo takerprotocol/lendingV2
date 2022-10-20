@@ -465,7 +465,6 @@ const LiquidateBody = ({
         })
     }
   }
-  console.log('total', total)
   //-------js---------//
   return (
     <Container>
