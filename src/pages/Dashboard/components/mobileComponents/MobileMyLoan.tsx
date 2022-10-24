@@ -6,11 +6,12 @@ import mobileUp from 'assets/images/svg/dashboard/mobileUp.svg'
 import CustomizedSlider from 'components/Slider'
 import { FlexBox, SpaceBetweenBox, FlexEndBox } from 'styleds'
 import { useMemo, useState } from 'react'
-import { useBorrowLimit, useEthDebt, useHeath } from 'state/user/hooks'
-import { fixedFormat, getRiskLevel, getRiskLevelTag } from 'utils'
+import { useBorrowLimit, useDebtBorrowLimitUsed, useEthDebt, useHeath } from 'state/user/hooks'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, times } from 'utils'
 import MobileMyLoanModal from './MobileMyLoanModal'
 import { useLoading } from 'state/application/hooks'
 import MobileMyLoanSkeleton from '../mobileDashboardSkeleton/MobileMyLoanSkeleton '
+import BigNumber from 'bignumber.js'
 
 const MyAssetsBox = styled(Box)`
   width: 100%;
@@ -50,25 +51,6 @@ const NoBorrowLimitRiskLevelBox = styled(Box)`
   margin-bottom: 0.75rem;
   position: relative;
 `
-const RiskLevelBox = styled(Box)`
-  width: 100%;
-  background: #f3f3f8;
-  border-radius: 0.5rem;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-  padding: 0 0 1.125rem 0.75rem;
-  position: relative;
-  ::before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: calc(50% - 15px / 2);
-    top: 100%;
-    border-width: 10.5px 7.5px;
-    border-style: dashed solid dashed dashed;
-    border-color: #f3f3f8 transparent transparent transparent;
-  }
-`
 const BorrowAPYBox = styled(Box)`
   background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
   border-radius: 0.5rem;
@@ -100,13 +82,37 @@ export default function MobileMyLoan() {
   const heath = useHeath()
   const [open, setOpen] = useState<boolean>(false)
   const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
+  const borrowLimitUsed = useDebtBorrowLimitUsed()
   const borrowLimit = useBorrowLimit()
-  const [sliderValue] = useState<number>(+heath)
   const loading = useLoading()
   const myLoanRiskLevel = useMemo(() => {
     return getRiskLevel(heath)
   }, [heath])
-
+  const RiskLevelBox = styled(Box)`
+    width: 100%;
+    background: #f3f3f8;
+    border-radius: 0.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    padding: 0 0 1.125rem 0.75rem;
+    position: relative;
+    &.left {
+      border-bottom-left-radius: 0px !important;
+    }
+    &.right {
+      border-bottom-right-radius: 0px !important;
+    }
+    ::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 99%;
+      left: ${`${times(borrowLimitUsed, 0.185)}px`};
+      border-width: 10.5px 7.5px;
+      border-style: dashed solid dashed dashed;
+      border-color: #f3f3f8 transparent transparent transparent;
+    }
+  `
   const myLoanRiskLevelTag = useMemo(() => {
     return getRiskLevelTag(heath)
   }, [heath])
@@ -236,7 +242,15 @@ export default function MobileMyLoan() {
                     </RiskFlexBox>
                   </NoBorrowLimitRiskLevelBox>
                 ) : (
-                  <RiskLevelBox>
+                  <RiskLevelBox
+                    className={
+                      new BigNumber(borrowLimitUsed).gte(199)
+                        ? 'right'
+                        : new BigNumber(borrowLimitUsed).lte(1)
+                        ? 'left'
+                        : ''
+                    }
+                  >
                     <RiskFlexBox>
                       <Box pt="1.1875rem">
                         <Typography variant="body2" lineHeight="0.75rem" fontWeight="600">
@@ -266,13 +280,16 @@ export default function MobileMyLoan() {
                     </RiskFlexBox>
                   </RiskLevelBox>
                 )}
-                <CustomizedSlider sliderValue={sliderValue} riskLevelTag={myLoanRiskLevelTag}></CustomizedSlider>
+                <CustomizedSlider
+                  sliderValue={Number(borrowLimitUsed)}
+                  riskLevelTag={myLoanRiskLevelTag}
+                ></CustomizedSlider>
                 <SpaceBetweenBox mt=".25rem" padding="0 1rem 0 1rem">
                   <Typography variant="body1" color=" #4E4B66" fontWeight="600">
                     Borrow Limit
                   </Typography>
                   <Typography variant="body1" color="#4E4B66" fontWeight="600">
-                    {borrowLimit}
+                    {fixedFormat(borrowLimit)}
                   </Typography>
                 </SpaceBetweenBox>
                 <BorrowAPYBox>

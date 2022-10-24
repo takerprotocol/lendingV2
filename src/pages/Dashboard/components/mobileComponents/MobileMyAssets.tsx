@@ -29,6 +29,9 @@ import { setLoginWalletType, setMobileMenuType } from 'state/user/reducer'
 import MobileMyAssetsModal from './MobileMyAssetsModal'
 import MobileTotalSkeleton from '../mobileDashboardSkeleton/MobileTotalSkeleton'
 import MobileMyAssetsSkeleton from '../mobileDashboardSkeleton/MobileMyAssetsSkeleton'
+import { setLoading, setPoolValues } from 'state/application/reducer'
+import { useLendingPool } from 'hooks/useLendingPool'
+import BigNumber from 'bignumber.js'
 // import MobileMyAssetsModal from './MobileMyAssetsModal'
 
 const TotalBox = styled(Box)`
@@ -114,6 +117,20 @@ export default function MobileMyAssets() {
       dispatch(setMobileMenuType(true))
     }
   }, [address, dispatch])
+  const contract = useLendingPool()
+  useEffect(() => {
+    if (contract) {
+      contract
+        .getPoolValues()
+        .then((res: Array<BigNumber>) => {
+          setLoading(false)
+          dispatch(setPoolValues([res[0].toString(), res[1].toString(), res[2].toString()]))
+        })
+        .catch(() => {
+          setLoading(false)
+        })
+    }
+  }, [contract, dispatch])
   return (
     <Box mt="0.5rem">
       <Box p="0 1rem">
@@ -145,7 +162,7 @@ export default function MobileMyAssets() {
                 <FlexBox mt="0.8125rem">
                   <img src={type === 1 ? mobileEth : mobilePurpleETH} alt="" />
                   <Typography ml="0.375rem" variant="subtitle1" fontWeight="600" lineHeight="1.125rem" color="#262338">
-                    {decimalFormat(poolValues[0].toString(), decimal)}
+                    {decimalFormat(poolValues[2].toString(), decimal)}
                   </Typography>
                 </FlexBox>
               </Box>

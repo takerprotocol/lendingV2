@@ -4,16 +4,16 @@ import TotalLiquidityIcon from 'assets/images/svg/dashboard/total-liquidity.svg'
 import TotalLeft from 'assets/images/svg/dashboard/totalLeft.svg'
 import TotalRight from 'assets/images/svg/dashboard/totalRight.svg'
 import BottomLiquidity from 'assets/images/svg/dashboard/bottom-liquidity.svg'
-import DashboardTotalSkeleton from './DashboardSkeleton/TotalSkeleton'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { decimalFormat, plus } from 'utils'
 import { useDecimal } from 'state/user/hooks'
-import TipsTooltip from './TipsTooltip'
 import { useAppDispatch } from 'state/hooks'
 import { setPoolValues } from 'state/application/reducer'
 import { usePoolValues } from 'state/application/hooks'
+import TipsTooltip from './TipsTooltip'
+import DashboardTotalSkeleton from './DashboardSkeleton/TotalSkeleton'
 
 const CenterBox = styled(Box)`
   display: flex;

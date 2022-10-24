@@ -15,7 +15,7 @@ import Option from './Option'
 import Modal from 'components/Modal'
 import { Web3Provider } from '@ethersproject/providers'
 import { formatEther } from 'ethers/lib/utils'
-import { setAccountBalance, setAddress } from 'state/user/reducer'
+import { setAccountBalance, setAddress, setMobileMenuType } from 'state/user/reducer'
 import { useAddress, useMobileType } from 'state/user/hooks'
 import { FlexBox } from 'styleds'
 import { useAppDispatch } from 'state/hooks'
@@ -222,7 +222,14 @@ export default function WalletModal() {
       ) : (
         <WalletBox>
           <FlexBox mb="2.25rem">
-            <img src={mobileWallet} alt="" onClick={() => dispatch(setLoginWalletType(true))} />
+            <img
+              src={mobileWallet}
+              alt=""
+              onClick={() => {
+                dispatch(setLoginWalletType(true))
+                dispatch(setMobileMenuType(true))
+              }}
+            />
             <Typography variant="subtitle1" ml="4.25rem" lineHeight="1.125rem" fontWeight="700" color="#262338">
               Select a wallet
             </Typography>

@@ -30,7 +30,7 @@ const MobileCollateralSkeleton = () => {
         <StyledSkeleton variant="rectangular" height="1.5rem" width="1.5rem" />
       </SpaceBetweenBox>
       <StyledSkeleton variant="rectangular" height="2.875rem" width="100%" />
-      {[1, 1, 1, 1, 1, 1, 1].map((index: number) => (
+      {[1, 2, 3, 4, 5, 6, 7].map((index: number) => (
         <CardBox key={`MobileCollateralSkeleton-${index}`}>
           <SpaceBetweenBox>
             <CardSkeleton variant="rectangular" height="1.5rem" width="8.875rem" />

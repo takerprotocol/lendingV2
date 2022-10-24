@@ -22,7 +22,6 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { toast } from 'react-toastify'
 import { useGateway } from 'hooks/useGateway'
-import { MAXBox } from '../MySupplyModal'
 const style = {
   width: '100%',
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -84,6 +83,13 @@ const CenterBox = styled(Box)`
     font-size: 1.375rems;
   }
 `
+const MAXBox = styled(Box)`
+  width: 2.625rem;
+  height: 1.3125rem;
+  padding: 0.0625rem 0.5rem;
+  background: #d9dbe9;
+  border-radius: 0.25rem;
+`
 const SpaceBetweenBox = styled(Box)`
   display: flex;
   justify-content: space-between;
@@ -143,6 +149,12 @@ const BorrowAmountBox = styled(Box)`
   padding: 0 1rem 1rem 1rem;
   position: relative;
   margin-bottom: 0.5rem;
+  &.left {
+    border-bottom-left-radius: 0px !important;
+  }
+  &.right {
+    border-bottom-right-radius: 0px !important;
+  }
 `
 const ValueTypography = styled(Typography)`
   font-family: 'Quicksand';
@@ -178,9 +190,9 @@ interface MyLoanModalProps {
 }
 export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModalProps) {
   const [check, setCheck] = useState<number>(repayRoBorrow)
-  const [amount, setAmount] = useState('')
+  const [amount, setAmount] = useState<string>('')
+  const [slider, setSlider] = useState<number>(0)
   const heath = useHeath()
-  const [sliderValue] = useState<number>(+heath)
   const debtRiskLevel = useDebtRiskLevel(times(amount, check === 1 ? 1 : -1))
   const upBorrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
   const borrowLimitUsed = useDebtBorrowLimitUsed()
@@ -194,11 +206,20 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
   const address = useAddress()
   const ethDebt = useEthDebt()
   const addTransaction = useTransactionAdder()
+  const beforeValue = useMemo(() => {
+    if (new BigNumber(upBorrowLimitUsed).gte(100)) {
+      return 100
+    } else if (new BigNumber(upBorrowLimitUsed).lte(0)) {
+      return 0
+    } else {
+      return upBorrowLimitUsed
+    }
+  }, [upBorrowLimitUsed])
   const BeforeImg = styled('img')`
     position: absolute;
     display: block;
     top: calc(100% - 10.5px);
-    left: ${`${plus(times(3.57, sliderValue), 25)}px`};
+    left: ${`${times(beforeValue, 0.156875)}rem`};
   `
   useEffect(() => {
     setCheck(repayRoBorrow)
@@ -263,7 +284,9 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
   const buttonDisabled = useMemo(() => {
     return check === 1 ? !amount || new BigNumber(amount).gt(borrowLimit) : !amount || new BigNumber(amount).gt(ethDebt)
   }, [amount, borrowLimit, check, ethDebt])
-
+  useEffect(() => {
+    setAmount(new BigNumber(borrowLimit).times(new BigNumber(slider).div(100)).toFixed(2, 1))
+  }, [borrowLimit, slider])
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -354,7 +377,9 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
           </Box>
         </TopBox>
         <BottomBox>
-          <BorrowAmountBox>
+          <BorrowAmountBox
+            className={new BigNumber(beforeValue).gte(99) ? 'right' : new BigNumber(beforeValue).lte(1) ? 'left' : ''}
+          >
             <SpaceBetweenBox sx={{ alignItems: 'flex-start' }}>
               <Box width="9rem" mt="1rem">
                 <Typography variant="body2" lineHeight="0.75rem" color="#14142A">
@@ -392,7 +417,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <MAXBox
                       onClick={() => {
-                        setAmount(ethDebt)
+                        setAmount(fixedFormat(ethDebt))
                       }}
                     >
                       <Typography variant="body2">MAX</Typography>
@@ -408,7 +433,11 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
             </SpaceBetweenBox>
             <BeforeImg src={loanModalBefore} alt=""></BeforeImg>
           </BorrowAmountBox>
-          <CustomizedSlider sliderValue={sliderValue} riskLevelTag={riskLevelTag}></CustomizedSlider>
+          <CustomizedSlider
+            sliderValue={Number(beforeValue)}
+            setSlider={setSlider}
+            riskLevelTag={riskLevelTag}
+          ></CustomizedSlider>
           <SpaceBetweenBox mt="0.5rem" mb="1rem">
             <FlexBox>
               <Typography variant="body1" color="#A0A3BD">

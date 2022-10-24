@@ -1,9 +1,9 @@
 import { Box, styled, Typography, Checkbox } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { SpaceBetweenBox, FlexBox, CenterBox } from 'styleds'
-import { Nft } from '@alch/alchemy-sdk'
 import { NftTokenModel } from 'services/type/nft'
 import BigNumber from 'bignumber.js'
+import { Nft } from '@alch/alchemy-sdk'
 const DepositBox = styled(Box)`
   background: #ffffff;
   box-shadow: 0px 0.625rem 1.25rem rgba(218, 218, 238, 0.3);
@@ -31,20 +31,22 @@ const ImgBox = styled(`img`)`
 `
 interface MobileWithdrawProps {
   list: any[]
+  TestWithdrawList: Array<Nft>
   setMobileWithdrawCheckedIndex: Function
   onChange: Function
   mobileWithdrawCheckedIndex: Array<string>
 }
 export default function MobileWithdraw({
   list,
+  TestWithdrawList,
   setMobileWithdrawCheckedIndex,
   mobileWithdrawCheckedIndex,
   onChange,
 }: MobileWithdrawProps) {
   const [TypeKey] = useState<string>('mobileWithdraw')
   const amount = useMemo(() => {
-    return list.reduce((total: string, current: NftTokenModel) => {
-      return new BigNumber(total).plus(current.balance || '0').toString()
+    return list.reduce((total: string, current: any) => {
+      return new BigNumber(total).plus(current.amount || '0').toString()
     }, '0')
   }, [list])
   return (
@@ -55,9 +57,9 @@ export default function MobileWithdraw({
           {list.length} NFTs / {amount} ETH
         </Typography>
       </SpaceBetweenBox>
-      {list.length !== 0 ? (
+      {TestWithdrawList.length !== 0 ? (
         <>
-          {list.map((el: NftTokenModel | Nft) => (
+          {TestWithdrawList.map((el: NftTokenModel | Nft) => (
             <CardBox
               className={mobileWithdrawCheckedIndex.includes(el.tokenId) ? 'isCheck' : ' '}
               key={`nft${TypeKey}-${el.tokenId}`}

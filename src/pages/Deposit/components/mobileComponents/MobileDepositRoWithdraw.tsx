@@ -4,6 +4,7 @@ import DepositBefore from 'assets/images/svg/deposit/Deposit-before.svg'
 import MobileDeposit from './MobileDeposit'
 import MobileWithdraw from './MobileWithdraw'
 import { NftTokenModel } from 'services/type/nft'
+import { Nft } from '@alch/alchemy-sdk'
 
 const MainBox = styled(SpaceBetweenBox)`
   width: 100%;
@@ -48,6 +49,7 @@ const BeforeImg = styled(`img`)`
 interface MobileDepositRoWithdrawProps {
   setType: Function
   type: number
+  TestWithdrawList: Array<Nft>
   withdrawList: NftTokenModel[]
   depositedList: NftTokenModel[]
   mobileWithdrawCheckedIndex: Array<string>
@@ -59,6 +61,7 @@ export default function MobileDepositRoWithdraw({
   setType,
   type,
   withdrawList,
+  TestWithdrawList,
   depositedList,
   mobileWithdrawCheckedIndex,
   mobileDepositCheckedIndex,
@@ -149,6 +152,7 @@ export default function MobileDepositRoWithdraw({
           mobileWithdrawCheckedIndex={mobileWithdrawCheckedIndex}
           setMobileWithdrawCheckedIndex={setMobileWithdrawCheckedIndex}
           list={withdrawList}
+          TestWithdrawList={TestWithdrawList}
           onChange={(data: Array<string>) => {
             setMobileWithdrawCheckedIndex(data)
           }}

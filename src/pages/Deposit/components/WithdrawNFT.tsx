@@ -114,6 +114,7 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
   useEffect(() => {
     getWithdrawList()
   }, [getWithdrawList])
+  console.log('list------', list)
   return (
     <DepositedNFTsStyleBox
       sx={{
@@ -189,6 +190,7 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
                   }}
                   onClick={() => {
                     setWithdrawType('shut')
+                    setCheckedIndex([])
                   }}
                 >
                   <img src={withdrawLargeAmount ? redResetButton : RefreshIcon2} alt="" />

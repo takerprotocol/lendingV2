@@ -6,13 +6,14 @@ import mobileCollateralRight2 from 'assets/images/svg/dashboard/mobileCollateral
 import mobileCollateralDown from 'assets/images/svg/dashboard/mobileCollateralDown.svg'
 import mobileCollateralUp from 'assets/images/svg/dashboard/mobileCollateralUp.svg'
 import { CenterBox, FlexBox, SpaceBetweenBox } from 'styleds'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { fromWei } from 'web3-utils'
 import { useNavigate } from 'react-router-dom'
 import { useCollections, useDepositedCollection, useLoading } from 'state/application/hooks'
 import { div, times } from 'utils'
-import { useAddress } from 'state/user/hooks'
+import { useAccountNfts, useAddress } from 'state/user/hooks'
 import MobileCollectionSkeleton from '../mobileDashboardSkeleton/MobileCollectionSkeleton'
+import { OwnedNft } from '@alch/alchemy-sdk'
 const Collection = styled(Box)`
   background: linear-gradient(180deg, #9574f5 0%, #857dfc 100%);
   width: 100%;
@@ -71,6 +72,7 @@ export default function MobileCollection() {
   const collection = useCollections()
   const address = useAddress()
   const loading = useLoading()
+  const list = useAccountNfts()
   const navigate = useNavigate()
   const depositedCollection = useDepositedCollection()
   const deposited = (id: string) => {
@@ -82,6 +84,16 @@ export default function MobileCollection() {
     }
     return '0'
   }
+  const nftBalance = useCallback(
+    (id: string) => {
+      if (list) {
+        const item = list.filter((el: OwnedNft) => el.contract.address.toLocaleLowerCase() === id.toLocaleLowerCase())
+        return item ? item.length : '0'
+      }
+      return '0'
+    },
+    [list]
+  )
   return (
     <CollectionBgBox display={collection.length === 0 ? 'none' : ''}>
       {loading ? (
@@ -115,7 +127,7 @@ export default function MobileCollection() {
                       </Typography>
                       <FlexBox>
                         <Typography variant="body2" lineHeight="1.125rem" color="#A0A3BD">
-                          60 Users
+                          {el?.activeUser} Users
                         </Typography>
                         <Typography ml={'0.5rem'} variant="body2" lineHeight="1.125rem" color="#A0A3BD">
                           230 NFTs
@@ -197,10 +209,10 @@ export default function MobileCollection() {
                           </Box>
                           <Box mr="2.75rem">
                             <Typography variant="body1" color="#7646FF" fontWeight="700">
-                              10 NFTs
+                              {nftBalance(el.id)} NTFs
                             </Typography>
                             <Typography variant="body2" color="#A0A3BD">
-                              I Can Deposit
+                              My Balance
                             </Typography>
                           </Box>
                         </SpaceBetweenBox>

@@ -198,7 +198,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const address = useAddress()
   const ethDebt = useEthDebt()
   const addTransaction = useTransactionAdder()
-  const BeforeValue = useMemo(() => {
+  const beforeValue = useMemo(() => {
     if (new BigNumber(upBorrowLimitUsed).gte(100)) {
       return 100
     } else if (new BigNumber(upBorrowLimitUsed).lte(0)) {
@@ -211,7 +211,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
     position: absolute;
     display: block;
     top: calc(100% - 10.5px);
-    left: ${`${times(3.56, BeforeValue)}px`};
+    left: ${`${times(3.56, beforeValue)}px`};
   `
   useEffect(() => {
     setCheck(repayRoBorrow)
@@ -374,7 +374,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
         </TopBox>
         <BottomBox>
           <BorrowAmountBox
-            className={new BigNumber(BeforeValue).gte(99) ? 'right' : new BigNumber(BeforeValue).lte(1) ? 'left' : ''}
+            className={new BigNumber(beforeValue).gte(99) ? 'right' : new BigNumber(beforeValue).lte(1) ? 'left' : ''}
           >
             <SpaceBetweenBox>
               <Box width={'200px'}>

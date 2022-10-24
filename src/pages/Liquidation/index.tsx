@@ -55,6 +55,7 @@ const MobileBody = styled(Box)`
   background: #f7f7fc;
   width: 100%;
   background-image: url(${mobileLiquidationBg});
+  background-size: 100%;
   background-repeat: no-repeat;
 `
 const ConnectWalletBox = styled(Box)`

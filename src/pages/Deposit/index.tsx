@@ -13,7 +13,6 @@ import { useCollections, useDepositedCollection } from 'state/application/hooks'
 import MobileHeader from './components/mobileComponents/MobileHeader'
 import MobileDepositRoWithdraw from './components/mobileComponents/MobileDepositRoWithdraw'
 import MobileFooter from './components/mobileComponents/MobileFooter'
-import mobileDepositBg from 'assets/images/svg/deposit/mobileDeposit-bg.svg'
 import BigNumber from 'bignumber.js'
 import { useAlchemy } from 'hooks/useAlchemy'
 
@@ -109,11 +108,11 @@ export default function Deposit() {
   const withdrawAmount = useMemo(() => {
     let totalAmount = '0'
     mobileWithdrawCheckedIndex.forEach((el) => {
-      const checkedNft = list.find((nft: { id: string }) => nft.id.split('-')[2] === el)
+      const checkedNft = withdrawList.find((nft: { id: string }) => nft.id.split('-')[2] === el)
       totalAmount = new BigNumber(checkedNft.amount).plus(totalAmount).toString()
     })
     return totalAmount
-  }, [mobileWithdrawCheckedIndex, list])
+  }, [mobileWithdrawCheckedIndex, withdrawList])
   const borrowLimitUsed = useCollateralBorrowLimitUsed(withdrawAmount)
   const withdrawLargeAmount = useMemo(() => {
     return new BigNumber(borrowLimitUsed).gte(1)
@@ -121,18 +120,22 @@ export default function Deposit() {
   const getWithdrawList = useCallback(async () => {
     if (alchemy) {
       const arr: Array<Nft> = []
-      for (let i = 0, length = list.length; i < length; i++) {
-        if (list[i].id) {
-          const nft = await getAlchemyNftMetadata(list[i].id.split('-')[1], list[i].id.split('-')[2], alchemy)
+      for (let i = 0, length = withdrawList.length; i < length; i++) {
+        if (withdrawList[i].id) {
+          const nft = await getAlchemyNftMetadata(
+            withdrawList[i].id.split('-')[1],
+            withdrawList[i].id.split('-')[2],
+            alchemy
+          )
           arr.push(nft)
         } else {
-          const nft = await getAlchemyNftMetadata(list[i].contract.address, list[i].tokenId, alchemy)
+          const nft = await getAlchemyNftMetadata(withdrawList[i].contract.address, withdrawList[i].tokenId, alchemy)
           arr.push(nft)
         }
       }
       setWithdrawList(arr)
     }
-  }, [alchemy, list])
+  }, [alchemy, withdrawList])
   useEffect(() => {
     getWithdrawList()
   }, [getWithdrawList])
@@ -163,7 +166,7 @@ export default function Deposit() {
         </Body>
       ) : (
         <MobileBody>
-          <MobileHeaderBg sx={{ backgroundImage: `url(${mobileDepositBg})` }}></MobileHeaderBg>
+          <MobileHeaderBg sx={{ backgroundImage: `url(${collection?.icon})` }}></MobileHeaderBg>
           <MobileMain>
             <MobileHeader></MobileHeader>
             <MobileDepositRoWithdraw
@@ -171,6 +174,7 @@ export default function Deposit() {
               withdrawList={withdrawList}
               type={type}
               setType={setType}
+              TestWithdrawList={TestWithdrawList}
               mobileWithdrawCheckedIndex={mobileWithdrawCheckedIndex}
               mobileDepositCheckedIndex={mobileDepositCheckedIndex}
               setMobileWithdrawCheckedIndex={setMobileWithdrawCheckedIndex}

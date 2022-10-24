@@ -2,13 +2,19 @@ import { Box, styled, Typography } from '@mui/material'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
 import RewardAdd from 'assets/images/svg/deposit/Reward-add.svg'
 import RewardRight from 'assets/images/svg/deposit/Reward-right.svg'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useCollections } from 'state/application/hooks'
 import { useParams } from 'react-router-dom'
-import { div, times } from 'utils'
-import { useErc20ReserveData } from 'state/user/hooks'
+import { getClient } from 'apollo/client'
+import { useActiveWeb3React } from 'hooks/web3'
+import { decimalFormat, div, times } from 'utils'
+import { useDecimal } from 'state/user/hooks'
 import { useAppDispatch } from 'state'
 import { setMobileSecondHeaderName } from 'state/user/reducer'
+import { useLendingPool } from 'hooks/useLendingPool'
+import BigNumber from 'bignumber.js'
+import { fromWei } from 'web3-utils'
+import { NftCollection } from 'apollo/queries'
 
 const MainBox = styled(Box)`
   width: 100%;
@@ -84,8 +90,14 @@ const RewardBox = styled(Box)`
 `
 export default function MobileHeader() {
   const [details, setDetails] = useState<boolean>(false)
-  const erc20ReserveData = useErc20ReserveData()
   const { id } = useParams()
+  const { chainId } = useActiveWeb3React()
+  const [client, setClient] = useState<any>(null)
+  const decimal = useDecimal()
+  const [totalValue, setTotalValue] = useState('')
+  const [borrowRate, setBorrowRate] = useState('')
+  const [total, setTotal] = useState(0)
+  const contract = useLendingPool()
   const dispatch = useAppDispatch()
   const collections = useCollections()
   const collection = useMemo(() => {
@@ -96,9 +108,41 @@ export default function MobileHeader() {
     }
   }, [collections, id])
   useEffect(() => {
+    if (chainId) {
+      setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
+    }
+  }, [chainId])
+  useEffect(() => {
     dispatch(setMobileSecondHeaderName(collection?.symbol))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  useEffect(() => {
+    if (contract && id) {
+      contract.getAssetValues(id).then((res: any) => {
+        setTotalValue(decimalFormat(res[0].toString(), decimal))
+      })
+      contract.getReserveData(id).then((res: any) => {
+        setBorrowRate(new BigNumber(times(fromWei(res.borrowRate.toString()), 100)).decimalPlaces(2, 1).toString())
+      })
+    }
+  }, [contract, decimal, id])
+  const getCollection = useCallback(async () => {
+    if (client && id) {
+      const res = await client.query({
+        query: NftCollection(id),
+      })
+      let count = 0
+      if (res && res.data && res.data.nftCollection) {
+        res.data.nftCollection.users.array.forEach((element: any) => {
+          count = count + element.tokens.length
+        })
+      }
+      setTotal(count)
+    }
+  }, [client, id])
+  useEffect(() => {
+    getCollection()
+  }, [getCollection])
   return (
     <MainBox>
       <HeaderFlexBox>
@@ -108,7 +152,7 @@ export default function MobileHeader() {
             {collection?.symbol}
           </Typography>
           <Typography mt="0.5rem" variant="body2" lineHeight="0.875rem" color="#A0A3BD">
-            {collection?.stats?.countOwners} Active Users
+            {collection?.activeUser} Active Users
           </Typography>
         </Box>
         <ImgBoxBorder></ImgBoxBorder>
@@ -130,12 +174,12 @@ export default function MobileHeader() {
               <path d="M2 9L6.5 11.5L11 9" stroke="#4E4B66" strokeWidth="1.30263" strokeLinejoin="round" />
             </svg>
             <Typography ml="0.25rem" variant="subtitle1" color="#4E4B66" lineHeight="1.125rem">
-              {collection?.stats?.volumeAll || 0}
+              {totalValue || 0}
             </Typography>
           </FlexBox>
         </Box>
         <Typography variant="body1" color="#A0A3BD" lineHeight="0.875rem" fontWeight="500">
-          {collection?.stats?.totalSupply || 0} NFTs
+          {total || 0} NFTs
         </Typography>
       </TotalBox>
       <FloorBox>
@@ -145,7 +189,7 @@ export default function MobileHeader() {
           </Typography>
           <FlexBox>
             <Typography mt="0.5rem" mr="0.25rem" variant="subtitle1" color="#4E4B66" lineHeight="1.125rem">
-              {collection?.stats?.floorPrice || 0}
+              {decimalFormat(collection?.floorPrice || 0, decimal)}
             </Typography>
             <Typography mt="0.75rem" variant="body1" color="#4E4B66;" fontWeight="600" lineHeight="0.875rem">
               ETH
@@ -165,7 +209,7 @@ export default function MobileHeader() {
               fontWeight="700"
               lineHeight="1.125rem"
             >
-              {times(collection?.stats?.floorPrice || 0, div(collection?.ltv, 10000))}
+              {decimalFormat(times(collection?.floorPrice || 0, div(collection?.ltv, 10000)), decimal)}
             </Typography>
             <Typography mt="0.75rem" variant="body1" color="#7646FF" fontWeight="700" lineHeight="0.875rem">
               ETH
@@ -180,7 +224,7 @@ export default function MobileHeader() {
               Liquidation Threshold
             </Typography>
             <Typography variant="body2" fontWeight="600">
-              {div(collection.liqThreshold, 100)}%
+              {div(collection?.liqThreshold, 100)}%
             </Typography>
           </SpaceBetweenBox>
           <SpaceBetweenBox m="0 0.75rem" mt="0.5rem">
@@ -195,19 +239,19 @@ export default function MobileHeader() {
             <FlexBox>
               <Box width="3.3125rem">
                 <Typography variant="subtitle2" color="#4BC8B1">
-                  20%
+                  0%
                 </Typography>
               </Box>
               <img src={RewardAdd} alt="" />
               <Box ml="1.3125rem" width="3.5625rem">
                 <Typography variant="subtitle2" color="#6E7191">
-                  {erc20ReserveData.depositRate}%
+                  {borrowRate}%
                 </Typography>
               </Box>
               <img src={RewardRight} alt="" />
               <Box ml="1.3125rem">
                 <Typography variant="subtitle2" color="#4E4B66">
-                  {erc20ReserveData.depositRate}%
+                  {borrowRate}%
                 </Typography>
               </Box>
             </FlexBox>

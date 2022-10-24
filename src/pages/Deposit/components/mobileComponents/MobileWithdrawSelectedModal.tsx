@@ -171,7 +171,6 @@ export default function MobileWithdrawSelectedModal({
   }, [collateralRiskLevel, type])
   const depositBorrowLimit = useBorrowLimit(depositAmount)
   const depositBorrowLimitUsed = useCollateralBorrowLimitUsed(depositAmount)
-  console.log(depositData)
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
