@@ -37,6 +37,16 @@ const HeaderBg = styled(Box)`
   left: 0;
   z-index: -3;
 `
+const LadingHeaderBg = styled(Box)`
+  background: #eff0f5;
+  width: 100%;
+  height: 300px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: -3;
+`
 const FilterBg = styled(Box)`
   backdrop-filter: blur(80px);
   width: 100%;
@@ -72,7 +82,19 @@ const MobileHeaderBg = styled(Box)`
   background-repeat: no-repeat;
   background-position: center;
   width: 100%;
-  height: 225px;
+  height: 14.0625rem;
+  z-index: -2;
+`
+const MobileBg = styled(Box)`
+  background: #eff0f5;
+  width: 100%;
+  height: 14.0625rem;
+  z-index: -2;
+`
+const MobileFilterBg = styled(Box)`
+  backdrop-filter: blur(40px);
+  width: 100%;
+  height: 14.0625rem;
   z-index: -1;
 `
 export default function Deposit() {
@@ -139,13 +161,20 @@ export default function Deposit() {
   useEffect(() => {
     getWithdrawList()
   }, [getWithdrawList])
+  // #eff0f5
   return (
     <>
       {mobile ? (
         <Body className="header-padding">
-          <HeaderBg sx={{ backgroundImage: `url(${collection?.icon})` }}></HeaderBg>
-          <FilterBg></FilterBg>
-          <OpacityBg></OpacityBg>
+          {loading ? (
+            <LadingHeaderBg></LadingHeaderBg>
+          ) : (
+            <>
+              <HeaderBg sx={{ backgroundImage: `{url(${collection?.icon})}` }}></HeaderBg>
+              <FilterBg></FilterBg>
+              <OpacityBg></OpacityBg>
+            </>
+          )}
           <Main>
             <DepositHeader loading={loading}></DepositHeader>
             <DepositNFT
@@ -166,10 +195,17 @@ export default function Deposit() {
         </Body>
       ) : (
         <MobileBody>
-          <MobileHeaderBg sx={{ backgroundImage: `url(${collection?.icon})` }}></MobileHeaderBg>
+          {loading ? (
+            <MobileBg></MobileBg>
+          ) : (
+            <MobileHeaderBg sx={{ backgroundImage: `url(${collection?.icon})` }}>
+              <MobileFilterBg></MobileFilterBg>
+            </MobileHeaderBg>
+          )}
           <MobileMain>
-            <MobileHeader></MobileHeader>
+            <MobileHeader loading={loading}></MobileHeader>
             <MobileDepositRoWithdraw
+              loading={loading}
               depositedList={list}
               withdrawList={withdrawList}
               type={type}
@@ -181,18 +217,20 @@ export default function Deposit() {
               setMobileDepositCheckedIndex={setMobileDepositCheckedIndex}
             ></MobileDepositRoWithdraw>
           </MobileMain>
-          <MobileFooter
-            mobileWithdrawCheckedIndex={mobileWithdrawCheckedIndex}
-            mobileDepositCheckedIndex={mobileDepositCheckedIndex}
-            depositedList={list}
-            TestWithdrawList={TestWithdrawList}
-            withdrawAmount={withdrawAmount}
-            setMobileWithdrawCheckedIndex={setMobileWithdrawCheckedIndex}
-            setMobileDepositCheckedIndex={setMobileDepositCheckedIndex}
-            withdrawLargeAmount={withdrawLargeAmount}
-            withdrawList={withdrawList}
-            type={type}
-          ></MobileFooter>
+          {!loading && (
+            <MobileFooter
+              mobileWithdrawCheckedIndex={mobileWithdrawCheckedIndex}
+              mobileDepositCheckedIndex={mobileDepositCheckedIndex}
+              depositedList={list}
+              TestWithdrawList={TestWithdrawList}
+              withdrawAmount={withdrawAmount}
+              setMobileWithdrawCheckedIndex={setMobileWithdrawCheckedIndex}
+              setMobileDepositCheckedIndex={setMobileDepositCheckedIndex}
+              withdrawLargeAmount={withdrawLargeAmount}
+              withdrawList={withdrawList}
+              type={type}
+            ></MobileFooter>
+          )}
         </MobileBody>
       )}
     </>

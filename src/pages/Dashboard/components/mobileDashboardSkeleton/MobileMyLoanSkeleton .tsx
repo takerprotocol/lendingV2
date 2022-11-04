@@ -4,7 +4,7 @@ const MobileMyLoanSkeletonBox = styled(Box)`
   background: #ffffff;
   border-radius: 0.75rem;
   padding: 1.5rem 1rem 1.25rem 1rem;
-  margin: 0.5rem 1rem 1rem 1rem;
+  margin: 1rem;
 `
 const Skeletons = styled(Skeleton)`
   background: rgba(239, 240, 246);

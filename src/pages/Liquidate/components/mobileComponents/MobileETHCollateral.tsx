@@ -1,6 +1,7 @@
 import { Box, styled, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { SpaceBetweenBox, FlexBox, FlexEndBox } from 'styleds'
+import MobileETHCollateralSkeleton from '../mobileLiquidateSkeleton/MobileETHCollateralSkeleton'
 
 const MobileETHCollateralBox = styled(Box)`
   padding: 1rem;
@@ -55,91 +56,100 @@ const SubtotalStrikeThroughValue = styled(Typography)`
 //   subtotal,
 //   label,
 // }: EthCollateralProps) {
-export default function MobileETHCollateral() {
+interface MobileETHCollateralProps {
+  loading: boolean
+}
+export default function MobileETHCollateral({ loading }: MobileETHCollateralProps) {
   const [amount] = useState('')
   return (
     <MobileETHCollateralBox>
-      <FlexBox>
-        <Typography variant="subtitle2">ETH Collateral</Typography>
-        <ProfitableBox>
-          <Typography variant="body2" fontWeight="700" color="#7646FF">
-            Profitable
-          </Typography>
-        </ProfitableBox>
-      </FlexBox>
-      <AmountBox>
-        <SpaceBetweenBox>
-          <Box>
-            <Typography variant="body2" fontWeight="700" color="#1F1D23">
-              Liquidation amount
+      {loading ? (
+        <MobileETHCollateralSkeleton></MobileETHCollateralSkeleton>
+      ) : (
+        <>
+          <FlexBox>
+            <Typography variant="subtitle2">ETH Collateral</Typography>
+            <ProfitableBox>
+              <Typography variant="body2" fontWeight="700" color="#7646FF">
+                Profitable
+              </Typography>
+            </ProfitableBox>
+          </FlexBox>
+          <AmountBox>
+            <SpaceBetweenBox>
+              <Box>
+                <Typography variant="body2" fontWeight="700" color="#1F1D23">
+                  Liquidation amount
+                </Typography>
+                <FlexBox>
+                  <svg width="17" height="23" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g opacity="0.7">
+                      <path
+                        d="M3 11.7576L8.5 3L14 11.7576L8.5 20L3 11.7576Z"
+                        stroke="#14142A"
+                        strokeWidth="2"
+                        strokeLinejoin="round"
+                      />
+                      <path d="M3 11.5L8.5 15L14 11.5" stroke="#14142A" strokeWidth="1.5" strokeLinejoin="round" />
+                    </g>
+                  </svg>
+                  <TextField
+                    autoFocus={true}
+                    sx={{ fontSize: '28px' }}
+                    placeholder="0.00"
+                    value={amount}
+                    // onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    //   event.target.value = event.target.value.replace(/^\D*(\d*(?:\.\d{0,10})?).*$/g, '$1')
+                    //   handleAmount(event.target.value)
+                    //   setAmount(event.target.value)
+                    // }}
+                  />
+                </FlexBox>
+              </Box>
+              <Box>
+                <FlexEndBox>
+                  <MaxBox>
+                    <Typography variant="body2" fontWeight="600">
+                      MAX
+                    </Typography>
+                  </MaxBox>
+                </FlexEndBox>
+                <Typography variant="body2" fontWeight="600">
+                  117.5789 ETH
+                </Typography>
+              </Box>
+            </SpaceBetweenBox>
+          </AmountBox>
+          <SpaceBetweenBox>
+            <Typography variant="body1" fontWeight="600" color="#A0A3BD">
+              Potential Profit
+            </Typography>
+            <Typography variant="body1" fontWeight="600" color="#4E4B66">
+              4.6 ETH
+            </Typography>
+          </SpaceBetweenBox>
+          <SpaceBetweenBox>
+            <Typography variant="body1" fontWeight="600" color="#A0A3BD">
+              Subtotal
             </Typography>
             <FlexBox>
-              <svg width="17" height="23" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g opacity="0.7">
-                  <path
-                    d="M3 11.7576L8.5 3L14 11.7576L8.5 20L3 11.7576Z"
-                    stroke="#14142A"
-                    strokeWidth="2"
-                    strokeLinejoin="round"
-                  />
-                  <path d="M3 11.5L8.5 15L14 11.5" stroke="#14142A" strokeWidth="1.5" strokeLinejoin="round" />
-                </g>
+              <SubtotalStrikeThroughValue>46.00</SubtotalStrikeThroughValue>
+              <svg width="13" height="23" viewBox="0 0 13 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M2 11.697L6.5 5L11 11.697L6.5 18L2 11.697Z"
+                  stroke="#A0A3BD"
+                  strokeWidth="1.2"
+                  strokeLinejoin="round"
+                />
+                <path d="M2 11L6.5 14L11 11" stroke="#A0A3BD" strokeWidth="1.2" strokeLinejoin="round" />
               </svg>
-              <TextField
-                autoFocus={true}
-                sx={{ fontSize: '28px' }}
-                placeholder="0.00"
-                value={amount}
-                // onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                //   event.target.value = event.target.value.replace(/^\D*(\d*(?:\.\d{0,10})?).*$/g, '$1')
-                //   handleAmount(event.target.value)
-                //   setAmount(event.target.value)
-                // }}
-              />
+              <Typography ml="0.125rem" variant="subtitle1" fontWeight="700" color="#7646FF">
+                41.4
+              </Typography>
             </FlexBox>
-          </Box>
-          <Box>
-            <FlexEndBox>
-              <MaxBox>
-                <Typography variant="body2" fontWeight="600">
-                  MAX
-                </Typography>
-              </MaxBox>
-            </FlexEndBox>
-            <Typography variant="body2" fontWeight="600">
-              117.5789 ETH
-            </Typography>
-          </Box>
-        </SpaceBetweenBox>
-      </AmountBox>
-      <SpaceBetweenBox>
-        <Typography variant="body1" fontWeight="600" color="#A0A3BD">
-          Potential Profit
-        </Typography>
-        <Typography variant="body1" fontWeight="600" color="#4E4B66">
-          4.6 ETH
-        </Typography>
-      </SpaceBetweenBox>
-      <SpaceBetweenBox>
-        <Typography variant="body1" fontWeight="600" color="#A0A3BD">
-          Subtotal
-        </Typography>
-        <FlexBox>
-          <SubtotalStrikeThroughValue>46.00</SubtotalStrikeThroughValue>
-          <svg width="13" height="23" viewBox="0 0 13 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M2 11.697L6.5 5L11 11.697L6.5 18L2 11.697Z"
-              stroke="#A0A3BD"
-              strokeWidth="1.2"
-              strokeLinejoin="round"
-            />
-            <path d="M2 11L6.5 14L11 11" stroke="#A0A3BD" strokeWidth="1.2" strokeLinejoin="round" />
-          </svg>
-          <Typography ml="0.125rem" variant="subtitle1" fontWeight="700" color="#7646FF">
-            41.4
-          </Typography>
-        </FlexBox>
-      </SpaceBetweenBox>
+          </SpaceBetweenBox>
+        </>
+      )}
     </MobileETHCollateralBox>
   )
 }

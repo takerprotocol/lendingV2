@@ -15,14 +15,15 @@ import { useAccountNfts, useAddress } from 'state/user/hooks'
 import MobileCollectionSkeleton from '../mobileDashboardSkeleton/MobileCollectionSkeleton'
 import { OwnedNft } from '@alch/alchemy-sdk'
 const Collection = styled(Box)`
-  background: linear-gradient(180deg, #9574f5 0%, #857dfc 100%);
   width: 100%;
   padding: 1.3125rem 1rem 2rem 1rem;
   border-radius: 12px;
   transform: matrix(1, 0, 0, -1, 0, 0);
+  background: linear-gradient(180deg, #857dfc 0%, #e0dff3 100%);
+  transform: matrix(1, 0, 0, -1, 0, 0);
 `
 const CollectionBgBox = styled(Box)`
-  background: linear-gradient(180deg, #857dfc 0%, #f7f7fc 100%);
+  background: linear-gradient(180deg, #857dfc 0%, #e0dff3 100%);
   padding: 0 1rem;
   transform: matrix(1, 0, 0, -1, 0, 0);
 `

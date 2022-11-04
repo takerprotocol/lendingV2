@@ -17,6 +17,7 @@ import MobileMain from './components/mobileComponents/MobileMain'
 import MobileETHCollateral from './components/mobileComponents/MobileETHCollateral'
 import MobileNFTCollaterals from './components/mobileComponents/MobileNFTCollaterals'
 import MobileFooter from './components/mobileComponents/MobileFooter'
+import MobileLiquidateTitleSkeleton from './components/mobileLiquidateSkeleton/MobileLiquidateTitleSkeleton'
 
 const Body = styled(Box)`
   width: 100%;
@@ -28,7 +29,6 @@ const MobileBody = styled(Box)`
   width: 100%;
   background: #e5e5e5;
   position: relative;
-  padding-bottom: 7.25rem;
 `
 
 const Liquidate = () => {
@@ -113,7 +113,7 @@ const Liquidate = () => {
           />
         </Body>
       ) : (
-        <MobileBody>
+        <MobileBody sx={{ paddingBottom: `${loading ? '1.4375rem' : '7.25rem'}` }}>
           <MobileHeader
             address={address || ''}
             riskPercentage={heath}
@@ -122,12 +122,17 @@ const Liquidate = () => {
             ethCollateral={minus(totalCollateral, nftCollateral)}
             totalDebt={totalDebt}
             ethDebt={totalDebt}
+            loading={loading}
             borrowings={totalDebt}
           ></MobileHeader>
-          <MobileMain totalDebt={totalDebt}></MobileMain>
-          <MobileETHCollateral></MobileETHCollateral>
-          <MobileNFTCollaterals></MobileNFTCollaterals>
-          <MobileFooter></MobileFooter>
+          {loading ? (
+            <MobileLiquidateTitleSkeleton></MobileLiquidateTitleSkeleton>
+          ) : (
+            <MobileMain totalDebt={totalDebt}></MobileMain>
+          )}
+          <MobileETHCollateral loading={loading}></MobileETHCollateral>
+          <MobileNFTCollaterals loading={loading}></MobileNFTCollaterals>
+          {!loading && <MobileFooter></MobileFooter>}
         </MobileBody>
       )}
     </>

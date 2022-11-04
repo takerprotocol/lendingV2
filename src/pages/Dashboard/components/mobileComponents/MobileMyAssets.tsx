@@ -28,10 +28,11 @@ import { useAppDispatch } from 'state/hooks'
 import { setLoginWalletType, setMobileMenuType } from 'state/user/reducer'
 import MobileMyAssetsModal from './MobileMyAssetsModal'
 import MobileTotalSkeleton from '../mobileDashboardSkeleton/MobileTotalSkeleton'
-import MobileMyAssetsSkeleton from '../mobileDashboardSkeleton/MobileMyAssetsSkeleton'
 import { setLoading, setPoolValues } from 'state/application/reducer'
 import { useLendingPool } from 'hooks/useLendingPool'
 import BigNumber from 'bignumber.js'
+import MobileMyAssetsSkeleton from '../mobileDashboardSkeleton/MobileMyAssetsSkeleton'
+import MobileMyLoanSkeleton from '../mobileDashboardSkeleton/MobileMyLoanSkeleton '
 // import MobileMyAssetsModal from './MobileMyAssetsModal'
 
 const TotalBox = styled(Box)`
@@ -170,90 +171,41 @@ export default function MobileMyAssets() {
           </TotalBox>
         )}
       </Box>
-      {address ? (
+      {loading ? (
+        <MobileMyAssetsSkeleton></MobileMyAssetsSkeleton>
+      ) : (
         <>
-          <Box p="0 1rem">
-            {loading ? (
-              <MobileMyAssetsSkeleton></MobileMyAssetsSkeleton>
-            ) : (
-              <MyAssetsBox
-                sx={{ background: `${myAssetsType ? '#ffffff' : 'linear-gradient(180deg, #FFFFFF 0%, #F7F7FC 100%)'}` }}
-              >
-                <SpaceBetweenBox>
-                  <FlexBox
-                    onClick={() => {
-                      setMyAssetsType(!myAssetsType)
-                    }}
-                  >
-                    <Typography mr="0.5rem" variant="subtitle2" fontWeight="700">
-                      My Assets
-                    </Typography>
-                    <img src={myAssetsType ? mobileDown : mobileUp} alt="" />
-                  </FlexBox>
-                  <ClaimBox>
-                    <img src={OverviewIcon} alt="" />
-                    <Typography ml="0.25rem" mr="0.5rem" variant="body2" fontWeight="600">
-                      16.84
-                    </Typography>
-                    <Typography variant="body2" fontWeight="700">
-                      Claim {'>'}
-                    </Typography>
-                  </ClaimBox>
-                </SpaceBetweenBox>
-                {myAssetsType ? (
-                  <SpaceBetweenBox mt="1rem">
-                    <Box ml="0.375rem">
-                      <Typography variant="body2" color="#A0A3BD">
+          {address ? (
+            <>
+              <Box p="0 1rem">
+                <MyAssetsBox
+                  sx={{
+                    background: `${myAssetsType ? '#ffffff' : 'linear-gradient(180deg, #FFFFFF 0%, #F7F7FC 100%)'}`,
+                  }}
+                >
+                  <SpaceBetweenBox>
+                    <FlexBox
+                      onClick={() => {
+                        setMyAssetsType(!myAssetsType)
+                      }}
+                    >
+                      <Typography mr="0.5rem" variant="subtitle2" fontWeight="700">
                         My Assets
                       </Typography>
-                      <FlexBox>
-                        <img src={mobileBlackEthLogo} alt="" />
-                        <Typography ml="0.4375rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
-                          {balance}
-                        </Typography>
-                      </FlexBox>
-                    </Box>
-                    <FlexBox>
-                      <NFTBox onClick={() => navigate('/Deposit')}>
-                        <Typography
-                          variant="body2"
-                          fontWeight="700"
-                          color="rgba(255, 255, 255, 0.5)"
-                          lineHeight="1.0625rem"
-                        >
-                          NFT
-                        </Typography>
-                        <Typography variant="body2" fontWeight="700" color="rgba(255, 255, 255)" lineHeight="1.0625rem">
-                          Deposit {'>'}
-                        </Typography>
-                      </NFTBox>
-                      <ETHBox>
-                        <Typography
-                          variant="body2"
-                          fontWeight="700"
-                          color="rgba(255, 255, 255, 0.5)"
-                          lineHeight="1.0625rem"
-                        >
-                          ETH
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          onClick={() => {
-                            setTypeModal(1)
-                            setOpenMySupplyModal(true)
-                          }}
-                          fontWeight="700"
-                          color="rgba(255, 255, 255)"
-                          lineHeight="1.0625rem"
-                        >
-                          Supply {'>'}
-                        </Typography>
-                      </ETHBox>
+                      <img src={myAssetsType ? mobileDown : mobileUp} alt="" />
                     </FlexBox>
+                    <ClaimBox>
+                      <img src={OverviewIcon} alt="" />
+                      <Typography ml="0.25rem" mr="0.5rem" variant="body2" fontWeight="600">
+                        16.84
+                      </Typography>
+                      <Typography variant="body2" fontWeight="700">
+                        Claim {'>'}
+                      </Typography>
+                    </ClaimBox>
                   </SpaceBetweenBox>
-                ) : (
-                  <Box>
-                    <SpaceBetweenBox mt="1rem" mr="2.75rem">
+                  {myAssetsType ? (
+                    <SpaceBetweenBox mt="1rem">
                       <Box ml="0.375rem">
                         <Typography variant="body2" color="#A0A3BD">
                           My Assets
@@ -265,81 +217,143 @@ export default function MobileMyAssets() {
                           </Typography>
                         </FlexBox>
                       </Box>
-                      <Box>
-                        <Typography variant="body1" fontWeight="600" color="#A0A3BD">
-                          15%
-                        </Typography>
-                        <FlexBox>
-                          <Typography mr="0.25rem" variant="body2" color="#A0A3BD">
-                            Net APY
+                      <FlexBox>
+                        <NFTBox onClick={() => navigate('/Deposit')}>
+                          <Typography
+                            variant="body2"
+                            fontWeight="700"
+                            color="rgba(255, 255, 255, 0.5)"
+                            lineHeight="1.0625rem"
+                          >
+                            NFT
                           </Typography>
-                          <img src={mobilePrompt2} alt="" />
-                        </FlexBox>
-                      </Box>
+                          <Typography
+                            variant="body2"
+                            fontWeight="700"
+                            color="rgba(255, 255, 255)"
+                            lineHeight="1.0625rem"
+                          >
+                            Deposit {'>'}
+                          </Typography>
+                        </NFTBox>
+                        <ETHBox>
+                          <Typography
+                            variant="body2"
+                            fontWeight="700"
+                            color="rgba(255, 255, 255, 0.5)"
+                            lineHeight="1.0625rem"
+                          >
+                            ETH
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            onClick={() => {
+                              setTypeModal(1)
+                              setOpenMySupplyModal(true)
+                            }}
+                            fontWeight="700"
+                            color="rgba(255, 255, 255)"
+                            lineHeight="1.0625rem"
+                          >
+                            Supply {'>'}
+                          </Typography>
+                        </ETHBox>
+                      </FlexBox>
                     </SpaceBetweenBox>
-                    <MobileMyNFTCollateral></MobileMyNFTCollateral>
-                    <MobileMyETHCollateral
-                      setOpenMySupplyModal={setOpenMySupplyModal}
-                      setTypeModal={setTypeModal}
-                    ></MobileMyETHCollateral>
-                  </Box>
+                  ) : (
+                    <Box>
+                      <SpaceBetweenBox mt="1rem" mr="2.75rem">
+                        <Box ml="0.375rem">
+                          <Typography variant="body2" color="#A0A3BD">
+                            My Assets
+                          </Typography>
+                          <FlexBox>
+                            <img src={mobileBlackEthLogo} alt="" />
+                            <Typography ml="0.4375rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
+                              {balance}
+                            </Typography>
+                          </FlexBox>
+                        </Box>
+                        <Box>
+                          <Typography variant="body1" fontWeight="600" color="#A0A3BD">
+                            15%
+                          </Typography>
+                          <FlexBox>
+                            <Typography mr="0.25rem" variant="body2" color="#A0A3BD">
+                              Net APY
+                            </Typography>
+                            <img src={mobilePrompt2} alt="" />
+                          </FlexBox>
+                        </Box>
+                      </SpaceBetweenBox>
+                      <MobileMyNFTCollateral></MobileMyNFTCollateral>
+                      <MobileMyETHCollateral
+                        setOpenMySupplyModal={setOpenMySupplyModal}
+                        setTypeModal={setTypeModal}
+                      ></MobileMyETHCollateral>
+                    </Box>
+                  )}
+                </MyAssetsBox>
+              </Box>
+              <MobileMyLoan></MobileMyLoan>
+            </>
+          ) : (
+            <ConnectWalletBox>
+              <CenterBox>
+                <img src={mobileWallet} alt="" />
+              </CenterBox>
+              <WalletTypography>Please connect your wallet</WalletTypography>
+              <CenterBox>
+                <Typography color="#A0A3BD" variant="body1">
+                  To see your deposited / borrowed assets,you
+                </Typography>
+              </CenterBox>
+              <CenterBox>
+                <Typography color="#A0A3BD" variant="body1">
+                  need to connect your wallet.
+                </Typography>
+              </CenterBox>
+              <CenterBox mt="2rem">
+                {type === 2 ? (
+                  <ConnectWalletButton
+                    onClick={() => {
+                      dispatch(setLoginWalletType(false))
+                      dispatch(setMobileMenuType(false))
+                      dispatch(setLoginWalletType(false))
+                    }}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Connect Wallet
+                  </ConnectWalletButton>
+                ) : (
+                  <PrimaryButton
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      dispatch(setLoginWalletType(false))
+                      dispatch(setMobileMenuType(false))
+                      dispatch(setLoginWalletType(false))
+                    }}
+                  >
+                    Connect Wallet
+                  </PrimaryButton>
                 )}
-              </MyAssetsBox>
-            )}
-          </Box>
-          <MobileMyLoan></MobileMyLoan>
+              </CenterBox>
+            </ConnectWalletBox>
+          )}
         </>
-      ) : (
-        <ConnectWalletBox>
-          <CenterBox>
-            <img src={mobileWallet} alt="" />
-          </CenterBox>
-          <WalletTypography>Please connect your wallet</WalletTypography>
-          <CenterBox>
-            <Typography color="#A0A3BD" variant="body1">
-              To see your deposited / borrowed assets,you
-            </Typography>
-          </CenterBox>
-          <CenterBox>
-            <Typography color="#A0A3BD" variant="body1">
-              need to connect your wallet.
-            </Typography>
-          </CenterBox>
-          <CenterBox mt="2rem">
-            {type === 2 ? (
-              <ConnectWalletButton
-                onClick={() => {
-                  dispatch(setLoginWalletType(false))
-                  dispatch(setMobileMenuType(false))
-                  dispatch(setLoginWalletType(false))
-                }}
-                variant="contained"
-                color="primary"
-              >
-                Connect Wallet
-              </ConnectWalletButton>
-            ) : (
-              <PrimaryButton
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  dispatch(setLoginWalletType(false))
-                  dispatch(setMobileMenuType(false))
-                  dispatch(setLoginWalletType(false))
-                }}
-              >
-                Connect Wallet
-              </PrimaryButton>
-            )}
-          </CenterBox>
-        </ConnectWalletBox>
       )}
-      <MobileMyAssetsModal
-        openMySupplyModal={openMySupplyModal}
-        setOpenMySupplyModal={setOpenMySupplyModal}
-        type={typeModal}
-        mySupply={decimalFormat(ethCollateral.replace(/,/g, ''), 0)}
-      ></MobileMyAssetsModal>
+      {loading ? (
+        <MobileMyLoanSkeleton></MobileMyLoanSkeleton>
+      ) : (
+        <MobileMyAssetsModal
+          openMySupplyModal={openMySupplyModal}
+          setOpenMySupplyModal={setOpenMySupplyModal}
+          type={typeModal}
+          mySupply={decimalFormat(ethCollateral.replace(/,/g, ''), 0)}
+        ></MobileMyAssetsModal>
+      )}
     </Box>
   )
 }

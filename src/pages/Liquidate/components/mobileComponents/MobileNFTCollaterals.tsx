@@ -2,6 +2,7 @@ import { Box, Checkbox, styled, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import mobileNFT from 'assets/images/svg/liquidate/mobile-NFT.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
+import MobileNFTCollateralsSkeleton from '../mobileLiquidateSkeleton/MobileNFTCollateralsSkeleton'
 
 const MobileNFTCollateralsBox = styled(Box)`
   background: #ffffff;
@@ -39,67 +40,76 @@ const InputBox = styled(FlexBox)`
   border-radius: 6px;
   background: #eff0f6;
 `
-export default function MobileNFTCollaterals() {
+interface MobileNFTCollateralsProps {
+  loading: boolean
+}
+export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsProps) {
   const [checkboxType, setCheckboxType] = useState<Array<string>>([])
   return (
     <MobileNFTCollateralsBox>
-      <Typography variant="subtitle2">37 NFT Collaterals</Typography>
-      {[1, 2, 3, 4, 5, 6].map((el: any, index: number) => (
-        <CardBox className={checkboxType.includes(el) ? 'isCheck' : ' '} key={index}>
-          <FlexBox>
-            <Checkbox
-              checked={checkboxType.includes(el)}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                if (event.target.checked) {
-                  setCheckboxType([...checkboxType, el])
-                } else {
-                  setCheckboxType(checkboxType.filter((cel) => cel !== el))
-                }
-              }}
-            ></Checkbox>
-            <Box>
+      {loading ? (
+        <MobileNFTCollateralsSkeleton></MobileNFTCollateralsSkeleton>
+      ) : (
+        <>
+          <Typography variant="subtitle2">37 NFT Collaterals</Typography>
+          {[1, 2, 3, 4, 5, 6].map((el: any, index: number) => (
+            <CardBox className={checkboxType.includes(el) ? 'isCheck' : ' '} key={index}>
               <FlexBox>
-                <ImgBox></ImgBox>
+                <Checkbox
+                  checked={checkboxType.includes(el)}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    if (event.target.checked) {
+                      setCheckboxType([...checkboxType, el])
+                    } else {
+                      setCheckboxType(checkboxType.filter((cel) => cel !== el))
+                    }
+                  }}
+                ></Checkbox>
                 <Box>
                   <FlexBox>
-                    <RadiusImg src={mobileNFT} alt="" />
-                    <Typography ml="0.375rem" fontWeight="700" variant="body2">
-                      Cryptopunks
-                    </Typography>
+                    <ImgBox></ImgBox>
+                    <Box>
+                      <FlexBox>
+                        <RadiusImg src={mobileNFT} alt="" />
+                        <Typography ml="0.375rem" fontWeight="700" variant="body2">
+                          Cryptopunks
+                        </Typography>
+                      </FlexBox>
+                      <Typography mt="0.25rem" fontWeight="700" variant="body1">
+                        CRYPTOPUNK #4728
+                      </Typography>
+                    </Box>
                   </FlexBox>
-                  <Typography mt="0.25rem" fontWeight="700" variant="body1">
-                    CRYPTOPUNK #4728
-                  </Typography>
+                  <SpaceBetweenBox mt="1rem">
+                    <InputBox>
+                      <TextField variant="outlined" />
+                      <Typography ml="6px" component="span" variant="body1" color="#A0A3BD">
+                        Max
+                      </Typography>
+                    </InputBox>
+                    <FlexBox ml="3.5625rem">
+                      <svg width="17" height="24" viewBox="0 0 17 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g opacity="0.5">
+                          <path
+                            d="M4 12.2121L8.5 5L13 12.2121L8.5 19L4 12.2121Z"
+                            stroke="#6E7191"
+                            strokeWidth="1.5"
+                            strokeLinejoin="round"
+                          />
+                          <path d="M4 12L8.5 14.5L13 12" stroke="#6E7191" strokeLinejoin="round" />
+                        </g>
+                      </svg>
+                      <Typography ml="0.125rem" fontWeight="700" variant="subtitle2" color="#7646FF">
+                        7.2176
+                      </Typography>
+                    </FlexBox>
+                  </SpaceBetweenBox>
                 </Box>
               </FlexBox>
-              <SpaceBetweenBox mt="1rem">
-                <InputBox>
-                  <TextField variant="outlined" />
-                  <Typography ml="6px" component="span" variant="body1" color="#A0A3BD">
-                    NTFs
-                  </Typography>
-                </InputBox>
-                <FlexBox ml="3.5625rem">
-                  <svg width="17" height="24" viewBox="0 0 17 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g opacity="0.5">
-                      <path
-                        d="M4 12.2121L8.5 5L13 12.2121L8.5 19L4 12.2121Z"
-                        stroke="#6E7191"
-                        strokeWidth="1.5"
-                        strokeLinejoin="round"
-                      />
-                      <path d="M4 12L8.5 14.5L13 12" stroke="#6E7191" strokeLinejoin="round" />
-                    </g>
-                  </svg>
-                  <Typography ml="0.125rem" fontWeight="700" variant="subtitle2" color="#7646FF">
-                    7.2176
-                  </Typography>
-                </FlexBox>
-              </SpaceBetweenBox>
-            </Box>
-          </FlexBox>
-        </CardBox>
-      ))}
+            </CardBox>
+          ))}
+        </>
+      )}
     </MobileNFTCollateralsBox>
   )
 }

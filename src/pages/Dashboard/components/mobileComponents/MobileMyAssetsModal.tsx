@@ -2,8 +2,6 @@ import prompt from 'assets/images/svg/common/prompt.svg'
 import redPrompt from 'assets/images/svg/common/redPrompt.svg'
 import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
-// import addIcon from 'assets/images/svg/common/add.svg'
-// import rightIcon from 'assets/images/svg/common/right.svg'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
 import { amountDecimal, desensitization, fixedFormat, getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
 import BigNumber from 'bignumber.js'
@@ -15,7 +13,6 @@ import {
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
   useDecimal,
-  // useErc20ReserveData,
   useEthCollateral,
   useHeath,
   useUsedCollateral,
@@ -23,17 +20,11 @@ import {
 } from 'state/user/hooks'
 import { gasLimit } from 'config'
 import { useTransactionAdder } from 'state/transactions/hooks'
-// import { TransactionType } from 'state/transactions/types'
-// import { useApproveCallback } from 'hooks/transactions/useApproveCallback'
-// import { ApprovalState } from 'hooks/transactions/useApproval'
 import { TransactionType } from 'state/transactions/types'
 import { useGateway } from 'hooks/useGateway'
 import { SpaceBetweenBox } from 'styleds'
 import { useApproveCallback, useTTokenApproveCallback } from 'hooks/transactions/useApproveCallback'
 import { ApprovalState } from 'hooks/transactions/useApproval'
-// import { useContract } from 'hooks/useContract'
-// import erc20Abi from 'abis/MockErc20.json'
-// import { fromWei } from 'web3-utils'
 
 const style = {
   width: '100%',

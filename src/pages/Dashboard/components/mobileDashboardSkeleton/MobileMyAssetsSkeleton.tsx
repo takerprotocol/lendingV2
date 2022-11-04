@@ -4,7 +4,7 @@ const MobileMyAssetsSkeletonBox = styled(Box)`
   background: #ffffff;
   border-radius: 0.75rem;
   padding: 1.5rem 1rem 1rem 1rem;
-  margin-top: -0.75rem;
+  margin: -0.75rem 1rem 0rem 1rem;
 `
 const Skeletons = styled(Skeleton)`
   background: rgba(239, 240, 246);

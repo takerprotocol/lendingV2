@@ -39,9 +39,9 @@ const RiskFlexBox = styled(Box)`
   justify-content: space-between;
 `
 const MyAssetsBgBox = styled(Box)`
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   padding: 0 1rem 1rem 1rem;
-  background: linear-gradient(180deg, rgba(247, 247, 252, 0) 0%, #e0dff3 100%);
+  background: linear-gradient(180deg, rgba(247, 247, 252, 0) 0%, #e0dff3 100%) !important;
 `
 const NoBorrowLimitRiskLevelBox = styled(Box)`
   width: 100%;
