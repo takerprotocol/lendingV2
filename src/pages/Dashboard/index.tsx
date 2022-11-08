@@ -39,13 +39,17 @@ const Main = styled(Box)`
   margin-bottom: 80px;
 `
 const MobileBody = styled(Box)`
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
+  background: #f7f7fc, url(${BgIcon});
   background-repeat: no-repeat;
-  background-size: cover;
 `
 const MobileMain = styled(Box)`
   width: 100%;
   margin: 0 auto;
+`
+const MenuBg = styled(Box)`
+  backdrop-filter: blur(75px);
+  width: 100wh;
+  height: 100vh;
 `
 const ConnectWalletBox = styled(Box)`
   background: linear-gradient(95.08deg, #7646ff 2.49%, #297ac9 49.84%, #00dfd2 97.19%);
@@ -72,7 +76,7 @@ export default function Dashboard() {
           dispatch(setLoginWalletType(false))
         }}
       >
-        <Typography variant="subtitle2" color="#ffffff" fontWeight="600">
+        <Typography variant="subtitle2" color="#ffffff" fontWeight="700">
           Connect Wallet
         </Typography>
       </ConnectWalletBox>
@@ -113,7 +117,7 @@ export default function Dashboard() {
                 <MobileCollection></MobileCollection>
               </>
             ) : (
-              <>
+              <MenuBg>
                 {loginWalletType ? (
                   <>
                     <MobileMenu></MobileMenu>
@@ -122,7 +126,7 @@ export default function Dashboard() {
                 ) : (
                   <WalletModal></WalletModal>
                 )}
-              </>
+              </MenuBg>
             )}
           </MobileMain>
         </MobileBody>

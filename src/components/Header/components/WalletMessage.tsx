@@ -20,9 +20,8 @@ import dayjs from 'dayjs'
 const WalletMessageBox = styled(Box)`
   background: #ffffff;
   border-radius: 12px;
-  padding: 1rem;
-  margin: 0 1rem;
-  margin-top: 1rem;
+  padding: 1rem 1rem 1.5rem 1rem;
+  margin: 1rem 1rem 0 1rem;
 `
 const WalletBalanceBox = styled(Box)`
   background: #f7f7fc;
@@ -75,14 +74,7 @@ export default function WalletMessage() {
         <SpaceBetweenBox>
           <CenterBox>
             <StyledBlockie seed={address} size={12} scale={2} />
-            <Typography
-              variant="subtitle2"
-              component="h1"
-              ml="8px"
-              mr="14px"
-              color="#6E7191"
-              sx={{ textDecorationLine: 'underline' }}
-            >
+            <Typography variant="subtitle2" component="h1" ml="8px" mr="14px" color="#6E7191">
               {desensitization(address)}
             </Typography>
             <Copy text={address} />

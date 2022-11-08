@@ -96,9 +96,9 @@ export default function Option({
             <Box display={'flex'} alignItems={'center'}>
               <img src={icon} alt={'Icon'} />
               <Typography
-                ml="1.125rem"
+                ml="1.25rem"
                 className="active"
-                variant="subtitle1"
+                variant="subtitle2"
                 lineHeight="1.125rem"
                 fontWeight="400"
                 color="#262338"

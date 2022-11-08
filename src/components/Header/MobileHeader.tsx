@@ -5,7 +5,7 @@ import X from 'assets/images/svg/common/X-icon.svg'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state'
 import { useMobileMenuType, useMobileSecondHeaderName } from 'state/user/hooks'
-import { setMobileMenuType } from 'state/user/reducer'
+import { setLoginWalletType, setMobileMenuType } from 'state/user/reducer'
 import { FlexBox } from 'styleds'
 const MobileHerderBox = styled(Box, {
   shouldForwardProp: (prop) => true,
@@ -96,6 +96,7 @@ export default function MobileHeader() {
             alt=""
             onClick={() => {
               dispatch(setMobileMenuType(!menuType))
+              dispatch(setLoginWalletType(true))
             }}
           />
         </MobileHerderBox>

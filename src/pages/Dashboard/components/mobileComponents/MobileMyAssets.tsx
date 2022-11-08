@@ -37,8 +37,8 @@ import MobileMyLoanSkeleton from '../mobileDashboardSkeleton/MobileMyLoanSkeleto
 
 const TotalBox = styled(Box)`
   width: 100%;
-  padding: 1.25rem 0rem 2rem 1.375rem;
-  border-radius: 0.375rem;
+  padding: 1.3125rem 0rem 2rem 1.375rem;
+  border-radius: 0.5rem;
   background: linear-gradient(180deg, rgba(153, 159, 210, 0.1) 0%, rgba(157, 162, 197, 0.0384882) 84.87%);
 `
 const MyAssetsBox = styled(Box)`
@@ -71,8 +71,8 @@ const ConnectWalletBox = styled(Box)`
   background: linear-gradient(180deg, #ffffff 0%, #f7f7fc 100%);
   border-radius: 12px;
   display: flex;
-  margin: 0 1rem 1rem 1rem;
-  padding: 1.875rem 0 1.5rem 0;
+  margin: -0.75rem 1rem 1rem 1rem;
+  padding: 2rem 0 1.5rem 0;
   flex-direction: column;
 `
 const WalletTypography = styled(Typography)`
@@ -189,8 +189,8 @@ export default function MobileMyAssets() {
                         setMyAssetsType(!myAssetsType)
                       }}
                     >
-                      <Typography mr="0.5rem" variant="subtitle2" fontWeight="700">
-                        My Assets
+                      <Typography mr="0.25rem" variant="subtitle2" fontWeight="700">
+                        My Account
                       </Typography>
                       <img src={myAssetsType ? mobileDown : mobileUp} alt="" />
                     </FlexBox>
@@ -212,7 +212,7 @@ export default function MobileMyAssets() {
                         </Typography>
                         <FlexBox>
                           <img src={mobileBlackEthLogo} alt="" />
-                          <Typography ml="0.4375rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
+                          <Typography ml="0.25rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
                             {balance}
                           </Typography>
                         </FlexBox>

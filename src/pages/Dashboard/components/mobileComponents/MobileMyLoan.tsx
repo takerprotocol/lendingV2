@@ -20,7 +20,7 @@ const MyAssetsBox = styled(Box)`
   .loanButton {
     padding: 0;
     margin-left: 0.5rem;
-    min-width: 5.1875rem;
+    min-width: 5.125rem;
     height: 2.5rem;
   }
   .MuiSlider-root {
@@ -131,7 +131,7 @@ export default function MobileMyLoan() {
                   setLoanType(!myLoanType)
                 }}
               >
-                <Typography mr="0.5rem" variant="subtitle2" fontWeight="700">
+                <Typography mr="0.25rem" variant="subtitle2" fontWeight="700">
                   My Loan
                 </Typography>
                 <img src={myLoanType ? mobileDown : mobileUp} alt="" />
@@ -154,7 +154,7 @@ export default function MobileMyLoan() {
                   </Typography>
                   <FlexBox>
                     <img src={mobileBlackEthLogo} alt="" />
-                    <Typography ml="0.4375rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
+                    <Typography ml="0.25rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
                       {fixedFormat(ethDebt)}
                     </Typography>
                   </FlexBox>

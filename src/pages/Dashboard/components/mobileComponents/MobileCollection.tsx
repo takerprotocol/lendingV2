@@ -19,11 +19,10 @@ const Collection = styled(Box)`
   padding: 1.3125rem 1rem 2rem 1rem;
   border-radius: 12px;
   transform: matrix(1, 0, 0, -1, 0, 0);
-  background: linear-gradient(180deg, #857dfc 0%, #e0dff3 100%);
+  background: linear-gradient(180deg, #9574f5 0%, #857dfc 100%);
   transform: matrix(1, 0, 0, -1, 0, 0);
 `
 const CollectionBgBox = styled(Box)`
-  background: linear-gradient(180deg, #857dfc 0%, #e0dff3 100%);
   padding: 0 1rem;
   transform: matrix(1, 0, 0, -1, 0, 0);
 `
@@ -69,7 +68,7 @@ const NftFooterBox = styled(Box)`
   box-shadow: 0px 10px 20px rgba(106, 99, 223, 0.5);
 `
 export default function MobileCollection() {
-  const [type, setType] = useState<number | null>(1)
+  const [type, setType] = useState<number | null>(null)
   const collection = useCollections()
   const address = useAddress()
   const loading = useLoading()
@@ -96,7 +95,16 @@ export default function MobileCollection() {
     [list]
   )
   return (
-    <CollectionBgBox display={collection.length === 0 ? 'none' : ''}>
+    <CollectionBgBox
+      sx={{
+        background: `${
+          address
+            ? 'linear-gradient(180deg, #857dfc 0%, #e0dff3 100%)'
+            : 'linear-gradient(180deg, #857dfc 0%, #f7f7fc 100%)'
+        }`,
+      }}
+      display={collection.length === 0 ? 'none' : ''}
+    >
       {loading ? (
         <MobileCollectionSkeleton></MobileCollectionSkeleton>
       ) : (
@@ -112,11 +120,11 @@ export default function MobileCollection() {
               </Typography>
               borrow reward
             </Typography>
-            {collection.map((el: any) => (
+            {collection.map((el: any, index: number) => (
               <CardBox key={`${el.id}collection`}>
                 <NftBox>
-                  <LabelBox display={type ? '' : 'none'}>
-                    <Typography variant="body1" color="#ffffff" lineHeight="150%" fontWeight="700">
+                  <LabelBox display={type === index && address ? '' : 'none'}>
+                    <Typography variant="body2" color="#ffffff" lineHeight="1.125rem" fontWeight="700">
                       Can Deposit
                     </Typography>
                   </LabelBox>
@@ -162,7 +170,7 @@ export default function MobileCollection() {
                             ml="0.25rem"
                             variant="body1"
                             color="#A0A3BD"
-                            fontWeight="700"
+                            fontWeight="600"
                             lineHeight="1.25rem"
                           >
                             {div(el.ltv, 100)}%
@@ -170,17 +178,19 @@ export default function MobileCollection() {
                         </FlexBox>
                       </Box>
                     </FlexBox>
-                    <img
-                      src={address ? mobileCollateralRight : mobileCollateralRight2}
-                      alt=""
-                      onClick={() => {
-                        navigate(`/deposit/${el.id}`)
-                      }}
-                    />
+                    <Box sx={{ height: '2.375rem', width: '2.375rem', marginTop: '0.0625rem' }}>
+                      <img
+                        src={address ? mobileCollateralRight : mobileCollateralRight2}
+                        alt=""
+                        onClick={() => {
+                          navigate(`/deposit/${el.id}`)
+                        }}
+                      />
+                    </Box>
                   </SpaceBetweenBox>
                 </NftBox>
                 <NftFooterBox>
-                  {el === type && (
+                  {index === type && (
                     <Box>
                       <SpaceBetweenBox marginY="0.5rem">
                         <Typography variant="body2" color="#A0A3BD">
@@ -201,15 +211,23 @@ export default function MobileCollection() {
                       <MyDepositedBox>
                         <SpaceBetweenBox>
                           <Box>
-                            <Typography variant="body1" color="#7646FF" fontWeight="700">
-                              {deposited(el.id)}
+                            <Typography
+                              variant="body1"
+                              color={+deposited(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
+                              fontWeight="700"
+                            >
+                              {deposited(el.id)} NFTs
                             </Typography>
                             <Typography variant="body2" color="#A0A3BD">
                               My Deposited
                             </Typography>
                           </Box>
                           <Box mr="2.75rem">
-                            <Typography variant="body1" color="#7646FF" fontWeight="700">
+                            <Typography
+                              variant="body1"
+                              color={+nftBalance(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
+                              fontWeight="700"
+                            >
                               {nftBalance(el.id)} NTFs
                             </Typography>
                             <Typography variant="body2" color="#A0A3BD">
@@ -222,17 +240,17 @@ export default function MobileCollection() {
                   )}
                   <CenterBox
                     onClick={() => {
-                      if (el === type) {
+                      if (index === type) {
                         setType(null)
                       } else {
-                        setType(el)
+                        setType(index)
                       }
                     }}
                   >
                     <Typography variant="body2" color="#A7A5D1">
-                      Show Details
+                      {index !== type ? 'Show Details' : 'Hide Details'}
                     </Typography>
-                    <img src={type ? mobileCollateralUp : mobileCollateralDown} alt="" />
+                    <img src={index === type ? mobileCollateralUp : mobileCollateralDown} alt="" />
                   </CenterBox>
                 </NftFooterBox>
               </CardBox>

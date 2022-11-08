@@ -17,7 +17,7 @@ const MobileMenuBox = styled(Box)`
 const ButtonBox = styled(Box)`
   background: #f7f7fc;
   border-radius: 6px;
-  padding: 0.8125rem 0.75rem 0.8125rem 1.125rem;
+  padding: 0.8125rem 0.75rem 0.8125rem 0.75rem;
   display: flex;
   align-items: center;
 `
@@ -35,7 +35,7 @@ export default function MobileMenu() {
         }}
       >
         <Typography
-          variant="body1"
+          variant="subtitle2"
           lineHeight="150%"
           fontWeight="700"
           color={String(location.pathname === '/' ? theme.palette.primary.main : theme.palette.text)}
@@ -70,15 +70,16 @@ export default function MobileMenu() {
           </Typography>
         </ButtonBox>
       </SpaceBetweenBox>
-      <SpaceBetweenBox>
+      <SpaceBetweenBox
+        onClick={() => {
+          navigate('/liquidation')
+          dispatch(setMobileMenuType(!menuType))
+        }}
+      >
         <Typography
-          variant="body1"
+          variant="subtitle2"
           lineHeight="150%"
           fontWeight="600"
-          onClick={() => {
-            navigate('/liquidation')
-            dispatch(setMobileMenuType(!menuType))
-          }}
           color={String(location.pathname === '/liquidation' ? theme.palette.primary.main : theme.palette.text)}
         >
           Liquidation
@@ -86,7 +87,7 @@ export default function MobileMenu() {
         <img src={mobileMenu} alt="" />
       </SpaceBetweenBox>
       <SpaceBetweenBox mt="2.25rem">
-        <Typography variant="body1" lineHeight="150%" fontWeight="600">
+        <Typography variant="subtitle2" lineHeight="150%" fontWeight="600">
           FAQs
         </Typography>
         <img src={mobileMenu} alt="" />

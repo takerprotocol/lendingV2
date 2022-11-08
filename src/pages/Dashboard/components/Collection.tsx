@@ -263,9 +263,9 @@ export default function Collection({ type, loading }: CollectionType) {
                           component="span"
                           variant="subtitle1"
                           fontWeight="700"
-                          color={dataType ? '#7646FF' : '#A0A3BD'}
+                          color={deposited(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
                         >
-                          {deposited(el.id)}
+                          {deposited(el.id)} NTFs
                         </Typography>
                         <Typography component="p" variant="body1" fontWeight="600" color="#A0A3BD">
                           My Deposited
@@ -276,7 +276,7 @@ export default function Collection({ type, loading }: CollectionType) {
                           component="span"
                           variant="subtitle1"
                           fontWeight="700"
-                          color={dataType ? '#7646FF' : '#A0A3BD'}
+                          color={nftBalance(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
                         >
                           {nftBalance(el.id)} NTFs
                         </Typography>

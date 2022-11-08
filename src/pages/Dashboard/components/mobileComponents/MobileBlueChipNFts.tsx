@@ -8,7 +8,6 @@ import { useAppDispatch } from 'state/hooks'
 const BlueChipStyleBox = styled(Box)`
   width: 100%;
   padding: 0.25rem;
-  margin-top: 0.5rem;
   background: rgba(160, 163, 189, 0.2);
   border-radius: 2.5rem;
 `
