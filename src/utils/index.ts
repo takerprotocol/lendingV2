@@ -4,7 +4,6 @@ import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import BigNumber from 'bignumber.js'
 import { JSEncrypt } from 'jsencrypt'
-
 const SHA256 = require('crypto-js/sha256')
 
 BigNumber.config({ EXPONENTIAL_AT: [-40, 40] })
@@ -77,23 +76,37 @@ export function numFormat(value?: string | number, thousandSeparated = true): st
   return ''
 }
 
-export function fixedFormat(value?: string | number, value1 = 2): string {
+export function fixedFormat(value?: string | number, value1 = 4): string {
   if (value) {
+    const flag = decimalPlacesLength(value)
     if (value.toString().split('.')[1] && value.toString().split('.')[1].length > 8) {
-      return new BigNumber(value).dp(8).toFormat(value1, 1)
+      return flag
+        ? new BigNumber(new BigNumber(value).dp(8).toFixed(value1, 1)).toFormat()
+        : new BigNumber(new BigNumber(value).toFixed()).toFormat()
     } else {
-      return new BigNumber(value).toFormat(value1, 1)
+      return flag
+        ? new BigNumber(new BigNumber(value).toFixed(value1, 1)).toFormat()
+        : new BigNumber(new BigNumber(value).toFixed()).toFormat()
     }
   }
-  return '0.00'
+  return '0'
 }
 
-export function decimalFormat(value?: number | string, decimal = 18, thousandSeparated = true, precision = 2) {
+export function decimalFormat(value?: number | string, decimal = 18, thousandSeparated = true, precision = 4) {
   if (value) {
+    const _value = new BigNumber(value).div(new BigNumber(10).pow(decimal))
     if (thousandSeparated) {
-      return new BigNumber(value).div(new BigNumber(10).pow(decimal)).toFormat(precision, 1)
+      if (decimalPlacesLength(_value.toString())) {
+        return new BigNumber(_value.toFixed(precision, 1)).toFormat()
+      } else {
+        return new BigNumber(_value.toFixed()).toFormat()
+      }
     } else {
-      return new BigNumber(value).div(new BigNumber(10).pow(decimal)).toFixed(precision, 1).toString()
+      if (decimalPlacesLength(_value.toString())) {
+        return _value.toFixed(precision, 1).toString()
+      } else {
+        return _value.toFixed().toString()
+      }
     }
   } else {
     return '0'
@@ -252,4 +265,9 @@ export const percent = (dividend: number | string, divisor: number | string) => 
 
 export const amountDecimal = (amount: number | string, decimal: number | string) => {
   return new BigNumber(amount).times(new BigNumber(10).pow(decimal)).toString()
+}
+
+export const decimalPlacesLength = (value: number | string) => {
+  const arr = new BigNumber(value).toFixed().split('.')
+  return arr.length > 1 ? new BigNumber('0.' + arr[1]).gt(0.00009) : false
 }
