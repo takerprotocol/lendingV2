@@ -269,5 +269,5 @@ export const amountDecimal = (amount: number | string, decimal: number | string)
 
 export const decimalPlacesLength = (value: number | string) => {
   const arr = new BigNumber(value).toFixed().split('.')
-  return arr.length > 1 ? new BigNumber('0.' + arr[1]).gt(0.00009) : false
+  return new BigNumber(value).gt(1) ? true : arr.length > 1 ? new BigNumber('0.' + arr[1]).gt(0.00009) : false
 }
