@@ -23,6 +23,12 @@ const MyAssetsBox = styled(Box)`
     min-width: 5.125rem;
     height: 2.5rem;
   }
+  .openButton {
+    padding: 0;
+    width: 5.75rem;
+    height: 2.25rem;
+    min-width: 5.75rem;
+  }
   .MuiSlider-root {
     padding: 0;
   }
@@ -48,7 +54,7 @@ const NoBorrowLimitRiskLevelBox = styled(Box)`
   background: #f3f3f8;
   border-radius: 0.5rem;
   margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.625rem;
   position: relative;
 `
 const BorrowAPYBox = styled(Box)`
@@ -72,7 +78,7 @@ const FooterBox = styled(Box)`
     bottom: calc(100%);
     border-width: 0.375rem 0.3125rem;
     border-style: dashed dashed solid dashed;
-    border-color: transparent transparent #f3f3f8 transparent;
+    border-color: transparent transparent rgba(217, 217, 217, 0.1) transparent;
   }
 `
 
@@ -93,7 +99,7 @@ export default function MobileMyLoan() {
     background: #f3f3f8;
     border-radius: 0.5rem;
     margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.625rem;
     padding: 0 0 1.125rem 0.75rem;
     position: relative;
     &.left {
@@ -127,6 +133,7 @@ export default function MobileMyLoan() {
           >
             <SpaceBetweenBox>
               <FlexBox
+                mt={myLoanType ? '0' : '0.5rem'}
                 onClick={() => {
                   setLoanType(!myLoanType)
                 }}
@@ -136,15 +143,17 @@ export default function MobileMyLoan() {
                 </Typography>
                 <img src={myLoanType ? mobileDown : mobileUp} alt="" />
               </FlexBox>
-              <ClaimBox>
-                <Typography mr="0.5rem" className={myLoanRiskLevelTag} variant="body2" fontWeight="700">
-                  {myLoanRiskLevel}
-                </Typography>
-                <Typography mr="0.5rem" color="#A0A3BD" variant="body2" fontWeight="600">
-                  {heath}%
-                </Typography>
-                <img src={mobilePrompt2} alt="" />
-              </ClaimBox>
+              {myLoanType && +ethDebt === 0 && (
+                <ClaimBox>
+                  <Typography mr="0.5rem" className={myLoanRiskLevelTag} variant="body2" fontWeight="700">
+                    {myLoanRiskLevel}
+                  </Typography>
+                  <Typography mr="0.5rem" color="#A0A3BD" variant="body2" fontWeight="600">
+                    {heath}%
+                  </Typography>
+                  <img src={mobilePrompt2} alt="" />
+                </ClaimBox>
+              )}
             </SpaceBetweenBox>
             {myLoanType ? (
               <SpaceBetweenBox mt="1rem">
@@ -154,7 +163,7 @@ export default function MobileMyLoan() {
                   </Typography>
                   <FlexBox>
                     <img src={mobileBlackEthLogo} alt="" />
-                    <Typography ml="0.25rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
+                    <Typography ml="0.25rem" variant="subtitle1" fontWeight="700">
                       {fixedFormat(ethDebt)}
                     </Typography>
                   </FlexBox>
@@ -192,14 +201,28 @@ export default function MobileMyLoan() {
               </SpaceBetweenBox>
             ) : (
               <>
-                <SpaceBetweenBox mt="1rem">
+                <SpaceBetweenBox mt="1.25rem" mr="1rem">
                   <Box ml="0.375rem">
-                    <Typography variant="body2" color="#A0A3BD">
+                    <Typography variant="body1" color="#A0A3BD">
                       My Debt
                     </Typography>
                     <FlexBox>
-                      <img src={mobileBlackEthLogo} alt="" />
-                      <Typography ml="0.4375rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
+                      <svg width="18" height="29" viewBox="0 0 18 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M3 15.2727L9 6L15 15.2727L9 24L3 15.2727Z"
+                          stroke="#14142A"
+                          strokeWidth="2"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M3 15L9 18L15 15"
+                          stroke="#14142A"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      <Typography ml="0.5rem" variant="h5">
                         {fixedFormat(ethDebt)}
                       </Typography>
                     </FlexBox>
@@ -211,7 +234,7 @@ export default function MobileMyLoan() {
                         setOpen(true)
                         setRepayRoBorrow(2)
                       }}
-                      className="loanButton"
+                      className="openButton"
                       variant="contained"
                     >
                       <Typography variant="body2" component="span" fontWeight="700">
@@ -289,7 +312,7 @@ export default function MobileMyLoan() {
                     Borrow Limit
                   </Typography>
                   <Typography variant="body1" color="#4E4B66" fontWeight="600">
-                    {fixedFormat(borrowLimit)}
+                    {fixedFormat(borrowLimit)} ETH
                   </Typography>
                 </SpaceBetweenBox>
                 <BorrowAPYBox>
@@ -311,18 +334,24 @@ export default function MobileMyLoan() {
                         setRepayRoBorrow(1)
                         setOpen(true)
                       }}
-                      className="loanButton"
+                      className="openButton"
                       variant="contained"
                     >
-                      <Typography variant="body2" component="span" fontWeight="700" color="#ffffff">
+                      <Typography variant="body2" fontWeight="700" color="#ffffff">
                         Borrow {'>'}
                       </Typography>
                     </Button>
                   </SpaceBetweenBox>
                   <FooterBox>
-                    <Typography variant="body2" component="span" color="#4E4B66">
+                    <Typography variant="body2" lineHeight="0.75rem" color="#4E4B66">
                       Borrow ETH to earn{' '}
-                      <Typography variant="body2" fontWeight="700" component="span" color="#29C3A8">
+                      <Typography
+                        variant="body2"
+                        lineHeight="0.75rem"
+                        fontWeight="700"
+                        component="span"
+                        color="#29C3A8"
+                      >
                         +20%
                       </Typography>{' '}
                       token reward

@@ -17,7 +17,7 @@ import {
   useCollateralRiskLevel,
   useDecimal,
   useErc20ReserveData,
-  useEthCollateral,
+  useEthLiquidity,
   useHeath,
   useUsedCollateral,
   useWalletBalance,
@@ -128,12 +128,12 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const [borrowOrRepay, setBorrowOrRepay] = useState<number>(type)
   // const [supplyLimit, setSupplyLimit] = useState('')
   const supplyLimit = useWalletBalance()
+  const ethLiquidity = useEthLiquidity()
   const [amount, setAmount] = useState('')
   const contract = useGateway()
   const poolContract = useLendingPool()
   const address = useAddress()
   const heath = useHeath()
-  const ethCollateral = useEthCollateral()
   const collateralRiskLevel = useCollateralRiskLevel(times(amount, borrowOrRepay === 1 ? 1 : -1))
   const TypographyRiskLevel = getRiskLevel(collateralRiskLevel)
   const riskLevelTag = getRiskLevelTag(collateralRiskLevel)
@@ -238,8 +238,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const buttonDisabled = useMemo(() => {
     return borrowOrRepay === 1
       ? !amount || new BigNumber(amount).gt(supplyLimit)
-      : !amount || new BigNumber(amount).gt(ethCollateral)
-  }, [amount, borrowOrRepay, ethCollateral, supplyLimit])
+      : !amount || new BigNumber(amount).gt(ethLiquidity)
+  }, [amount, borrowOrRepay, ethLiquidity, supplyLimit])
 
   return (
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">

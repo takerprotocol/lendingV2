@@ -4,7 +4,14 @@ import mobileMyETHCollateralPrompt from 'assets/images/svg/dashboard/mobileMyETH
 import mobileChecked from 'assets/images/svg/dashboard/mobileChecked-Icon.svg'
 import mobileChecked2 from 'assets/images/svg/dashboard/mobileChecked2-Icon.svg'
 import { useMemo, useState } from 'react'
-import { useBorrowLimit, useEthCollateral, useEthDebt, useUsedCollateral, useUserValue } from 'state/user/hooks'
+import {
+  useBorrowLimit,
+  useEthCollateral,
+  useEthDebt,
+  useEthLiquidity,
+  useUsedCollateral,
+  useUserValue,
+} from 'state/user/hooks'
 import { SpaceBox } from 'styleds'
 import { fixedFormat, times } from 'utils'
 import { toast } from 'react-toastify'
@@ -26,9 +33,9 @@ const MyETHCollateralBox = styled(Box)`
   .Padding-button {
     min-width: 5.75rem;
     height: 2.25rem;
-    padding: 0.5625rem  0.875rem 0.5625rem ;1.25rem
+    padding: 0.5625rem 0.875rem 0.5625rem;
   }
-  .MuiCheckbox-root{
+  .MuiCheckbox-root {
     height: 1rem;
     width: 1rem;
     padding: 0;
@@ -89,6 +96,7 @@ interface MobileMyETHCollateralProps {
 }
 export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeModal }: MobileMyETHCollateralProps) {
   const ethCollateral = useEthCollateral()
+  const ethLiquidity = useEthLiquidity()
   const usedCollateral = useUsedCollateral()
   const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
   const [openMySupplySwitchModal, setOpenMySupplySwitchModal] = useState<boolean>(false)
@@ -119,7 +127,7 @@ export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeMod
             My ETH Collateral
           </Typography>
           <Typography variant="subtitle1" component="span" fontWeight="700" color="#ffffff">
-            {fixedFormat(ethCollateral)}{' '}
+            {fixedFormat(ethLiquidity)}{' '}
             <Typography variant="body1" component="span" fontWeight="700" color="#ffffff">
               ETH
             </Typography>

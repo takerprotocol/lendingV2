@@ -1,10 +1,10 @@
 import { Box, Button, styled, Typography } from '@mui/material'
 import mobileButtonDown from 'assets/images/svg/dashboard/mobileButtonDown.svg'
 import { useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useCollections } from 'state/application/hooks'
 import { useAccountNfts, useUserNftConfig, useUserValue } from 'state/user/hooks'
 import { SpaceBox, FlexBox } from 'styleds'
+import { fixedFormat } from 'utils'
 const MyNFTCollateralBox = styled(Box)`
   background: linear-gradient(249.47deg, #7a82ff 0%, #9574f5 100%);
   box-shadow: 0 0.5rem 1rem rgba(128, 139, 238, 0.3), inset 0 0.0625rem 0.1875rem rgba(170, 189, 255, 0.7);
@@ -25,7 +25,6 @@ const NFTsBox = styled(FlexBox)`
   margin-top: 0.5rem;
 `
 export default function MobileMyNFTCollateral() {
-  const navigate = useNavigate()
   const userValue = useUserValue()
   const nftConfig = useUserNftConfig()
   const collections = useCollections()
@@ -43,7 +42,7 @@ export default function MobileMyNFTCollateral() {
             My NFT Collateral
           </Typography>
           <Typography variant="subtitle1" component="span" fontWeight="700" color="#ffffff">
-            {userValue.NFTLiquidity}{' '}
+            {fixedFormat(userValue.NFTLiquidity)}{' '}
             <Typography variant="body1" component="span" fontWeight="700" color="#ffffff">
               ETH
             </Typography>
@@ -63,7 +62,17 @@ export default function MobileMyNFTCollateral() {
           </FlexBox>
         </Box>
         <Box mt="48px">
-          <Button onClick={() => navigate('/deposit')} className="Padding-button" variant="contained" color="secondary">
+          <Button
+            onClick={() => {
+              window.scrollTo({
+                top: 750,
+                behavior: 'smooth',
+              })
+            }}
+            className="Padding-button"
+            variant="contained"
+            color="secondary"
+          >
             <Typography variant="body2" component="span" fontWeight="700" color=" #716CF8">
               Deposit
             </Typography>

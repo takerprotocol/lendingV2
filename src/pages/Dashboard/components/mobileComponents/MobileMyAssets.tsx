@@ -20,7 +20,6 @@ import {
 } from 'state/user/hooks'
 import MobileMyETHCollateral from './MobileMyETHCollateral'
 import MobileMyNFTCollateral from './MobileMyNFTCollateral'
-import { useNavigate } from 'react-router-dom'
 import MobileMyLoan from './MobileMyLoan'
 import { decimalFormat, plus } from 'utils'
 import { useLoading, usePoolValues } from 'state/application/hooks'
@@ -43,7 +42,7 @@ const TotalBox = styled(Box)`
 `
 const MyAssetsBox = styled(Box)`
   width: 100%;
-  padding: 1rem;
+  padding: 1rem 1rem 0.5rem 1rem;
   margin-top: -0.75rem;
   border-radius: 0.75rem;
 `
@@ -100,7 +99,6 @@ const PrimaryButton = styled(Button)`
 `
 export default function MobileMyAssets() {
   const [myAssetsType, setMyAssetsType] = useState<boolean>(true)
-  const navigate = useNavigate()
   const poolValues = usePoolValues()
   const loading = useLoading()
   const decimal = useDecimal()
@@ -205,20 +203,27 @@ export default function MobileMyAssets() {
                     </ClaimBox>
                   </SpaceBetweenBox>
                   {myAssetsType ? (
-                    <SpaceBetweenBox mt="1rem">
+                    <SpaceBetweenBox mb="0.5rem" mt="1rem">
                       <Box ml="0.375rem">
                         <Typography variant="body2" color="#A0A3BD">
                           My Assets
                         </Typography>
                         <FlexBox>
                           <img src={mobileBlackEthLogo} alt="" />
-                          <Typography ml="0.25rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
+                          <Typography ml="0.25rem" variant="subtitle1" fontWeight="700" lineHeight="1.8125rem">
                             {balance}
                           </Typography>
                         </FlexBox>
                       </Box>
                       <FlexBox>
-                        <NFTBox onClick={() => navigate('/Deposit')}>
+                        <NFTBox
+                          onClick={() => {
+                            window.scrollTo({
+                              top: 450,
+                              behavior: 'smooth',
+                            })
+                          }}
+                        >
                           <Typography
                             variant="body2"
                             fontWeight="700"
@@ -264,12 +269,32 @@ export default function MobileMyAssets() {
                     <Box>
                       <SpaceBetweenBox mt="1rem" mr="2.75rem">
                         <Box ml="0.375rem">
-                          <Typography variant="body2" color="#A0A3BD">
+                          <Typography variant="body1" color="#A0A3BD">
                             My Assets
                           </Typography>
                           <FlexBox>
-                            <img src={mobileBlackEthLogo} alt="" />
-                            <Typography ml="0.4375rem" variant="h5" fontSize="1.125rem" lineHeight="1.8125rem">
+                            <svg
+                              width="18"
+                              height="29"
+                              viewBox="0 0 18 29"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M3 15.2727L9 6L15 15.2727L9 24L3 15.2727Z"
+                                stroke="#14142A"
+                                strokeWidth="2"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M3 15L9 18L15 15"
+                                stroke="#14142A"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                            <Typography ml="0.5rem" variant="h5">
                               {balance}
                             </Typography>
                           </FlexBox>

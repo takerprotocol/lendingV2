@@ -21,7 +21,7 @@ export function useContract<T extends Contract = Contract>(
     let address: string | undefined
     if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap
     else address = addressOrAddressMap[chainId]
-    if (!address && address.toString() === '0') return null
+    if (!address || address.toString() === '0') return null
     try {
       return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
     } catch (error) {
