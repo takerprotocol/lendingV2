@@ -30,7 +30,7 @@ const BottomBox = styled(Box)`
   margin-left: 2.375rem;
   margin-right: 2.375rem;
   margin-top: -0.75rem;
-  padding: 1.125rem 1rem 1rem 1rem;
+  padding: 1.5rem 1rem 1rem 1rem;
   background: #ffffff;
   box-shadow: 0px 0.9375rem 1.875rem rgba(20, 20, 42, 0.2);
   border-radius: 0.75rem;
@@ -49,16 +49,6 @@ export const RightBgBox = styled(Box)`
   height: 1.125rem;
   border-radius: 100%;
 `
-// export const ThinkButton = styled(Button)`
-//   ont-family: 'Quicksand';
-//   font-style: normal;
-//   font-weight: 700;
-//   font-size: 14px;
-//   line-height: 160%;
-//   text-align: center;
-//   color: #ffffff;
-//   padding: 0rem;
-// `
 interface MySupplySwitchModalProps {
   openMySupplySwitchModal: boolean
   loanType: boolean
@@ -157,15 +147,15 @@ export default function MobileMySupplySwitchModal({
             <Typography mb="0.5rem" variant="subtitle1" fontWeight="700">
               {switchType === 0 ? 'Sure to unable ?' : 'Enable Collateral Mode'}
             </Typography>
-            <Typography variant="body2" component="span" color="#6E7191">
+            <Typography display={switchType === 0 ? 'inline' : ''} variant="body2" color="#6E7191">
               {switchType === 0
                 ? 'If you unable the collateral mode will reduce the borrow limit '
                 : 'Use your Supply ETH as collateral to get a higher Borrow limit amount'}
             </Typography>
-            <Typography display={modalType ? '' : 'none'} variant="body2" component="span" color="#6E7191">
-              and{' '}
+            <Typography display={modalType ? 'inline' : 'none'} variant="body2" color="#6E7191">
+              and&nbsp;
             </Typography>
-            <Typography display={modalType ? '' : 'none'} variant="body2" component="span" color="#E1536C">
+            <Typography display={modalType ? 'inline' : 'none'} fontWeight="600" variant="body2" color="#E1536C">
               increase your account risk level
             </Typography>
           </Box>

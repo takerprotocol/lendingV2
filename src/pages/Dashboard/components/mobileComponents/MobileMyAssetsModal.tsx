@@ -54,6 +54,9 @@ const BottomBox = styled(Box)`
   .MuiOutlinedInput-root {
     height: 1.8125rem;
   }
+  .error {
+    box-shadow: none;
+  }
 `
 const CenterBox = styled(Box)`
   display: flex;
@@ -71,22 +74,6 @@ const FlexBox = styled(Box)`
   align-items: center;
   justify-content: flex-start;
 `
-// const AddBgBox = styled(Box)`
-//   display: flex;
-//   align-items: center;
-//   width: 18px;
-//   border-radius: 100%;
-//   height: 18px;
-//   background: #eff0f6;
-//   padding: 4.88px;
-// `
-// const RightFlexBox = styled(Box)`
-//   background: #f7f7fc;
-//   border-radius: 10px;
-//   padding: 16px;
-//   margin-top: 24px;
-//   margin-bottom: 24px;
-// `
 const BorrowAmountBox = styled(Box)`
   width: 100%;
   background: #eff0f6;
@@ -132,12 +119,10 @@ const NetSupplyAPY = styled(Box)`
   background: #f7f7fc;
   border-radius: 6px;
   width: 100%;
-  padding: 0.4375rem;
+  padding: 0.375rem;
   display: flex;
-  align-items: center;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
-  justify-content: center;
 `
 interface MySupplyModalProps {
   openMySupplyModal: boolean
@@ -241,17 +226,6 @@ export default function MobileMyAssetsModal({
       }
     }
   }
-  const nonCollateral = useMemo(() => {
-    if (usedCollateral) {
-      return 'Used as Collateral'
-    } else {
-      return 'Non-collateral'
-    }
-  }, [usedCollateral])
-
-  const ModalType = useMemo(() => {
-    return amount !== ''
-  }, [amount])
 
   const overSupply = useMemo(() => {
     if (borrowOrRepay === 2) {
@@ -299,16 +273,27 @@ export default function MobileMyAssetsModal({
                   />
                 </svg>
               </Box>
-              <FlexBox mt="1.8125rem">
-                <Typography mr="0.375rem" variant="body1" color="#FFFFFF">
-                  {nonCollateral}
-                </Typography>
+              <FlexBox mt={usedCollateral ? '0.75rem' : '1.8125rem'}>
+                {!usedCollateral ? (
+                  <Typography mr="0.375rem" variant="body2" color="rgba(255, 255, 255, 0.7)">
+                    Non-collateral
+                  </Typography>
+                ) : (
+                  <Box mr="0.25rem">
+                    <Typography mr="0.375rem" variant="body2" color="rgba(255, 255, 255, 0.7)">
+                      Used as&nbsp;
+                    </Typography>
+                    <Typography mr="0.375rem" variant="body2" color="rgba(255, 255, 255, 0.7)">
+                      Collateral
+                    </Typography>
+                  </Box>
+                )}
                 <img src={prompt} alt="" />
               </FlexBox>
             </Box>
           </SupplySpaceBetweenBox>
           <SpaceBetweenBox m="1.125rem 3.375rem 0 3.5rem">
-            <Box display={supplyLimit !== '0' ? '' : 'none'}>
+            <Box display={usedCollateral ? '' : 'none'}>
               <Typography
                 variant="body1"
                 fontWeight="700"
@@ -323,10 +308,10 @@ export default function MobileMyAssetsModal({
               </Typography>
               <Box
                 className={borrowOrRepay === 1 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.4375rem' }}
+                sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.375rem' }}
               ></Box>
             </Box>
-            <Box display={supplyLimit !== '0' ? '' : 'none'}>
+            <Box display={usedCollateral ? '' : 'none'}>
               <Typography
                 variant="body1"
                 fontWeight="700"
@@ -341,7 +326,7 @@ export default function MobileMyAssetsModal({
               </Typography>
               <Box
                 className={borrowOrRepay === 2 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.4375rem' }}
+                sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.375rem' }}
               ></Box>
             </Box>
           </SpaceBetweenBox>
@@ -357,7 +342,7 @@ export default function MobileMyAssetsModal({
                   <img src={myCollateral} alt="" />
                   <ValueTextField
                     autoFocus={true}
-                    sx={{ marginLeft: '0.4375rem', fontSize: '1.375rem' }}
+                    sx={{ marginLeft: '0.25rem', fontSize: '1.375rem' }}
                     placeholder="0.00"
                     value={amount}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -399,69 +384,67 @@ export default function MobileMyAssetsModal({
               <Typography variant="body2" color="#A0A3BD">
                 Supply Amount (ETH)
               </Typography>
-              <Box>
-                <Typography fontWeight="600" variant="body2" component="span" color="#A0A3BD">
+              <FlexBox>
+                <Typography fontWeight="600" variant="body2" color="#A0A3BD">
                   {fixedFormat(mySupply)} {'>'}
                 </Typography>
-                <Typography ml="0.375rem" variant="body2" component="span" fontWeight="700" color="#14142A">
+                <Typography ml="0.375rem" variant="body2" fontWeight="700" color="#14142A">
                   {fixedFormat(plus(mySupply, amount ? (borrowOrRepay === 1 ? amount : times(amount, -1)) : 0))}
                 </Typography>
-              </Box>
+              </FlexBox>
             </SpaceBetweenBox>
-            {ModalType && (
+            {usedCollateral && (
               <Box>
                 <SpaceBetweenBox mt="1rem">
                   <Typography variant="body2" color="#A0A3BD">
                     Borrow Limited (ETH)
                   </Typography>
-                  <Box>
-                    <Typography variant="body2" fontWeight="600" component="span" color={'#A0A3BD'}>
+                  <FlexBox>
+                    <Typography variant="body2" fontWeight="600" color={'#A0A3BD'}>
                       {fixedFormat(borrowLimit)} {'>'}
                     </Typography>
                     <Typography
                       ml="0.375rem"
                       variant="body2"
-                      component="span"
                       fontWeight="700"
                       color={overSupply ? '#E1536C' : '#14142A'}
                     >
                       {fixedFormat(upBorrowLimit)}
                     </Typography>
-                  </Box>
+                  </FlexBox>
                 </SpaceBetweenBox>
                 <SpaceBetweenBox mt="1rem">
                   <Typography variant="body2" color="#A0A3BD">
                     Borrow Limit Used
                   </Typography>
-                  <Box>
-                    <Typography variant="body2" fontWeight="600" component="span" color="#A0A3BD">
+                  <FlexBox>
+                    <Typography variant="body2" fontWeight="600" color="#A0A3BD">
                       {new BigNumber(borrowLimitUsed).toFixed(2, 1)}% {'>'}
                     </Typography>
                     <Typography
                       ml="0.375rem"
                       variant="body2"
-                      component="span"
                       fontWeight="700"
                       color={overSupply ? '#E1536C' : '#14142A'}
                     >
                       {new BigNumber(upBorrowLimitUsed).toFixed(2, 1)}%
                     </Typography>
-                  </Box>
+                  </FlexBox>
                 </SpaceBetweenBox>
                 <SpaceBetweenBox mt="1rem">
-                  <Box>
-                    <Typography variant="body2" component="span" color="#A0A3BD">
-                      Risk level
+                  <FlexBox>
+                    <Typography variant="body2" color="#A0A3BD">
+                      Risk Level
                     </Typography>
-                    <Typography className={riskLevelTag} ml="0.5rem" variant="body2" component="span" fontWeight="700">
+                    <Typography className={riskLevelTag} ml="0.5rem" variant="body2" fontWeight="700">
                       {TypographyRiskLevel}
                     </Typography>
-                  </Box>
+                  </FlexBox>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Typography fontWeight="600" variant="body2" component="span" color="#A0A3BD">
+                    <Typography fontWeight="600" variant="body2" color="#A0A3BD">
                       {heath}% {'>'}
                     </Typography>
-                    <Typography ml="6px" variant="body2" component="span" fontWeight="700" color="#14142A">
+                    <Typography ml="6px" variant="body2" fontWeight="700" color="#14142A">
                       {amount ? collateralRiskLevel : heath}%
                     </Typography>
                   </Box>
@@ -469,54 +452,8 @@ export default function MobileMyAssetsModal({
               </Box>
             )}
           </Box>
-          {/* <RightFlexBox>
-            <FlexBox>
-              <Box width={'65px'}>
-                <Typography variant="subtitle2" color="#4BC8B1">
-                  20%
-                </Typography>
-              </Box>
-              <Box sx={{ width: '52px' }}>
-                <AddBgBox>
-                  <img height="8.25px" width="8.25px" src={addIcon} alt="" />
-                </AddBgBox>
-              </Box>
-              <Box width={'66px'}>
-                <Typography variant="subtitle2" color="#6E7191">
-                  {erc20ReserveData.depositRate}%
-                </Typography>
-              </Box>
-              <Box width="50px">
-                <AddBgBox>
-                  <img height="8.25px" width="8.25px" src={rightIcon} alt="" />
-                </AddBgBox>
-              </Box>
-              <Box>
-                <Typography variant="subtitle2" color="#4E4B66">
-                  10%
-                </Typography>
-              </Box>
-            </FlexBox>
-            <FlexBox>
-              <Box width="117px">
-                <Typography variant="body2" fontWeight="500" color="#A0A3BD">
-                  Token Reward
-                </Typography>
-              </Box>
-              <Box width="116px">
-                <Typography variant="body2" fontWeight="600" color="#A0A3BD">
-                  Borrow APY
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="body2" fontWeight="600" color="#4E4B66">
-                  Net Borrow APY
-                </Typography>
-              </Box>
-            </FlexBox>
-          </RightFlexBox> */}
           <NetSupplyAPY>
-            <Typography variant="body2" fontWeight="600" color="#A0A3BD" lineHeight="0.75rem">
+            <Typography variant="body2" ml="4.625rem" fontWeight="600" color="#A0A3BD" lineHeight="0.75rem">
               Net Supply APY
             </Typography>
             <Typography mx="0.375rem" fontWeight="600" variant="body2" lineHeight="0.75rem">
@@ -537,10 +474,10 @@ export default function MobileMyAssetsModal({
           <Button
             disabled={buttonDisabled}
             variant="contained"
+            className={overSupply ? 'error' : ''}
             color={overSupply ? 'error' : 'primary'}
             sx={{ width: '100%', height: '3rem' }}
             onClick={() => {
-              // supply
               if (borrowOrRepay === 1) {
                 supplySubmit()
                 setAmount('')
@@ -550,7 +487,7 @@ export default function MobileMyAssetsModal({
               }
             }}
           >
-            {borrowOrRepay === 1
+            {/* {borrowOrRepay === 1
               ? approval === ApprovalState.APPROVED || !amount
                 ? 'Supply'
                 : approval === ApprovalState.PENDING
@@ -560,18 +497,21 @@ export default function MobileMyAssetsModal({
               ? 'Withdraw'
               : tokenApproval === ApprovalState.PENDING
               ? 'Pending'
-              : 'Approve'}
+              : 'Approve'} */}
+            {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}
           </Button>
-          <Box mt="1rem" display={overSupply ? '' : 'none'}>
-            <FlexBox>
-              <Box mr="8px" pt="1px" height="2.375rem">
-                <img src={redPrompt} alt="" />
-              </Box>
-              <Typography color="#E1536C" fontWeight="600" variant="body2">
-                If you withdraw the maximum amount of collateral ETH, your collateral will be easily liquidate
-              </Typography>
-            </FlexBox>
-          </Box>
+          {overSupply && (
+            <Box mt="1rem">
+              <FlexBox>
+                <Box mr="0.5rem" mt="-0.5625rem" pt="1px" height="2.375rem">
+                  <img src={redPrompt} alt="" />
+                </Box>
+                <Typography color="#E1536C" variant="body2">
+                  If you withdraw the maximum amount of collateral ETH, your collateral will be easily liquidate
+                </Typography>
+              </FlexBox>
+            </Box>
+          )}
         </BottomBox>
       </Box>
     </Modal>

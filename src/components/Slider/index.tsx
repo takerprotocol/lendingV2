@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Slider from '@mui/material/Slider'
 import { styled } from '@mui/material/styles'
+import { div } from 'utils'
 // import Tooltip from '@mui/material/Tooltip';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Props {
@@ -23,6 +24,7 @@ const PrettoSlider = styled(Slider)({
     width: '14px',
     border: '2px solid #FFFFFF',
     background: 'linear-gradient(213.69deg, #66DEC8 14%, #4BC8B1 92%)',
+    boxShadow: '0px 2px 4px rgba(155, 192, 186, 0.4)',
     '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
       boxShadow: 'inherit',
     },
@@ -63,12 +65,15 @@ export default function CustomizedSlider({ setSlider, riskLevelTag, sliderValue 
   return (
     <PrettoSlider
       className={`Slider-${riskLevelTag}`}
-      valueLabelDisplay="off"
-      value={sliderValue}
-      aria-label="pretto slider"
+      // valueLabelDisplay="off"
+      max={1000}
+      min={0}
+      value={(sliderValue || 0) * 10}
+      // aria-label="pretto slider"
       onChange={(el: any) => {
         if (setSlider) {
-          setSlider(el.target.value)
+          setSlider(div(el.target.value, 10))
+          console.log(el.target.value)
         }
       }}
     />

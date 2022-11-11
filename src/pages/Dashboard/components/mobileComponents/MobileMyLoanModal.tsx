@@ -1,5 +1,6 @@
 import greyShutOff from 'assets/images/svg/common/greyShutOff.svg'
 import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material'
+import redPrompt from 'assets/images/svg/common/redPrompt.svg'
 import { useEffect, useMemo, useState } from 'react'
 import loanModalBefore from 'assets/images/svg/dashboard/loanModal-before.svg'
 import CustomizedSlider from 'components/Slider'
@@ -11,7 +12,6 @@ import {
   useDebtBorrowLimitUsed,
   useDebtRiskLevel,
   useDecimal,
-  // useErc20ReserveData,
   useEthDebt,
   useHeath,
 } from 'state/user/hooks'
@@ -99,6 +99,12 @@ const FlexBox = styled(Box)`
   align-items: center;
   justify-content: flex-start;
 `
+const StartBox = styled(Box)`
+  margin-top: 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+`
 // const RightBox = styled(Box)`
 //   display: flex;
 //   align-items: center;
@@ -145,10 +151,10 @@ const BorrowTypography = styled(Typography)`
 `
 const BorrowAmountBox = styled(Box)`
   background: #eff0f6;
-  border-radius: 0.625rem;
+  border-radius: 0.5rem;
   padding: 0 1rem 1rem 1rem;
   position: relative;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3125rem;
   &.left {
     border-bottom-left-radius: 0px !important;
   }
@@ -177,11 +183,10 @@ const NetBorrowAPY = styled(Box)`
   background: #f7f7fc;
   border-radius: 6px;
   width: 100%;
-  padding: 0.4375rem;
+  padding: 0.375rem 0;
   display: flex;
   align-items: center;
-  margin-top: 1.6875rem;
-  justify-content: center;
+  margin-top: 1.625rem;
 `
 interface MyLoanModalProps {
   open: boolean
@@ -280,7 +285,6 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
         })
     }
   }
-
   const buttonDisabled = useMemo(() => {
     return check === 1 ? !amount || new BigNumber(amount).gt(borrowLimit) : !amount || new BigNumber(amount).gt(ethDebt)
   }, [amount, borrowLimit, check, ethDebt])
@@ -449,10 +453,10 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
             </FlexBox>
             <FlexBox>
               <Typography variant="body1" fontWeight="600" color="#A0A3BD">
-                {heath}% {'>'}
+                {new BigNumber(heath).toFormat(0)}% {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" fontWeight="700" color="#14142A">
-                {amount ? debtRiskLevel : heath}%
+                {new BigNumber(amount ? debtRiskLevel : heath).toFormat(0)}%
               </Typography>
             </FlexBox>
           </SpaceBetweenBox>
@@ -508,6 +512,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
           </NetBorrowAPY>
           <Button
             disabled={buttonDisabled}
+            color={new BigNumber(debtRiskLevel).lt(110) ? 'error' : 'primary'}
             variant="contained"
             sx={{ width: '100%', height: '3rem', marginTop: '0.5rem' }}
             onClick={() => {
@@ -522,6 +527,16 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
           >
             {check === 1 ? 'Borrow' : 'Repay'}
           </Button>
+          {new BigNumber(debtRiskLevel).lt(110) && (
+            <StartBox>
+              <Box mt="0.125rem" mr="0.5rem">
+                <img src={redPrompt} alt="" />
+              </Box>
+              <Typography color="#E1536C" variant="body2">
+                Your collateral can easily be liquidated if the borrowing limit is reached
+              </Typography>
+            </StartBox>
+          )}
         </BottomBox>
       </Box>
     </Modal>

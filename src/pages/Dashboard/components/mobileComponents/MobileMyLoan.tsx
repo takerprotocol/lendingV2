@@ -64,7 +64,7 @@ const BorrowAPYBox = styled(Box)`
   margin-top: 1.5rem;
 `
 const FooterBox = styled(Box)`
-  background: rgba(217, 217, 217, 0.1);
+  background: #eff0f6;
   width: 100%;
   border-radius: 0.25rem;
   padding: 0.5rem 1.6875rem;
@@ -78,12 +78,14 @@ const FooterBox = styled(Box)`
     bottom: calc(100%);
     border-width: 0.375rem 0.3125rem;
     border-style: dashed dashed solid dashed;
-    border-color: transparent transparent rgba(217, 217, 217, 0.1) transparent;
+    border-color: transparent transparent #eff0f6 transparent;
   }
 `
-
-export default function MobileMyLoan() {
-  const [myLoanType, setLoanType] = useState<boolean>(true)
+interface MobileMyLoanProps {
+  myLoanType: boolean
+  setLoanType: Function
+}
+export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanProps) {
   const ethDebt = useEthDebt()
   const heath = useHeath()
   const [open, setOpen] = useState<boolean>(false)
@@ -100,7 +102,7 @@ export default function MobileMyLoan() {
     border-radius: 0.5rem;
     margin-top: 1.5rem;
     margin-bottom: 0.625rem;
-    padding: 0 0 1.125rem 0.75rem;
+    padding: 0 0 1.125rem 1rem;
     position: relative;
     &.left {
       border-bottom-left-radius: 0px !important;
@@ -113,7 +115,7 @@ export default function MobileMyLoan() {
       display: block;
       position: absolute;
       top: 99%;
-      left: ${`${times(borrowLimitUsed, 0.185)}px`};
+      left: ${`${times(borrowLimitUsed, 0.185)}rem`};
       border-width: 10.5px 7.5px;
       border-style: dashed solid dashed dashed;
       border-color: #f3f3f8 transparent transparent transparent;
@@ -143,7 +145,7 @@ export default function MobileMyLoan() {
                 </Typography>
                 <img src={myLoanType ? mobileDown : mobileUp} alt="" />
               </FlexBox>
-              {myLoanType && +ethDebt === 0 && (
+              {myLoanType && +ethDebt !== 0 && (
                 <ClaimBox>
                   <Typography mr="0.5rem" className={myLoanRiskLevelTag} variant="body2" fontWeight="700">
                     {myLoanRiskLevel}
@@ -156,7 +158,7 @@ export default function MobileMyLoan() {
               )}
             </SpaceBetweenBox>
             {myLoanType ? (
-              <SpaceBetweenBox mt="1rem">
+              <SpaceBetweenBox mt={myLoanType && +ethDebt !== 0 ? '1rem' : '1.25rem'}>
                 <Box ml="0.375rem">
                   <Typography variant="body2" color="#A0A3BD">
                     My Debt
@@ -296,7 +298,7 @@ export default function MobileMyLoan() {
                         <Typography mt="-0.25rem" variant="body1" color="#6E7191" fontWeight="600">
                           {heath}%
                         </Typography>
-                        <Typography mt="-0.25rem" variant="body2" color=" #A0A3BD" fontWeight="600">
+                        <Typography mr="0.5rem" variant="body2" color=" #A0A3BD" fontWeight="600">
                           Collateralization
                         </Typography>
                       </Box>

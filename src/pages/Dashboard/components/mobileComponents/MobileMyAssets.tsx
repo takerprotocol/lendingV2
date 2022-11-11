@@ -99,13 +99,14 @@ const PrimaryButton = styled(Button)`
 `
 export default function MobileMyAssets() {
   const [myAssetsType, setMyAssetsType] = useState<boolean>(true)
+  const [myLoanType, setLoanType] = useState<boolean>(true)
   const poolValues = usePoolValues()
   const loading = useLoading()
   const decimal = useDecimal()
   const balance = useWalletBalance()
   // const userValue = useUserValue()
   const ethCollateral = useEthCollateral()
-  const [openMySupplyModal, setOpenMySupplyModal] = useState(false)
+  const [openMySupplyModal, setOpenMySupplyModal] = useState<boolean>(false)
   const type = useDashboardType()
   const address = useAddress()
   const dispatch = useAppDispatch()
@@ -218,10 +219,17 @@ export default function MobileMyAssets() {
                       <FlexBox>
                         <NFTBox
                           onClick={() => {
-                            window.scrollTo({
-                              top: 450,
-                              behavior: 'smooth',
-                            })
+                            if (myLoanType) {
+                              window.scrollTo({
+                                top: 430,
+                                behavior: 'smooth',
+                              })
+                            } else {
+                              window.scrollTo({
+                                top: 730,
+                                behavior: 'smooth',
+                              })
+                            }
                           }}
                         >
                           <Typography
@@ -311,7 +319,7 @@ export default function MobileMyAssets() {
                           </FlexBox>
                         </Box>
                       </SpaceBetweenBox>
-                      <MobileMyNFTCollateral></MobileMyNFTCollateral>
+                      <MobileMyNFTCollateral myLoanType={myLoanType}></MobileMyNFTCollateral>
                       <MobileMyETHCollateral
                         setOpenMySupplyModal={setOpenMySupplyModal}
                         setTypeModal={setTypeModal}
@@ -320,7 +328,7 @@ export default function MobileMyAssets() {
                   )}
                 </MyAssetsBox>
               </Box>
-              <MobileMyLoan></MobileMyLoan>
+              <MobileMyLoan myLoanType={myLoanType} setLoanType={setLoanType}></MobileMyLoan>
             </>
           ) : (
             <ConnectWalletBox>

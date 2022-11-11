@@ -24,7 +24,10 @@ const NFTsBox = styled(FlexBox)`
   padding: 0.375rem 0.5rem;
   margin-top: 0.5rem;
 `
-export default function MobileMyNFTCollateral() {
+interface MobileMyNFTCollateralProps {
+  myLoanType: boolean
+}
+export default function MobileMyNFTCollateral({ myLoanType }: MobileMyNFTCollateralProps) {
   const userValue = useUserValue()
   const nftConfig = useUserNftConfig()
   const collections = useCollections()
@@ -54,8 +57,7 @@ export default function MobileMyNFTCollateral() {
               </Typography>
               {+nftConfig !== 0 && (
                 <Typography variant="body2" lineHeight="0.75rem" color="#ffffff">
-                  {' '}
-                  · {supportNfts.length} collections
+                  &nbsp;· {supportNfts.length} collections
                 </Typography>
               )}
             </NFTsBox>
@@ -64,10 +66,17 @@ export default function MobileMyNFTCollateral() {
         <Box mt="48px">
           <Button
             onClick={() => {
-              window.scrollTo({
-                top: 750,
-                behavior: 'smooth',
-              })
+              if (myLoanType) {
+                window.scrollTo({
+                  top: 710,
+                  behavior: 'smooth',
+                })
+              } else {
+                window.scrollTo({
+                  top: 1010,
+                  behavior: 'smooth',
+                })
+              }
             }}
             className="Padding-button"
             variant="contained"
