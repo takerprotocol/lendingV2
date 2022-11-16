@@ -9,6 +9,7 @@ import Bayc from 'assets/images/png/collection/bayc.png'
 import Mayc from 'assets/images/png/collection/mayc.png'
 import { abbrevAddress } from 'utils/abbrevAddres'
 import Copy from 'components/Copy'
+import { fixedFormat } from 'utils'
 
 const CardBox = styled(Box)`
   background: #ffffff;
@@ -22,17 +23,19 @@ const CardBox = styled(Box)`
     .more {
       margin-left: -0.375rem;
       border-radius: 0.25rem;
+      margin-top: 0.0625rem;
       border-top: 0.125rem white solid;
       border-left: 0.125rem white solid;
       border-bottom: 0.125rem white solid;
     }
   }
   .noMore {
+    margin-top: 0.0625rem;
     margin-right: 0.25rem;
   }
 `
 const ImgBox = styled(FlexBox)`
-  height: 1.75rem;
+  height: 1.625rem;
 `
 const Img = styled(`img`)`
   width: 1.5rem;
@@ -71,6 +74,14 @@ export default function MobileCollateralList({
     }
     return ERC721
   }
+  // const spotPosition = useMemo(() => {
+  //   if (debt.indexOf('.') === -1) {
+  //     return 0
+  //   } else {
+  //     return debt.indexOf('.') > 5 ? 0 : 5 - debt.indexOf('.')
+  //   }
+  // }, [debt])
+  // console.log('@@@', spotPosition)
   const navigate = useNavigate()
   const CollateralList = useMemo(() => {
     if (collections.length > 10) {
@@ -106,17 +117,25 @@ export default function MobileCollateralList({
     <CardBox>
       <SpaceBetweenBox>
         <CenterBox>
-          <Typography mr="0.375rem" variant="subtitle2" color="#6E7191">
-            {abbrevAddress(address)}&nbsp;
+          <Typography
+            mr="0.375rem"
+            variant="subtitle2"
+            fontWeight={+riskPercentage > 120 ? '600' : '700'}
+            color={+riskPercentage > 120 ? '#6E7191' : ''}
+          >
+            {abbrevAddress(address)}
           </Typography>
           <Copy text={address} />
         </CenterBox>
         <Typography
-          onClick={() => navigate(`/liquidate/${address}`)}
-          mr="0.375rem"
+          onClick={() => {
+            if (!(+riskPercentage > 120)) {
+              navigate(`/liquidate/${address}`)
+            }
+          }}
+          fontWeight={+riskPercentage > 120 ? '600' : '700'}
           variant="body1"
-          fontWeight="600"
-          color="#7646FF"
+          color={+riskPercentage > 120 ? 'rgba(160, 163, 189, 0.8)' : '#7646FF'}
         >
           LIQUIDATE {'>'}
         </Typography>
@@ -147,7 +166,7 @@ export default function MobileCollateralList({
             <path d="M5 10L8.5 12L12 10" stroke="#14142A" strokeLinejoin="round" />
           </svg>
           <Typography variant="body1" fontWeight="700">
-            {debt}
+            {fixedFormat(debt)}
           </Typography>
         </FlexBox>
       </SpaceBetweenBox>

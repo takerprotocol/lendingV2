@@ -11,7 +11,7 @@ const style = {
   left: '0rem',
   padding: '1.375rem 1.5rem 0rem 1.5rem',
   background: '#FFFFFF',
-  borderRadius: '0.75rem',
+  borderRadius: '0.5rem',
   overflow: 'scroll',
 }
 const FilterTypography = styled(Typography)`
@@ -29,7 +29,7 @@ const TitleTypography = styled(Typography)`
   font-style: normal;
   font-weight: 500;
   font-size: 1rem;
-  line-height: 1rem;
+  line-height: 1.6875rem;
   display: flex;
   margin-bottom: 0.5rem;
   align-items: center;
@@ -79,6 +79,7 @@ const ClearAllBox = styled(CenterBox)`
   background: #f7f7fc;
   width: 50%;
   height: 3rem;
+  padding: 0.8125rem 0;
   margin-right: 0.5rem;
   mix-blend-mode: normal;
   border-radius: 0.375rem;
@@ -120,6 +121,9 @@ const NameTypography = styled(Typography)`
   color: #14142a;
   overflow: hidden;
   text-overflow: ellipsis;
+`
+const ClearSvg = styled(`svg`)`
+  margin-right: 0.5rem;
 `
 interface MobileFilterProps {
   openFilter: boolean
@@ -255,17 +259,15 @@ export default function MobileFilterModal({
               setOpenFilter(false)
             }}
           >
-            <Box mr="0.375rem">
-              <svg width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M7.5 12C4.42299 12 1.92857 9.53757 1.92857 6.5C1.92857 4.65977 2.84408 3.03062 4.25 2.03221L1 2.83333M7.5 1C10.577 1 13.0714 3.46243 13.0714 6.5C13.0714 8.34023 12.1559 9.96938 10.75 10.9678L14 10.1667"
-                  stroke="#A0A3BD"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Box>
+            <ClearSvg width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M7.5 12C4.42299 12 1.92857 9.53757 1.92857 6.5C1.92857 4.65977 2.84408 3.03062 4.25 2.03221L1 2.83333M7.5 1C10.577 1 13.0714 3.46243 13.0714 6.5C13.0714 8.34023 12.1559 9.96938 10.75 10.9678L14 10.1667"
+                stroke="#A0A3BD"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </ClearSvg>
             Clear All
           </ClearAllBox>
           <ResultsBox

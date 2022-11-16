@@ -20,13 +20,12 @@ import dayjs from 'dayjs'
 const WalletMessageBox = styled(Box)`
   background: #ffffff;
   border-radius: 12px;
-  padding: 1rem 1rem 1.5rem 1rem;
+  padding: 1rem 1rem 1rem 1rem;
   margin: 1rem 1rem 0 1rem;
 `
 const WalletBalanceBox = styled(Box)`
   background: #f7f7fc;
   border-radius: 6px;
-  margin-bottom: 2.25rem;
   padding: 0.5rem;
 `
 const StyledBlockie = styled(Blockies)`
@@ -70,7 +69,7 @@ export default function WalletMessage() {
   }
   return (
     <WalletMessageBox>
-      <WalletBalanceBox>
+      <WalletBalanceBox mb={Object.keys(transactions).length === 0 ? '' : '2.25rem'}>
         <SpaceBetweenBox>
           <CenterBox>
             <StyledBlockie seed={address} size={12} scale={2} />
@@ -126,12 +125,14 @@ export default function WalletMessage() {
           </EditBox>
         </SpaceBetweenBox> */}
         <Box>
-          <FlexBox>
-            <img src={mobileNotice} alt="" />
-            <Typography ml="0.375rem" variant="body1" fontWeight="700">
-              Latest notifications
-            </Typography>
-          </FlexBox>
+          {Object.keys(transactions).length !== 0 && (
+            <FlexBox>
+              <img src={mobileNotice} alt="" />
+              <Typography ml="0.375rem" variant="body1" fontWeight="700">
+                Latest notifications
+              </Typography>
+            </FlexBox>
+          )}
           {Object.keys(transactions).map((hash) => (
             <>
               <SpaceBetweenBox ml="1.5rem" mb="0.24rem" mt="1rem">

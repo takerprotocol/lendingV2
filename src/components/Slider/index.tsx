@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Slider from '@mui/material/Slider'
 import { styled } from '@mui/material/styles'
-import { div } from 'utils'
 // import Tooltip from '@mui/material/Tooltip';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface Props {
@@ -66,14 +65,11 @@ export default function CustomizedSlider({ setSlider, riskLevelTag, sliderValue 
     <PrettoSlider
       className={`Slider-${riskLevelTag}`}
       // valueLabelDisplay="off"
-      max={1000}
-      min={0}
-      value={(sliderValue || 0) * 10}
+      value={sliderValue}
       // aria-label="pretto slider"
       onChange={(el: any) => {
         if (setSlider) {
-          setSlider(div(el.target.value, 10))
-          console.log(el.target.value)
+          setSlider(el.target.value)
         }
       }}
     />

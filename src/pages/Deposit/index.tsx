@@ -78,7 +78,7 @@ const MobileMain = styled(Box)`
   width: 100%;
 `
 const MobileHeaderBg = styled(Box)`
-  background-size: cover;
+  background-size: 42.5rem 42.5rem;
   background-repeat: no-repeat;
   background-position: center;
   width: 100%;
@@ -92,7 +92,7 @@ const MobileBg = styled(Box)`
   z-index: -2;
 `
 const MobileFilterBg = styled(Box)`
-  backdrop-filter: blur(40px);
+  backdrop-filter: blur(30px);
   width: 100%;
   height: 14.0625rem;
   z-index: -1;

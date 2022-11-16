@@ -6,6 +6,9 @@ const PaginationContainer = styled('div')`
   gap: 0.25rem;
   margin-top: 2.25rem;
   justify-content: center;
+  .down {
+    color: #a0a3bd;
+  }
 `
 
 const PaginationButton = styled('div', {
@@ -53,61 +56,69 @@ const MobileCollateralPagination = ({
   onPageSelect: (page: number) => void
 }) => {
   const pages = Math.ceil(collaterals.length / 16)
-  const params = useParams()
+  const params = useParams().page || 1
   const navigate = useNavigate()
   const onSelect = (index: number) => {
     onPageSelect(index)
     navigate(`/liquidation/${index}`)
   }
   const nextPage = () => {
-    if (params.page && Number(params.page) + 1 <= pages) {
-      navigate(`/liquidation/${Number(params.page) + 1}`)
+    if (params && Number(params) + 1 <= pages) {
+      navigate(`/liquidation/${Number(params) + 1}`)
     } else {
       navigate(`/liquidation/${pages}`)
     }
   }
   const previousPage = () => {
-    if (params.page && Number(params.page) - 1 > 0) {
-      navigate(`/liquidation/${Number(params.page) - 1}`)
+    if (params && Number(params) - 1 > 0) {
+      navigate(`/liquidation/${Number(params) - 1}`)
     } else {
       navigate(`/liquidation/1`)
     }
   }
   return (
-    <Box>
-      <PaginationContainer>
-        <PaginationButton onClick={previousPage}>{'<'}</PaginationButton>
-        {Array.from({ length: pages }).map((item: any, index: number) => {
-          if (index < 3) {
-            return (
-              <PaginationButton
-                selected={Number(params.page || 0) === index + 1}
-                onClick={() => onSelect(index + 1)}
-                key={`pagination-button-${index}`}
-              >
-                {index + 1}
+    <>
+      {pages !== 1 && (
+        <Box>
+          <PaginationContainer>
+            <PaginationButton className={params === 1 ? 'down' : ''} onClick={previousPage}>
+              {'<'}
+            </PaginationButton>
+            {Array.from({ length: pages }).map((item: any, index: number) => {
+              if (index < 3) {
+                return (
+                  <PaginationButton
+                    selected={Number(params || 0) === index + 1}
+                    onClick={() => onSelect(index + 1)}
+                    key={`pagination-button-${index}`}
+                  >
+                    {index + 1}
+                  </PaginationButton>
+                )
+              } else {
+                return null
+              }
+            })}
+            {pages > 4 && (
+              <>
+                <PaginationButton>...</PaginationButton>
+              </>
+            )}
+            {pages > 3 && (
+              <PaginationButton selected={Number(params || 0) === pages} onClick={() => onSelect(pages)}>
+                {pages}
               </PaginationButton>
-            )
-          } else {
-            return null
-          }
-        })}
-        {pages > 4 && (
-          <>
-            <PaginationButton>...</PaginationButton>
-          </>
-        )}
-        {pages > 3 && (
-          <PaginationButton selected={Number(params.page || 0) === pages} onClick={() => onSelect(pages)}>
-            {pages}
-          </PaginationButton>
-        )}
-        <PaginationButton onClick={nextPage}>{'>'}</PaginationButton>
-      </PaginationContainer>
-      <ResultsContainer>
-        <ResultsText>{collaterals.length} results in total</ResultsText>
-      </ResultsContainer>
-    </Box>
+            )}
+            <PaginationButton className={params === pages ? 'down' : ''} onClick={nextPage}>
+              {'>'}
+            </PaginationButton>
+          </PaginationContainer>
+          <ResultsContainer>
+            <ResultsText>{collaterals.length} results in total</ResultsText>
+          </ResultsContainer>
+        </Box>
+      )}
+    </>
   )
 }
 

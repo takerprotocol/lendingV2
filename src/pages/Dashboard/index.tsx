@@ -40,6 +40,7 @@ const Main = styled(Box)`
 `
 const MobileBody = styled(Box)`
   background: #f7f7fc, url(${BgIcon});
+  background-size: 100% 49.75rem;
   background-repeat: no-repeat;
 `
 const MobileMain = styled(Box)`

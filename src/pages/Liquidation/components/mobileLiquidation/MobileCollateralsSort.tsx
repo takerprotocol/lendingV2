@@ -3,7 +3,7 @@ import { styled, Menu, MenuItem } from '@mui/material'
 const CollateralsMenu = styled(Menu)`
   .MuiPaper-root {
     max-width: 14.3125rem !important;
-    margin-top: 1.25rem !important;
+    margin-top: 1.4375rem !important;
     margin-left: -0.5625rem !important;
     border: 1px solid #eff0f6 !important;
     box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3) !important;

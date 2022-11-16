@@ -68,6 +68,11 @@ const ConnectWalletBox = styled(Box)`
   align-items: center;
   justify-content: center;
 `
+const MenuBg = styled(Box)`
+  backdrop-filter: blur(150px);
+  width: 100wh;
+  height: 100vh;
+`
 export default function Liquidation() {
   const mobileMenuType = useMobileMenuType()
   const loginWalletType = useLoginWalletType()
@@ -245,14 +250,16 @@ export default function Liquidation() {
             </Box>
           ) : (
             <Box sx={{ minHeight: '41.6875rem' }} p="3.625rem 0 10rem 0">
-              {loginWalletType ? (
-                <>
-                  <MobileMenu></MobileMenu>
-                  {address ? <WalletMessage></WalletMessage> : <>{ConnectWallet()}</>}
-                </>
-              ) : (
-                <WalletModal></WalletModal>
-              )}
+              <MenuBg>
+                {loginWalletType ? (
+                  <>
+                    <MobileMenu></MobileMenu>
+                    {address ? <WalletMessage></WalletMessage> : <>{ConnectWallet()}</>}
+                  </>
+                ) : (
+                  <WalletModal></WalletModal>
+                )}
+              </MenuBg>
             </Box>
           )}
         </MobileBody>

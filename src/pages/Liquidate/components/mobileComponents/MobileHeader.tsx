@@ -11,7 +11,7 @@ const MobileHeaderBox = styled(Box)`
   padding-bottom: 1.8125rem;
 `
 const HealthBox = styled(Box)`
-  padding: 0.25rem 0.75rem;
+  padding: 0.1875rem 0.75rem;
   border: 0.0625rem solid rgba(225, 83, 108, 0.5);
   filter: drop-shadow(0px 0.25rem 0.5rem rgba(221, 140, 140, 0.1));
   border-radius: 2.1875rem;
@@ -20,6 +20,9 @@ const HealthBox = styled(Box)`
 const CollateralAndTotalDebtBox = styled(FlexBox)`
   margin: 1.5rem 0 0 0;
   width: 23.4375rem;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   overflow: scroll;
 `
 const CollateralBox = styled(Box)`
@@ -81,13 +84,13 @@ export default function MobileHeader({
             </FlexBox>
             <HealthBox>
               <Typography fontWeight="600" variant="body2" color="#E1536C">
-                In liquidation... {riskPercentage}%
+                IN LIQUIDATION... {riskPercentage}%
               </Typography>
             </HealthBox>
           </SpaceBetweenBox>
           <CollateralAndTotalDebtBox>
             <CollateralBox>
-              <Typography fontWeight="600" variant="body2" color="#FFFFFF">
+              <Typography fontWeight="600" lineHeight="0.75rem" variant="body2" color="#FFFFFF">
                 Collateral
               </Typography>
               <FlexBox mt="0.5rem">
@@ -118,7 +121,7 @@ export default function MobileHeader({
               </SpaceBetweenBox>
             </CollateralBox>
             <TotalDebtBox>
-              <Typography fontWeight="600" variant="body2" color="#FFFFFF">
+              <Typography lineHeight="0.75rem" fontWeight="600" variant="body2" color="#FFFFFF">
                 Total Debt
               </Typography>
               <FlexBox mt="0.5rem">

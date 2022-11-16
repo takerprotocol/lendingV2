@@ -8,6 +8,7 @@ import ERC721 from 'assets/images/png/collection/721.png'
 import Azuki from 'assets/images/png/collection/azuki.png'
 import Bayc from 'assets/images/png/collection/bayc.png'
 import Mayc from 'assets/images/png/collection/mayc.png'
+import { fixedFormat } from 'utils'
 const Card = styled('div')(({ theme }) => ({
   background: '#ffffff',
   border: '1px solid #eff0f6',
@@ -262,13 +263,13 @@ const CollateralItem = ({
             />
             <path d="M4 10.5L8.5 13L13 10.5" stroke="#14142A" strokeLinejoin="round" />
           </svg>
-          {debt}
+          {fixedFormat(debt)}
         </Value>
       </DataItem>
       <DataItem width={'178px'}>
         <Header>Risk Level</Header>
         <Value color={+riskPercentage <= 120 ? '#E1536C' : '#4E4B66'}>
-          {riskPercentage}%<ValueText>&nbsp;- {riskLevel}</ValueText>
+          {(+riskPercentage).toFixed(2)}%<ValueText>&nbsp;- {riskLevel}</ValueText>
         </Value>
       </DataItem>
       <Button

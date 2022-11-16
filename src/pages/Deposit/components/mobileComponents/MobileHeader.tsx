@@ -30,6 +30,7 @@ const HeaderFlexBox = styled(FlexBox)`
 const ImgBox = styled(`img`)`
   width: 4rem;
   height: 4rem;
+  background: #d9dbe9;
   border-radius: 0.25rem;
   z-index: 3;
 `
@@ -159,7 +160,7 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
               <Typography variant="subtitle1" lineHeight="1.375rem" fontWeight="700">
                 {collection?.symbol}
               </Typography>
-              <Typography mt="0.5rem" variant="body2" lineHeight="0.875rem" color="#A0A3BD">
+              <Typography mt="0.5rem" variant="body1" lineHeight="0.875rem" color="#A0A3BD">
                 {collection?.activeUser} Active Users
               </Typography>
             </Box>
@@ -226,7 +227,7 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
             </Box>
           </FloorBox>
           {details && (
-            <Box mt="2rem">
+            <Box mt="2.25rem">
               <SpaceBetweenBox m="0 0.75rem">
                 <Typography variant="body2" color="#A0A3BD">
                   Liquidation Threshold

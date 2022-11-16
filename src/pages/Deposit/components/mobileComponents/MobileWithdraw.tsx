@@ -93,7 +93,7 @@ export default function MobileWithdraw({
             <Typography variant="subtitle2">0 NFTs</Typography>
           </CenterBox>
           <CenterBox mt="0.5rem" mb="1.25rem">
-            <Typography display={list ? 'none' : ''} variant="body2" fontWeight="600" color="#a0a3bd">
+            <Typography variant="body2" fontWeight="600" color="#a0a3bd">
               You have no NFTs in this collection to withdraw
             </Typography>
           </CenterBox>

@@ -1,6 +1,7 @@
-import { Box, Checkbox, styled, TextField, Typography } from '@mui/material'
+import { Box, styled, Typography, Checkbox } from '@mui/material'
 import { useState } from 'react'
 import mobileNFT from 'assets/images/svg/liquidate/mobile-NFT.svg'
+// import nftListCheckbox from 'assets/images/svg/liquidate/nftListCheckbox.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
 import MobileNFTCollateralsSkeleton from '../mobileLiquidateSkeleton/MobileNFTCollateralsSkeleton'
 
@@ -10,6 +11,24 @@ const MobileNFTCollateralsBox = styled(Box)`
   border-radius: 12px;
   padding: 1rem;
   margin: 0 1rem;
+  .MuiSvgIcon-root {
+    display: none;
+  }
+  .MuiCheckbox-root {
+    opacity: 0.5;
+    border: 1px solid #a0a3bd;
+    border-radius: 4px;
+  }
+  .isCheck {
+    .MuiSvgIcon-root {
+      display: block;
+    }
+    .MuiCheckbox-root {
+      opacity: 1;
+      border: 0px solid #a0a3bd;
+      border-radius: 4px;
+    }
+  }
 `
 const CardBox = styled(Box)`
   border-radius: 10px;
@@ -33,18 +52,42 @@ const RadiusImg = styled(`img`)`
   border-radius: 100%;
 `
 const InputBox = styled(FlexBox)`
-  width: 7.9375rem;
   height: 1.875rem;
   padding: 0.25rem 0.5rem;
   margin-right: 0.75rem;
+  background: #f7f7fc;
   border-radius: 6px;
-  background: #eff0f6;
+`
+const StyleCheckbox = styled(Checkbox)`
+  width: 1.25rem;
+  height: 1.25rem;
+`
+const StyleTextField = styled('input')`
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 160%;
+  display: flex;
+  align-items: center;
+  color: #4e4b66;
+  outline: none;
+  border: 0;
+  margin-right: 0.375rem;
+  line-height: 130%;
+  max-width: 3.3125rem;
+  max-height: 1.375rem;
+  background: transparent;
+  &::placeholder {
+    color: #4e4b66;
+  }
 `
 interface MobileNFTCollateralsProps {
   loading: boolean
 }
 export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsProps) {
   const [checkboxType, setCheckboxType] = useState<Array<string>>([])
+  const [NftType] = useState<string>('ERC721')
   return (
     <MobileNFTCollateralsBox>
       {loading ? (
@@ -55,8 +98,9 @@ export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsPr
           {[1, 2, 3, 4, 5, 6].map((el: any, index: number) => (
             <CardBox className={checkboxType.includes(el) ? 'isCheck' : ' '} key={index}>
               <FlexBox>
-                <Checkbox
+                <StyleCheckbox
                   checked={checkboxType.includes(el)}
+                  // checkedIcon={<img src={nftListCheckbox} alt="" />}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     if (event.target.checked) {
                       setCheckboxType([...checkboxType, el])
@@ -64,8 +108,8 @@ export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsPr
                       setCheckboxType(checkboxType.filter((cel) => cel !== el))
                     }
                   }}
-                ></Checkbox>
-                <Box>
+                ></StyleCheckbox>
+                <Box ml="0.8125rem" width="100%">
                   <FlexBox>
                     <ImgBox></ImgBox>
                     <Box>
@@ -81,13 +125,31 @@ export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsPr
                     </Box>
                   </FlexBox>
                   <SpaceBetweenBox mt="1rem">
-                    <InputBox>
-                      <TextField variant="outlined" />
-                      <Typography ml="6px" component="span" variant="body1" color="#A0A3BD">
-                        Max
+                    {NftType !== 'ERC721' ? (
+                      <InputBox>
+                        <StyleTextField
+                          autoFocus={true}
+                          placeholder="1"
+                          // value={amount}
+                          // onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                          //   event.target.value = event.target.value.replace(/^\D*(\d*(?:\.\d{0,10})?).*$/g, '$1')
+                          //   handleAmount(event.target.value)
+                          //   setAmount(event.target.value)
+                          // }}
+                        />
+                        <svg width="2" height="18" viewBox="0 0 2 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M1 0.5V17.5" stroke="#EFF0F6" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        <Typography ml="0.5rem" variant="body1" fontWeight="600" color="#6E7191">
+                          Max 20
+                        </Typography>
+                      </InputBox>
+                    ) : (
+                      <Typography my="0.25rem" variant="body1" color="#A0A3BD">
+                        Floor Price
                       </Typography>
-                    </InputBox>
-                    <FlexBox ml="3.5625rem">
+                    )}
+                    <FlexBox>
                       <svg width="17" height="24" viewBox="0 0 17 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g opacity="0.5">
                           <path

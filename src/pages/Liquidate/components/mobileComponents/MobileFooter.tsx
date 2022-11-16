@@ -11,9 +11,30 @@ const MobileFooterBox = styled(Box)`
   left: 0rem;
   background: #262338;
   padding: 1rem 1rem 2.25rem 1rem;
-  border-top-left-radius: 0.75rem;
-  border-top-right-radius: 0.75rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
   box-shadow: 0rem 0.625rem 1.25rem rgba(38, 35, 56, 0.1);
+  .MuiSvgIcon-root {
+    display: none;
+  }
+  .MuiCheckbox-root {
+    border: 1px solid #4e4b66;
+    filter: drop-shadow(0px 4px 8px rgba(118, 70, 255, 0.1));
+    border-radius: 4px;
+  }
+  .Mui-checked {
+    width: 1.25rem;
+    height: 1.25rem;
+    .MuiSvgIcon-root {
+      display: block;
+      color: #7646ff;
+    }
+    &.MuiCheckbox-root {
+      opacity: 1;
+      background: #fff;
+      border-radius: 4px;
+    }
+  }
 `
 const RadiusImg = styled(`img`)`
   width: 1rem;
@@ -76,7 +97,7 @@ const ListBox = styled(Box)`
   overflow: scroll;
   border-radius: 0.5rem;
   margin-bottom: 1.5rem;
-  padding: 1rem 1rem 1rem 0.3125rem;
+  padding: 1rem;
 `
 const PriceBox = styled(SpaceBetweenBox)`
   padding: 0 1rem 1rem 1rem;
@@ -121,8 +142,8 @@ export default function MobileFooter() {
           <ListBox>
             {list.map((el: any) => (
               <FlexBox mb={list.length === +div(el, 1) ? '0rem' : '1.25rem'} key={el}>
-                <Checkbox></Checkbox>
-                <SpaceBetweenBox ml="0.3125rem" width="100%">
+                <Checkbox color="primary" />
+                <SpaceBetweenBox ml="1rem" width="100%">
                   <FlexBox>
                     <ImgBox></ImgBox>
                     <Box>
@@ -239,14 +260,14 @@ export default function MobileFooter() {
               48.6176
             </Typography>
             <Typography
-              onClick={() => setDetails(true)}
+              onClick={() => setDetails(!details)}
               ml="0.5rem"
               color="#A87EFF"
               lineHeight="0.75rem"
               variant="body2"
             >
               Details
-              {details ? (
+              {!details ? (
                 <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M8 4.875L8 11.5" stroke="#A87EFF" strokeLinecap="round" />
                   <path d="M11 7.49973L8 4.5L5 7.5" stroke="#A87EFF" strokeLinecap="round" strokeLinejoin="round" />

@@ -27,7 +27,7 @@ const Body = styled(Box)`
 `
 const MobileBody = styled(Box)`
   width: 100%;
-  background: #e5e5e5;
+  background: #f7f7fc;
   position: relative;
 `
 

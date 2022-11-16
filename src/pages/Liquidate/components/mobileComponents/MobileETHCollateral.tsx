@@ -1,5 +1,4 @@
-import { Box, styled, TextField, Typography } from '@mui/material'
-import { useState } from 'react'
+import { Box, styled, Typography } from '@mui/material'
 import { SpaceBetweenBox, FlexBox, FlexEndBox } from 'styleds'
 import MobileETHCollateralSkeleton from '../mobileLiquidateSkeleton/MobileETHCollateralSkeleton'
 
@@ -12,20 +11,21 @@ const MobileETHCollateralBox = styled(Box)`
   border-radius: 0.75rem;
 `
 const AmountBox = styled(Box)`
-  padding: 1rem;
+  padding: 1rem 1rem 0.5rem 1rem;
   background: #f7f7fc;
   border-radius: 10px;
   margin: 1.5rem 0 1rem 0;
 `
 const ProfitableBox = styled(Box)`
-  padding: 0.25rem 0.5rem;
-  border: 1px solid rgba(118, 70, 255, 0.5);
+  padding: 0.125rem 0.375rem;
+  border: 2px solid rgba(118, 70, 255, 0.5);
   border-radius: 0.125rem;
   margin-left: 0.5rem;
 `
 const MaxBox = styled(Box)`
-  padding: 0.125rem 0.5rem;
+  padding: 0.0625rem 0.5rem;
   background: #d9dbe9;
+  margin-top: 0.0625rem;
   margin-bottom: 0.5rem;
   border-radius: 0.25rem;
 `
@@ -41,6 +41,19 @@ const SubtotalStrikeThroughValue = styled(Typography)`
   text-decoration-line: line-through;
   /* Cool Gray 400 */
   color: #a0a3bd;
+`
+const StyleTextField = styled('input')`
+  font-size: 1.75rem;
+  margin-left: 0.25rem;
+  outline: none;
+  border: 0;
+  line-height: 130%;
+  max-width: 11.25rem;
+  max-height: 1.8125rem;
+  background: transparent;
+  &::placeholder {
+    color: rgba(110, 113, 145, 0.7);
+  }
 `
 // interface EthCollateralProps {
 //   handleAmount: Function
@@ -60,7 +73,6 @@ interface MobileETHCollateralProps {
   loading: boolean
 }
 export default function MobileETHCollateral({ loading }: MobileETHCollateralProps) {
-  const [amount] = useState('')
   return (
     <MobileETHCollateralBox>
       {loading ? (
@@ -70,15 +82,15 @@ export default function MobileETHCollateral({ loading }: MobileETHCollateralProp
           <FlexBox>
             <Typography variant="subtitle2">ETH Collateral</Typography>
             <ProfitableBox>
-              <Typography variant="body2" fontWeight="700" color="#7646FF">
+              <Typography variant="body2" lineHeight="1.125rem" fontWeight="700" color="#7646FF">
                 Profitable
               </Typography>
             </ProfitableBox>
           </FlexBox>
           <AmountBox>
             <SpaceBetweenBox>
-              <Box>
-                <Typography variant="body2" fontWeight="700" color="#1F1D23">
+              <Box mb="0.5rem">
+                <Typography variant="body2" mb="0.5rem" lineHeight="0.75rem" fontWeight="600" color="#1F1D23">
                   Liquidation amount
                 </Typography>
                 <FlexBox>
@@ -93,11 +105,10 @@ export default function MobileETHCollateral({ loading }: MobileETHCollateralProp
                       <path d="M3 11.5L8.5 15L14 11.5" stroke="#14142A" strokeWidth="1.5" strokeLinejoin="round" />
                     </g>
                   </svg>
-                  <TextField
+                  <StyleTextField
                     autoFocus={true}
-                    sx={{ fontSize: '28px' }}
                     placeholder="0.00"
-                    value={amount}
+                    // value={amount}
                     // onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     //   event.target.value = event.target.value.replace(/^\D*(\d*(?:\.\d{0,10})?).*$/g, '$1')
                     //   handleAmount(event.target.value)
@@ -119,35 +130,40 @@ export default function MobileETHCollateral({ loading }: MobileETHCollateralProp
                 </Typography>
               </Box>
             </SpaceBetweenBox>
+            <Typography display="none" variant="body2" fontWeight="600" color="#E1536C">
+              Maximum value exceeded
+            </Typography>
           </AmountBox>
-          <SpaceBetweenBox>
-            <Typography variant="body1" fontWeight="600" color="#A0A3BD">
-              Potential Profit
-            </Typography>
-            <Typography variant="body1" fontWeight="600" color="#4E4B66">
-              4.6 ETH
-            </Typography>
-          </SpaceBetweenBox>
-          <SpaceBetweenBox>
-            <Typography variant="body1" fontWeight="600" color="#A0A3BD">
-              Subtotal
-            </Typography>
-            <FlexBox>
-              <SubtotalStrikeThroughValue>46.00</SubtotalStrikeThroughValue>
-              <svg width="13" height="23" viewBox="0 0 13 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M2 11.697L6.5 5L11 11.697L6.5 18L2 11.697Z"
-                  stroke="#A0A3BD"
-                  strokeWidth="1.2"
-                  strokeLinejoin="round"
-                />
-                <path d="M2 11L6.5 14L11 11" stroke="#A0A3BD" strokeWidth="1.2" strokeLinejoin="round" />
-              </svg>
-              <Typography ml="0.125rem" variant="subtitle1" fontWeight="700" color="#7646FF">
-                41.4
+          <Box mx="1rem">
+            <SpaceBetweenBox>
+              <Typography variant="body1" fontWeight="600" color="#A0A3BD">
+                Potential Profit
               </Typography>
-            </FlexBox>
-          </SpaceBetweenBox>
+              <Typography variant="body1" fontWeight="600" color="#4E4B66">
+                4.6 ETH
+              </Typography>
+            </SpaceBetweenBox>
+            <SpaceBetweenBox mt="0.5rem">
+              <Typography variant="body1" fontWeight="600" color="#A0A3BD">
+                Subtotal
+              </Typography>
+              <FlexBox>
+                <SubtotalStrikeThroughValue>46.00</SubtotalStrikeThroughValue>
+                <svg width="13" height="23" viewBox="0 0 13 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M2 11.697L6.5 5L11 11.697L6.5 18L2 11.697Z"
+                    stroke="#A0A3BD"
+                    strokeWidth="1.2"
+                    strokeLinejoin="round"
+                  />
+                  <path d="M2 11L6.5 14L11 11" stroke="#A0A3BD" strokeWidth="1.2" strokeLinejoin="round" />
+                </svg>
+                <Typography ml="0.125rem" variant="subtitle1" fontWeight="700" color="#7646FF">
+                  41.4
+                </Typography>
+              </FlexBox>
+            </SpaceBetweenBox>
+          </Box>
         </>
       )}
     </MobileETHCollateralBox>

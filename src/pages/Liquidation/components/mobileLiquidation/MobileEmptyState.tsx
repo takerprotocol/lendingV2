@@ -5,7 +5,7 @@ import searchIcon from 'assets/images/svg/liquidation/search-icon.svg'
 const Container = styled('div')`
   width: 100%;
   text-align: center;
-  padding-top: 84px;
+  padding-top: 5.4375rem;
 `
 
 const SearchIcon = styled('div')`
@@ -29,7 +29,7 @@ const Title = styled(Typography)`
   /* Cool Gray 800 */
 
   color: #14142a;
-  margin-top: 14px;
+  margin-top: 0.25rempx;
   margin-bottom: 8px;
 `
 
@@ -50,22 +50,20 @@ const Explainer = styled(Typography)`
 `
 
 const ClearButton = styled(Button)`
-  width: 172px;
-  height: 48px;
+  width: 10.75rem;
+  height: 3rem;
   margin: 0 auto;
-  margin-top: 24px;
+  margin-top: 2rem;
   margin-bottom: 7.5rem;
-  border-radius: 31px;
+  border-radius: 1.9375rem;
 `
 
 const MobileEmptyState = ({
   searchTerm = [],
-  onClear = () => {
-    return null
-  },
+  resetFilters,
 }: {
   searchTerm?: Array<string>
-  onClear?: () => null
+  resetFilters: Function
 }) => {
   return (
     <Container>
@@ -87,7 +85,7 @@ const MobileEmptyState = ({
           <Explainer> search or clear your search criteria.</Explainer>
         </>
       )}
-      <ClearButton variant="contained" onClick={() => onClear()}>
+      <ClearButton variant="contained" onClick={() => resetFilters()}>
         Clear Search
       </ClearButton>
     </Container>

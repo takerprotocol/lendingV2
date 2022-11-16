@@ -106,6 +106,9 @@ const KeywordSearchInput = styled('input')`
     border: 1px solid #7646ff !important;
     box-shadow: 0px 10px 20px rgba(208, 217, 244, 0.5) !important;
   }
+  &::placeholder {
+    color: rgba(110, 113, 145, 0.7);
+  }
   display: flex;
   align-items: center;
 `

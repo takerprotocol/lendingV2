@@ -16,7 +16,7 @@ const MainBox = styled(SpaceBetweenBox)`
   margin-top: 1rem;
 `
 const DepositBox = styled(Box)`
-  padding: 0.5625rem 2.9063rem 0.5625rem 2.6563rem;
+  padding: 0.5rem 2.9063rem 0.5rem 2.6563rem;
   display: flex;
   align-items: center;
   position: relative;
