@@ -1,9 +1,13 @@
 import { Box, styled, Typography, Checkbox } from '@mui/material'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import SortIcon from 'assets/images/svg/liquidation/mobileSort-icon.svg'
 import mobileNFT from 'assets/images/svg/liquidate/mobile-NFT.svg'
+import FilterIcon from 'assets/images/svg/liquidation/mobileFilter-icon.svg'
 // import nftListCheckbox from 'assets/images/svg/liquidate/nftListCheckbox.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
 import MobileNFTCollateralsSkeleton from '../mobileLiquidateSkeleton/MobileNFTCollateralsSkeleton'
+import MobileCollateralsSortModal from './MobileCollateralsSortModal'
+import MobileFilterModal from './MobileFilterModal'
 
 const MobileNFTCollateralsBox = styled(Box)`
   background: #ffffff;
@@ -32,7 +36,7 @@ const MobileNFTCollateralsBox = styled(Box)`
 `
 const CardBox = styled(Box)`
   border-radius: 10px;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   padding: 1rem 1rem 0.875rem 0.8125rem;
   &.isCheck {
     background: #f7f7fc;
@@ -82,20 +86,111 @@ const StyleTextField = styled('input')`
     color: #4e4b66;
   }
 `
+const SortAndFilterBox = styled(SpaceBetweenBox)`
+  background: #f7f7fc;
+  border-radius: 0.625rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem 0.5rem;
+`
+const SortTypography = styled(Typography)`
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 24px;
+`
 interface MobileNFTCollateralsProps {
   loading: boolean
 }
 export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsProps) {
   const [checkboxType, setCheckboxType] = useState<Array<string>>([])
+  const [list] = useState<Array<number>>([1, 2, 3, 4, 5, 6, 7, 8, 9, 0])
   const [NftType] = useState<string>('ERC721')
+  const [openFilter, setOpenFilter] = useState(false)
+  const [collectionFilter, setCollectionFilter] = useState(0)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [sort, setSort] = useState<number>(0)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const sortValue = useMemo(() => {
+    switch (sort) {
+      case 1:
+        return 'Risk Level: Low to High'
+      case 2:
+        return 'Risk Level: High to Low'
+      default:
+        return 'Default Sort'
+    }
+  }, [sort])
   return (
     <MobileNFTCollateralsBox>
       {loading ? (
         <MobileNFTCollateralsSkeleton></MobileNFTCollateralsSkeleton>
       ) : (
         <>
-          <Typography variant="subtitle2">37 NFT Collaterals</Typography>
-          {[1, 2, 3, 4, 5, 6].map((el: any, index: number) => (
+          <Typography mb="0.5rem" variant="subtitle2">
+            37 NFT Collaterals
+          </Typography>
+          {list.length > 9 && (
+            <SortAndFilterBox>
+              <FlexBox
+                onClick={(event: any) => {
+                  // if (!AllFilterType) {
+                  handleClick(event)
+                  // }
+                }}
+              >
+                <img src={SortIcon} alt="" />
+                <FlexBox>
+                  <SortTypography ml="0.25rem">{sortValue}</SortTypography>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d={!open ? 'M16 10L11.5 15L7 10' : 'M16 15L11.5 10L7 15'}
+                      stroke={'#14142A'}
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </FlexBox>
+              </FlexBox>
+              <FlexBox>
+                <svg width="2" height="24" viewBox="0 0 2 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 0.5V23.5" stroke="#D9DBE9" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <FlexBox
+                  onClick={() => {
+                    setOpenFilter(true)
+                  }}
+                >
+                  {/* <FlexBox sx={{ opacity: `${AllFilterType ? '0.5' : '1'}` }}> */}
+                  <SortTypography color="#14142A" ml="1rem">
+                    Filter
+                  </SortTypography>
+                  {/* {FilterCount === 2 ? (
+                  <SortTypography ml="0.25rem" color="#7646FF">
+                    ({FilterCount})
+                  </SortTypography>
+                ) : FilterCount === 1 ? (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M14 18V11L17 7H7L10 11V16"
+                      stroke="#7646FF"
+                      strokeWidth="1.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ) : (
+                  <img src={FilterIcon} alt="" />
+                )} */}
+                  <img src={FilterIcon} alt="" />
+                </FlexBox>
+              </FlexBox>
+            </SortAndFilterBox>
+          )}
+          {list.map((el: any, index: number) => (
             <CardBox className={checkboxType.includes(el) ? 'isCheck' : ' '} key={index}>
               <FlexBox>
                 <StyleCheckbox
@@ -172,6 +267,19 @@ export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsPr
           ))}
         </>
       )}
+      <MobileCollateralsSortModal
+        open={open}
+        anchorEl={anchorEl}
+        setAnchorEl={setAnchorEl}
+        setSort={setSort}
+        sort={sort}
+      ></MobileCollateralsSortModal>
+      <MobileFilterModal
+        openFilter={openFilter}
+        setOpenFilter={setOpenFilter}
+        setCollectionFilter={setCollectionFilter}
+        collectionFilter={collectionFilter}
+      ></MobileFilterModal>
     </MobileNFTCollateralsBox>
   )
 }

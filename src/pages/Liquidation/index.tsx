@@ -249,7 +249,7 @@ export default function Liquidation() {
               )}
             </Box>
           ) : (
-            <Box sx={{ minHeight: '41.6875rem' }} p="3.625rem 0 10rem 0">
+            <Box sx={{ minHeight: '41.6875rem' }} p="3.625rem 0 0rem 0">
               <MenuBg>
                 {loginWalletType ? (
                   <>

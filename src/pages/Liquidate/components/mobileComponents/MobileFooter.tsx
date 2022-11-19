@@ -104,6 +104,7 @@ const PriceBox = styled(SpaceBetweenBox)`
 `
 const LiquidateButton = styled(Button)`
   background: linear-gradient(82.51deg, #884bff 0%, #6865ff 42.39%, #4785ff 74.2%, #2fc1ff 100%) !important;
+  box-shadow: none !important;
   border-radius: 6px !important;
 `
 export default function MobileFooter() {
