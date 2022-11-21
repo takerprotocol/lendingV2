@@ -86,7 +86,11 @@ export default function MobileHeader() {
           <Box
             height="1rem"
             onClick={() => {
-              navigate('/')
+              if (location.pathname === '/') {
+                window.location.reload()
+              } else {
+                navigate('/')
+              }
             }}
           >
             <img src={Taker} alt="" />

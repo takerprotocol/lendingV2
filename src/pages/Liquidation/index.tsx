@@ -165,11 +165,11 @@ export default function Liquidation() {
   }, [collection, collectionFilter, conditionDebtFilter, debtFilter])
   useEffect(() => {
     if (chainId) {
-      setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : chainId === 5 ? 5 : 42])
+      setClient(getClient()[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
   }, [chainId])
   const getCollaterals = useCallback(async () => {
-    if (address && client) {
+    if (client) {
       const user = await client.query({
         query: AllUser(healthFactor, searchValue, conditionSort, allUserWhere),
       })
@@ -201,7 +201,7 @@ export default function Liquidation() {
         setCollaterals(users)
       }
     }
-  }, [address, client, healthFactor, searchValue, conditionSort, allUserWhere, decimal])
+  }, [client, healthFactor, searchValue, conditionSort, allUserWhere, decimal])
 
   useEffect(() => {
     getCollaterals()

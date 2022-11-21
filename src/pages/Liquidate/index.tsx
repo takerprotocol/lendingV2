@@ -44,7 +44,7 @@ const Liquidate = () => {
 
   useEffect(() => {
     if (chainId) {
-      setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : chainId === 5 ? 5 : 42])
+      setClient(getClient()[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 42])
     }
   }, [chainId])
   const getCollaterals = useCallback(async () => {

@@ -496,6 +496,10 @@ export const theme = createTheme({
               background: linear-gradient(180deg, #FF7272 0%, #E1536C 100%) !important;
             }
         }
+        .walletconnect-modal__footer {
+          width: 100%;
+          overflow: auto;
+        }
         .Slider-In-liquidation{
           background: #EFF0F6;
           color: #FF7272 !important;
