@@ -20,6 +20,7 @@ import { useAddress, useMobileType } from 'state/user/hooks'
 import { FlexBox } from 'styleds'
 import { useAppDispatch } from 'state/hooks'
 import { setLoginWalletType } from 'state/user/reducer'
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 
 const WalletBox = styled(Box)`
   background: #ffffff;
@@ -72,7 +73,7 @@ export default function WalletModal() {
     setBalance()
   }, [setBalance, chainId])
 
-  const tryActivation = async (connector: AbstractConnector | undefined) => {
+  const tryActivation = async (connector: AbstractConnector | undefined | WalletConnectConnector) => {
     Object.keys(SUPPORTED_WALLETS).map((key) => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
         return SUPPORTED_WALLETS[key].name
@@ -93,10 +94,15 @@ export default function WalletModal() {
           })
         })
         .catch((error) => {
-          console.log(error, '-----------')
           if (error instanceof UnsupportedChainIdError) {
-            activate(connector) // a little janky...can't use setError because the connector isn't set
+            activate(connector)
           } else {
+            console.log(connector)
+            connector.deactivate()
+            connector.deactivate()
+            if (connector instanceof WalletConnectConnector) {
+              connector.walletConnectProvider = undefined
+            }
             console.log(true, '-----')
           }
         })

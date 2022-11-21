@@ -107,7 +107,7 @@
     "use-onclickoutside": "^0.4.0"
   },
   "resolutions": {
-    "@walletconnect/ethereum-provider": "1.6.5",
+    "@walletconnect/ethereum-provider": "1.8.0",
     "react-error-overlay": "6.0.9"
   },
   "scripts": {

@@ -25,6 +25,7 @@ import { useGateway } from 'hooks/useGateway'
 import { SpaceBetweenBox } from 'styleds'
 import { useApproveCallback, useTTokenApproveCallback } from 'hooks/transactions/useApproveCallback'
 import { ApprovalState } from 'hooks/transactions/useApproval'
+import TipsTooltip from '../TipsTooltip'
 
 const style = {
   width: '100%',
@@ -115,7 +116,7 @@ export const SupplySpaceBetweenBox = styled(Box)`
   align-items: flex-start;
   justify-content: space-between;
 `
-const NetSupplyAPY = styled(Box)`
+const NetSupplyAPY = styled(FlexBox)`
   background: #f7f7fc;
   border-radius: 6px;
   width: 100%;
@@ -459,17 +460,7 @@ export default function MobileMyAssetsModal({
             <Typography mx="0.375rem" fontWeight="600" variant="body2" lineHeight="0.75rem">
               10%
             </Typography>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="8" cy="7.99805" r="6.5" stroke="#A0A3BD" />
-              <path
-                d="M7.5 7.49805C7.5 7.2219 7.72386 6.99805 8 6.99805C8.27614 6.99805 8.5 7.2219 8.5 7.49805V11.498C8.5 11.7742 8.27614 11.998 8 11.998C7.72386 11.998 7.5 11.7742 7.5 11.498V7.49805Z"
-                fill="#A0A3BD"
-              />
-              <path
-                d="M9 4.99805C9 5.55033 8.55228 5.99805 8 5.99805C7.44772 5.99805 7 5.55033 7 4.99805C7 4.44576 7.44772 3.99805 8 3.99805C8.55228 3.99805 9 4.44576 9 4.99805Z"
-                fill="#A0A3BD"
-              />
-            </svg>
+            <TipsTooltip value="1234"></TipsTooltip>
           </NetSupplyAPY>
           <Button
             disabled={buttonDisabled}

@@ -21,7 +21,6 @@ interface COLOR {
     [key: number]: string
   }
 }
-
 export const colors: COLOR = {
   white: '#ffffff',
   dialogHeaderBg: '#fff',
@@ -374,6 +373,7 @@ export const theme = createTheme({
           text-align: center !important;
           color: #ffffff !important;
           padding: 4px 8px !important;
+          margin-bottom:0.75rem !important;
         }
         .MuiTooltip-arrow {
           ::before {

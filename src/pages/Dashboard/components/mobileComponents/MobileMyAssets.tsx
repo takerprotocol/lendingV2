@@ -1,6 +1,6 @@
 import { Box, Button, styled, Typography } from '@mui/material'
-import mobilePrompt from 'assets/images/svg/dashboard/mobilePrompt.svg'
-import mobilePrompt2 from 'assets/images/svg/dashboard/mobilePrompt-2.svg'
+// import mobilePrompt from 'assets/images/svg/dashboard/mobilePrompt.svg'
+// import mobilePrompt2 from 'assets/images/svg/dashboard/mobilePrompt-2.svg'
 import mobileEth from 'assets/images/svg/dashboard/mobileEth-icon.svg'
 import mobileBlackEthLogo from 'assets/images/svg/dashboard/mobileBlackEthLogo.svg'
 import mobilePurpleETH from 'assets/images/svg/dashboard/mobilePurpleETH-iocn.svg'
@@ -32,6 +32,7 @@ import { useLendingPool } from 'hooks/useLendingPool'
 import BigNumber from 'bignumber.js'
 import MobileMyAssetsSkeleton from '../mobileDashboardSkeleton/MobileMyAssetsSkeleton'
 import MobileMyLoanSkeleton from '../mobileDashboardSkeleton/MobileMyLoanSkeleton '
+import TipsTooltip from '../TipsTooltip'
 // import MobileMyAssetsModal from './MobileMyAssetsModal'
 
 const TotalBox = styled(Box)`
@@ -144,7 +145,7 @@ export default function MobileMyAssets() {
                   <Typography mr="0.5rem" variant="body2" fontWeight="600" lineHeight="0.75rem" color="#6E7191">
                     Total Liquidity
                   </Typography>
-                  <img src={mobilePrompt} alt="" />
+                  <TipsTooltip grey="grey" value={'111111'} size={''}></TipsTooltip>
                 </FlexBox>
                 <FlexBox mt="0.75rem">
                   <img src={type === 1 ? mobileEth : mobilePurpleETH} alt="" />
@@ -315,7 +316,7 @@ export default function MobileMyAssets() {
                             <Typography mr="0.25rem" variant="body2" color="#A0A3BD">
                               Net APY
                             </Typography>
-                            <img src={mobilePrompt2} alt="" />
+                            <TipsTooltip value="11"></TipsTooltip>
                           </FlexBox>
                         </Box>
                       </SpaceBetweenBox>

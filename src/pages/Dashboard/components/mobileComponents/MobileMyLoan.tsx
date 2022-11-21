@@ -1,5 +1,5 @@
 import { Box, Button, styled, Typography } from '@mui/material'
-import mobilePrompt2 from 'assets/images/svg/dashboard/mobilePrompt-2.svg'
+// import mobilePrompt2 from 'assets/images/svg/dashboard/mobilePrompt-2.svg'
 import mobileBlackEthLogo from 'assets/images/svg/dashboard/mobileBlackEthLogo.svg'
 import mobileDown from 'assets/images/svg/dashboard/mobileDown.svg'
 import mobileUp from 'assets/images/svg/dashboard/mobileUp.svg'
@@ -12,6 +12,7 @@ import MobileMyLoanModal from './MobileMyLoanModal'
 import { useLoading } from 'state/application/hooks'
 import MobileMyLoanSkeleton from '../mobileDashboardSkeleton/MobileMyLoanSkeleton '
 import BigNumber from 'bignumber.js'
+import TipsTooltip from '../TipsTooltip'
 
 const MyAssetsBox = styled(Box)`
   width: 100%;
@@ -153,7 +154,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                   <Typography mr="0.5rem" color="#A0A3BD" variant="body2" fontWeight="600">
                     {heath}%
                   </Typography>
-                  <img src={mobilePrompt2} alt="" />
+                  <TipsTooltip value="11"></TipsTooltip>
                 </ClaimBox>
               )}
             </SpaceBetweenBox>
@@ -261,7 +262,8 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                       </Box>
                       <Box m="0.5rem 0.5rem 0 0">
                         <FlexEndBox>
-                          <img width="16px" height="16px" src={mobilePrompt2} alt="" />
+                          {/* <img width="16px" height="16px" src={mobilePrompt2} alt="" /> */}
+                          <TipsTooltip value="11"></TipsTooltip>
                         </FlexEndBox>
                       </Box>
                     </RiskFlexBox>
@@ -293,7 +295,8 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                       </Box>
                       <Box m="0.5rem 0.5rem 0 0">
                         <FlexEndBox>
-                          <img width="16px" height="16px" src={mobilePrompt2} alt="" />
+                          {/* <img width="16px" height="16px" src={mobilePrompt2} alt="" /> */}
+                          <TipsTooltip value="11"></TipsTooltip>
                         </FlexEndBox>
                         <Typography mt="-0.25rem" variant="body1" color="#6E7191" fontWeight="600">
                           {heath}%
@@ -327,7 +330,8 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                         <Typography variant="body2" mr="0.25rem" color="#A0A3BD" lineHeight="1.125rem">
                           Net Borrow APY
                         </Typography>
-                        <img src={mobilePrompt2} alt="" />
+                        {/* <img src={mobilePrompt2} alt="" /> */}
+                        <TipsTooltip value="11"></TipsTooltip>
                       </FlexBox>
                     </Box>
                     <Button
