@@ -10,7 +10,7 @@ import { useCallback, useState } from 'react'
 import { fromWei } from 'web3-utils'
 import { useNavigate } from 'react-router-dom'
 import { useCollections, useDepositedCollection, useLoading } from 'state/application/hooks'
-import { div, times } from 'utils'
+import { div, fixedFormat, times } from 'utils'
 import { useAccountNfts, useAddress } from 'state/user/hooks'
 import MobileCollectionSkeleton from '../mobileDashboardSkeleton/MobileCollectionSkeleton'
 import { OwnedNft } from '@alch/alchemy-sdk'
@@ -123,11 +123,13 @@ export default function MobileCollection() {
             {collection.map((el: any, index: number) => (
               <CardBox key={`${el.id}collection`}>
                 <NftBox>
-                  <LabelBox display={type === index && address ? '' : 'none'}>
-                    <Typography variant="body2" color="#ffffff" lineHeight="1.125rem" fontWeight="700">
-                      Can Deposit
-                    </Typography>
-                  </LabelBox>
+                  {nftBalance(el.id) > 0 && (
+                    <LabelBox>
+                      <Typography variant="body2" color="#ffffff" lineHeight="1.125rem" fontWeight="700">
+                        Can Deposit
+                      </Typography>
+                    </LabelBox>
+                  )}
                   <FlexBox>
                     <ImgBox src={el.icon} alt="" />
                     <Box ml="0.5rem">
@@ -153,7 +155,7 @@ export default function MobileCollection() {
                         <FlexBox mt="0.125rem">
                           <img src={mobileBlackEthLogo2} alt="" />
                           <Typography ml="0.3125rem" variant="body1" fontWeight="700" lineHeight="1.25rem">
-                            {fromWei(el?.floorPrice || 0)}
+                            {fixedFormat(fromWei(el?.floorPrice || 0))}
                           </Typography>
                         </FlexBox>
                       </Box>
@@ -164,7 +166,7 @@ export default function MobileCollection() {
                         <FlexBox mt="0.125rem">
                           <img src={mobileBlackEthLogo2} alt="" />
                           <Typography ml="0.3125rem" variant="body1" fontWeight="700" lineHeight="1.25rem">
-                            {times(fromWei(el?.floorPrice || 0), div(el.ltv, 10000))}
+                            {fixedFormat(fromWei(times(el?.floorPrice || 0, div(el.ltv, 10000))))}
                           </Typography>
                           <Typography
                             ml="0.25rem"

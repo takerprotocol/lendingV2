@@ -4,7 +4,7 @@ import myCollateralIcon from 'assets/images/svg/dashboard/myCollateral-icon.svg'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
 import DepositHeaderSkeleton from './depositSkeleton/DepositHeaderSkeleton'
-import { useDecimal } from 'state/user/hooks'
+import { useDecimal, useErc20ReserveData } from 'state/user/hooks'
 import { useCollections } from 'state/application/hooks'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -101,6 +101,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
   const decimal = useDecimal()
   const [totalValue, setTotalValue] = useState('')
   const [borrowRate, setBorrowRate] = useState('')
+  const erc20ReserveData = useErc20ReserveData()
   const [total, setTotal] = useState(0)
   const { id } = useParams()
   const contract = useLendingPool()
@@ -225,7 +226,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                   </BgFlexBox>
                 </Box>
                 <Box>
-                  <BigTypography>{borrowRate}%</BigTypography>
+                  <BigTypography>{erc20ReserveData.borrowRate}%</BigTypography>
                 </Box>
               </FlexBox>
               <FlexBox mt="4px">

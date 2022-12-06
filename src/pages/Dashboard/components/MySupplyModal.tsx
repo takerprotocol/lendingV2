@@ -466,7 +466,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
 
               <Box>
                 <Typography variant="subtitle2" color="#4E4B66">
-                  10%
+                  {erc20ReserveData.borrowRate}%
                 </Typography>
               </Box>
             </FlexBox>

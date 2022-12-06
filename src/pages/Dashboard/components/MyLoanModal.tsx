@@ -519,7 +519,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               </Box>
               <Box>
                 <Typography variant="subtitle2" color="#4E4B66">
-                  10%
+                  {erc20ReserveData.borrowRate}%
                 </Typography>
               </Box>
             </FlexBox>

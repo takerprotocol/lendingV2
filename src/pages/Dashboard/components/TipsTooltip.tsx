@@ -11,6 +11,11 @@ const ImgBox = styled(Box)`
   display: flex;
   align-items: center;
 `
+const MClickAwayListener = styled(ClickAwayListener)`
+  .MuiTooltip-tooltip {
+    margin: 0px;
+  }
+`
 const MTooltip = styled(Tooltip)``
 interface TipsTooltipProps {
   value: string
@@ -35,7 +40,7 @@ export default function TipsTooltip({ value, grey, size }: TipsTooltipProps) {
           </ImgBox>
         </Tooltip>
       ) : (
-        <ClickAwayListener onClickAway={handleTooltipClose}>
+        <MClickAwayListener onClickAway={handleTooltipClose}>
           <MTooltip
             PopperProps={{
               disablePortal: true,
@@ -51,10 +56,8 @@ export default function TipsTooltip({ value, grey, size }: TipsTooltipProps) {
           >
             <img onClick={handleTooltipOpen} src={grey === 'grey' ? mobilePrompt : mobilePrompt2} alt="" />
           </MTooltip>
-        </ClickAwayListener>
+        </MClickAwayListener>
       )}
     </>
   )
 }
-// MuiTooltip-popper MuiTooltip-popperInteractive MuiTooltip-popperArrow css-pnpvgc-MuiPopper-root-MuiTooltip-popper MuiPopperUnstyled-root
-// MuiTooltip-tooltip MuiTooltip-tooltipArrow MuiTooltip-touch MuiTooltip-tooltipPlacementTop css-1scp802-MuiTooltip-tooltip

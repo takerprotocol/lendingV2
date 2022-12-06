@@ -13,6 +13,7 @@ import {
   useBorrowLimit,
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
+  useErc20ReserveData,
   useHeath,
   useUserValue,
 } from 'state/user/hooks'
@@ -53,7 +54,7 @@ const WithdrawList = styled(Box)`
   background: #f7f7fc;
   border-radius: 8px;
   overflow: auto;
-  padding: 16px 16px 0px 16px;
+  padding: 16px 16px 16px 16px;
 `
 const BodyTypography = styled(Typography)`
   font-weight: 500;
@@ -76,6 +77,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
   const address = useAddress()
   const userValue = useUserValue()
   const heath = useHeath()
+  const erc20ReserveData = useErc20ReserveData()
   const collateralRiskLevel = useCollateralRiskLevel()
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
@@ -109,7 +111,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
         })
     }
   }
-
+  console.log(data)
   const riskLevelWarning = useMemo(() => {
     return new BigNumber(collateralRiskLevel).lt(150) && type === 'withdraw'
   }, [collateralRiskLevel, type])
@@ -136,7 +138,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
         </FlexBox>
         <WithdrawList>
           {data.map((el: Nft, index: number) => (
-            <FlexBox mb="24px" key={index}>
+            <FlexBox mb={data.length > 1 ? '24px' : '0'} key={`Withdraw${index}`}>
               <img width="48px" src={el.rawMetadata?.image} alt="" />
               <Box width="232px" ml="12px" mr="24px">
                 <BodyTypography color="#6E7191 !important" fontWeight="600 !important">
@@ -251,7 +253,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
             </Box>
             <Box>
               <Typography component="p" variant="subtitle2" lineHeight="16px" color="#4E4B66">
-                10%
+                {erc20ReserveData.borrowRate}%
               </Typography>
             </Box>
           </FlexBox>
@@ -287,7 +289,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
             withdraw()
           }}
         >
-          Withdraw
+          Withdraw {data.length} NFTs
         </Button>
       </Box>
     </Modal>

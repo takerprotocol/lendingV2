@@ -10,7 +10,7 @@ import { useAccountNfts, useAddress, useDecimal, useUserNftConfig } from 'state/
 import { useCollections, useDepositedCollection, usePoolValues, useWalletModalToggle } from 'state/application/hooks'
 import { useNavigate } from 'react-router-dom'
 import CollectionSkeleton from './DashboardSkeleton/CollectionSkeleton'
-import { decimalFormat, div, times } from 'utils'
+import { decimalFormat, div, fixedFormat, times } from 'utils'
 import { OwnedNft } from '@alch/alchemy-sdk'
 import { fromWei } from 'web3-utils'
 
@@ -200,13 +200,13 @@ export default function Collection({ type, loading }: CollectionType) {
                   <CollectionFlexBox sx={{ width: '124px' }}>
                     <img src={minMyCollateralIcon} alt="" />
                     <Typography ml="2px" component="span" variant="body1" fontWeight="700">
-                      {fromWei(el?.floorPrice || 0)}
+                      {fixedFormat(fromWei(el?.floorPrice || 0))}
                     </Typography>
                   </CollectionFlexBox>
                   <CollectionFlexBox sx={{ width: '248px' }}>
                     <img src={minMyCollateralIcon} alt="" />
                     <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
-                      {times(fromWei(el?.floorPrice || 0), div(el.ltv, 10000))}
+                      {fixedFormat(fromWei(times(el?.floorPrice || 0, div(el.ltv, 10000))))}
                     </Typography>
                     <TitleTypography>{div(el.ltv, 100)}%</TitleTypography>
                   </CollectionFlexBox>
@@ -263,9 +263,17 @@ export default function Collection({ type, loading }: CollectionType) {
                           component="span"
                           variant="subtitle1"
                           fontWeight="700"
-                          color={deposited(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
+                          color={+deposited(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
                         >
-                          {deposited(el.id)} NTFs
+                          {deposited(el.id)}{' '}
+                        </Typography>
+                        <Typography
+                          component="span"
+                          variant="body1"
+                          fontWeight="700"
+                          color={+deposited(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
+                        >
+                          NTFs
                         </Typography>
                         <Typography component="p" variant="body1" fontWeight="600" color="#A0A3BD">
                           My Deposited
@@ -278,7 +286,15 @@ export default function Collection({ type, loading }: CollectionType) {
                           fontWeight="700"
                           color={nftBalance(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
                         >
-                          {nftBalance(el.id)} NTFs
+                          {nftBalance(el.id)} {''}
+                        </Typography>
+                        <Typography
+                          component="span"
+                          variant="body1"
+                          fontWeight="700"
+                          color={nftBalance(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
+                        >
+                          NTFs
                         </Typography>
                         <Typography component="p" variant="body1" fontWeight="600" color="#A0A3BD">
                           My Balance

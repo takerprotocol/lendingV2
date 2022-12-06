@@ -14,6 +14,7 @@ import {
   useBorrowLimit,
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
+  useErc20ReserveData,
   useHeath,
   useUserValue,
 } from 'state/user/hooks'
@@ -46,14 +47,14 @@ const RightFlexBox = styled(Box)`
   padding: 16px;
   margin-top: 24px;
 `
-const WithdrawList = styled(Box)`
+const DepositList = styled(Box)`
   width: 372px;
   max-height: 257px;
   margin-top: 16px;
   background: #f7f7fc;
   border-radius: 8px;
   overflow: auto;
-  padding: 16px 16px 0px 16px;
+  padding: 16px 16px 16px 16px;
 `
 const BodyTypography = styled(Typography)`
   font-weight: 500;
@@ -73,6 +74,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const contract = useLendingPool()
   const address = useAddress()
   const userValue = useUserValue()
+  const erc20ReserveData = useErc20ReserveData()
   const heath = useHeath()
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
@@ -172,9 +174,9 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             {amount} ETH value
           </Typography>
         </FlexBox>
-        <WithdrawList>
+        <DepositList>
           {data.map((el: NftTokenModel, index: number) => (
-            <FlexBox mb="24px" key={index}>
+            <FlexBox mb={data.length > 1 ? '24px' : '0'} key={`Deposit${index}`}>
               <img width="48px" src={el.media[0]?.gateway || ''} alt="" />
               <Box width="232px" ml="12px" mr="24px">
                 <BodyTypography color="#6E7191 !important" fontWeight="600 !important">
@@ -184,7 +186,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
               <BodyTypography>x 1</BodyTypography>
             </FlexBox>
           ))}
-        </WithdrawList>
+        </DepositList>
 
         <SpaceBetweenBox mt="24px">
           <Box>
@@ -271,7 +273,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             </Box>
             <Box width={'66px'}>
               <Typography variant="subtitle2" color="#6E7191">
-                -10%
+                {erc20ReserveData.borrowRate}%
               </Typography>
             </Box>
             <Box width="50px">
@@ -289,7 +291,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             </Box>
             <Box>
               <Typography variant="subtitle2" color="#4E4B66">
-                10%
+                {erc20ReserveData.borrowRate}%
               </Typography>
             </Box>
           </FlexBox>
@@ -330,7 +332,8 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             }
           }}
         >
-          {type === 'Withdraw' ? type : isApproved === 2 ? 'Deposit' : isApproved === 1 ? 'Pending' : 'Approve'}
+          {/* {type === 'Withdraw' ? type : isApproved === 2 ? 'Deposit' : isApproved === 1 ? 'Pending' : 'Approve'} */}
+          Deposit {data.length} NFTs
         </Button>
       </Box>
     </Modal>

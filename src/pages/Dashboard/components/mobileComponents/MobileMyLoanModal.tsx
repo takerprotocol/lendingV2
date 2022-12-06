@@ -12,6 +12,7 @@ import {
   useDebtBorrowLimitUsed,
   useDebtRiskLevel,
   useDecimal,
+  useErc20ReserveData,
   useEthDebt,
   useHeath,
 } from 'state/user/hooks'
@@ -205,6 +206,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
   const TypographyRiskLevel = getRiskLevel(amount ? debtRiskLevel : heath)
   const riskLevelTag = getRiskLevelTag(amount ? debtRiskLevel : heath)
   const contract = useGateway()
+  const erc20ReserveData = useErc20ReserveData()
   const poolContract = useLendingPool()
   // const erc20ReserveData = useErc20ReserveData()
   const borrowLimit = useBorrowLimit()
@@ -497,7 +499,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
               Net Borrow APY
             </Typography>
             <Typography mx="0.375rem" fontWeight="600" variant="body2" lineHeight="0.75rem">
-              10%
+              {erc20ReserveData.borrowRate}%
             </Typography>
             <TipsTooltip value="1122"></TipsTooltip>
           </NetBorrowAPY>

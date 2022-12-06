@@ -127,7 +127,7 @@ export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeMod
             My ETH Collateral
           </Typography>
           <Typography variant="subtitle1" component="span" fontWeight="700" color="#ffffff">
-            {fixedFormat(ethLiquidity, 2)}{' '}
+            {fixedFormat(ethLiquidity)}{' '}
             <Typography variant="body1" component="span" fontWeight="700" color="#ffffff">
               ETH
             </Typography>

@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom'
 import { getClient } from 'apollo/client'
 import { useActiveWeb3React } from 'hooks/web3'
 import { decimalFormat, div, times } from 'utils'
-import { useDecimal } from 'state/user/hooks'
+import { useDecimal, useErc20ReserveData } from 'state/user/hooks'
 import { useAppDispatch } from 'state'
 import { setMobileSecondHeaderName } from 'state/user/reducer'
 import { useLendingPool } from 'hooks/useLendingPool'
@@ -98,6 +98,7 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
   const { id } = useParams()
   const { chainId } = useActiveWeb3React()
   const [client, setClient] = useState<any>(null)
+  const erc20ReserveData = useErc20ReserveData()
   const decimal = useDecimal()
   const [totalValue, setTotalValue] = useState('')
   const [borrowRate, setBorrowRate] = useState('')
@@ -260,7 +261,7 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
                   <img src={RewardRight} alt="" />
                   <Box ml="1.3125rem">
                     <Typography variant="subtitle2" color="#4E4B66">
-                      {borrowRate}%
+                      {erc20ReserveData.borrowRate}%
                     </Typography>
                   </Box>
                 </FlexBox>

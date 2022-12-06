@@ -14,7 +14,6 @@ const style = {
 }
 const FlexEndBox = styled(Box)`
   display: flex;
-  margin: 8px 8px 0px 0px;
   align-items: center;
   justify-content: flex-end;
   cursor: pointer;
@@ -38,7 +37,7 @@ export default function SureModal({ openSureModal, handle }: SureModalProps) {
         >
           <img src={shutOff} alt="" />
         </FlexEndBox>
-        <FlexBox sx={{ justifyContent: 'center', marginTop: '32px' }}>
+        <FlexBox sx={{ justifyContent: 'center', marginTop: '24px' }}>
           <Typography variant="h5" component="h1">
             Are you sure you want to cancel
           </Typography>

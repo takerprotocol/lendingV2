@@ -6,7 +6,7 @@ import mobileUp from 'assets/images/svg/dashboard/mobileUp.svg'
 import CustomizedSlider from 'components/Slider'
 import { FlexBox, SpaceBetweenBox, FlexEndBox } from 'styleds'
 import { useMemo, useState } from 'react'
-import { useBorrowLimit, useDebtBorrowLimitUsed, useEthDebt, useHeath } from 'state/user/hooks'
+import { useBorrowLimit, useDebtBorrowLimitUsed, useErc20ReserveData, useEthDebt, useHeath } from 'state/user/hooks'
 import { fixedFormat, getRiskLevel, getRiskLevelTag, times } from 'utils'
 import MobileMyLoanModal from './MobileMyLoanModal'
 import { useLoading } from 'state/application/hooks'
@@ -89,6 +89,7 @@ interface MobileMyLoanProps {
 export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanProps) {
   const ethDebt = useEthDebt()
   const heath = useHeath()
+  const erc20ReserveData = useErc20ReserveData()
   const [open, setOpen] = useState<boolean>(false)
   const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
   const borrowLimitUsed = useDebtBorrowLimitUsed()
@@ -324,7 +325,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                   <SpaceBetweenBox>
                     <Box>
                       <Typography variant="body1" color="#262338" lineHeight="1.3125rem" fontWeight="700">
-                        10%
+                        {erc20ReserveData.borrowRate}%
                       </Typography>
                       <FlexBox>
                         <Typography variant="body2" mr="0.25rem" color="#A0A3BD" lineHeight="1.125rem">

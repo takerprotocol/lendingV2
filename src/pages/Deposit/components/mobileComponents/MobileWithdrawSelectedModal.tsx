@@ -11,6 +11,7 @@ import {
   useBorrowLimit,
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
+  useErc20ReserveData,
   useHeath,
   useUserValue,
 } from 'state/user/hooks'
@@ -49,13 +50,13 @@ const RightFlexBox = styled(Box)`
   align-items: center;
   justify-content: center;
 `
-const WithdrawList = styled(Box)`
+const DepositList = styled(Box)`
   max-height: 12.5rem;
   margin-top: 1rem;
   background: #f7f7fc;
   border-radius: 0.5rem;
   overflow: auto;
-  padding: 1rem 1rem 0px 1rem;
+  padding: 1rem 1rem 1rem 1rem;
 `
 const BodyTypography = styled(Typography)`
   font-weight: 500;
@@ -94,6 +95,7 @@ export default function MobileWithdrawSelectedModal({
   const heath = useHeath()
   const collateralRiskLevel = useCollateralRiskLevel()
   const TypographyRiskLevel = getRiskLevel(heath)
+  const erc20ReserveData = useErc20ReserveData()
   const riskLevelTag = getRiskLevelTag(heath)
   const ercContract = useContract(id, MockERC721Abi)
   const addTransaction = useTransactionAdder()
@@ -188,11 +190,11 @@ export default function MobileWithdrawSelectedModal({
           <Typography mt="0.125rem" variant="body1" color="#A0A3BD">
             {type === 'deposit' ? depositAmount : amount} ETH value
           </Typography>
-          <WithdrawList>
+          <DepositList>
             {type === 'deposit' ? (
               <>
                 {depositData.map((el: Nft | NftTokenModel, index: number) => (
-                  <SpaceBetweenBox mb="1.5rem" key={index}>
+                  <SpaceBetweenBox mb={data.length > 1 ? '1.5rem' : '0'} key={`deposit${index}`}>
                     <FlexBox>
                       <NftImg width="3rem" height="3rem" src={el.media[0]?.gateway || ''} alt="" />
                       <Box ml="0.75rem">
@@ -208,7 +210,7 @@ export default function MobileWithdrawSelectedModal({
             ) : (
               <>
                 {data.map((el: Nft | NftTokenModel, index: number) => (
-                  <SpaceBetweenBox mb="1.5rem" key={index}>
+                  <SpaceBetweenBox mb={data.length > 1 ? '1.5rem' : '0'} key={`Withdraw${index}`}>
                     <FlexBox>
                       <NftImg width="3rem" height="3rem" src={el.rawMetadata?.image} alt="" />
                       <Box ml="0.75rem">
@@ -222,7 +224,7 @@ export default function MobileWithdrawSelectedModal({
                 ))}
               </>
             )}
-          </WithdrawList>
+          </DepositList>
           <SpaceBetweenBox mt="1.5rem">
             <Box>
               <Typography variant="body2" color="#A0A3BD">
@@ -309,7 +311,7 @@ export default function MobileWithdrawSelectedModal({
               Net Borrow APY
             </Typography>
             <Typography lineHeight="0.75rem" ml="0.375rem" mr="0.5rem" variant="body2" fontWeight="600">
-              10%
+              {erc20ReserveData.borrowRate}%
             </Typography>
             <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#clip0_3612_18790)">
@@ -342,7 +344,8 @@ export default function MobileWithdrawSelectedModal({
               }
             }}
           >
-            {type === 'Withdraw' ? type : isApproved === 2 ? 'Deposit' : isApproved === 1 ? 'Pending' : 'Approve'}
+            {/* {type === 'Withdraw' ? type : isApproved === 2 ? 'Deposit' : isApproved === 1 ? 'Pending' : 'Approve'} */}
+            {type === 'Withdraw' ? `Withdraw ${data.length} NFTs` : `Deposit ${depositData.length} NFTs`}
           </Button>
           <Box mb="1rem" display={riskLevelWarning ? '' : 'none'}>
             <FlexBox>
