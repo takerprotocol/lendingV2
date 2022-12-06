@@ -58,13 +58,10 @@ export default function CustomizeRoutes() {
     }
   }, [chainId])
   const flag = useMemo(() => {
-    return (
-      transactions &&
-      Object.keys(transactions).some((hash) => {
-        const tx = transactions[hash]
-        return tx && tx.receipt && tx.info.type !== TransactionType.APPROVAL && isTransactionRecent(tx)
-      })
-    )
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return tx && tx.receipt && tx.info.type !== TransactionType.APPROVAL && isTransactionRecent(tx)
+    }).length
   }, [transactions])
   useEffect(() => {
     if (address && chainId && !CHAIN_IDs.includes(chainId)) {
