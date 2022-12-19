@@ -37,7 +37,7 @@ export default function MobileMenu() {
         <Typography
           variant="subtitle2"
           lineHeight="150%"
-          fontWeight="700"
+          fontWeight={String(location.pathname === '/' ? '700' : '600')}
           color={String(location.pathname === '/' ? theme.palette.primary.main : theme.palette.text)}
         >
           Dashboard
@@ -79,7 +79,7 @@ export default function MobileMenu() {
         <Typography
           variant="subtitle2"
           lineHeight="150%"
-          fontWeight="600"
+          fontWeight={String(location.pathname === '/liquidation' ? '700' : '600')}
           color={String(location.pathname === '/liquidation' ? theme.palette.primary.main : theme.palette.text)}
         >
           Liquidation
@@ -87,7 +87,12 @@ export default function MobileMenu() {
         <img src={mobileMenu} alt="" />
       </SpaceBetweenBox>
       <SpaceBetweenBox mt="2.25rem">
-        <Typography variant="subtitle2" lineHeight="150%" fontWeight="600">
+        <Typography
+          variant="subtitle2"
+          lineHeight="150%"
+          fontWeight={String(location.pathname === '/liquidation' ? '700' : '600')}
+          color={String(location.pathname === '/liquidation' ? theme.palette.primary.main : theme.palette.text)}
+        >
           FAQs
         </Typography>
         <img src={mobileMenu} alt="" />

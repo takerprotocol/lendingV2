@@ -18,6 +18,7 @@ const MobileCollateralBox = styled(Box)`
   background-image: url(${mobileCollaterals});
   backdrop-filter: blur(1.5625rem);
   background-repeat: no-repeat;
+  background-size: 100%;
   border-radius: 0.75rem;
   padding: 1rem 0 2.375rem 0;
 `
