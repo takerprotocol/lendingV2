@@ -83,6 +83,7 @@ export default function MobileDepositRoWithdraw({
             onClick={() => {
               if (type !== 1) {
                 setType(1)
+                setMobileWithdrawCheckedIndex([])
               }
             }}
           >
@@ -116,6 +117,7 @@ export default function MobileDepositRoWithdraw({
             onClick={() => {
               if (type !== 2) {
                 setType(2)
+                setMobileDepositCheckedIndex([])
               }
             }}
           >

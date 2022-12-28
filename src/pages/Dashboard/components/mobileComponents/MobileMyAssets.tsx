@@ -15,13 +15,15 @@ import {
   useDashboardType,
   useDecimal,
   useEthCollateral,
+  useEthLiquidity,
+  useUserValue,
   // useUserValue,
-  useWalletBalance,
+  // useWalletBalance,
 } from 'state/user/hooks'
 import MobileMyETHCollateral from './MobileMyETHCollateral'
 import MobileMyNFTCollateral from './MobileMyNFTCollateral'
 import MobileMyLoan from './MobileMyLoan'
-import { decimalFormat, plus } from 'utils'
+import { decimalFormat, fixedFormat, plus } from 'utils'
 import { useLoading, usePoolValues } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { setLoginWalletType, setMobileMenuType } from 'state/user/reducer'
@@ -104,8 +106,8 @@ export default function MobileMyAssets() {
   const poolValues = usePoolValues()
   const loading = useLoading()
   const decimal = useDecimal()
-  const balance = useWalletBalance()
-  // const userValue = useUserValue()
+  const ethLiquidity = useEthLiquidity()
+  const userValue = useUserValue()
   const ethCollateral = useEthCollateral()
   const [openMySupplyModal, setOpenMySupplyModal] = useState<boolean>(false)
   const type = useDashboardType()
@@ -213,7 +215,7 @@ export default function MobileMyAssets() {
                         <FlexBox>
                           <img src={mobileBlackEthLogo} alt="" />
                           <Typography ml="0.25rem" variant="subtitle1" fontWeight="700" lineHeight="1.8125rem">
-                            {balance}
+                            {fixedFormat(plus(userValue.NFTLiquidity, ethLiquidity))}
                           </Typography>
                         </FlexBox>
                       </Box>
@@ -276,7 +278,7 @@ export default function MobileMyAssets() {
                     </SpaceBetweenBox>
                   ) : (
                     <Box>
-                      <SpaceBetweenBox mt="1rem" mr="2.75rem">
+                      <SpaceBetweenBox mt="1rem" mr="2.6875rem">
                         <Box ml="0.375rem">
                           <Typography variant="body1" color="#A0A3BD">
                             My Assets
@@ -304,11 +306,11 @@ export default function MobileMyAssets() {
                               />
                             </svg>
                             <Typography ml="0.5rem" variant="h5">
-                              {balance}
+                              {fixedFormat(plus(userValue.NFTLiquidity, ethLiquidity))}
                             </Typography>
                           </FlexBox>
                         </Box>
-                        <Box>
+                        <Box mt="0.125rem" ml="-0.0625rem">
                           <Typography variant="body1" fontWeight="600" color="#A0A3BD">
                             15%
                           </Typography>

@@ -19,13 +19,13 @@ import { TransactionDetails, TransactionType } from 'state/transactions/types'
 import dayjs from 'dayjs'
 const WalletMessageBox = styled(Box)`
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 0.75rem;
   padding: 1rem 1rem 1rem 1rem;
   margin: 1rem 1rem 0 1rem;
 `
 const WalletBalanceBox = styled(Box)`
   background: #f7f7fc;
-  border-radius: 6px;
+  border-radius: 0.375rem;
   padding: 0.5rem;
 `
 const StyledBlockie = styled(Blockies)`
@@ -42,8 +42,11 @@ const LogoutBox = styled(Box)`
 const ImgBox = styled(Box)`
   border-radius: 0.25rem;
   margin: 0.5rem 0.25rem 0.5rem 0;
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
+`
+const CopyBox = styled(Box)`
+  margin-top: -0.0625rem;
 `
 export default function WalletMessage() {
   const address = useAddress()
@@ -73,10 +76,12 @@ export default function WalletMessage() {
         <SpaceBetweenBox>
           <CenterBox>
             <StyledBlockie seed={address} size={12} scale={2} />
-            <Typography variant="subtitle2" component="h1" ml="8px" mr="14px" color="#6E7191">
+            <Typography variant="subtitle2" component="h1" ml="0.5rem" mr="0.6875rem" color="#6E7191">
               {desensitization(address)}
             </Typography>
-            <Copy text={address} />
+            <CopyBox>
+              <Copy text={address} />
+            </CopyBox>
           </CenterBox>
           <LogoutBox
             sx={{ cursor: 'pointer' }}
@@ -214,7 +219,7 @@ export default function WalletMessage() {
                   <Typography mx="0.5rem" color="#4E4B66" variant="body2">
                     {desensitization(hash)}
                   </Typography>
-                  <Copy color={'Txid'} text={hash} />
+                  <Copy text={hash} />
                 </FlexBox>
               </Box>
             </>

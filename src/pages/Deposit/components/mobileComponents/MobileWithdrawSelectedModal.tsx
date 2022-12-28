@@ -24,6 +24,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { Nft } from '@alch/alchemy-sdk'
 import { NftTokenModel } from 'services/type/nft'
+import TipsTooltip from 'pages/Dashboard/components/TipsTooltip'
 
 const style = {
   width: '100%',
@@ -45,7 +46,7 @@ const RightFlexBox = styled(Box)`
   background: #f7f7fc;
   margin: 1.5rem 0 0.5rem 0;
   border-radius: 6px;
-  padding: 0.5rem 0rem;
+  padding: 0.4375rem 0rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -163,6 +164,8 @@ export default function MobileWithdrawSelectedModal({
         })
     }
   }
+  console.log(depositData, '111')
+  console.log(data, '222')
   const depositAmount = useMemo(() => {
     return depositData.reduce((total: string, current: NftTokenModel) => {
       return new BigNumber(total).plus(current.balance || '0').toString()
@@ -184,17 +187,20 @@ export default function MobileWithdrawSelectedModal({
           >
             <img src={shutOff} alt="" />
           </FlexEndBox>
-          <Typography fontWeight="700" variant="subtitle1">
+          <Typography ml="0.5rem" fontWeight="700" variant="subtitle1">
             {type === 'deposit' ? depositData.length : data.length} NFTs selected
           </Typography>
-          <Typography mt="0.125rem" variant="body1" color="#A0A3BD">
+          <Typography ml="0.5rem" mt="0.125rem" variant="body1" color="#A0A3BD">
             {type === 'deposit' ? depositAmount : amount} ETH value
           </Typography>
           <DepositList>
             {type === 'deposit' ? (
               <>
                 {depositData.map((el: Nft | NftTokenModel, index: number) => (
-                  <SpaceBetweenBox mb={data.length > 1 ? '1.5rem' : '0'} key={`deposit${index}`}>
+                  <SpaceBetweenBox
+                    mb={Number(minus(depositData.length, 1)) === index ? '0' : '1.5rem'}
+                    key={`deposit${index}`}
+                  >
                     <FlexBox>
                       <NftImg width="3rem" height="3rem" src={el.media[0]?.gateway || ''} alt="" />
                       <Box ml="0.75rem">
@@ -203,14 +209,17 @@ export default function MobileWithdrawSelectedModal({
                         </BodyTypography>
                       </Box>
                     </FlexBox>
-                    <BodyTypography>x 1</BodyTypography>
+                    <BodyTypography display={el.tokenType === 'ERC721' ? 'none' : ''}>x 1</BodyTypography>
                   </SpaceBetweenBox>
                 ))}
               </>
             ) : (
               <>
                 {data.map((el: Nft | NftTokenModel, index: number) => (
-                  <SpaceBetweenBox mb={data.length > 1 ? '1.5rem' : '0'} key={`Withdraw${index}`}>
+                  <SpaceBetweenBox
+                    mb={Number(minus(data.length, 1)) === index ? '0' : '1.5rem'}
+                    key={`Withdraw${index}`}
+                  >
                     <FlexBox>
                       <NftImg width="3rem" height="3rem" src={el.rawMetadata?.image} alt="" />
                       <Box ml="0.75rem">
@@ -219,7 +228,7 @@ export default function MobileWithdrawSelectedModal({
                         </BodyTypography>
                       </Box>
                     </FlexBox>
-                    <BodyTypography>x 1</BodyTypography>
+                    <BodyTypography display={el.tokenType === 'ERC721' ? 'none' : ''}>x 1</BodyTypography>
                   </SpaceBetweenBox>
                 ))}
               </>
@@ -313,24 +322,7 @@ export default function MobileWithdrawSelectedModal({
             <Typography lineHeight="0.75rem" ml="0.375rem" mr="0.5rem" variant="body2" fontWeight="600">
               {erc20ReserveData.borrowRate}%
             </Typography>
-            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clipPath="url(#clip0_3612_18790)">
-                <circle cx="7" cy="7.99805" r="6.5" stroke="#A0A3BD" />
-                <path
-                  d="M6.5 7.49805C6.5 7.2219 6.72386 6.99805 7 6.99805C7.27614 6.99805 7.5 7.2219 7.5 7.49805V11.498C7.5 11.7742 7.27614 11.998 7 11.998C6.72386 11.998 6.5 11.7742 6.5 11.498V7.49805Z"
-                  fill="#A0A3BD"
-                />
-                <path
-                  d="M8 4.99805C8 5.55033 7.55228 5.99805 7 5.99805C6.44772 5.99805 6 5.55033 6 4.99805C6 4.44576 6.44772 3.99805 7 3.99805C7.55228 3.99805 8 4.44576 8 4.99805Z"
-                  fill="#A0A3BD"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_3612_18790">
-                  <rect width="15" height="14" fill="white" transform="translate(0 0.998047)" />
-                </clipPath>
-              </defs>
-            </svg>
+            <TipsTooltip size="14" value="1234"></TipsTooltip>
           </RightFlexBox>
           <Button
             variant="contained"

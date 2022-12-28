@@ -48,7 +48,7 @@ export default function MobileHeader() {
     <>
       {lightBackground ? (
         <>
-          <DepositRoLiquidateBox sx={{ background: `${deposit ? '#ffffff' : '#262338'}` }}>
+          <DepositRoLiquidateBox sx={{ background: `${deposit ? '#F7F7FC' : '#262338'}` }}>
             <svg
               width="48"
               onClick={() => {

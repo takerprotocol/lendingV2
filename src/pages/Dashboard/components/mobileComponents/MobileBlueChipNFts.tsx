@@ -2,6 +2,8 @@ import { Box, styled, Typography } from '@mui/material'
 import { useDashboardType } from 'state/user/hooks'
 import { setDashboardType } from 'state/user/reducer'
 import mobileBlueChip from 'assets/images/svg/dashboard/mobileBlueChip.svg'
+import mobileGrowthNFTsBefore from 'assets/images/svg/dashboard/mobileGrowthNFTs-before.svg'
+import mobileBlueChipNFTsBefore from 'assets/images/svg/dashboard/mobileBlueChipNFTs-before.svg'
 import mobileGrowth from 'assets/images/svg/dashboard/mobileGrowth.svg'
 import { SpaceBetweenBox } from 'styleds'
 import { useAppDispatch } from 'state/hooks'
@@ -24,16 +26,6 @@ const BlueChipBox = styled(Box)`
     box-shadow: 0px 0.3125rem 0.625rem rgba(110, 113, 145, 0.05), inset 0px 0.125rem 0.125rem rgba(255, 255, 255, 0.2);
     border-radius: 1.5625rem;
     padding: 0.5rem 1.5rem;
-    ::before {
-      content: '';
-      display: block;
-      position: absolute;
-      left: calc(50% - 0.875rem / 2);
-      top: calc(100% - 0.0625rem);
-      border-width: 0.5rem 0.4375rem;
-      border-style: dashed solid dashed dashed;
-      border-color: #14142a transparent transparent transparent;
-    }
   }
 `
 const GrowthBox = styled(Box)`
@@ -49,17 +41,17 @@ const GrowthBox = styled(Box)`
     box-shadow: 0px 5px 10px rgba(128, 113, 255, 0.2), inset 0px 0.125rem 0.125rem rgba(255, 255, 255, 0.1);
     border-radius: 1.5625rem;
     padding: 0.5rem 1.9036rem;
-    ::before {
-      content: '';
-      display: block;
-      position: absolute;
-      left: calc(50% - 0.875rem / 2);
-      top: calc(100% - 0.0625rem);
-      border-width: 0.5rem 0.4375rem;
-      border-style: dashed solid dashed dashed;
-      border-color: #8071ff transparent transparent transparent;
-    }
   }
+`
+const ImgGrowthBefore = styled(`img`)`
+  position: absolute;
+  left: calc(50% - 34px / 2);
+  top: calc(100% - 13px);
+`
+const ImgBlueChipNFTsBefore = styled(`img`)`
+  position: absolute;
+  left: calc(50% - 34px / 2);
+  top: calc(100% - 13px);
 `
 export default function MobileBlueChipNFts() {
   const type = useDashboardType()
@@ -82,6 +74,7 @@ export default function MobileBlueChipNFts() {
             <Typography variant="body1" fontWeight="600" color={type === 2 ? '#14142A' : '#ffffff'}>
               Blue Chip NFTs
             </Typography>
+            {type === 1 && <ImgBlueChipNFTsBefore src={mobileBlueChipNFTsBefore}></ImgBlueChipNFTsBefore>}
           </BlueChipBox>
           <GrowthBox
             className={type === 2 ? 'open' : ''}
@@ -97,6 +90,7 @@ export default function MobileBlueChipNFts() {
             <Typography variant="body1" fontWeight="600" color={type === 1 ? '#14142A' : '#ffffff'}>
               Growth NFTs
             </Typography>
+            {type === 2 && <ImgGrowthBefore src={mobileGrowthNFTsBefore}></ImgGrowthBefore>}
           </GrowthBox>
         </SpaceBetweenBox>
       </BlueChipStyleBox>

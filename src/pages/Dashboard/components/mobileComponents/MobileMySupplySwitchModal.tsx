@@ -36,7 +36,7 @@ const BottomBox = styled(Box)`
   border-radius: 0.75rem;
 `
 const DataBox = styled(Box)`
-  margin-top: 2.25rem;
+  margin-bottom: 1.5rem;
   width: 100%;
   border-radius: 0.375rem;
 `
@@ -143,8 +143,8 @@ export default function MobileMySupplySwitchModal({
           </Box>
         </TopBox>
         <BottomBox>
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography mb="0.5rem" variant="subtitle1" fontWeight="700">
+          <Box mb="2.25rem" sx={{ textAlign: 'center' }}>
+            <Typography mb="0.375rem" variant="subtitle1" fontWeight="700">
               {switchType === 0 ? 'Sure to unable ?' : 'Enable Collateral Mode'}
             </Typography>
             <Typography display={switchType === 0 ? 'inline' : ''} variant="body2" color="#6E7191">
@@ -204,7 +204,7 @@ export default function MobileMySupplySwitchModal({
                   </SpaceBetweenBox>
                   <SpaceBetweenBox>
                     <FlexBox>
-                      <Typography mr="0.5rem" variant="body2" color="#A0A3BD">
+                      <Typography variant="body2" color="#A0A3BD">
                         Risk level
                       </Typography>
                       <Typography className={ColorClass} ml="0.5rem" variant="body2" fontWeight="700">
@@ -225,7 +225,7 @@ export default function MobileMySupplySwitchModal({
             </DataBox>
           )}
           {switchType === 0 ? (
-            <SpaceBetweenBox mt="1.5rem">
+            <SpaceBetweenBox>
               <Button
                 sx={{ width: '50%', height: '3rem' }}
                 color="secondary"
@@ -248,7 +248,7 @@ export default function MobileMySupplySwitchModal({
             </SpaceBetweenBox>
           ) : (
             <Button
-              sx={{ marginTop: '1.5rem', width: '100%', height: '3rem' }}
+              sx={{ width: '100%', height: '3rem' }}
               variant="contained"
               onClick={() => {
                 handle('enable')

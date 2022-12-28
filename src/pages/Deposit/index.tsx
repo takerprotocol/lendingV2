@@ -194,7 +194,11 @@ export default function Deposit() {
           </Main>
         </Body>
       ) : (
-        <MobileBody>
+        <MobileBody
+          pb={
+            mobileWithdrawCheckedIndex.length !== 0 || mobileDepositCheckedIndex.length !== 0 ? '7.5625rem' : '1.25rem'
+          }
+        >
           {loading ? (
             <MobileBg></MobileBg>
           ) : (

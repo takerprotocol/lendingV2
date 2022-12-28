@@ -54,7 +54,13 @@ export default function TipsTooltip({ value, grey, size }: TipsTooltipProps) {
             disableTouchListener
             title={value}
           >
-            <img onClick={handleTooltipOpen} src={grey === 'grey' ? mobilePrompt : mobilePrompt2} alt="" />
+            <img
+              width={size}
+              height={size}
+              onClick={handleTooltipOpen}
+              src={grey === 'grey' ? mobilePrompt : mobilePrompt2}
+              alt=""
+            />
           </MTooltip>
         </MClickAwayListener>
       )}

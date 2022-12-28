@@ -20,6 +20,21 @@ const FlexEndBox = styled(Box)`
 const SureButton = styled(Button)`
   width: 50%;
   height: 3rem;
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 160%;
+  color: #4e4b66;
+`
+const CancelButton = styled(Button)`
+  width: 50%;
+  height: 3rem;
+  font-family: 'Quicksand';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 160%;
 `
 interface SureModalProps {
   openSureModal: boolean
@@ -65,7 +80,7 @@ export default function MobileSureModal({
           >
             Think about it
           </SureButton>
-          <SureButton
+          <CancelButton
             sx={{ marginLeft: '0.5rem' }}
             variant="contained"
             onClick={() => {
@@ -78,7 +93,7 @@ export default function MobileSureModal({
             }}
           >
             Cancel
-          </SureButton>
+          </CancelButton>
         </SpaceBetweenBox>
       </Box>
     </Modal>

@@ -48,7 +48,7 @@ const FlexEndBox = styled(Box)`
   justify-content: flex-end;
 `
 const NFTsBox = styled(Box)`
-  width: 80.2%;
+  width: 5.0625rem;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 0.25rem;
   padding: 0.5rem;
@@ -60,7 +60,7 @@ const MyETHRightBox = styled(Box)`
   justify-content: flex-end;
 `
 const NetSupplyAPYBox = styled(Box)`
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(217, 217, 217, 0.1);
   width: 56.272%;
   border-radius: 0.25rem;
   display: flex;
@@ -73,7 +73,7 @@ const NetSupplyAPYBox = styled(Box)`
     content: '';
     display: block;
     position: absolute;
-    right: calc(50% - 1.96875rem);
+    right: calc(50% - 2.2813rem);
     bottom: calc(100%);
     border-width: 0.375rem 0.3125rem;
     border-style: dashed dashed solid dashed;
@@ -165,7 +165,7 @@ export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeMod
         <MyETHRightBox>
           <FlexEndBox>
             {usedCollateral ? (
-              <Typography mt="-0.5rem" mr="0.5rem" variant="body2" fontWeight="700" color="#ffffff">
+              <Typography mt="-0.3125rem" mr="0.5rem" variant="body2" fontWeight="700" color="#ffffff">
                 Used as Collateral
               </Typography>
             ) : (

@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles'
 import { red } from '@mui/material/colors'
 // eslint-disable-next-line no-restricted-imports
 import 'react-toastify/dist/ReactToastify.css'
-
+import { isMobile } from 'utils/userAgent'
 interface COLOR {
   barBackground: string
   barSecondBackground: string
@@ -395,13 +395,15 @@ export const theme = createTheme({
           text-decoration: none;
           color: unset;
         }
-        .Toastify {
+        ${
+          isMobile
+            ? `.Toastify {
           .Toastify__toast-container {
-            width: 480px;
-            top: 78px;
+            top: 3.625rem;
+            padding: 0 1rem;
           }
           .Toastify__toast {
-            padding: 24px;
+            padding: 1rem 1.5rem 1rem 1rem;        
             background: rgba(255, 255, 255, 0.9);            
             border: 1px solid #EFF0F6;
             box-shadow: 0px 10px 20px rgba(20, 20, 42, 0.05);
@@ -409,15 +411,34 @@ export const theme = createTheme({
             border-radius: 12px;
             .error, .success {
               width: 38px;
-              margin-right: 24px;
+              margin-right: 0.75rem;
             }
             .toast-close {
-              width: 24px;
+              width: 1rem;
             }
+          }
+          .MuiTypography-subtitle2{
+            font-family: 'Quicksand';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 160%;
+            color: #262338;
+          }
+          .MuiTypography-subtitle1{
+            font-size: 16px !important;
+          }
+          a{
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            line-height: 160% !important;
+            text-decoration-line: underline;
+            color: #7646FF !important;
+            margin-right: 0.5rem;
           }
           .Toastify__toast-icon {
             width: 38px;
-            margin-right: 24px;
+            margin-right: 0.75rem;
             svg {
               width: 28px;
               height: 28px;
@@ -426,10 +447,10 @@ export const theme = createTheme({
             }
           }
           .Toastify__toast-body {
-            padding: 0 30px 0 0;
+            padding: 0 0 0 0;
             font-weight: 700;
-            font-size: 18px;
-            line-height: 160%;
+            font-size: 16px;
+            line-height: 140%;
             display: flex;
             align-items: center;
             letter-spacing: 0.02em;
@@ -446,6 +467,59 @@ export const theme = createTheme({
             }
             
           }
+        }`
+            : `.Toastify {
+              .Toastify__toast-container {
+                width: 480px;
+                top: 78px;
+              }
+              .Toastify__toast {
+                padding: 24px;
+                background: rgba(255, 255, 255, 0.9);            
+                border: 1px solid #EFF0F6;
+                box-shadow: 0px 10px 20px rgba(20, 20, 42, 0.05);
+                backdrop-filter: blur(80px);            
+                border-radius: 12px;
+                .error, .success {
+                  width: 38px;
+                  margin-right: 24px;
+                }
+                .toast-close {
+                  width: 24px;
+                }
+              }
+              .Toastify__toast-icon {
+                width: 38px;
+                margin-right: 24px;
+                svg {
+                  width: 28px;
+                  height: 28px;
+                  background: #fff;
+                  border-radius: 50%;
+                }
+              }
+              .Toastify__toast-body {
+                padding: 0 30px 0 0;
+                font-weight: 700;
+                font-size: 18px;
+                line-height: 160%;
+                display: flex;
+                align-items: center;
+                letter-spacing: 0.02em;
+                color: #14142A;
+              }
+              .Toastify__toast--error {
+                .success {
+                  display: none;
+                }
+              }
+              .Toastify__toast--success {
+                .error {
+                  display: none;
+                }
+                
+              }
+        }`
         }
         .MuiMenu-paper {
           box-shadow: 0px 0px 32px rgb(0 0 0 / 10%) !important;

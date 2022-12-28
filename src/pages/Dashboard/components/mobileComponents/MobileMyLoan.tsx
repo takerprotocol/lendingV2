@@ -64,6 +64,9 @@ const BorrowAPYBox = styled(Box)`
   padding: 1rem 1rem 0.25rem 1rem;
   margin-top: 1.5rem;
 `
+const Img = styled(`img`)`
+  margin-top: 0.0625rem;
+`
 const FooterBox = styled(Box)`
   background: #eff0f6;
   width: 100%;
@@ -75,7 +78,7 @@ const FooterBox = styled(Box)`
     content: '';
     display: block;
     position: absolute;
-    right: calc(50% - 6.5rem);
+    right: calc(50% - 7rem);
     bottom: calc(100%);
     border-width: 0.375rem 0.3125rem;
     border-style: dashed dashed solid dashed;
@@ -137,7 +140,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
           >
             <SpaceBetweenBox>
               <FlexBox
-                mt={myLoanType ? '0' : '0.5rem'}
+                mt={myLoanType ? (myLoanType && +ethDebt !== 0 ? '0' : '0.3125rem') : '0.5rem'}
                 onClick={() => {
                   setLoanType(!myLoanType)
                 }}
@@ -145,7 +148,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                 <Typography mr="0.25rem" variant="subtitle2" fontWeight="700">
                   My Loan
                 </Typography>
-                <img src={myLoanType ? mobileDown : mobileUp} alt="" />
+                <Img src={myLoanType ? mobileDown : mobileUp} alt="" />
               </FlexBox>
               {myLoanType && +ethDebt !== 0 && (
                 <ClaimBox>
@@ -167,7 +170,14 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                   </Typography>
                   <FlexBox>
                     <img src={mobileBlackEthLogo} alt="" />
-                    <Typography ml="0.25rem" variant="subtitle1" fontWeight="700">
+                    <Typography
+                      fontSize={fixedFormat(ethDebt).length > 10 ? '1rem' : '1.125rem'}
+                      width="7.0625rem"
+                      sx={{ textOverflow: 'ellipsis', maxWidth: '7.0625rem', overflow: 'hidden' }}
+                      ml="0.25rem"
+                      variant="subtitle1"
+                      fontWeight="700"
+                    >
                       {fixedFormat(ethDebt)}
                     </Typography>
                   </FlexBox>
@@ -226,7 +236,13 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                           strokeLinejoin="round"
                         />
                       </svg>
-                      <Typography ml="0.5rem" variant="h5">
+                      <Typography
+                        width="9.6875rem"
+                        sx={{ textOverflow: 'ellipsis', maxWidth: '9.6875rem', overflow: 'hidden' }}
+                        fontSize={fixedFormat(ethDebt).length > 10 ? '1rem' : '1.375rem'}
+                        ml="0.5rem"
+                        variant="h5"
+                      >
                         {fixedFormat(ethDebt)}
                       </Typography>
                     </FlexBox>
@@ -264,7 +280,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                       <Box m="0.5rem 0.5rem 0 0">
                         <FlexEndBox>
                           {/* <img width="16px" height="16px" src={mobilePrompt2} alt="" /> */}
-                          <TipsTooltip value="11"></TipsTooltip>
+                          <TipsTooltip size="16" value="11"></TipsTooltip>
                         </FlexEndBox>
                       </Box>
                     </RiskFlexBox>
@@ -297,12 +313,12 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                       <Box m="0.5rem 0.5rem 0 0">
                         <FlexEndBox>
                           {/* <img width="16px" height="16px" src={mobilePrompt2} alt="" /> */}
-                          <TipsTooltip value="11"></TipsTooltip>
+                          <TipsTooltip size="16" value="11"></TipsTooltip>
                         </FlexEndBox>
                         <Typography mt="-0.25rem" variant="body1" color="#6E7191" fontWeight="600">
                           {heath}%
                         </Typography>
-                        <Typography mr="0.5rem" variant="body2" color=" #A0A3BD" fontWeight="600">
+                        <Typography mr="0.4375rem" variant="body2" color=" #A0A3BD" fontWeight="600">
                           Collateralization
                         </Typography>
                       </Box>

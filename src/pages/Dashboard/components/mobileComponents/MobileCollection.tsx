@@ -5,7 +5,7 @@ import mobileCollateralRight from 'assets/images/svg/dashboard/mobileCollateralR
 import mobileCollateralRight2 from 'assets/images/svg/dashboard/mobileCollateralRight2.svg'
 import mobileCollateralDown from 'assets/images/svg/dashboard/mobileCollateralDown.svg'
 import mobileCollateralUp from 'assets/images/svg/dashboard/mobileCollateralUp.svg'
-import { CenterBox, FlexBox, SpaceBetweenBox } from 'styleds'
+import { FlexBox, SpaceBetweenBox } from 'styleds'
 import { useCallback, useState } from 'react'
 import { fromWei } from 'web3-utils'
 import { useNavigate } from 'react-router-dom'
@@ -123,7 +123,7 @@ export default function MobileCollection() {
             {collection.map((el: any, index: number) => (
               <CardBox key={`${el.id}collection`}>
                 <NftBox>
-                  {nftBalance(el.id) > 0 && (
+                  {address && nftBalance(el.id) > 0 && (
                     <LabelBox>
                       <Typography variant="body2" color="#ffffff" lineHeight="1.125rem" fontWeight="700">
                         Can Deposit
@@ -182,10 +182,12 @@ export default function MobileCollection() {
                     </FlexBox>
                     <Box sx={{ height: '2.375rem', width: '2.375rem', marginTop: '0.0625rem' }}>
                       <img
-                        src={address ? mobileCollateralRight : mobileCollateralRight2}
+                        src={address && nftBalance(el.id) > 0 ? mobileCollateralRight : mobileCollateralRight2}
                         alt=""
                         onClick={() => {
-                          navigate(`/deposit/${el.id}`)
+                          if (address && nftBalance(el.id) > 0) {
+                            navigate(`/deposit/${el.id}`)
+                          }
                         }}
                       />
                     </Box>
@@ -211,8 +213,8 @@ export default function MobileCollection() {
                         </Typography>
                       </SpaceBetweenBox>
                       <MyDepositedBox>
-                        <SpaceBetweenBox>
-                          <Box>
+                        <FlexBox>
+                          <Box mr="3.125rem">
                             <Typography
                               variant="body1"
                               color={+deposited(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
@@ -224,7 +226,7 @@ export default function MobileCollection() {
                               My Deposited
                             </Typography>
                           </Box>
-                          <Box mr="2.75rem">
+                          <Box>
                             <Typography
                               variant="body1"
                               color={+nftBalance(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
@@ -236,11 +238,12 @@ export default function MobileCollection() {
                               My Balance
                             </Typography>
                           </Box>
-                        </SpaceBetweenBox>
+                        </FlexBox>
                       </MyDepositedBox>
                     </Box>
                   )}
-                  <CenterBox
+                  <FlexBox
+                    ml="5.6875rem"
                     onClick={() => {
                       if (index === type) {
                         setType(null)
@@ -253,7 +256,7 @@ export default function MobileCollection() {
                       {index !== type ? 'Show Details' : 'Hide Details'}
                     </Typography>
                     <img src={index === type ? mobileCollateralUp : mobileCollateralDown} alt="" />
-                  </CenterBox>
+                  </FlexBox>
                 </NftFooterBox>
               </CardBox>
             ))}

@@ -47,7 +47,7 @@ const TopBox = styled(Box)`
 const BottomBox = styled(Box)`
   margin-left: 2.375rem;
   margin-right: 2.375rem;
-  margin-top: -0.75rem;
+  margin-top: -0.8125rem;
   background: #ffffff;
   box-shadow: 0px 0.9375rem 1.875rem rgba(20, 20, 42, 0.2);
   border-radius: 0.75rem;
@@ -118,9 +118,9 @@ export const SupplySpaceBetweenBox = styled(Box)`
 `
 const NetSupplyAPY = styled(FlexBox)`
   background: #f7f7fc;
-  border-radius: 6px;
+  border-radius: 0.375rem;
   width: 100%;
-  padding: 0.375rem;
+  padding: 0.4375rem;
   display: flex;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
@@ -281,10 +281,10 @@ export default function MobileMyAssetsModal({
                   </Typography>
                 ) : (
                   <Box mr="0.25rem">
-                    <Typography mr="0.375rem" variant="body2" color="rgba(255, 255, 255, 0.7)">
+                    <Typography mr="0.375rem" lineHeight="140%" variant="body2" color="rgba(255, 255, 255, 0.7)">
                       Used as&nbsp;
                     </Typography>
-                    <Typography mr="0.375rem" variant="body2" color="rgba(255, 255, 255, 0.7)">
+                    <Typography mr="0.375rem" lineHeight="140%" variant="body2" color="rgba(255, 255, 255, 0.7)">
                       Collateral
                     </Typography>
                   </Box>
@@ -309,7 +309,7 @@ export default function MobileMyAssetsModal({
               </Typography>
               <Box
                 className={borrowOrRepay === 1 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.375rem' }}
+                sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.3125rem' }}
               ></Box>
             </Box>
             <Box display={usedCollateral ? '' : 'none'}>
@@ -327,7 +327,7 @@ export default function MobileMyAssetsModal({
               </Typography>
               <Box
                 className={borrowOrRepay === 2 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.375rem' }}
+                sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.3125rem' }}
               ></Box>
             </Box>
           </SpaceBetweenBox>
@@ -443,10 +443,10 @@ export default function MobileMyAssetsModal({
                   </FlexBox>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Typography fontWeight="600" variant="body2" color="#A0A3BD">
-                      {heath}% {'>'}
+                      {Math.floor(Number(heath))}% {'>'}
                     </Typography>
                     <Typography ml="6px" variant="body2" fontWeight="700" color="#14142A">
-                      {amount ? collateralRiskLevel : heath}%
+                      {Math.floor(Number(amount ? collateralRiskLevel : heath))}%
                     </Typography>
                   </Box>
                 </SpaceBetweenBox>
@@ -454,13 +454,13 @@ export default function MobileMyAssetsModal({
             )}
           </Box>
           <NetSupplyAPY>
-            <Typography variant="body2" ml="4.625rem" fontWeight="600" color="#A0A3BD" lineHeight="0.75rem">
+            <Typography variant="body2" ml="4.25rem" fontWeight="600" color="#A0A3BD" lineHeight="0.75rem">
               Net Supply APY
             </Typography>
             <Typography mx="0.375rem" fontWeight="600" variant="body2" lineHeight="0.75rem">
               10%
             </Typography>
-            <TipsTooltip value="1234"></TipsTooltip>
+            <TipsTooltip size="14" value="1234"></TipsTooltip>
           </NetSupplyAPY>
           <Button
             disabled={buttonDisabled}
@@ -494,7 +494,7 @@ export default function MobileMyAssetsModal({
           {overSupply && (
             <Box mt="1rem">
               <FlexBox>
-                <Box mr="0.5rem" mt="-0.5625rem" pt="1px" height="2.375rem">
+                <Box mr="0.5rem" mt="-0.875rem" pt="1px" height="2.375rem">
                   <img src={redPrompt} alt="" />
                 </Box>
                 <Typography color="#E1536C" variant="body2">

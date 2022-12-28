@@ -1,5 +1,5 @@
 import { Box, Button, styled, Typography } from '@mui/material'
-import { FlexBox, SpaceBetweenBox } from 'styleds'
+import { SpaceBetweenBox } from 'styleds'
 import { NftTokenModel } from 'services/type/nft'
 import { Nft } from '@alch/alchemy-sdk'
 import MobileWithdrawSelectedModal from './MobileWithdrawSelectedModal'
@@ -8,12 +8,17 @@ import MobileSureModal from './MobileSureModal'
 
 const FooterBox = styled(Box)`
   margin-top: 1rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   background: #ffffff;
-  border: 1px solid #eff0f6;
+  border-top: 1px solid #eff0f6;
   padding: 0 -1rem;
-  padding: 1rem 1rem 2.25rem 1.5rem;
+  padding: 0 1rem 0 1.5rem;
   border-top-left-radius: 0.625rem;
   border-top-right-radius: 0.625rem;
+  transition: height 0.75s;
 `
 const ResetButton = styled(Box)`
   display: flex;
@@ -23,17 +28,6 @@ const WithdrawButton = styled(Box)`
   padding: 13px 16px;
   background: rgba(225, 83, 108, 0.1);
   border-radius: 6px;
-`
-const MobileAbsolute = styled(FlexBox)`
-  padding: 8px 8px 8px 16px;
-  background: rgba(225, 83, 108, 0.1);
-  backdrop-filter: blur(30px);
-  position: absolute;
-  border-radius: 4px;
-  bottom: 6.75rem;
-  right: 1rem;
-  left: 1rem;
-  display: none;
 `
 interface MobileFooterProps {
   type: number
@@ -66,27 +60,17 @@ export default function MobileFooter({
   }, [type])
   return (
     <FooterBox
+      sx={{
+        height: `${
+          mobileWithdrawCheckedIndex.length !== 0 || mobileDepositCheckedIndex.length !== 0 ? '101px' : '0px'
+        }`,
+      }}
       display={type === 1 ? (depositedList.length === 0 ? 'none' : '') : withdrawList.length === 0 ? 'none' : ''}
     >
-      <MobileAbsolute
-      // display={type === 2 && withdrawLargeAmount ? '' : 'none'}
-      >
-        <Typography variant="body2" fontWeight="600" mr="0.5rem" color="#E1536C">
-          The amount of withdraw is too large and it is easy to be liquidated
-        </Typography>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M14.4964 6.51071C14.7745 6.2326 14.7745 5.78169 14.4964 5.50357C14.2183 5.22546 13.7674 5.22546 13.4893 5.50357L10 8.99286L6.51071 5.50357C6.2326 5.22546 5.78169 5.22546 5.50357 5.50357C5.22546 5.78169 5.22546 6.2326 5.50357 6.51071L8.99286 10L5.50357 13.4893C5.22546 13.7674 5.22546 14.2183 5.50357 14.4964C5.78169 14.7745 6.2326 14.7745 6.51071 14.4964L10 11.0071L13.4893 14.4964C13.7674 14.7745 14.2183 14.7745 14.4964 14.4964C14.7745 14.2183 14.7745 13.7674 14.4964 13.4893L11.0071 10L14.4964 6.51071Z"
-            fill="#E1536C"
-          />
-        </svg>
-      </MobileAbsolute>
-      <SpaceBetweenBox>
+      <SpaceBetweenBox m="1rem 0 2.25rem 0">
         <ResetButton
           onClick={() => {
             setOpenSureModal(true)
-            setMobileWithdrawCheckedIndex([])
-            setMobileDepositCheckedIndex([])
           }}
         >
           <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">

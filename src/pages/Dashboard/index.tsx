@@ -39,8 +39,8 @@ const Main = styled(Box)`
   margin-bottom: 80px;
 `
 const MobileBody = styled(Box)`
-  background: #f7f7fc, url(${BgIcon});
-  background-size: 100% 49.75rem;
+  background-color: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6));
+  background-size: 100% 32rem;
   background-repeat: no-repeat;
 `
 const MobileMain = styled(Box)`
@@ -48,16 +48,22 @@ const MobileMain = styled(Box)`
   margin: 0 auto;
 `
 const MenuBg = styled(Box)`
-  backdrop-filter: blur(75px);
+  position: absolute;
+  -webkit-backdrop-filter: blur(150px);
+  backdrop-filter: blur(150px);
   width: 100wh;
+  padding-top: 58px;
   height: 100vh;
+  top: 0;
+  left: 0;
+  width: 100%;
 `
 const ConnectWalletBox = styled(Box)`
   background: linear-gradient(95.08deg, #7646ff 2.49%, #297ac9 49.84%, #00dfd2 97.19%);
   box-shadow: 0px 0.5rem 1rem rgba(40, 127, 202, 0.2), inset 0px 0.125rem 0.125rem rgba(255, 255, 255, 0.1);
   border-radius: 1.6875rem;
   padding: 0.875rem;
-  margin: 1rem 1rem 0 1rem;
+  margin: 1.5rem 1rem 0 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,16 +114,16 @@ export default function Dashboard() {
       ) : (
         <MobileBody
           pt="3.625rem"
+          height={mobileMenuType ? '100%' : '100vh'}
           sx={{ backgroundImage: `${type === 1 ? `url(${MobileBgIcon})` : `url(${MobileGrowthBg})`}` }}
         >
           <MobileMain>
-            {mobileMenuType ? (
-              <>
-                <MobileBlueChipNFts></MobileBlueChipNFts>
-                <MobileMyAssets></MobileMyAssets>
-                <MobileCollection></MobileCollection>
-              </>
-            ) : (
+            <>
+              <MobileBlueChipNFts></MobileBlueChipNFts>
+              <MobileMyAssets></MobileMyAssets>
+              <MobileCollection></MobileCollection>
+            </>
+            {!mobileMenuType && (
               <MenuBg>
                 {loginWalletType ? (
                   <>

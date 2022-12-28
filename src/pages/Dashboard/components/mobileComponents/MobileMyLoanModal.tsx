@@ -185,8 +185,10 @@ const NetBorrowAPY = styled(Box)`
   background: #f7f7fc;
   border-radius: 6px;
   width: 100%;
+  display: flex;
   padding: 0.375rem 0;
   display: flex;
+  justify-content: center;
   align-items: center;
   margin-top: 1.625rem;
 `
@@ -489,13 +491,19 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
               <Typography variant="body1" fontWeight="600" color="#A0A3BD">
                 {new BigNumber(borrowLimitUsed).toFixed(2, 1)}% {'>'}
               </Typography>
-              <Typography ml="0.375rem" variant="body1" fontWeight="700" color="#14142A">
-                {new BigNumber(upBorrowLimitUsed).toFixed(2, 1)}%
-              </Typography>
+              {new BigNumber(new BigNumber(upBorrowLimitUsed).toFixed(2, 1)).gt(100) ? (
+                <Typography ml="0.375rem" variant="body1" fontWeight="700" color="#14142A">
+                  {new BigNumber(upBorrowLimitUsed).toFixed(2, 1)}%
+                </Typography>
+              ) : (
+                <Typography ml="0.375rem" color="#E1536C" variant="body1" fontWeight="700">
+                  100%+
+                </Typography>
+              )}
             </FlexBox>
           </SpaceBetweenBox>
           <NetBorrowAPY>
-            <Typography ml="4.5625rem" variant="body2" fontWeight="600" color="#A0A3BD" lineHeight="0.75rem">
+            <Typography variant="body2" fontWeight="600" color="#A0A3BD" lineHeight="0.75rem">
               Net Borrow APY
             </Typography>
             <Typography mx="0.375rem" fontWeight="600" variant="body2" lineHeight="0.75rem">
@@ -504,8 +512,8 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
             <TipsTooltip value="1122"></TipsTooltip>
           </NetBorrowAPY>
           <Button
-            disabled={buttonDisabled}
-            color={new BigNumber(debtRiskLevel).lt(110) ? 'error' : 'primary'}
+            disabled={Number(amount) === 0 || buttonDisabled}
+            color={new BigNumber(debtRiskLevel).lt(110) && check === 1 ? 'error' : 'primary'}
             variant="contained"
             sx={{ width: '100%', height: '3rem', marginTop: '0.5rem' }}
             onClick={() => {
@@ -520,7 +528,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
           >
             {check === 1 ? 'Borrow' : 'Repay'}
           </Button>
-          {new BigNumber(debtRiskLevel).lt(110) && (
+          {new BigNumber(debtRiskLevel).lt(110) && check === 1 && (
             <StartBox>
               <Box mt="0.125rem" mr="0.5rem">
                 <img src={redPrompt} alt="" />

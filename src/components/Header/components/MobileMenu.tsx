@@ -53,7 +53,7 @@ export default function MobileMenu() {
           }}
         >
           <img src={mobileBlueChipIcon} alt="" />
-          <Typography ml="0.25rem" variant="body1" fontWeight="600">
+          <Typography ml="0.25rem" mr="0.375rem" variant="body1" fontWeight="600">
             Blue Chip NFTs
           </Typography>
         </ButtonBox>
@@ -65,7 +65,7 @@ export default function MobileMenu() {
           }}
         >
           <img src={mobileGrowthIcon} alt="" />
-          <Typography ml="0.25rem" mr="0.75rem" variant="body1" fontWeight="600">
+          <Typography ml="0.25rem" mr="1.125rem" variant="body1" fontWeight="600">
             Growth NFTs
           </Typography>
         </ButtonBox>

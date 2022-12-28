@@ -63,15 +63,21 @@ const ConnectWalletBox = styled(Box)`
   box-shadow: 0px 0.5rem 1rem rgba(40, 127, 202, 0.2), inset 0px 0.125rem 0.125rem rgba(255, 255, 255, 0.1);
   border-radius: 1.6875rem;
   padding: 0.875rem;
-  margin: 1rem 1rem 0 1rem;
+  margin: 1.5rem 1rem 0 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
 `
 const MenuBg = styled(Box)`
+  position: absolute;
   backdrop-filter: blur(150px);
+  -webkit-backdrop-filter: blur(150px);
   width: 100wh;
+  padding-top: 58px;
   height: 100vh;
+  top: 0;
+  left: 0;
+  width: 100%;
 `
 export default function Liquidation() {
   const mobileMenuType = useMobileMenuType()
@@ -228,39 +234,36 @@ export default function Liquidation() {
           />
         </Body>
       ) : (
-        <MobileBody>
-          {mobileMenuType ? (
-            <Box p="0 1rem">
-              <MobileHeader></MobileHeader>
-              {loading ? (
-                <MobileCollateralSkeleton></MobileCollateralSkeleton>
+        <MobileBody height={mobileMenuType ? '100%' : '100vh'}>
+          <Box p="0 1rem">
+            <MobileHeader></MobileHeader>
+            {loading ? (
+              <MobileCollateralSkeleton></MobileCollateralSkeleton>
+            ) : (
+              <MobileCollateral
+                sort={sort}
+                setSort={setSort}
+                debtFilter={debtFilter}
+                setDebtFilter={setDebtFilter}
+                collectionFilter={collectionFilter}
+                setCollectionFilter={setCollectionFilter}
+                searchTerms={searchTerms}
+                setSearchTerms={setSearchTerms}
+                collaterals={collaterals}
+              ></MobileCollateral>
+            )}
+          </Box>
+          {!mobileMenuType && (
+            <MenuBg>
+              {loginWalletType ? (
+                <>
+                  <MobileMenu></MobileMenu>
+                  {address ? <WalletMessage></WalletMessage> : <>{ConnectWallet()}</>}
+                </>
               ) : (
-                <MobileCollateral
-                  sort={sort}
-                  setSort={setSort}
-                  debtFilter={debtFilter}
-                  setDebtFilter={setDebtFilter}
-                  collectionFilter={collectionFilter}
-                  setCollectionFilter={setCollectionFilter}
-                  searchTerms={searchTerms}
-                  setSearchTerms={setSearchTerms}
-                  collaterals={collaterals}
-                ></MobileCollateral>
+                <WalletModal></WalletModal>
               )}
-            </Box>
-          ) : (
-            <Box sx={{ minHeight: '41.6875rem' }} p="3.625rem 0 0rem 0">
-              <MenuBg>
-                {loginWalletType ? (
-                  <>
-                    <MobileMenu></MobileMenu>
-                    {address ? <WalletMessage></WalletMessage> : <>{ConnectWallet()}</>}
-                  </>
-                ) : (
-                  <WalletModal></WalletModal>
-                )}
-              </MenuBg>
-            </Box>
+            </MenuBg>
           )}
         </MobileBody>
       )}

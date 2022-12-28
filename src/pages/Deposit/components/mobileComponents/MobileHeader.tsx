@@ -281,7 +281,7 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
           )}
           <ShowDetailButton onClick={() => setDetails(!details)}>
             <Typography variant="body2" color="#A0A3BD" fontWeight="500">
-              Show Details
+              {!details ? 'Show Details' : 'Hide Details'}
             </Typography>
             {details ? (
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">

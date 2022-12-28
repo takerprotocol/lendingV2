@@ -4,6 +4,8 @@ import { Nft } from '@alch/alchemy-sdk'
 import { SpaceBetweenBox, FlexBox, CenterBox } from 'styleds'
 import { NftTokenModel } from 'services/type/nft'
 import BigNumber from 'bignumber.js'
+import depositNotChecked_Icon from 'assets/images/svg/deposit/depositNotChecked_Icon.svg'
+import depositChecked_Icon from 'assets/images/svg/deposit/depositChecked_Icon.svg'
 
 const DepositBox = styled(Box)`
   background: #ffffff;
@@ -24,11 +26,17 @@ const NameBox = styled(Box)`
   display: flex;
   align-items: flex-start;
 `
+const DepositCheckbox = styled(Checkbox)`
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.8125rem;
+`
 const ImgBox = styled(`img`)`
   width: 3rem;
   height: 3rem;
   margin-right: 0.5rem;
   border-radius: 0.25rem;
+  margin-bottom: 0.125rem;
 `
 const MaxBox = styled(Box)`
   background: #4e4b66;
@@ -65,7 +73,13 @@ export default function MobileDeposit({
     <DepositBox>
       <SpaceBetweenBox>
         <Typography variant="subtitle2">You Can Deposit</Typography>
-        <Typography display={depositedList.length === 0 ? 'none' : ''} variant="body2" fontWeight="600" color="#a0a3bd">
+        <Typography
+          mt="0.125rem"
+          display={depositedList.length === 0 ? 'none' : ''}
+          variant="body2"
+          fontWeight="600"
+          color="#a0a3bd"
+        >
           {depositedList.length} NFTs / {amount} ETH
         </Typography>
       </SpaceBetweenBox>
@@ -77,8 +91,11 @@ export default function MobileDeposit({
               key={`nft${TypeKey}-${el.tokenId}`}
             >
               <FlexBox>
-                <Checkbox
+                <DepositCheckbox
+                  sx={{ marginTop: `${mobileDepositCheckedIndex.includes(el.tokenId) ? '0.375rem' : '0'}` }}
                   checked={mobileDepositCheckedIndex.includes(el.tokenId)}
+                  checkedIcon={<img src={depositChecked_Icon} alt="" />}
+                  icon={<img src={depositNotChecked_Icon} alt="" />}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     if (event.target.checked) {
                       setMobileDepositCheckedIndex([...mobileDepositCheckedIndex, el.tokenId])
@@ -86,7 +103,7 @@ export default function MobileDeposit({
                       setMobileDepositCheckedIndex(mobileDepositCheckedIndex.filter((cel) => cel !== el.tokenId))
                     }
                   }}
-                ></Checkbox>
+                />
                 <Box>
                   <NameBox>
                     <ImgBox src={el.media[0]?.gateway || ''} alt={`nft-${el.title}`}></ImgBox>
@@ -95,7 +112,7 @@ export default function MobileDeposit({
                     </Typography>
                   </NameBox>
                   {el.tokenType === 'ERC1155' && (
-                    <FlexBox mt="1rem">
+                    <FlexBox mt="0.875rem">
                       <InputBox>
                         <TextField variant="outlined" />
                         <Typography ml="6px" component="span" variant="body1" color="#A0A3BD">

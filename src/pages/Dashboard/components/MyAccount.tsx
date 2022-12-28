@@ -8,8 +8,9 @@ import MyAccountSkeleton from './DashboardSkeleton/MyAccountSkeleton'
 import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress, useWalletBalance } from 'state/user/hooks'
+import { useAddress, useEthLiquidity, useUserValue } from 'state/user/hooks'
 import TipsTooltip from './TipsTooltip'
+import { fixedFormat, plus } from 'utils'
 
 const MyAccountBox = styled(Box)`
   width: 716px;
@@ -36,7 +37,8 @@ interface MyAccountProps {
   type: number
 }
 export default function MyAccount({ type }: MyAccountProps) {
-  const balance = useWalletBalance()
+  const ethLiquidity = useEthLiquidity()
+  const userValue = useUserValue()
   const [loading, setLoading] = useState(true)
   const address = useAddress()
   // const [userValues, setUserValues] = useState<BigNumber>(new BigNumber(0))
@@ -84,7 +86,7 @@ export default function MyAccount({ type }: MyAccountProps) {
               <CenterBox>
                 <img src={blackEthLogo} alt="" />
                 <Typography ml="8px" variant="h3" fontSize="32px" lineHeight="51px">
-                  {balance}
+                  {fixedFormat(plus(userValue.NFTLiquidity, ethLiquidity))}
                 </Typography>
               </CenterBox>
               <FlexBox mt="-15px">
