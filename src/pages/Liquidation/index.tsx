@@ -142,7 +142,7 @@ export default function Liquidation() {
   }, [sort])
   const searchValue = useMemo(() => {
     if (searchTerms.length !== 0) {
-      return `collections_: {collection_contains: "${searchTerms[0].toLowerCase()}"}`
+      return `collections_: {collection_contains_nocase: "${searchTerms[0].toLowerCase()}"}`
     } else {
       return ''
     }
@@ -164,9 +164,12 @@ export default function Liquidation() {
     } else if (collectionFilter === 0) {
       return [...conditionDebtFilter]
     } else if (debtFilter === 0) {
-      return [`collections_: {collection_contains: "${collection[collectionFilter - 1].id}"}`]
+      return [`collections_: {collection_contains_nocase: "${collection[collectionFilter - 1].id}"}`]
     } else {
-      return [`collections_: {collection_contains: "${collection[collectionFilter - 1].id}"}`, ...conditionDebtFilter]
+      return [
+        `collections_: {collection_contains_nocase: "${collection[collectionFilter - 1].id}"}`,
+        ...conditionDebtFilter,
+      ]
     }
   }, [collection, collectionFilter, conditionDebtFilter, debtFilter])
   useEffect(() => {

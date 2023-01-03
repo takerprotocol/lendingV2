@@ -120,10 +120,9 @@ export const AllUser = (
   conditionSort: Array<string>,
   allUserWhere: Array<string>
 ) => {
-  // users(skip: 0, limit: 2, where: {collections: {collection: {id: "0x01"}}},${searchValue}orderBy: ${
   const queryString = `
     query users ($skip: Int, $limit: Int) {
-    users(skip: 0, limit: 10, where: {${healthFactor}${[...allUserWhere]}},${searchValue}orderBy: ${
+    users(skip: 0, limit: 10, where: {${healthFactor}${[...allUserWhere]},${searchValue}},orderBy: ${
     conditionSort[0]
   }, orderDirection: ${conditionSort[1]}) {
         id
@@ -151,7 +150,7 @@ export const AllUser = (
         }
         collections {
           id
-          collection(id: "0x9b73acc52a3c6ba40c2296362f5d89bf8731a76f") {
+          collection {
             id
             tNFT
             ercType
