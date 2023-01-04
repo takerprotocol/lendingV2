@@ -3,11 +3,11 @@ import { FlexBox, SpaceBetweenBox } from 'styleds'
 import mobileCollaterals from 'assets/images/svg/liquidation/mobileCollaterals-bg.svg'
 import SortIcon from 'assets/images/svg/liquidation/mobileSort-icon.svg'
 import FilterIcon from 'assets/images/svg/liquidation/mobileFilter-icon.svg'
-import { CollateralModel } from 'services/type/nft'
+import { CollateralModel, CollectionsModel } from 'services/type/nft'
 import { useAppDispatch } from 'state/hooks'
 import MobileCollateralList from './MobileCollateralList'
 import MobileCollateralPagination from './MobileCollateralPagination'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import MobileCollateralsSort from './MobileCollateralsSort'
 import MobileFilterModal from './MobileFilterModal'
 import MobileCollateralsType from './MobileCollateralsType'
@@ -20,7 +20,7 @@ const MobileCollateralBox = styled(Box)`
   background-repeat: no-repeat;
   background-size: 100%;
   border-radius: 0.75rem;
-  padding: 1rem 0 2.375rem 0;
+  padding: 1.7188rem 0 2.375rem 0;
 `
 const CollateralsTypography = styled(Typography)`
   font-weight: 700;
@@ -39,6 +39,7 @@ const SortAndFilterBox = styled(SpaceBetweenBox)`
 `
 const ValueBox = styled(SpaceBetweenBox)`
   width: 6.875rem;
+  margin-left: 0.375rem;
   padding: 0.25rem 0.25rem 0.25rem 0.75rem;
   background: rgba(217, 219, 233, 0.3);
   border-radius: 0.375rem;
@@ -56,7 +57,7 @@ const ValueTypography = styled(Typography)`
   color: #14142a;
 `
 const SearchInput = styled(`input`)`
-  width: 6.375rem;
+  max-width: 6.375rem;
   height: 1.375rem;
   margin-left: 0.375rem;
   font-family: 'Quicksand';
@@ -150,13 +151,6 @@ export default function MobileCollateral({
         return 'Default Sort'
     }
   }, [sort])
-  useEffect(() => {
-    if (!(sort === 5 || sort === 6)) {
-      if (collateralsType !== 'All Borrowers') {
-        dispatch(setCollateralsType('All Borrowers'))
-      }
-    }
-  }, [collateralsType, dispatch, sort])
   function resetFilters() {
     setSort(0)
     setDebtFilter(0)
@@ -174,32 +168,51 @@ export default function MobileCollateral({
     }
     return count
   }, [collectionFilter, debtFilter])
+  const CollateralList = useMemo(() => {
+    return (
+      collaterals
+        // .filter(collectionsFilterFunction)
+        // .filter(deptFilterFunction)
+        // .sort(sortOptionsFunction)
+        // .slice(+times(minus(currentPage, 1), 16), +currentPageIndex)
+        .map((collateral: any, index: number) => {
+          const nfts = collateral.collections.reduce(
+            (acc: any, current: CollectionsModel) => acc + current.tokens.length,
+            0
+          )
+          return (
+            <MobileCollateralList
+              key={`collateral-${JSON.stringify(collateral)}${index}`}
+              {...collateral}
+              nfts={nfts}
+            />
+          )
+        })
+    )
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [collaterals, collectionFilter, debtFilter, sort, searchTerms])
   return (
     <MobileCollateralBox>
       <Box m="0 1rem">
-        <SpaceBetweenBox mb="0.5rem">
+        <SpaceBetweenBox mb="1.1875rem">
           <FlexBox
             onClick={(event: any) => {
-              if (sort === 5 || sort === 6) {
-                handleClickCollaterals(event)
-              }
+              handleClickCollaterals(event)
             }}
             ml="0.5rem"
           >
             <CollateralsTypography>{collateralsType}</CollateralsTypography>
-            {(sort === 5 || sort === 6) && (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M17 10.5L12 15.5L7 10.5"
-                  stroke="#14142A"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            )}
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M17 10.5L12 15.5L7 10.5"
+                stroke="#14142A"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </FlexBox>
-          <FlexBox mr={search ? '' : '0.5rem'}>
+          <FlexBox mr={!searchType ? `${searchValue === '' ? '0.5rem' : '0'}` : '0'}>
             <svg
               onClick={() => {
                 setSearch(true)
@@ -216,22 +229,47 @@ export default function MobileCollateral({
               />
             </svg>
             {search && (
-              <SearchInput
-                value={searchValue}
-                placeholder={'Search address'}
-                onChange={handleSearch}
-                autoFocus={true}
-                onFocus={handleSearch}
-                onBlur={() => {
-                  handleAddSearchTerm(searchValue)
-                }}
-                onKeyDown={(e: any) => {
-                  if (e.code === 'Tab' || e.code === 'Enter') {
-                    handleAddSearchTerm(searchValue)
-                    e.target.blur()
-                  }
-                }}
-              />
+              <>
+                <SearchInput
+                  value={searchValue}
+                  placeholder={'Search address'}
+                  sx={{
+                    width: `${searchValue === '' ? '6.375rem' : '5.375rem'}`,
+                    marginRight: `${searchValue === '' ? 0 : '0.375rem'}`,
+                  }}
+                  onChange={handleSearch}
+                  autoFocus={true}
+                  onFocus={handleSearch}
+                  // onBlur={() => {
+                  //   handleAddSearchTerm(searchValue)
+                  // }}
+                  onKeyDown={(e: any) => {
+                    if (e.code === 'Tab' || e.code === 'Enter') {
+                      handleAddSearchTerm(searchValue)
+                      e.target.blur()
+                    }
+                  }}
+                />
+                {searchValue && (
+                  <svg
+                    onClick={() => {
+                      setSearchValue('')
+                      setSearch(false)
+                    }}
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect width="18" height="18" rx="9" fill="#D9DBE9" fillOpacity="0.5" />
+                    <path
+                      d="M13.0468 5.85964C13.2971 5.60934 13.2971 5.20352 13.0468 4.95321C12.7965 4.70291 12.3907 4.70291 12.1404 4.95321L9 8.09357L5.85964 4.95321C5.60934 4.70291 5.20352 4.70291 4.95321 4.95321C4.70291 5.20352 4.70291 5.60934 4.95321 5.85964L8.09357 9L4.95321 12.1404C4.70291 12.3907 4.70291 12.7965 4.95321 13.0468C5.20352 13.2971 5.60934 13.2971 5.85964 13.0468L9 9.90643L12.1404 13.0468C12.3907 13.2971 12.7965 13.2971 13.0468 13.0468C13.2971 12.7965 13.2971 12.3907 13.0468 12.1404L9.90643 9L13.0468 5.85964Z"
+                      fill="#A0A3BD"
+                    />
+                  </svg>
+                )}
+              </>
             )}
             {searchType && (
               <ValueBox
@@ -321,9 +359,7 @@ export default function MobileCollateral({
       </Box>
       {collaterals.length !== 0 ? (
         <>
-          {collaterals.map((el: any, index: number) => (
-            <MobileCollateralList {...el} key={`collateral-${JSON.stringify(el)}${index}`}></MobileCollateralList>
-          ))}
+          {CollateralList}
           <MobileCollateralPagination collaterals={collaterals} onPageSelect={(number: number) => null} />
         </>
       ) : (

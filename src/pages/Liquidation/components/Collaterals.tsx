@@ -508,37 +508,33 @@ const Collaterals = ({
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               onClick={(event: any) => {
-                if (sort === 5 || sort === 6) {
-                  handleClick(event)
-                }
+                handleClick(event)
               }}
             >
               <CollateralSelectText mr="8px">{collateralsType}</CollateralSelectText>
-              {(sort === 5 || sort === 6) && (
-                <>
-                  {open ? (
-                    <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M18 17L11 10L4 17"
-                        stroke="#14142A"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  ) : (
-                    <svg width="18" height="11" viewBox="0 0 18 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M16 2L9 9L2 2"
-                        stroke="#14142A"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                </>
-              )}
+              <>
+                {open ? (
+                  <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M18 17L11 10L4 17"
+                      stroke="#14142A"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ) : (
+                  <svg width="18" height="11" viewBox="0 0 18 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M16 2L9 9L2 2"
+                      stroke="#14142A"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </>
             </FlexBox>
             <InputContainer>
               {searchTerms[0] !== '' && (

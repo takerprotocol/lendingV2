@@ -6,7 +6,7 @@ import rightIcon from 'assets/images/svg/common/right.svg'
 import loanModalBefore from 'assets/images/svg/dashboard/loanModal-before.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal } from 'utils'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal, minus } from 'utils'
 import {
   useAddress,
   useBorrowLimit,
@@ -207,11 +207,20 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
       return upBorrowLimitUsed
     }
   }, [upBorrowLimitUsed])
+  const bef = useMemo(() => {
+    if (new BigNumber(beforeValue).gte(96)) {
+      return 96
+    } else if (new BigNumber(beforeValue).lte(0)) {
+      return 0
+    } else {
+      return beforeValue
+    }
+  }, [beforeValue])
   const BeforeImg = styled('img')`
     position: absolute;
     display: block;
     top: calc(100% - 10.5px);
-    left: ${`${times(3.56, beforeValue)}px`};
+    left: ${`${times(bef, 1)}%`};
   `
   useEffect(() => {
     setCheck(repayRoBorrow)
@@ -277,8 +286,21 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
     return check === 1 ? !amount || new BigNumber(amount).gt(borrowLimit) : !amount || new BigNumber(amount).gt(ethDebt)
   }, [amount, borrowLimit, check, ethDebt])
   useEffect(() => {
-    setAmount(new BigNumber(borrowLimit).times(new BigNumber(slider).div(100)).toFixed(2, 1))
-  }, [borrowLimit, slider])
+    const count = new BigNumber(borrowLimit).times(new BigNumber(slider).div(100)).toFixed(2, 1)
+    if (check === 1) {
+      if (new BigNumber(count).gte(minus(borrowLimit, ethDebt))) {
+        setAmount(Number(minus(borrowLimit, ethDebt)).toFixed(2))
+      } else {
+        setAmount(count)
+      }
+    } else {
+      if (new BigNumber(count).gte(ethDebt)) {
+        setAmount(ethDebt)
+      } else {
+        setAmount(count)
+      }
+    }
+  }, [borrowLimit, check, ethDebt, slider])
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -302,8 +324,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 sx={{ display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }}
                 mr="8px"
                 onClick={() => {
-                  onClose(false)
                   setAmount('')
+                  onClose(false)
                 }}
               >
                 <img src={greyShutOff} alt="" />
@@ -342,8 +364,9 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                   variant="subtitle1"
                   color={check === 1 ? '#FFFFFF' : '#A0A3BD'}
                   onClick={() => {
-                    setCheck(1)
                     setAmount('')
+                    setCheck(1)
+                    setSlider(0)
                   }}
                 >
                   Borrow
@@ -358,8 +381,9 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                   variant="subtitle1"
                   color={check === 2 ? '#FFFFFF' : '#A0A3BD'}
                   onClick={() => {
-                    setCheck(2)
                     setAmount('')
+                    setSlider(0)
+                    setCheck(2)
                   }}
                 >
                   Repay

@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import loanModalBefore from 'assets/images/svg/dashboard/loanModal-before.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal } from 'utils'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal, minus } from 'utils'
 import {
   useAddress,
   useBorrowLimit,
@@ -156,7 +156,7 @@ const BorrowAmountBox = styled(Box)`
   border-radius: 0.5rem;
   padding: 0 1rem 1rem 1rem;
   position: relative;
-  margin-bottom: 0.3125rem;
+  margin-bottom: 0.6875rem;
   &.left {
     border-bottom-left-radius: 0px !important;
   }
@@ -225,11 +225,20 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
       return upBorrowLimitUsed
     }
   }, [upBorrowLimitUsed])
+  const bef = useMemo(() => {
+    if (new BigNumber(beforeValue).gte(94)) {
+      return 94
+    } else if (new BigNumber(beforeValue).lte(0)) {
+      return 0
+    } else {
+      return beforeValue
+    }
+  }, [beforeValue])
   const BeforeImg = styled('img')`
     position: absolute;
     display: block;
     top: calc(100% - 10.5px);
-    left: ${`${times(beforeValue, 0.156875)}rem`};
+    left: ${`${times(bef, 1)}%`};
   `
   useEffect(() => {
     setCheck(repayRoBorrow)
@@ -294,8 +303,21 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
     return check === 1 ? !amount || new BigNumber(amount).gt(borrowLimit) : !amount || new BigNumber(amount).gt(ethDebt)
   }, [amount, borrowLimit, check, ethDebt])
   useEffect(() => {
-    setAmount(new BigNumber(borrowLimit).times(new BigNumber(slider).div(100)).toFixed(2, 1))
-  }, [borrowLimit, slider])
+    const count = new BigNumber(borrowLimit).times(new BigNumber(slider).div(100)).toFixed(2, 1)
+    if (check === 1) {
+      if (new BigNumber(count).gte(minus(borrowLimit, ethDebt))) {
+        setAmount(Number(minus(borrowLimit, ethDebt)).toFixed(2))
+      } else {
+        setAmount(count)
+      }
+    } else {
+      if (new BigNumber(count).gte(ethDebt)) {
+        setAmount(ethDebt)
+      } else {
+        setAmount(count)
+      }
+    }
+  }, [borrowLimit, check, ethDebt, slider])
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -358,6 +380,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
                   onClick={() => {
                     setCheck(1)
                     setAmount('')
+                    setSlider(0)
                   }}
                 >
                   Borrow
@@ -373,6 +396,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
                   onClick={() => {
                     setCheck(2)
                     setAmount('')
+                    setSlider(0)
                   }}
                 >
                   Repay
@@ -387,7 +411,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
         </TopBox>
         <BottomBox>
           <BorrowAmountBox
-            className={new BigNumber(beforeValue).gte(99) ? 'right' : new BigNumber(beforeValue).lte(1) ? 'left' : ''}
+            className={new BigNumber(beforeValue).gte(96) ? 'right' : new BigNumber(beforeValue).lte(1) ? 'left' : ''}
           >
             <SpaceBetweenBox sx={{ alignItems: 'flex-start' }}>
               <Box width="9rem" mt="1rem">
@@ -426,7 +450,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <MAXBox
                       onClick={() => {
-                        setAmount(fixedFormat(ethDebt))
+                        setAmount(ethDebt)
                       }}
                     >
                       <Typography variant="body2">MAX</Typography>

@@ -8,6 +8,8 @@ import { FlexBox, SpaceBetweenBox } from 'styleds'
 import MobileNFTCollateralsSkeleton from '../mobileLiquidateSkeleton/MobileNFTCollateralsSkeleton'
 import MobileCollateralsSortModal from './MobileCollateralsSortModal'
 import MobileFilterModal from './MobileFilterModal'
+import depositNotChecked_Icon from 'assets/images/svg/deposit/depositNotChecked_Icon.svg'
+import depositChecked_Icon from 'assets/images/svg/deposit/depositChecked_Icon.svg'
 
 const MobileNFTCollateralsBox = styled(Box)`
   background: #ffffff;
@@ -52,7 +54,7 @@ const ImgBox = styled(`img`)`
 const RadiusImg = styled(`img`)`
   width: 1rem;
   height: 1rem;
-  margin-right: 0.375
+  margin-right: 0.375;
   border-radius: 100%;
 `
 const InputBox = styled(FlexBox)`
@@ -89,8 +91,7 @@ const StyleTextField = styled('input')`
 const SortAndFilterBox = styled(SpaceBetweenBox)`
   background: #f7f7fc;
   border-radius: 0.625rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   padding: 0.75rem 0.5rem;
 `
 const SortTypography = styled(Typography)`
@@ -129,7 +130,7 @@ export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsPr
         <MobileNFTCollateralsSkeleton></MobileNFTCollateralsSkeleton>
       ) : (
         <>
-          <Typography mb="0.5rem" variant="subtitle2">
+          <Typography mb="1rem" variant="subtitle2">
             37 NFT Collaterals
           </Typography>
           {list.length > 9 && (
@@ -194,8 +195,10 @@ export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsPr
             <CardBox className={checkboxType.includes(el) ? 'isCheck' : ' '} key={index}>
               <FlexBox>
                 <StyleCheckbox
+                  sx={{ marginTop: `${checkboxType.includes(el) ? '0.375rem' : '0'}` }}
                   checked={checkboxType.includes(el)}
-                  // checkedIcon={<img src={nftListCheckbox} alt="" />}
+                  checkedIcon={<img src={depositChecked_Icon} alt="" />}
+                  icon={<img src={depositNotChecked_Icon} alt="" />}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     if (event.target.checked) {
                       setCheckboxType([...checkboxType, el])

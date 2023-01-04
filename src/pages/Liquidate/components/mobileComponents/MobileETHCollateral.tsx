@@ -1,5 +1,5 @@
 import { Box, styled, Typography } from '@mui/material'
-import { SpaceBetweenBox, FlexBox, FlexEndBox } from 'styleds'
+import { SpaceBetweenBox, SpaceBox, FlexBox, FlexEndBox } from 'styleds'
 import MobileETHCollateralSkeleton from '../mobileLiquidateSkeleton/MobileETHCollateralSkeleton'
 
 const MobileETHCollateralBox = styled(Box)`
@@ -17,8 +17,8 @@ const AmountBox = styled(Box)`
   margin: 1.5rem 0 1rem 0;
 `
 const ProfitableBox = styled(Box)`
-  padding: 0.125rem 0.375rem;
-  border: 2px solid rgba(118, 70, 255, 0.5);
+  padding: 0.1875rem 0.4375rem;
+  border: 0.0625rem solid rgba(118, 70, 255, 0.5);
   border-radius: 0.125rem;
   margin-left: 0.5rem;
 `
@@ -43,8 +43,8 @@ const SubtotalStrikeThroughValue = styled(Typography)`
   color: #a0a3bd;
 `
 const StyleTextField = styled('input')`
-  font-size: 1.75rem;
-  margin-left: 0.25rem;
+  font-size: 1.375rem;
+  margin-left: 0.125rem;
   outline: none;
   border: 0;
   line-height: 130%;
@@ -88,7 +88,7 @@ export default function MobileETHCollateral({ loading }: MobileETHCollateralProp
             </ProfitableBox>
           </FlexBox>
           <AmountBox>
-            <SpaceBetweenBox>
+            <SpaceBox>
               <Box mb="0.5rem">
                 <Typography variant="body2" mb="0.5rem" lineHeight="0.75rem" fontWeight="600" color="#1F1D23">
                   Liquidation amount
@@ -129,7 +129,7 @@ export default function MobileETHCollateral({ loading }: MobileETHCollateralProp
                   117.5789 ETH
                 </Typography>
               </Box>
-            </SpaceBetweenBox>
+            </SpaceBox>
             <Typography display="none" variant="body2" fontWeight="600" color="#E1536C">
               Maximum value exceeded
             </Typography>

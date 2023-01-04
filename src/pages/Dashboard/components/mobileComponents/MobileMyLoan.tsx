@@ -20,7 +20,6 @@ const MyAssetsBox = styled(Box)`
   border-radius: 0.75rem;
   .loanButton {
     padding: 0;
-    margin-left: 0.5rem;
     min-width: 5.125rem;
     height: 2.5rem;
   }
@@ -33,6 +32,9 @@ const MyAssetsBox = styled(Box)`
   .MuiSlider-root {
     padding: 0;
   }
+`
+const BorrowButton = styled(Button)`
+  margin-left: 0.5rem;
 `
 const ClaimBox = styled(Box)`
   display: flex;
@@ -198,7 +200,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                       </Typography>
                     </Button>
                   </Box>
-                  <Button
+                  <BorrowButton
                     disabled={+borrowLimit === 0}
                     onClick={() => {
                       setRepayRoBorrow(1)
@@ -210,7 +212,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                     <Typography variant="body2" component="span" fontWeight="700" color="#ffffff">
                       Borrow {'>'}
                     </Typography>
-                  </Button>
+                  </BorrowButton>
                 </FlexBox>
               </SpaceBetweenBox>
             ) : (

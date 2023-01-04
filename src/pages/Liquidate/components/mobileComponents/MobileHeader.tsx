@@ -18,7 +18,7 @@ const HealthBox = styled(Box)`
   margin-right: 1rem;
 `
 const CollateralAndTotalDebtBox = styled(FlexBox)`
-  margin: 1.5rem 0 0 0;
+  margin: 1.4375rem 0 0 0;
   width: 23.4375rem;
   &::-webkit-scrollbar {
     display: none;

@@ -9,11 +9,15 @@ const style = {
   width: '100%',
   maxHeight: '32.0625rem',
   left: '0rem',
-  padding: '1.375rem 1.5rem 0rem 1.5rem',
+  padding: '0 1.5rem 7.75rem 1.5rem',
   background: '#FFFFFF',
   borderRadius: '0.5rem',
-  overflow: 'scroll',
+  // overflow: 'scroll',
 }
+
+const TitleBox = styled(Box)`
+  padding-top: 1.375rem;
+`
 const FilterTypography = styled(Typography)`
   font-family: 'Quicksand';
   font-style: normal;
@@ -41,6 +45,14 @@ const CollectionsItem = styled(FlexBox)`
   padding: 0 0.75rem 0 0.5rem;
   background: #f7f7fc;
   border-radius: 0.25rem;
+`
+const ScrollBox = styled(Box)`
+  overflow: scroll;
+  max-height: 21.5625rem;
+  padding-bottom: 1.5rem;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 const CollectionsBox = styled(Box)`
   display: flex;
@@ -178,79 +190,83 @@ export default function MobileFilterModal({
       aria-describedby="keep-mounted-modal-description"
     >
       <Box sx={style}>
-        <SpaceBetweenBox mb="1rem">
-          <FilterTypography>Filter</FilterTypography>
-          <svg
-            width="24"
-            onClick={() => {
-              setOpenFilter(false)
-            }}
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M19.1943 6.41714C19.6393 5.97216 19.6393 5.2507 19.1943 4.80571C18.7493 4.36073 18.0278 4.36073 17.5829 4.80571L12 10.3886L6.41714 4.80571C5.97216 4.36073 5.2507 4.36073 4.80571 4.80571C4.36073 5.2507 4.36073 5.97216 4.80571 6.41714L10.3886 12L4.80572 17.5829C4.36073 18.0278 4.36073 18.7493 4.80571 19.1943C5.2507 19.6393 5.97216 19.6393 6.41714 19.1943L12 13.6114L17.5829 19.1943C18.0278 19.6393 18.7493 19.6393 19.1943 19.1943C19.6393 18.7493 19.6393 18.0278 19.1943 17.5829L13.6114 12L19.1943 6.41714Z"
-              fill="#14142A"
-            />
-          </svg>
-        </SpaceBetweenBox>
-        <TitleTypography>Collections</TitleTypography>
-        <CollectionsBox>
-          <AllCollectionsBox
-            onClick={() => {
-              setCollectionFilter(0)
-            }}
-            sx={{
-              fontWeight: collectionFilter === 0 ? '600' : '500',
-              border: collectionFilter === 0 ? '1px solid #7646ff' : '',
-              color: collectionFilter === 0 ? '#7646ff' : '',
-            }}
-          >
-            {' '}
-            All Collections
-          </AllCollectionsBox>
-          {collection.map((el: any, index: number) => (
-            <CollectionsItem
-              sx={{
-                border: collectionFilter - 1 === index ? '1px solid #7646ff' : '',
-              }}
+        <TitleBox>
+          <SpaceBetweenBox mb="1rem">
+            <FilterTypography>Filter</FilterTypography>
+            <svg
+              width="24"
               onClick={() => {
-                setCollectionFilter(index + 1)
+                setOpenFilter(false)
               }}
-              key={`MobileCollections-${el.id}`}
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <NftImg alt={el.name} src={el.icon} />
-              <FlexBox height="100%" width="7.375rem">
-                <NameTypography
-                  fontWeight={collectionFilter - 1 === index ? '600' : '500'}
-                  sx={{ color: collectionFilter - 1 === index ? '#7646ff' : '' }}
-                >
-                  {el.name}
-                </NameTypography>
-              </FlexBox>
-            </CollectionsItem>
-          ))}
-        </CollectionsBox>
-        <TitleTypography mt="1.5rem">Debt</TitleTypography>
-        <CollectionsBox mb="6.25rem">
-          {debtFilters.map((el: any, index: number) => (
+              <path
+                d="M19.1943 6.41714C19.6393 5.97216 19.6393 5.2507 19.1943 4.80571C18.7493 4.36073 18.0278 4.36073 17.5829 4.80571L12 10.3886L6.41714 4.80571C5.97216 4.36073 5.2507 4.36073 4.80571 4.80571C4.36073 5.2507 4.36073 5.97216 4.80571 6.41714L10.3886 12L4.80572 17.5829C4.36073 18.0278 4.36073 18.7493 4.80571 19.1943C5.2507 19.6393 5.97216 19.6393 6.41714 19.1943L12 13.6114L17.5829 19.1943C18.0278 19.6393 18.7493 19.6393 19.1943 19.1943C19.6393 18.7493 19.6393 18.0278 19.1943 17.5829L13.6114 12L19.1943 6.41714Z"
+                fill="#14142A"
+              />
+            </svg>
+          </SpaceBetweenBox>
+        </TitleBox>
+        <ScrollBox>
+          <TitleTypography>Collections</TitleTypography>
+          <CollectionsBox>
             <AllCollectionsBox
-              sx={{
-                fontWeight: debtFilter === el.value ? '600' : '500',
-                border: debtFilter === el.value ? '1px solid #7646ff' : '',
-                color: debtFilter === el.value ? '#7646ff' : '',
-              }}
               onClick={() => {
-                setDebtFilter(el.value)
+                setCollectionFilter(0)
               }}
-              key={`MobileDebt-${index}`}
+              sx={{
+                fontWeight: collectionFilter === 0 ? '600' : '500',
+                border: collectionFilter === 0 ? '1px solid #7646ff' : '',
+                color: collectionFilter === 0 ? '#7646ff' : '',
+              }}
             >
-              {el.name}
+              {' '}
+              All Collections
             </AllCollectionsBox>
-          ))}
-        </CollectionsBox>
+            {collection.map((el: any, index: number) => (
+              <CollectionsItem
+                sx={{
+                  border: collectionFilter - 1 === index ? '1px solid #7646ff' : '',
+                }}
+                onClick={() => {
+                  setCollectionFilter(index + 1)
+                }}
+                key={`MobileCollections-${el.id}`}
+              >
+                <NftImg alt={el.name} src={el.icon} />
+                <FlexBox height="100%" width="7.375rem">
+                  <NameTypography
+                    fontWeight={collectionFilter - 1 === index ? '600' : '500'}
+                    sx={{ color: collectionFilter - 1 === index ? '#7646ff' : '' }}
+                  >
+                    {el.name}
+                  </NameTypography>
+                </FlexBox>
+              </CollectionsItem>
+            ))}
+          </CollectionsBox>
+          <TitleTypography mt="1.5rem">Debt</TitleTypography>
+          <CollectionsBox>
+            {debtFilters.map((el: any, index: number) => (
+              <AllCollectionsBox
+                sx={{
+                  fontWeight: debtFilter === el.value ? '600' : '500',
+                  border: debtFilter === el.value ? '1px solid #7646ff' : '',
+                  color: debtFilter === el.value ? '#7646ff' : '',
+                }}
+                onClick={() => {
+                  setDebtFilter(el.value)
+                }}
+                key={`MobileDebt-${index}`}
+              >
+                {el.name}
+              </AllCollectionsBox>
+            ))}
+          </CollectionsBox>
+        </ScrollBox>
         <FooterBox>
           <ClearAllBox
             onClick={() => {

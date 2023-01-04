@@ -16,7 +16,7 @@ const CardBox = styled(Box)`
   border: 0.0625rem solid #eff0f6;
   border-radius: 0.625rem;
   margin: 0 1rem;
-  padding: 1rem 1rem 0.875rem 1rem;
+  padding: 0.9375rem 0.9375rem 0.8125rem 0.9375rem;
   margin-top: 1rem;
   .Img-Box {
     padding-left: 0.375rem;
@@ -60,7 +60,7 @@ export default function MobileCollateralList({
   riskPercentage,
   riskLevelTag,
   riskLevel,
-  nfts,
+  nfts = 0,
 }: MobileCollateralListProps) {
   const renderImg = (symbol?: string) => {
     if (symbol) {
@@ -142,7 +142,7 @@ export default function MobileCollateralList({
       </SpaceBetweenBox>
       <SpaceBetweenBox mt="1.5rem">
         <Typography variant="body2" fontWeight="600" lineHeight="0.75rem" color="#A0A3BD">
-          {collections?.length || 0} Collections / {nfts} NFTs
+          {collections?.length || 0} Collections {`${collections?.length === 0 ? '' : `/ ${nfts} NFTs`}`}
         </Typography>
         <Typography variant="body2" fontWeight="600" lineHeight="0.75rem" color="#A0A3BD">
           Total Debt

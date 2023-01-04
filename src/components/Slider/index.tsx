@@ -3,17 +3,19 @@ import Slider from '@mui/material/Slider'
 import { styled } from '@mui/material/styles'
 // import Tooltip from '@mui/material/Tooltip';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface Props {
-  children: React.ReactElement
-  value: number
-}
 const PrettoSlider = styled(Slider)({
   color: '#5fdac4',
   height: 8,
   padding: 0,
+  '&.max': {
+    '& .MuiSlider-thumb': {
+      transform: `translate(-100%, -50%)`,
+    },
+  },
   '& .MuiSlider-track': {
-    border: '1px solid #FFFFFF',
+    border: '1px solid #EFF0F6',
     height: '6px',
+    maxWidth: '99% !important',
   },
   '& .MuiSlider-rail': {
     background: '#eff0f6',
@@ -24,6 +26,7 @@ const PrettoSlider = styled(Slider)({
     border: '2px solid #FFFFFF',
     background: 'linear-gradient(213.69deg, #66DEC8 14%, #4BC8B1 92%)',
     boxShadow: '0px 2px 4px rgba(155, 192, 186, 0.4)',
+    transform: `translate(-0, -50%)`,
     '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
       boxShadow: 'inherit',
     },
@@ -61,15 +64,17 @@ interface CustomizedSliderProps {
   setSlider?: Function
 }
 export default function CustomizedSlider({ setSlider, riskLevelTag, sliderValue }: CustomizedSliderProps) {
+  // console.log(sliderValue)
   return (
     <PrettoSlider
-      className={`Slider-${riskLevelTag}`}
+      className={`Slider-${riskLevelTag} ${(sliderValue || 0) >= 96 && 'max'}`}
       // valueLabelDisplay="off"
       value={sliderValue}
       // aria-label="pretto slider"
       onChange={(el: any) => {
         if (setSlider) {
           setSlider(el.target.value)
+          // console.log('@@@@', el.target.value)
         }
       }}
     />

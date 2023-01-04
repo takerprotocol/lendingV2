@@ -1,8 +1,10 @@
 import { Box, Button, Checkbox, styled, Typography } from '@mui/material'
-import { SpaceBetweenBox, FlexBox, FlexEndBox } from 'styleds'
+import { SpaceBetweenBox, FlexBox, FlexEndBox, SpaceBox, CenterBox } from 'styleds'
 import mobileNFT from 'assets/images/svg/liquidate/mobile-NFT.svg'
 import { div } from 'utils'
 import { useState } from 'react'
+import liquidateNotChecked_Icon from 'assets/images/svg/liquidate/liquidateNotChecked_Icon.svg'
+import liquidateChecked_Icon from 'assets/images/svg/liquidate/liquidateChecked_Icon.svg'
 
 const MobileFooterBox = styled(Box)`
   position: fixed;
@@ -39,8 +41,12 @@ const MobileFooterBox = styled(Box)`
 const RadiusImg = styled(`img`)`
   width: 1rem;
   height: 1rem;
-  margin-right: 0.375
+  margin-right: 0.375;
   border-radius: 100%;
+`
+const StyleCheckbox = styled(Checkbox)`
+  width: 1.25rem;
+  height: 1.25rem;
 `
 const ImgBox = styled(`img`)`
   width: 3rem;
@@ -109,6 +115,7 @@ const LiquidateButton = styled(Button)`
 `
 export default function MobileFooter() {
   const list: Array<number> = [1, 2, 3]
+  const [checkboxType, setCheckboxType] = useState<Array<string>>([])
   const [details, setDetails] = useState<boolean>(false)
   return (
     <MobileFooterBox>
@@ -136,14 +143,26 @@ export default function MobileFooter() {
             <Typography variant="subtitle2" color="#EFF0F6">
               18 NFT Collaterals
             </Typography>
-            <Typography variant="body1" fontWeight="600" color="#6E7191">
+            <Typography mr="-0.0625rem" mt="0.125rem" variant="body1" fontWeight="600" color="#6E7191">
               4 Collections
             </Typography>
           </SpaceBetweenBox>
           <ListBox>
             {list.map((el: any) => (
-              <FlexBox mb={list.length === +div(el, 1) ? '0rem' : '1.25rem'} key={el}>
-                <Checkbox color="primary" />
+              <FlexBox mb={list.length === +div(el, 1) ? '0rem' : '1.5rem'} key={el}>
+                <StyleCheckbox
+                  sx={{ marginTop: '0.375rem' }}
+                  checked={checkboxType.includes(el)}
+                  checkedIcon={<img src={liquidateChecked_Icon} alt="" />}
+                  icon={<img src={liquidateNotChecked_Icon} alt="" />}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    if (event.target.checked) {
+                      setCheckboxType([...checkboxType, el])
+                    } else {
+                      setCheckboxType(checkboxType.filter((cel) => cel !== el))
+                    }
+                  }}
+                ></StyleCheckbox>
                 <SpaceBetweenBox ml="1rem" width="100%">
                   <FlexBox>
                     <ImgBox></ImgBox>
@@ -241,12 +260,12 @@ export default function MobileFooter() {
           </PriceBox>
         </>
       )}
-      <SpaceBetweenBox>
-        <Box>
+      <SpaceBox>
+        <Box mt="0.375rem">
           <Typography mb="0.5rem" color="#EFF0F6" lineHeight="0.75rem" variant="body2">
             Total price
           </Typography>
-          <FlexBox>
+          <CenterBox>
             <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M4 11.7121L8.5 4.5L13 11.7121L8.5 18.5L4 11.7121Z"
@@ -263,31 +282,32 @@ export default function MobileFooter() {
             <Typography
               onClick={() => setDetails(!details)}
               ml="0.5rem"
+              mr="0.3125rem"
               color="#A87EFF"
               lineHeight="0.75rem"
               variant="body2"
             >
               Details
-              {!details ? (
-                <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8 4.875L8 11.5" stroke="#A87EFF" strokeLinecap="round" />
-                  <path d="M11 7.49973L8 4.5L5 7.5" stroke="#A87EFF" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              ) : (
-                <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8 11.125L8 4.5" stroke="#A87EFF" strokeLinecap="round" />
-                  <path d="M11 8.50027L8 11.5L5 8.5" stroke="#A87EFF" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              )}
             </Typography>
-          </FlexBox>
+            {!details ? (
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 0.875L4 7.5" stroke="#A87EFF" strokeLinecap="round" />
+                <path d="M7 3.49973L4 0.5L1 3.5" stroke="#A87EFF" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : (
+              <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 7.125L4 0.5" stroke="#A87EFF" strokeLinecap="round" />
+                <path d="M7 4.50027L4 7.5L1 4.5" stroke="#A87EFF" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
+          </CenterBox>
         </Box>
         <Box>
           <LiquidateButton variant="contained" color="primary">
             LIQUIDATE
           </LiquidateButton>
         </Box>
-      </SpaceBetweenBox>
+      </SpaceBox>
     </MobileFooterBox>
   )
 }
