@@ -6,8 +6,8 @@ dataSources:
     name: ILendingPool
     network: goerli
     source:
-      address: "0xf2989DAEEEc632BfdF87afC5C56b17b3e527425C"
-      startBlock: 7746778
+      address: "0xc2a2c091329927a38F7b77D3F6c68518a0E8C230"
+      startBlock: 7778330
       abi: ILendingPool
     mapping:
       kind: ethereum/events
@@ -50,8 +50,8 @@ dataSources:
     name: PoolConfigurator
     network: goerli
     source:
-      address: "0x1874dE12836B35A61708708c22c433132E72754F"
-      startBlock: 7746778
+      address: "0x457881F2F758aC29aD984a999632415b24F6039C"
+      startBlock: 7778330
       abi: PoolConfigurator
     mapping:
       kind: ethereum/events
@@ -88,7 +88,7 @@ dataSources:
     network: goerli
     source:
       address: "0xA1b32782F2cFedE04E444Ae13aEAEFfEC12A6916"
-      startBlock: 7746778
+      startBlock: 7778330
       abi: IPriceOracleGetter
     mapping:
       kind: ethereum/events
@@ -102,25 +102,4 @@ dataSources:
       eventHandlers:
         - event: NewNFTPrice(indexed address,uint256)
           handler: handleNewNFTPrice
-      file: ILendingPool/ILendingPool.wasm
-  - kind: ethereum
-    name: IWETHGateway
-    network: goerli
-    source:
-      address: "0x1Db1011e880664A43009661d8A647A37c6789234"
-      startBlock: 7746778
-      abi: IWETHGateway
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.6
-      language: wasm/assemblyscript
-      entities:
-        - User
-        - UserReserve
-      abis:
-        - name: IWETHGateway
-          file: IWETHGateway/abis/IWETHGateway.json
-      eventHandlers:
-        - event: Withdrawn(indexed address,indexed address,uint256)
-          handler: handleGatewayWithdrawn
       file: ILendingPool/ILendingPool.wasm

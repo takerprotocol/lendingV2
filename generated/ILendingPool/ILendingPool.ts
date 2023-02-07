@@ -425,6 +425,31 @@ export class ILendingPool__getReserveDataResultValue0Struct extends ethereum.Tup
   }
 }
 
+export class ILendingPool__getReservesListResult {
+  value0: Array<Address>;
+  value1: Array<Address>;
+
+  constructor(value0: Array<Address>, value1: Array<Address>) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromAddressArray(this.value0));
+    map.set("value1", ethereum.Value.fromAddressArray(this.value1));
+    return map;
+  }
+
+  getValue0(): Array<Address> {
+    return this.value0;
+  }
+
+  getValue1(): Array<Address> {
+    return this.value1;
+  }
+}
+
 export class ILendingPool__getUserAssetValuesResult {
   value0: BigInt;
   value1: BigInt;
@@ -759,6 +784,39 @@ export class ILendingPool extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getReservesList(): ILendingPool__getReservesListResult {
+    let result = super.call(
+      "getReservesList",
+      "getReservesList():(address[],address[])",
+      []
+    );
+
+    return new ILendingPool__getReservesListResult(
+      result[0].toAddressArray(),
+      result[1].toAddressArray()
+    );
+  }
+
+  try_getReservesList(): ethereum.CallResult<
+    ILendingPool__getReservesListResult
+  > {
+    let result = super.tryCall(
+      "getReservesList",
+      "getReservesList():(address[],address[])",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new ILendingPool__getReservesListResult(
+        value[0].toAddressArray(),
+        value[1].toAddressArray()
+      )
+    );
   }
 
   getUserAssetValues(

@@ -4,31 +4,6 @@
   "sourceName": "contracts/interfaces/IWETHGateway.sol",
   "abi": [
     {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "pool",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "name": "Withdrawn",
-      "type": "event"
-    },
-    {
       "inputs": [
         {
           "internalType": "address",

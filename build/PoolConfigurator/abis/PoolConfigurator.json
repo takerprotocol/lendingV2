@@ -48,6 +48,44 @@
       },
       {
         "indexed": false,
+        "internalType": "bool",
+        "name": "pause",
+        "type": "bool"
+      }
+    ],
+    "name": "AssetPauseUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "asset",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "borrowCap",
+        "type": "uint256"
+      }
+    ],
+    "name": "BorrowCapUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "asset",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "liqThreshold",
         "type": "uint256"
@@ -60,6 +98,25 @@
       }
     ],
     "name": "BorrowParamsUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "asset",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "depositCap",
+        "type": "uint256"
+      }
+    ],
+    "name": "DepositCapUpdated",
     "type": "event"
   },
   {
@@ -567,6 +624,16 @@
             "type": "uint256"
           },
           {
+            "internalType": "uint256",
+            "name": "depositCap",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowCap",
+            "type": "uint256"
+          },
+          {
             "internalType": "uint16",
             "name": "reserveFactor",
             "type": "uint16"
@@ -587,6 +654,11 @@
       {
         "internalType": "contract ITakerAddressesProvider",
         "name": "provider",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "admin",
         "type": "address"
       }
     ],
@@ -627,19 +699,6 @@
       }
     ],
     "name": "revokeRole",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "admin",
-        "type": "address"
-      }
-    ],
-    "name": "setAdmin",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -720,6 +779,42 @@
         "type": "address"
       },
       {
+        "internalType": "bool",
+        "name": "pause",
+        "type": "bool"
+      }
+    ],
+    "name": "updateAssetPause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "asset",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "borrowCap",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateBorrowCap",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "asset",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "liqThreshold",
         "type": "uint256"
@@ -731,6 +826,37 @@
       }
     ],
     "name": "updateBorrowParams",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "asset",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "depositCap",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateDepositCap",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bool",
+        "name": "pause",
+        "type": "bool"
+      }
+    ],
+    "name": "updatePoolPause",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

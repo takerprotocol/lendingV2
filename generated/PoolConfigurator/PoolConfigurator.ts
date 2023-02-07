@@ -54,6 +54,50 @@ export class AssetFreezeUpdated__Params {
   }
 }
 
+export class AssetPauseUpdated extends ethereum.Event {
+  get params(): AssetPauseUpdated__Params {
+    return new AssetPauseUpdated__Params(this);
+  }
+}
+
+export class AssetPauseUpdated__Params {
+  _event: AssetPauseUpdated;
+
+  constructor(event: AssetPauseUpdated) {
+    this._event = event;
+  }
+
+  get asset(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get pause(): boolean {
+    return this._event.parameters[1].value.toBoolean();
+  }
+}
+
+export class BorrowCapUpdated extends ethereum.Event {
+  get params(): BorrowCapUpdated__Params {
+    return new BorrowCapUpdated__Params(this);
+  }
+}
+
+export class BorrowCapUpdated__Params {
+  _event: BorrowCapUpdated;
+
+  constructor(event: BorrowCapUpdated) {
+    this._event = event;
+  }
+
+  get asset(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get borrowCap(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
 export class BorrowParamsUpdated extends ethereum.Event {
   get params(): BorrowParamsUpdated__Params {
     return new BorrowParamsUpdated__Params(this);
@@ -77,6 +121,28 @@ export class BorrowParamsUpdated__Params {
 
   get ltv(): BigInt {
     return this._event.parameters[2].value.toBigInt();
+  }
+}
+
+export class DepositCapUpdated extends ethereum.Event {
+  get params(): DepositCapUpdated__Params {
+    return new DepositCapUpdated__Params(this);
+  }
+}
+
+export class DepositCapUpdated__Params {
+  _event: DepositCapUpdated;
+
+  constructor(event: DepositCapUpdated) {
+    this._event = event;
+  }
+
+  get asset(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get depositCap(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
   }
 }
 
@@ -714,8 +780,16 @@ export class InitReservesCallParamsListStruct extends ethereum.Tuple {
     return this[12].toBigInt();
   }
 
+  get depositCap(): BigInt {
+    return this[13].toBigInt();
+  }
+
+  get borrowCap(): BigInt {
+    return this[14].toBigInt();
+  }
+
   get reserveFactor(): i32 {
-    return this[13].toI32();
+    return this[15].toI32();
   }
 }
 
@@ -738,6 +812,10 @@ export class InitializeCall__Inputs {
 
   get provider(): Address {
     return this._call.inputValues[0].value.toAddress();
+  }
+
+  get admin(): Address {
+    return this._call.inputValues[1].value.toAddress();
   }
 }
 
@@ -813,36 +891,6 @@ export class RevokeRoleCall__Outputs {
   _call: RevokeRoleCall;
 
   constructor(call: RevokeRoleCall) {
-    this._call = call;
-  }
-}
-
-export class SetAdminCall extends ethereum.Call {
-  get inputs(): SetAdminCall__Inputs {
-    return new SetAdminCall__Inputs(this);
-  }
-
-  get outputs(): SetAdminCall__Outputs {
-    return new SetAdminCall__Outputs(this);
-  }
-}
-
-export class SetAdminCall__Inputs {
-  _call: SetAdminCall;
-
-  constructor(call: SetAdminCall) {
-    this._call = call;
-  }
-
-  get admin(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class SetAdminCall__Outputs {
-  _call: SetAdminCall;
-
-  constructor(call: SetAdminCall) {
     this._call = call;
   }
 }
@@ -945,6 +993,74 @@ export class UpdateAssetFreezeCall__Outputs {
   }
 }
 
+export class UpdateAssetPauseCall extends ethereum.Call {
+  get inputs(): UpdateAssetPauseCall__Inputs {
+    return new UpdateAssetPauseCall__Inputs(this);
+  }
+
+  get outputs(): UpdateAssetPauseCall__Outputs {
+    return new UpdateAssetPauseCall__Outputs(this);
+  }
+}
+
+export class UpdateAssetPauseCall__Inputs {
+  _call: UpdateAssetPauseCall;
+
+  constructor(call: UpdateAssetPauseCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get pause(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class UpdateAssetPauseCall__Outputs {
+  _call: UpdateAssetPauseCall;
+
+  constructor(call: UpdateAssetPauseCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateBorrowCapCall extends ethereum.Call {
+  get inputs(): UpdateBorrowCapCall__Inputs {
+    return new UpdateBorrowCapCall__Inputs(this);
+  }
+
+  get outputs(): UpdateBorrowCapCall__Outputs {
+    return new UpdateBorrowCapCall__Outputs(this);
+  }
+}
+
+export class UpdateBorrowCapCall__Inputs {
+  _call: UpdateBorrowCapCall;
+
+  constructor(call: UpdateBorrowCapCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get borrowCap(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class UpdateBorrowCapCall__Outputs {
+  _call: UpdateBorrowCapCall;
+
+  constructor(call: UpdateBorrowCapCall) {
+    this._call = call;
+  }
+}
+
 export class UpdateBorrowParamsCall extends ethereum.Call {
   get inputs(): UpdateBorrowParamsCall__Inputs {
     return new UpdateBorrowParamsCall__Inputs(this);
@@ -979,6 +1095,70 @@ export class UpdateBorrowParamsCall__Outputs {
   _call: UpdateBorrowParamsCall;
 
   constructor(call: UpdateBorrowParamsCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateDepositCapCall extends ethereum.Call {
+  get inputs(): UpdateDepositCapCall__Inputs {
+    return new UpdateDepositCapCall__Inputs(this);
+  }
+
+  get outputs(): UpdateDepositCapCall__Outputs {
+    return new UpdateDepositCapCall__Outputs(this);
+  }
+}
+
+export class UpdateDepositCapCall__Inputs {
+  _call: UpdateDepositCapCall;
+
+  constructor(call: UpdateDepositCapCall) {
+    this._call = call;
+  }
+
+  get asset(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get depositCap(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class UpdateDepositCapCall__Outputs {
+  _call: UpdateDepositCapCall;
+
+  constructor(call: UpdateDepositCapCall) {
+    this._call = call;
+  }
+}
+
+export class UpdatePoolPauseCall extends ethereum.Call {
+  get inputs(): UpdatePoolPauseCall__Inputs {
+    return new UpdatePoolPauseCall__Inputs(this);
+  }
+
+  get outputs(): UpdatePoolPauseCall__Outputs {
+    return new UpdatePoolPauseCall__Outputs(this);
+  }
+}
+
+export class UpdatePoolPauseCall__Inputs {
+  _call: UpdatePoolPauseCall;
+
+  constructor(call: UpdatePoolPauseCall) {
+    this._call = call;
+  }
+
+  get pause(): boolean {
+    return this._call.inputValues[0].value.toBoolean();
+  }
+}
+
+export class UpdatePoolPauseCall__Outputs {
+  _call: UpdatePoolPauseCall;
+
+  constructor(call: UpdatePoolPauseCall) {
     this._call = call;
   }
 }

@@ -77,27 +77,6 @@ export class IPriceOracleGetter extends ethereum.SmartContract {
     return new IPriceOracleGetter("IPriceOracleGetter", address);
   }
 
-  getNFTPrice(asset: Address): BigInt {
-    let result = super.call("getNFTPrice", "getNFTPrice(address):(uint256)", [
-      ethereum.Value.fromAddress(asset)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_getNFTPrice(asset: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getNFTPrice",
-      "getNFTPrice(address):(uint256)",
-      [ethereum.Value.fromAddress(asset)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   getReserveAssetPrice(asset: Address): BigInt {
     let result = super.call(
       "getReserveAssetPrice",
@@ -112,29 +91,6 @@ export class IPriceOracleGetter extends ethereum.SmartContract {
     let result = super.tryCall(
       "getReserveAssetPrice",
       "getReserveAssetPrice(address):(uint256)",
-      [ethereum.Value.fromAddress(asset)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getTokenizedNFTPrice(asset: Address): BigInt {
-    let result = super.call(
-      "getTokenizedNFTPrice",
-      "getTokenizedNFTPrice(address):(uint256)",
-      [ethereum.Value.fromAddress(asset)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getTokenizedNFTPrice(asset: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getTokenizedNFTPrice",
-      "getTokenizedNFTPrice(address):(uint256)",
       [ethereum.Value.fromAddress(asset)]
     );
     if (result.reverted) {

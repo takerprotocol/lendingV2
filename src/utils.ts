@@ -3,7 +3,7 @@ import {
 } from "../generated/schema";
 import {Address, BigDecimal, BigInt} from "@graphprotocol/graph-ts";
 import { log } from '@graphprotocol/graph-ts';
-import {IPriceOracleGetter} from "../generated/LendingPool/IPriceOracleGetter";
+import {IPriceOracleGetter} from "../generated/IPriceOracleGetter/IPriceOracleGetter";
 
 export function newUser(Id: string): User {
 
@@ -45,22 +45,7 @@ export function newUserNftCollection(Id: string): UserNftCollection {
 
 export function updateCollectionPrice(collection: NftCollection, oracle: IPriceOracleGetter): void{
     let addr = Address.fromString(collection.id);
-
-    if (collection.ercType == BigInt.zero()) {
-        // ERC20
-        collection.floorPrice = oracle.try_getTokenizedNFTPrice(addr).value;
-    }
-    else if (collection.ercType == BigInt.fromI32(1)) {
-        // ERC721
-        collection.floorPrice = oracle.try_getNFTPrice(addr).value;
-    }
-    else if (collection.ercType == BigInt.fromI32(2)) {
-        // ERC1155
-        collection.floorPrice = oracle.try_getNFTPrice(addr).value;
-    }
-    else {
-        log.error("Unrecognized collection ERC type", [collection.id]);
-    }
+    collection.floorPrice = oracle.try_getReserveAssetPrice(addr).value;
     collection.save();
 }
 
