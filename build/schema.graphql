@@ -15,9 +15,8 @@ type Reserve @entity {
   ltv: BigInt!
   liquidityIndex: BigDecimal!
   debtIndex: BigDecimal!
-  depositRate: BigDecimal!
-  borrowRate: BigDecimal!
-
+  depositRate: BigDecimal
+  borrowRate: BigDecimal
 
   name: String
   symbol: String
@@ -26,7 +25,7 @@ type Reserve @entity {
 }
 
 type NftCollection @entity {
-  id: ID!  # underlying address
+  id: ID! # underlying address
   pool: LendingPool!
 
   tNFT: Bytes! # proxy
@@ -64,7 +63,7 @@ type UserReserve @entity {
   usedAsCollateral: Boolean!
 }
 
-type UserNftCollection  @entity {
+type UserNftCollection @entity {
   id: ID! # user - collection - tokenId
   user: User!
   collection: NftCollection!
@@ -76,4 +75,3 @@ type NftToken @entity {
   userCollection: UserNftCollection!
   amount: BigInt!
 }
-
