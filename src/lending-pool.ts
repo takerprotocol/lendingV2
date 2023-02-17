@@ -1,4 +1,4 @@
-import {Address, BigInt, store, log, BigDecimal} from "@graphprotocol/graph-ts";
+import {Address, BigInt, store, log} from "@graphprotocol/graph-ts";
 import {
   Borrowed, CollateralStatusUpdated, Deposited, Liquidated, NFTsDeposited,
   NFTsWithdrawn, Repaid, ReserveDataUpdated, Withdrawn
@@ -18,7 +18,7 @@ import * as utils from "./utils";
 
 
 export const POOLID = "0xc2a2c091329927a38F7b77D3F6c68518a0E8C230";
-export const ORACLE = "0xA1b32782F2cFedE04E444Ae13aEAEFfEC12A6916";
+export const ORACLE = "0x8f0ba96ca811f174c51636005df0f78fc148dde6";
 
 // toLowerCase for comparison
 // export const GATEWAY = "0x1Db1011e880664A43009661d8A647A37c6789234".toLowerCase();
@@ -72,19 +72,6 @@ export function handleNftReserveInitialized(event: NftReserveInitialized): void{
 
 }
 
-export function handleReserveDataUpdated(event: ReserveDataUpdated): void{
-  let reserve = Reserve.load(event.params.asset.toHex());
-  if (!reserve) {
-    log.error("Nonexist reserve data updated", [event.params.asset.toHex()]);
-    return;
-  }
-  reserve.liquidityIndex = event.params.liquidityIndex.toBigDecimal();
-  reserve.debtIndex = event.params.debtIndex.toBigDecimal();
-  reserve.depositRate = event.params.depositRate.toBigDecimal();
-  reserve.borrowRate = event.params.borrowRate.toBigDecimal();
-  reserve.save();
-}
-
 export function handleReserveInitialized(event: ReserveInitialized): void{
   let poolId = POOLID;
   let pool = LendingPool.load(poolId);
@@ -99,11 +86,6 @@ export function handleReserveInitialized(event: ReserveInitialized): void{
   reserve.interestRateCalculator = event.params.interestRateStrategyAddress;
   reserve.liqThreshold = event.params.liqThreshold;
   reserve.ltv = event.params.ltv;
-
-  reserve.liquidityIndex = BigDecimal.zero();
-  reserve.debtIndex = BigDecimal.zero();
-  reserve.depositRate = BigDecimal.zero();
-  reserve.borrowRate = BigDecimal.zero();
 
   let reserveContract = ERC20.bind(event.params.asset);
   reserve.name = reserveContract.try_name().value;
@@ -195,6 +177,39 @@ export function handleWithdrawn(event: Withdrawn): void {
   user.save();
   userReserve.save();
 }
+
+// export function handleGatewayWithdrawn(event: GatewayWithdrawn): void {
+//   let userId = event.params.to.toHex();
+//   let reserveId = WETH;
+//   let userReserveId = userId + "-" + reserveId;
+//
+//   let user = User.load(userId);
+//   let reserve = Reserve.load(reserveId);
+//   let userReserve = UserReserve.load(userReserveId);
+//   if (!user){
+//     log.warning('Found Withdrawn event for unknown user - {}', [userId]);
+//     user = utils.newUser(userId);
+//   }
+//   if (!reserve) {
+//     log.warning('Found Withdrawn event for unknown reserve - {}', [reserveId]);
+//     return;
+//   }
+//   if (!userReserve) {
+//     userReserve = utils.newUserReserve(userReserveId);
+//     userReserve.user = userId;
+//     userReserve.reserve = reserveId;
+//   }
+//
+//   user.reserveSupply = user.reserveSupply.minus(event.params.amount);
+//   if (userReserve.usedAsCollateral) {
+//     user.totalCollateral = user.totalCollateral.minus(event.params.amount);
+//     user = utils.updateUserState(user, event.params.amount.neg(), reserve.ltv, reserve.liqThreshold);
+//   }
+//   userReserve.depositedAmount = userReserve.depositedAmount.minus(event.params.amount);
+//
+//   user.save();
+//   userReserve.save();
+// }
 
 export function handleBorrowed(event: Borrowed): void {
   let userId = event.params.from.toHex();

@@ -88,7 +88,7 @@ dataSources:
     name: IPriceOracleGetter
     network: goerli
     source:
-      address: "0xA1b32782F2cFedE04E444Ae13aEAEFfEC12A6916"
+      address: "0x8f0ba96ca811f174c51636005df0f78fc148dde6"
       startBlock: 7778330
       abi: IPriceOracleGetter
     mapping:

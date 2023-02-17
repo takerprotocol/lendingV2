@@ -2,7 +2,7 @@
   "network": "goerli",
   "LendingPool": {
     "startBlock": 7778330,
-    "address": "0xc2a2c091329927a38F7b77D3F6c68518a0E8C230\n"
+    "address": "0xc2a2c091329927a38F7b77D3F6c68518a0E8C230"
   },
   "PoolConfigurator": {
     "startBlock": 7778330,
@@ -10,7 +10,7 @@
   },
   "IPriceOracleGetter": {
     "startBlock": 7778330,
-    "address": "0xA1b32782F2cFedE04E444Ae13aEAEFfEC12A6916"
+    "address": "0x8f0ba96ca811f174c51636005df0f78fc148dde6"
   },
   "WETHGateway": {
     "startBlock": 7778330,
