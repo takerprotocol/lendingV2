@@ -30,12 +30,12 @@ export default function DashboardTotalSkeleton() {
           <TopSkeleton variant="rectangular" />
           <BottomSkeleton variant="rectangular" />
         </Box>
-        <Box ml="55px">
+        <Box ml="79px">
           <TopSkeleton variant="rectangular" sx={{ height: '21px', width: '208px' }} />
           <BottomSkeleton variant="rectangular" sx={{ height: '21px', width: '232px', marginTop: '18px' }} />
         </Box>
       </FlexBox>
-      <FlexBox ml="114px">
+      <FlexBox ml="164px">
         <TotalSkeleton variant="rectangular" />
         <Box ml="24px">
           <TopSkeleton variant="rectangular" />

@@ -6,18 +6,18 @@ export const getProxyAddressesProvider = (chainId?: number) => {
     return '0xdc5b54ec293f3e8ede2854076e467a8525e5014d'
   }
   if (chainId === 5) {
-    return '0xd0D2eF85D43C509d7032CfD740f1be3338516dBc'
+    return '0x5cb4887a2694A34fc941ecc1971828F5989b49bE'
   }
-  return '0xd0D2eF85D43C509d7032CfD740f1be3338516dBc'
+  return '0x5cb4887a2694A34fc941ecc1971828F5989b49bE'
 }
 export const getGatewayAddresses = (chainId?: number) => {
   if (chainId === 42) {
     return '0x027a729ac4bf61a74fc2d18b117641b2e39b326f'
   }
   if (chainId === 5) {
-    return '0x3fF11A6270133B8B462A082702aAf072b2B6e3F4'
+    return '0x898b4faA08FDd29726793CBd06a3da553d8Bb638'
   }
-  return '0x3fF11A6270133B8B462A082702aAf072b2B6e3F4'
+  return '0x898b4faA08FDd29726793CBd06a3da553d8Bb638'
 }
 export const getERC20Address = (chainId?: number) => {
   if (chainId === 42) {
@@ -33,9 +33,9 @@ export const getWETH = (chainId?: number) => {
     return '0xee144f0bfc2b8665a17b14702a65c74cb0d0e95f'
   }
   if (chainId === 5) {
-    return '0x4dF05bA0b19980C86B9b94569B12C3549473E746'
+    return '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'
   }
-  return '0x4dF05bA0b19980C86B9b94569B12C3549473E746'
+  return '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'
 }
 
 export const getERC721Address = (chainId?: number) => {
@@ -43,9 +43,9 @@ export const getERC721Address = (chainId?: number) => {
     return '0x2809c94dd3948abb869af008d84935028fd560ed'
   }
   if (chainId === 5) {
-    return '0x27d88F730029C276e4b934D153C89f28B693C845'
+    return '0x0f1165Cbd432fdd05944E3C53e1A21b8Bc1e2697'
   }
-  return '0x27d88F730029C276e4b934D153C89f28B693C845'
+  return '0x0f1165Cbd432fdd05944E3C53e1A21b8Bc1e2697'
 }
 
 export const getTToken = (chainId?: number) => {
@@ -53,9 +53,19 @@ export const getTToken = (chainId?: number) => {
     return '0xa92FAF88c7051BAcCddDc28260c95D0ecC1f2f34'
   }
   if (chainId === 5) {
-    return '0x3Af30a16BC740b2c212d635c802E43eDe5555E2F'
+    return '0xb45e358Ce8D3e181fEb7733B76c06cFd068Cac69'
   }
-  return '0x3Af30a16BC740b2c212d635c802E43eDe5555E2F'
+  return '0xb45e358Ce8D3e181fEb7733B76c06cFd068Cac69'
+}
+
+export const getDToken = (chainId?: number) => {
+  if (chainId === 42) {
+    return '0xa92FAF88c7051BAcCddDc28260c95D0ecC1f2f34'
+  }
+  if (chainId === 5) {
+    return '0xb45e358Ce8D3e181fEb7733B76c06cFd068Cac69'
+  }
+  return '0xb45e358Ce8D3e181fEb7733B76c06cFd068Cac69'
 }
 
 // KOVAN

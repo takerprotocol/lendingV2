@@ -1,7 +1,7 @@
 import { Box, Button, Modal, styled, Typography } from '@mui/material'
 import addIcon from 'assets/images/svg/common/add.svg'
 import redPrompt from 'assets/images/svg/common/redPrompt.svg'
-import rightIcon from 'assets/images/svg/common/right.svg'
+import rightIcon from 'assets/images/svg/common/rightIcon.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds/index'
 import { useMemo } from 'react'
@@ -19,7 +19,7 @@ import {
 } from 'state/user/hooks'
 import { gasLimit } from 'config'
 import { toast } from 'react-toastify'
-import { getRiskLevel, getRiskLevelTag, minus, times } from 'utils'
+import { getRiskLevel, getRiskLevelTag, minus, plus, times } from 'utils'
 import { useContract } from 'hooks/useContract'
 import { useParams } from 'react-router-dom'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -57,9 +57,9 @@ const WithdrawList = styled(Box)`
   padding: 16px 16px 16px 16px;
 `
 const BodyTypography = styled(Typography)`
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 22px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 160%;
   color: #a0a3bd;
 `
 interface NFTsSelectedType {
@@ -138,7 +138,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
         </FlexBox>
         <WithdrawList>
           {data.map((el: Nft, index: number) => (
-            <FlexBox mb={data.length > 1 ? '24px' : '0'} key={`Withdraw${index}`}>
+            <FlexBox mb={Number(plus(index, 1)) >= data.length ? '0' : '24px'} key={`Withdraw${index}`}>
               <img width="48px" src={el.rawMetadata?.image} alt="" />
               <Box width="232px" ml="12px" mr="24px">
                 <BodyTypography color="#6E7191 !important" fontWeight="600 !important">
@@ -216,7 +216,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
         <RightFlexBox mb="24px">
           <FlexBox>
             <Box width={'65px'}>
-              <Typography component="p" variant="subtitle2" lineHeight="16px" color="#4BC8B1">
+              <Typography component="p" variant="subtitle2" color="#4BC8B1">
                 20%
               </Typography>
             </Box>
@@ -234,7 +234,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
               </FlexBox>
             </Box>
             <Box width={'66px'}>
-              <Typography component="p" variant="subtitle2" lineHeight="16px" color="#6E7191">
+              <Typography component="p" variant="subtitle2" color="#6E7191">
                 -10%
               </Typography>
             </Box>
@@ -245,14 +245,13 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
                   borderRadius: '100%',
                   height: '18px',
                   background: '#EFF0F6',
-                  padding: '4.88px',
                 }}
               >
-                <img height="8.25px" width="8.25px" src={rightIcon} alt="" />
+                <img src={rightIcon} alt="" />
               </FlexBox>
             </Box>
             <Box>
-              <Typography component="p" variant="subtitle2" lineHeight="16px" color="#4E4B66">
+              <Typography component="p" variant="subtitle2" color="#4E4B66">
                 {erc20ReserveData.borrowRate}%
               </Typography>
             </Box>

@@ -86,7 +86,6 @@ interface MyLoanProps {
 export default function MyLoan({ loading, type }: MyLoanProps) {
   const [open, setOpen] = useState<boolean>(false)
   const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
-  const [datatype] = useState<boolean>(true)
   const erc20ReserveData = useErc20ReserveData()
   const ethDebt = useEthDebt()
   const borrowLimit = useBorrowLimit()
@@ -144,7 +143,13 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
           </Box>
           <RiskLevelBox
             className={
-              new BigNumber(borrowLimitUsed).gte(199) ? 'right' : new BigNumber(borrowLimitUsed).lte(1) ? 'left' : ''
+              Number(ethDebt) !== 0
+                ? new BigNumber(borrowLimitUsed).gt(99)
+                  ? 'right'
+                  : new BigNumber(borrowLimitUsed).lt(1)
+                  ? 'left'
+                  : ''
+                : ''
             }
           >
             {+borrowLimit !== 0 ? (
@@ -250,7 +255,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                 </Typography>
               </Box>
               <Button
-                disabled={!datatype}
+                disabled={Number(minus(borrowLimit, ethDebt)) === 0}
                 sx={{ width: '174px', height: '48px' }}
                 variant="contained"
                 onClick={() => {
@@ -258,7 +263,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                   setRepayRoBorrow(1)
                 }}
               >
-                Borrow{datatype && <img className="left" src={ButtonSupply} alt="" />}
+                Borrow{Number(minus(borrowLimit, ethDebt)) !== 0 && <img className="left" src={ButtonSupply} alt="" />}
               </Button>
             </SpaceBetweenBox>
           </BottomBox>

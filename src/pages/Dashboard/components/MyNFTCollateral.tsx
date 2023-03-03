@@ -66,12 +66,22 @@ const BottomTopBox = styled(Box)`
   margin-bottom: 31px;
   height: 44px;
   display: flex;
-  align-items: center;
 `
 const ImgBox = styled(`img`)`
   width: 24px;
   height: 24px;
   margin-left: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  :hover {
+    transform: translateY(-4px);
+    transition: all 0.25s ease-in;
+  }
+`
+const RightImgBox = styled(`img`)`
+  width: 24px;
+  height: 24px;
+  margin-right: 4px;
   border-radius: 4px;
   cursor: pointer;
   :hover {
@@ -86,6 +96,11 @@ const NftListBox = styled(Box)`
 const FlexEndBox = styled(Box)`
   display: flex;
   align-items: flex-end;
+`
+export const EndBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 `
 interface MyNFTCollateralProps {
   type: number
@@ -152,13 +167,13 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
       <BottomBox>
         <BottomTopBox>
           {dataType ? (
-            <SpaceBetweenBox>
+            <SpaceBetweenBox width="100%">
               <Box>
                 <Typography variant="body1" fontWeight="700" color="#6E7191">
                   My Deposited Collections
                 </Typography>
               </Box>
-              <FlexBox>
+              <EndBox>
                 {depositedCollection &&
                   depositedCollection.map((el: any) => {
                     return (
@@ -172,7 +187,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                       ></ImgBox>
                     )
                   })}
-              </FlexBox>
+              </EndBox>
             </SpaceBetweenBox>
           ) : (
             <Typography variant="body1" fontWeight="700" color="#6E7191">
@@ -182,8 +197,8 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
         </BottomTopBox>
         <NftListBox>
           <Typography variant="body2" lineHeight="12px" fontWeight="600" color="#A0A3BD">
-            {supportNfts.length > 0 ? (
-              <>You have {supportNfts.length} NFTs can deposit</>
+            {collections.length > 0 ? (
+              <>You have {collections.length} NFTs can deposit</>
             ) : (
               <>We support these collections</>
             )}
@@ -199,13 +214,13 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                       arrow
                       placement="top"
                     >
-                      <ImgBox
+                      <RightImgBox
                         src={el.media[0]?.gateway || ''}
                         alt=""
                         onClick={() => {
                           navigate(`/deposit/${el.contract.address}`)
                         }}
-                      ></ImgBox>
+                      ></RightImgBox>
                     </Tooltip>
                   )
                 })}
@@ -216,13 +231,13 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                 collections.map((el: any) => {
                   return (
                     <Tooltip key={`collections_${el.id}`} title={el.name || ''} arrow placement="top">
-                      <ImgBox
+                      <RightImgBox
                         src={el.icon || ''}
                         alt=""
                         onClick={() => {
                           navigate(`/deposit/${el.id}`)
                         }}
-                      ></ImgBox>
+                      ></RightImgBox>
                     </Tooltip>
                   )
                 })}

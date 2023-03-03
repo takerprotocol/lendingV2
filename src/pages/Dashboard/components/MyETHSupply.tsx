@@ -87,7 +87,7 @@ const BottomBox = styled(Box)`
 `
 const BottomTopBox = styled(Box)`
   width: 290px;
-  padding: 8px 10px 8px 8px;
+  padding: 8px;
   background: #f7f7fc;
   border-radius: 4px;
   margin-bottom: 34px;

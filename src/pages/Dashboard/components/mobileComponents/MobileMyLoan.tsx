@@ -56,7 +56,6 @@ const NoBorrowLimitRiskLevelBox = styled(Box)`
   width: 100%;
   background: #f3f3f8;
   border-radius: 0.5rem;
-  margin-top: 1.5rem;
   margin-bottom: 0.625rem;
   position: relative;
 `
@@ -107,7 +106,6 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
     width: 100%;
     background: #f3f3f8;
     border-radius: 0.5rem;
-    margin-top: 1.5rem;
     margin-bottom: 0.625rem;
     padding: 0 0 1.125rem 1rem;
     position: relative;
@@ -217,7 +215,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
               </SpaceBetweenBox>
             ) : (
               <>
-                <SpaceBetweenBox mt="1.25rem" mr="1rem">
+                <SpaceBetweenBox mb={fixedFormat(ethDebt).length > 10 ? '1.3125rem' : '1.5rem'} mt="1.25rem" mr="1rem">
                   <Box ml="0.375rem">
                     <Typography variant="body1" color="#A0A3BD">
                       My Debt
@@ -238,15 +236,18 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                           strokeLinejoin="round"
                         />
                       </svg>
-                      <Typography
-                        width="9.6875rem"
-                        sx={{ textOverflow: 'ellipsis', maxWidth: '9.6875rem', overflow: 'hidden' }}
-                        fontSize={fixedFormat(ethDebt).length > 10 ? '1rem' : '1.375rem'}
-                        ml="0.5rem"
-                        variant="h5"
-                      >
-                        {fixedFormat(ethDebt)}
-                      </Typography>
+                      <FlexBox height="2.375rem" sx={{ maxWidth: '9.6875rem' }}>
+                        <Typography
+                          width="9.6875rem"
+                          sx={{ maxWidth: '9.6875rem', wordBreak: 'break-all' }}
+                          lineHeight={fixedFormat(ethDebt).length > 10 ? '120%' : '160%'}
+                          fontSize={fixedFormat(ethDebt).length > 10 ? '1rem' : '1.375rem'}
+                          ml="0.5rem"
+                          variant="h5"
+                        >
+                          {fixedFormat(ethDebt)}
+                        </Typography>
+                      </FlexBox>
                     </FlexBox>
                   </Box>
                   <FlexBox>
@@ -290,9 +291,9 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                 ) : (
                   <RiskLevelBox
                     className={
-                      new BigNumber(borrowLimitUsed).gte(199)
+                      new BigNumber(borrowLimitUsed).gt(99)
                         ? 'right'
-                        : new BigNumber(borrowLimitUsed).lte(1)
+                        : new BigNumber(borrowLimitUsed).lt(1)
                         ? 'left'
                         : ''
                     }

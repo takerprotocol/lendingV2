@@ -114,7 +114,6 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
   useEffect(() => {
     getWithdrawList()
   }, [getWithdrawList])
-  console.log('list------', list)
   return (
     <DepositedNFTsStyleBox
       sx={{

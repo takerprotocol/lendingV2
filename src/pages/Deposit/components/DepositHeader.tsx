@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { Box, Typography } from '@mui/material'
 import myCollateralIcon from 'assets/images/svg/dashboard/myCollateral-icon.svg'
-import addIcon from 'assets/images/svg/common/add.svg'
-import rightIcon from 'assets/images/svg/common/right.svg'
+import addIcon from 'assets/images/svg/common/addIcon.svg'
+import rightIcon from 'assets/images/svg/common/rightIcon.svg'
 import DepositHeaderSkeleton from './depositSkeleton/DepositHeaderSkeleton'
 import { useDecimal, useErc20ReserveData } from 'state/user/hooks'
 import { useCollections } from 'state/application/hooks'
@@ -39,10 +39,13 @@ const BgFlexBox = styled(Box)`
   border-radius: 100%;
   height: 24px;
   background: #eff0f6;
-  padding: 5px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  img {
+    height: 24px;
+    width: 24px;
+  }
 `
 const BigTypography = styled(Typography)`
   font-size: 24px;
@@ -134,8 +137,8 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
         query: NftCollection(id),
       })
       let count = 0
-      if (res && res.data && res.data.nftCollection) {
-        res.data.nftCollection.users.array.forEach((element: any) => {
+      if (res && res.data && res.data.nftCollection && res.data.nftCollection.users) {
+        res.data.nftCollection.users.forEach((element: any) => {
           count = count + element.tokens.length
         })
       }
@@ -222,7 +225,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 </Box>
                 <Box width="60px">
                   <BgFlexBox>
-                    <img margin-left="20px" src={rightIcon} alt="" />
+                    <img src={rightIcon} alt="" />
                   </BgFlexBox>
                 </Box>
                 <Box>

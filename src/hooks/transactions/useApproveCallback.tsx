@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
-import { ApprovalState, useApproval, useTWETHApproval } from './useApproval'
+import { ApprovalState, useApproval, useDTokenApproval, useTWETHApproval } from './useApproval'
 
 function useGetAndTrackApproval(getApproval: any) {
   const addTransaction = useTransactionAdder()
@@ -27,5 +27,11 @@ export function useApproveCallback(amount: string, spender?: string): [ApprovalS
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useTTokenApproveCallback(amount: string, spender?: string): [ApprovalState, () => Promise<any>] {
   const [approval, getApproval] = useTWETHApproval(amount, spender)
+  return [approval, useGetAndTrackApproval(getApproval)]
+}
+
+// returns a variable indicating the state of the approval and a function which approves if necessary or early returns
+export function useDTokenApproveCallback(amount: string, spender?: string): [ApprovalState, () => Promise<any>] {
+  const [approval, getApproval] = useDTokenApproval(amount, spender)
   return [approval, useGetAndTrackApproval(getApproval)]
 }

@@ -12,7 +12,6 @@ import {
   useUsedCollateral,
   useUserValue,
 } from 'state/user/hooks'
-import { SpaceBox } from 'styleds'
 import { fixedFormat, times } from 'utils'
 import { toast } from 'react-toastify'
 import BigNumber from 'bignumber.js'
@@ -23,6 +22,7 @@ import { useLendingPool } from 'hooks/useLendingPool'
 import { useAppDispatch } from 'state/hooks'
 import { setUsedCollateral } from 'state/user/reducer'
 import MobileMySupplySwitchUnableOffModal from './MobileMySupplySwitchUnableOffModal'
+import { SpaceBetweenBox, SpaceBox } from 'styleds'
 
 const MyETHCollateralBox = styled(Box)`
   background: linear-gradient(249.47deg, #6aa2f7 0%, #627eea 100%);
@@ -121,48 +121,11 @@ export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeMod
   }
   return (
     <MyETHCollateralBox>
-      <SpaceBox>
-        <Box>
-          <Typography mb={'0.25rem'} variant="body2" color="#ffffff">
+      <Box>
+        <SpaceBetweenBox>
+          <Typography variant="body2" color="#ffffff">
             My ETH Collateral
           </Typography>
-          <Typography variant="subtitle1" component="span" fontWeight="700" color="#ffffff">
-            {fixedFormat(ethLiquidity)}{' '}
-            <Typography variant="body1" component="span" fontWeight="700" color="#ffffff">
-              ETH
-            </Typography>
-          </Typography>
-          {!usedCollateral ? (
-            <NetSupplyBox>
-              <Typography
-                mr="0.5rem"
-                variant="body2"
-                component="span"
-                lineHeight="0.75rem"
-                fontWeight="600"
-                color="#ffffff"
-              >
-                30%{' '}
-                <Typography lineHeight="0.75rem" variant="body2" color="#ffffff" component="span">
-                  Net Supply APY
-                </Typography>
-              </Typography>
-              <img src={mobileMyETHCollateralPrompt} alt="" />
-            </NetSupplyBox>
-          ) : (
-            <NFTsBox
-              onClick={() => {
-                setOpenMySupplyModal(true)
-                setTypeModal(2)
-              }}
-            >
-              <Typography variant="body2" fontWeight="600" lineHeight="0.75rem" color="#ffffff">
-                Withdraw {'>'}
-              </Typography>
-            </NFTsBox>
-          )}
-        </Box>
-        <MyETHRightBox>
           <FlexEndBox>
             {usedCollateral ? (
               <Typography mt="-0.3125rem" mr="0.5rem" variant="body2" fontWeight="700" color="#ffffff">
@@ -201,24 +164,69 @@ export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeMod
               }}
             />
           </FlexEndBox>
-          <FlexEndBox mb={!usedCollateral ? '0.25rem' : '0'} mt="2.0625rem">
-            <Button
+        </SpaceBetweenBox>
+        <Typography
+          sx={{ textOverflow: 'ellipsis', maxWidth: '17.625rem', overflow: 'hidden' }}
+          mt="0.25rem"
+          variant="subtitle1"
+          fontWeight="700"
+          color="#ffffff"
+        >
+          {fixedFormat(ethLiquidity)}{' '}
+          <Typography variant="body1" component="span" fontWeight="700" color="#ffffff">
+            ETH
+          </Typography>
+        </Typography>
+        <SpaceBox>
+          {!usedCollateral ? (
+            <NetSupplyBox>
+              <Typography
+                mr="0.5rem"
+                variant="body2"
+                component="span"
+                lineHeight="0.75rem"
+                fontWeight="600"
+                color="#ffffff"
+              >
+                30%{' '}
+                <Typography lineHeight="0.75rem" variant="body2" color="#ffffff" component="span">
+                  Net Supply APY
+                </Typography>
+              </Typography>
+              <img src={mobileMyETHCollateralPrompt} alt="" />
+            </NetSupplyBox>
+          ) : (
+            <NFTsBox
               onClick={() => {
                 setOpenMySupplyModal(true)
-                setTypeModal(1)
+                setTypeModal(2)
               }}
-              className="Padding-button"
-              variant="contained"
-              color="secondary"
             >
-              <Typography variant="body2" ml="0.375rem" component="span" fontWeight="700" color="#578AEB">
-                Supply
+              <Typography variant="body2" fontWeight="600" lineHeight="0.75rem" color="#ffffff">
+                Withdraw {'>'}
               </Typography>
-              <img src={mobileButtonRight} alt="" />
-            </Button>
-          </FlexEndBox>
-        </MyETHRightBox>
-      </SpaceBox>
+            </NFTsBox>
+          )}
+          <MyETHRightBox>
+            <FlexEndBox mb={!usedCollateral ? '0.25rem' : '0'}>
+              <Button
+                onClick={() => {
+                  setOpenMySupplyModal(true)
+                  setTypeModal(1)
+                }}
+                className="Padding-button"
+                variant="contained"
+                color="secondary"
+              >
+                <Typography variant="body2" ml="0.375rem" component="span" fontWeight="700" color="#578AEB">
+                  Supply
+                </Typography>
+                <img src={mobileButtonRight} alt="" />
+              </Button>
+            </FlexEndBox>
+          </MyETHRightBox>
+        </SpaceBox>
+      </Box>
       {usedCollateral && (
         <FlexEndBox>
           <NetSupplyAPYBox>

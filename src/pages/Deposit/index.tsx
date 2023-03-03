@@ -170,7 +170,7 @@ export default function Deposit() {
             <LadingHeaderBg></LadingHeaderBg>
           ) : (
             <>
-              <HeaderBg sx={{ backgroundImage: `{url(${collection?.icon})}` }}></HeaderBg>
+              <HeaderBg sx={{ backgroundImage: `url(${collection?.icon})` }}></HeaderBg>
               <FilterBg></FilterBg>
               <OpacityBg></OpacityBg>
             </>

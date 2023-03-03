@@ -67,9 +67,8 @@ const BeforeImg = styled(`img`)`
 `
 interface BlueChipGrowthNFTs {
   type: number
-  loading: boolean
 }
-export default function ChipNFTs({ type, loading }: BlueChipGrowthNFTs) {
+export default function ChipNFTs({ type }: BlueChipGrowthNFTs) {
   const dispatch = useAppDispatch()
   return (
     <FlexBox>

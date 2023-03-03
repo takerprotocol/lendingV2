@@ -138,8 +138,8 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
         query: NftCollection(id),
       })
       let count = 0
-      if (res && res.data && res.data.nftCollection) {
-        res.data.nftCollection.users.array.forEach((element: any) => {
+      if (res && res.data && res.data.nftCollection && res.data.nftCollection.users) {
+        res.data.nftCollection.users.forEach((element: any) => {
           count = count + element.tokens.length
         })
       }

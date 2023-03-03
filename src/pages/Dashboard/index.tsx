@@ -31,7 +31,8 @@ import { Typography } from '@mui/material'
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: 100% 685px;
+  min-height: calc(100vh - 267px);
 `
 const Main = styled(Box)`
   width: 1208px;
@@ -106,7 +107,7 @@ export default function Dashboard() {
           sx={{ backgroundImage: `${type === 1 ? `url(${BgIcon})` : `url(${growthBg})`}` }}
         >
           <Main>
-            <BlueChipNFTs loading={loading} type={type}></BlueChipNFTs>
+            <BlueChipNFTs type={type}></BlueChipNFTs>
             <DataNFTs loading={loading} type={type}></DataNFTs>
             <Collection loading={loading} type={type}></Collection>
           </Main>

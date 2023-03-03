@@ -10,7 +10,7 @@ export const clientEth = new ApolloClient({
 })
 export const clientGoerli = new ApolloClient({
   link: new HttpLink({
-    uri: 'https://api.thegraph.com/subgraphs/name/ceciliaz030/lendingsubgraph_test',
+    uri: ' https://api.thegraph.com/subgraphs/name/takerprotocol/lending-subgraph-2',
   }),
   cache: new InMemoryCache(),
 })

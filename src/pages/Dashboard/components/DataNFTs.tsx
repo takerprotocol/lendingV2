@@ -9,7 +9,9 @@ const DataNFTsBox = styled(Box)`
   width: 1208px;
   background: linear-gradient(180deg, rgba(153, 159, 210, 0.1) 0%, rgba(160, 163, 189, 0) 96.99%);
   border-radius: 12px;
-  padding: 46px 24px 24px;
+  padding-bottom: 24px;
+  padding-right: 24px;
+  padding-left: 24px;
   .SkeletonBg {
     background: #ffffff !important;
   }
@@ -21,7 +23,7 @@ interface DataNFTsProps {
 export default function DataNFTs({ type, loading }: DataNFTsProps) {
   const address = useAddress()
   return (
-    <DataNFTsBox>
+    <DataNFTsBox pt={loading ? '48px' : '46px'}>
       <Box>
         <DashboardTotal type={type}></DashboardTotal>
       </Box>
@@ -30,7 +32,7 @@ export default function DataNFTs({ type, loading }: DataNFTsProps) {
           <ConnectWallet type={type}></ConnectWallet>
         ) : (
           <>
-            <MyAccount type={type}></MyAccount>
+            <MyAccount loading={loading} type={type}></MyAccount>
             <Box width="24px"></Box>
             <MyLoan type={type} loading={loading}></MyLoan>
           </>

@@ -30,7 +30,7 @@ const WalletBgBox = styled(Box)`
     ),
     #262338;
   box-shadow: 0px 4px 8px rgba(75, 75, 122, 0.1), inset 0px 2px 2px rgba(75, 86, 132, 0.5);
-  border-radius: 10px;
+  border-radius: 6px;
 `
 export default function ConnectWallet({ type }: { type: number }) {
   const toggleModal = useWalletModalToggle()

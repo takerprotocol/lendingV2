@@ -1,12 +1,12 @@
 import greyShutOff from 'assets/images/svg/common/greyShutOff.svg'
 import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
-import addIcon from 'assets/images/svg/common/add.svg'
-import rightIcon from 'assets/images/svg/common/right.svg'
+import addIcon from 'assets/images/svg/common/addIcon.svg'
+import rightIcon from 'assets/images/svg/common/rightIcon.svg'
 import loanModalBefore from 'assets/images/svg/dashboard/loanModal-before.svg'
 import CustomizedSlider from 'components/Slider'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, times, amountDecimal, minus } from 'utils'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, amountDecimal, minus, times, div } from 'utils'
 import {
   useAddress,
   useBorrowLimit,
@@ -24,6 +24,8 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { toast } from 'react-toastify'
 import { useGateway } from 'hooks/useGateway'
+import { useDTokenApproveCallback } from 'hooks/transactions/useApproveCallback'
+import { ApprovalState } from 'hooks/transactions/useApproval'
 const style = {
   width: '420px',
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -52,7 +54,7 @@ const MAXBox = styled(Box)`
   border: 1px solid #14142a;
   border-radius: 4px;
   margin-top: 12px;
-  padding: 2px 8px;
+  padding: 1px 7px;
   cursor: pointer;
   color: #14142a;
   &.max {
@@ -111,7 +113,6 @@ const RightBox = styled(Box)`
   width: 18px;
   border-radius: 100%;
   height: 18px;
-  background: #eff0f6;
   padding: 4.88px;
 `
 const RightFlexBox = styled(Box)`
@@ -198,6 +199,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const address = useAddress()
   const ethDebt = useEthDebt()
   const addTransaction = useTransactionAdder()
+  const [tokenApproval, tokenApproveCallback] = useDTokenApproveCallback(amount, contract?.address)
+  const repayValue = useMemo(() => {
+    return times(div(amount, ethDebt), 100)
+  }, [amount, ethDebt])
   const beforeValue = useMemo(() => {
     if (new BigNumber(upBorrowLimitUsed).gte(100)) {
       return 100
@@ -207,57 +212,65 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
       return upBorrowLimitUsed
     }
   }, [upBorrowLimitUsed])
-  const bef = useMemo(() => {
-    if (new BigNumber(beforeValue).gte(96)) {
-      return 96
-    } else if (new BigNumber(beforeValue).lte(0)) {
-      return 0
-    } else {
-      return beforeValue
-    }
-  }, [beforeValue])
+  // const bef = useMemo(() => {
+  //   if (beforeValue > 96 || Number(repayValue) > 96) {
+  //   }
+  // }, [beforeValue])
   const BeforeImg = styled('img')`
     position: absolute;
     display: block;
     top: calc(100% - 10.5px);
-    left: ${`${times(bef, 1)}%`};
+    left: calc(${check === 1 ? beforeValue : repayValue} * 3.57px);
   `
   useEffect(() => {
     setCheck(repayRoBorrow)
   }, [repayRoBorrow])
-  const borrowSubmit = () => {
+  // useEffect(() => {
+  //   if (+amount !== 0) {
+  //     setSlider(+new BigNumber(ethDebt).div(amount).toFixed(2, 1))
+  //   }
+  // }, [amount, ethDebt])
+  const borrowSubmit = async () => {
     if (contract) {
       if (check === 1) {
-        contract
-          .borrow(poolContract?.address, amountDecimal(amount, decimal), { gasLimit })
-          .then((res: any) => {
-            addTransaction(res, {
-              type: TransactionType.BORROW,
-              recipient: address,
-              amount,
+        if (tokenApproval !== ApprovalState.APPROVED) {
+          await tokenApproveCallback()
+        } else {
+          contract
+            .borrow(poolContract?.address, amountDecimal(amount, decimal), { gasLimit })
+            .then((res: any) => {
+              addTransaction(res, {
+                type: TransactionType.BORROW,
+                recipient: address,
+                amount,
+              })
+              onClose(false)
             })
-            onClose(false)
-          })
-          .catch((error: any) => {
-            toast.error(error.message)
-          })
+            .catch((error: any) => {
+              toast.error(error.message)
+            })
+        }
       } else {
-        contract
-          .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
-            value: amountDecimal(amount, decimal),
-            gasLimit,
-          })
-          .then((res: any) => {
-            addTransaction(res, {
-              type: TransactionType.REPAY,
-              recipient: address,
-              amount,
+        if (tokenApproval !== ApprovalState.APPROVED) {
+          await tokenApproveCallback()
+        } else {
+          contract
+            .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
+              value: amountDecimal(amount, decimal),
+              gasLimit,
             })
-            onClose(false)
-          })
-          .catch((error: any) => {
-            toast.error(error.message)
-          })
+            .then((res: any) => {
+              addTransaction(res, {
+                type: TransactionType.REPAY,
+                recipient: address,
+                amount,
+              })
+              onClose(false)
+            })
+            .catch((error: any) => {
+              toast.error(error.message)
+            })
+        }
       }
     }
   }
@@ -294,11 +307,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
         setAmount(count)
       }
     } else {
-      if (new BigNumber(count).gte(ethDebt)) {
-        setAmount(ethDebt)
-      } else {
-        setAmount(count)
-      }
+      const sun = new BigNumber(ethDebt).times(new BigNumber(slider).div(100)).toFixed(2, 1)
+      setAmount(sun)
     }
   }, [borrowLimit, check, ethDebt, slider])
   return (
@@ -330,19 +340,19 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               >
                 <img src={greyShutOff} alt="" />
               </Box>
-              {new BigNumber(heath).lt(100) ? (
+              {new BigNumber(debtRiskLevel).lt(100) ? (
                 <HighRiskButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
                     In liquidation...
                   </Typography>
                 </HighRiskButton>
-              ) : new BigNumber(heath).gte(100) && new BigNumber(heath).lte(110) ? (
+              ) : new BigNumber(debtRiskLevel).gte(100) && new BigNumber(debtRiskLevel).lte(110) ? (
                 <HighRiskButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
                     HIGH RISK
                   </Typography>
                 </HighRiskButton>
-              ) : new BigNumber(heath).gt(110) && new BigNumber(heath).lte(130) ? (
+              ) : new BigNumber(debtRiskLevel).gt(110) && new BigNumber(debtRiskLevel).lte(130) ? (
                 <RiskyButton>
                   <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
                     RISKY
@@ -359,7 +369,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
           </SpaceBetweenBox>
           <Box display={+ethDebt === 0 ? 'none' : ''}>
             <CenterBox mt="24px">
-              <Box ml="114px">
+              <Box ml="115px">
                 <BorrowTypography
                   variant="subtitle1"
                   color={check === 1 ? '#FFFFFF' : '#A0A3BD'}
@@ -398,7 +408,13 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
         </TopBox>
         <BottomBox>
           <BorrowAmountBox
-            className={new BigNumber(beforeValue).gte(99) ? 'right' : new BigNumber(beforeValue).lte(1) ? 'left' : ''}
+            className={
+              new BigNumber(check === 1 ? beforeValue : repayValue).gt(99)
+                ? 'right'
+                : new BigNumber(check === 1 ? beforeValue : repayValue).lt(1)
+                ? 'left'
+                : ''
+            }
           >
             <SpaceBetweenBox>
               <Box width={'200px'}>
@@ -448,13 +464,13 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                         setAmount(ethDebt)
                       }}
                     >
-                      <Typography variant="body2" component="p">
+                      <Typography fontWeight="700" variant="body2">
                         MAX
                       </Typography>
                     </MAXBox>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Typography mt="8px" variant="body1" color="#14142A">
+                    <Typography mt="8px" variant="body1" fontWeight="600" color="#14142A">
                       {fixedFormat(ethDebt)} ETH
                     </Typography>
                   </Box>
@@ -463,10 +479,10 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </SpaceBetweenBox>
             <BeforeImg src={loanModalBefore} alt=""></BeforeImg>
           </BorrowAmountBox>
-          <Box mb="21px" mt="9px" height="8px" width="372px">
+          <Box mb="23px" mt="9px" height="8px" width="372px">
             <CustomizedSlider
               setSlider={setSlider}
-              sliderValue={Number(upBorrowLimitUsed)}
+              sliderValue={check === 1 ? Number(upBorrowLimitUsed) : +repayValue}
               riskLevelTag={riskLevelTag}
             ></CustomizedSlider>
           </Box>
@@ -528,7 +544,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               </Box>
               <Box sx={{ width: '52px' }}>
                 <FlexBox>
-                  <img height="8.25px" width="8.25px" src={addIcon} alt="" />
+                  <img src={addIcon} alt="" />
                 </FlexBox>
               </Box>
               <Box width={'66px'}>
@@ -538,7 +554,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               </Box>
               <Box width="50px">
                 <RightBox>
-                  <img height="8.25px" width="8.25px" src={rightIcon} alt="" />
+                  <img src={rightIcon} alt="" />
                 </RightBox>
               </Box>
               <Box>
@@ -603,7 +619,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </LiquidatedBox>
           ) : (
             <Button
-              disabled={buttonDisabled}
+              disabled={+amount === 0 || buttonDisabled}
               variant="contained"
               sx={{ width: '372px', height: '54px', marginTop: '24px' }}
               onClick={() => {
@@ -616,7 +632,17 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 }
               }}
             >
-              {check === 1 ? 'Borrow' : 'Repay'}
+              {check === 1
+                ? tokenApproval === ApprovalState.APPROVED || !amount
+                  ? 'Borrow'
+                  : tokenApproval === ApprovalState.PENDING
+                  ? 'Pending'
+                  : 'Approve'
+                : tokenApproval === ApprovalState.APPROVED || !amount
+                ? 'Repay'
+                : tokenApproval === ApprovalState.PENDING
+                ? 'Pending'
+                : 'Approve'}
             </Button>
           )}
         </BottomBox>

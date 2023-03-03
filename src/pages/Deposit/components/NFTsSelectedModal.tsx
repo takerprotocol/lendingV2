@@ -1,7 +1,7 @@
 import { Box, Button, Modal, styled, Typography } from '@mui/material'
 import addIcon from 'assets/images/svg/common/add.svg'
 import redPrompt from 'assets/images/svg/common/redPrompt.svg'
-import rightIcon from 'assets/images/svg/common/right.svg'
+import rightIcon from 'assets/images/svg/common/rightIcon.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds/index'
 import { NftTokenModel } from 'services/type/nft'
@@ -57,9 +57,9 @@ const DepositList = styled(Box)`
   padding: 16px 16px 16px 16px;
 `
 const BodyTypography = styled(Typography)`
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 19px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 160%;
   color: #a0a3bd;
 `
 interface NFTsSelectedType {
@@ -176,7 +176,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
         </FlexBox>
         <DepositList>
           {data.map((el: NftTokenModel, index: number) => (
-            <FlexBox mb={data.length > 1 ? '24px' : '0'} key={`Deposit${index}`}>
+            <FlexBox mb={Number(plus(index, 1)) >= data.length ? '0' : '24px'} key={`Deposit${index}`}>
               <img width="48px" src={el.media[0]?.gateway || ''} alt="" />
               <Box width="232px" ml="12px" mr="24px">
                 <BodyTypography color="#6E7191 !important" fontWeight="600 !important">
@@ -283,10 +283,9 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
                   borderRadius: '100%',
                   height: '18px',
                   background: '#EFF0F6',
-                  padding: '4.88px',
                 }}
               >
-                <img height="8.25px" width="8.25px" src={rightIcon} alt="" />
+                <img src={rightIcon} alt="" />
               </FlexBox>
             </Box>
             <Box>

@@ -11,6 +11,7 @@ import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress, useEthLiquidity, useUserValue } from 'state/user/hooks'
 import TipsTooltip from './TipsTooltip'
 import { fixedFormat, plus } from 'utils'
+import { setLoading } from 'state/application/reducer'
 
 const MyAccountBox = styled(Box)`
   width: 716px;
@@ -35,11 +36,11 @@ const MyAssetsBox = styled(Box)`
 `
 interface MyAccountProps {
   type: number
+  loading: boolean
 }
-export default function MyAccount({ type }: MyAccountProps) {
+export default function MyAccount({ type, loading }: MyAccountProps) {
   const ethLiquidity = useEthLiquidity()
   const userValue = useUserValue()
-  const [loading, setLoading] = useState(true)
   const address = useAddress()
   // const [userValues, setUserValues] = useState<BigNumber>(new BigNumber(0))
   const [data] = useState<boolean>(true)
