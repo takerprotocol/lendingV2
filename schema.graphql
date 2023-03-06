@@ -9,12 +9,12 @@ type Reserve @entity {
   pool: LendingPool!
 
   tToken: Bytes! # proxy
-  debtToken: Bytes! # pr1.1oxy
+  debtToken: Bytes! # proxy
   interestRateCalculator: Bytes! #library
   liqThreshold: BigInt!
   ltv: BigInt!
-  liquidityIndex: BigDecimal!
-  debtIndex: BigDecimal!
+  liquidityIndex: BigDecimal
+  debtIndex: BigDecimal
   depositRate: BigDecimal
   borrowRate: BigDecimal
 

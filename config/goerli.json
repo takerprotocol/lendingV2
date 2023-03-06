@@ -1,23 +1,19 @@
 {
   "network": "goerli",
   "LendingPool": {
-    "startBlock": 7778330,
-    "address": "0xc2a2c091329927a38F7b77D3F6c68518a0E8C230"
+    "startBlock": 8565231,
+    "address": "0xA58Dd872770dD6b1107a8f4A039Cd6Bb63F9db56"
   },
   "PoolConfigurator": {
-    "startBlock": 7778330,
-    "address": "0x457881F2F758aC29aD984a999632415b24F6039C"
+    "startBlock": 8565231,
+    "address": "0xFF1F2E2Ec407493bD18a2d548690d5bB30d03D57"
   },
   "IPriceOracleGetter": {
-    "startBlock": 7778330,
-    "address": "0x8f0ba96ca811f174c51636005df0f78fc148dde6"
+    "startBlock": 8549602,
+    "address": "0xE2CCD3C11848B986A7dab1B4F99D46a401674aA8"
   },
   "WETHGateway": {
-    "startBlock": 7778330,
-    "address": "0x1Db1011e880664A43009661d8A647A37c6789234"
-  },
-  "WETH": {
-    "startBlock": 7778330,
-    "address": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6"
+    "startBlock": 8565254,
+    "address": "0x898b4faA08FDd29726793CBd06a3da553d8Bb638"
   }
 }
