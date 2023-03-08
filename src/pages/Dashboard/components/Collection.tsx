@@ -308,7 +308,7 @@ export default function Collection({ type, loading }: CollectionType) {
                       </CollectionFlexBox>
                       {address ? (
                         <Box mt="50px">
-                          <Button onClick={() => navigate(`/deposit/${el.id}`)} variant="contained">
+                          <Button onClick={() => (window.location.href = `/deposit/${el.id}`)} variant="contained">
                             Deposit
                           </Button>
                         </Box>

@@ -183,7 +183,9 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                         src={renderImg(el.userNftCollection.id)}
                         alt=""
                         onClick={() => {
-                          navigate(`/deposit/${el.id}`)
+                          if (el.userNftCollection && el.userNftCollection.id) {
+                            window.location.href = `/deposit/${el.userNftCollection.id.split('-')[1]}`
+                          }
                         }}
                       ></ImgBox>
                     )
@@ -219,7 +221,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                         src={el.media[0]?.gateway || ''}
                         alt=""
                         onClick={() => {
-                          navigate(`/deposit/${el.contract.address}`)
+                          window.location.href = `/deposit/${el.contract.address}`
                         }}
                       ></RightImgBox>
                     </Tooltip>
@@ -236,7 +238,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                         src={el.icon || ''}
                         alt=""
                         onClick={() => {
-                          navigate(`/deposit/${el.id}`)
+                          window.location.href = `/deposit/${el.id}`
                         }}
                       ></RightImgBox>
                     </Tooltip>

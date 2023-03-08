@@ -186,7 +186,7 @@ export default function MobileCollection() {
                         alt=""
                         onClick={() => {
                           if (address && nftBalance(el.id) > 0) {
-                            navigate(`/deposit/${el.id}`)
+                            window.location.href = `/deposit/${el.id}`
                           }
                         }}
                       />
