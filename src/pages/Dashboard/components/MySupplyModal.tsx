@@ -518,12 +518,12 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               ? approval === ApprovalState.APPROVED || !amount
                 ? 'Supply'
                 : approval === ApprovalState.PENDING
-                ? 'Pending'
+                ? 'Loading'
                 : 'Approve'
               : tokenApproval === ApprovalState.APPROVED || !amount
               ? 'Withdraw'
               : tokenApproval === ApprovalState.PENDING
-              ? 'Pending'
+              ? 'Loading'
               : 'Approve'}
           </Button>
         </BottomBox>

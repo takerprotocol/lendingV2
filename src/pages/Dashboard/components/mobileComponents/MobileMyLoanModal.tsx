@@ -571,12 +571,12 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
               ? tokenApproval === ApprovalState.APPROVED || !amount
                 ? 'Borrow'
                 : tokenApproval === ApprovalState.PENDING
-                ? 'Pending'
+                ? 'Loading'
                 : 'Approve'
               : tokenApproval === ApprovalState.APPROVED || !amount
               ? 'Repay'
               : tokenApproval === ApprovalState.PENDING
-              ? 'Pending'
+              ? 'Loading'
               : 'Approve'}
           </Button>
           {new BigNumber(debtRiskLevel).lt(110) && check === 1 && (

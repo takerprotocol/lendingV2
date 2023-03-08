@@ -231,7 +231,7 @@ export default function CustomizeRoutes() {
   }, [dispatch])
   useEffect(() => {
     getCollection()
-  }, [getCollection])
+  }, [getCollection, flag])
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />

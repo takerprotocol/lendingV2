@@ -331,8 +331,15 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             }
           }}
         >
-          {/* {type === 'Withdraw' ? type : isApproved === 2 ? 'Deposit' : isApproved === 1 ? 'Pending' : 'Approve'} */}
-          Deposit {data.length} NFTs
+          {type === 'Withdraw'
+            ? isApproved === 2
+              ? type
+              : 'Loading'
+            : isApproved === 2
+            ? `Deposit ${data.length} NFTs`
+            : isApproved === 1
+            ? 'Loading'
+            : 'Approve'}
         </Button>
       </Box>
     </Modal>
