@@ -10,6 +10,7 @@ import ERC721 from 'assets/images/png/collection/721.png'
 import { useActiveWeb3React } from 'hooks/web3'
 import { getClient } from 'apollo/client'
 import { User } from 'apollo/queries'
+import { decimalFormat } from 'utils'
 
 // import ILendingPoolAddressesProviderAbi from 'abis/MockERC721.json'
 // import { useContract } from 'hooks/useContract'
@@ -266,7 +267,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
             </Typography>
             <FlexEndBox height={24}>
               <Typography variant="h5" mr="8px" fontWeight="600" color="#ffffff" lineHeight="22px">
-                {userValue.NFTLiquidity}
+                {decimalFormat(userValue.NFTLiquidity, 0)}
               </Typography>
               <Typography variant="subtitle1" fontWeight="700" color="#ffffff" lineHeight="18px">
                 ETH

@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { useCollections } from 'state/application/hooks'
 import { useAccountNfts, useUserNftConfig, useUserValue } from 'state/user/hooks'
 import { SpaceBox, FlexBox } from 'styleds'
-import { fixedFormat } from 'utils'
+import { decimalFormat } from 'utils'
 const MyNFTCollateralBox = styled(Box)`
   background: linear-gradient(249.47deg, #7a82ff 0%, #9574f5 100%);
   box-shadow: 0 0.5rem 1rem rgba(128, 139, 238, 0.3), inset 0 0.0625rem 0.1875rem rgba(170, 189, 255, 0.7);
@@ -45,7 +45,7 @@ export default function MobileMyNFTCollateral({ myLoanType }: MobileMyNFTCollate
             My NFT Collateral
           </Typography>
           <Typography variant="subtitle1" component="span" fontWeight="700" color="#ffffff">
-            {fixedFormat(userValue.NFTLiquidity)}{' '}
+            {decimalFormat(userValue.NFTLiquidity, 0)}
             <Typography variant="body1" component="span" fontWeight="700" color="#ffffff">
               ETH
             </Typography>
