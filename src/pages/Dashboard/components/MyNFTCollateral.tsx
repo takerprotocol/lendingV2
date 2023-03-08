@@ -3,7 +3,6 @@ import MyNFTCollateralBg from 'assets/images/svg/dashboard/MyNFTCollateralBg.svg
 import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
 import { FlexBox, SpaceBetweenBox, SpaceBox } from 'styleds'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAccountNfts, useAddress, useUserValue } from 'state/user/hooks'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
 import ERC721 from 'assets/images/png/collection/721.png'
@@ -116,7 +115,6 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
       setClient(getClient()[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
   }, [chainId])
-  const navigate = useNavigate()
   const [nftCount, setNftCount] = useState(0)
   const [dataType] = useState<boolean>(true)
   const userValue = useUserValue()

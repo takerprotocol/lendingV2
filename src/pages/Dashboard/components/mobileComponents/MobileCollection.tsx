@@ -8,7 +8,6 @@ import mobileCollateralUp from 'assets/images/svg/dashboard/mobileCollateralUp.s
 import { FlexBox, SpaceBetweenBox } from 'styleds'
 import { useCallback, useState } from 'react'
 import { fromWei } from 'web3-utils'
-import { useNavigate } from 'react-router-dom'
 import { useCollections, useDepositedCollection, useLoading } from 'state/application/hooks'
 import { div, fixedFormat, times } from 'utils'
 import { useAccountNfts, useAddress } from 'state/user/hooks'
@@ -73,7 +72,6 @@ export default function MobileCollection() {
   const address = useAddress()
   const loading = useLoading()
   const list = useAccountNfts()
-  const navigate = useNavigate()
   const depositedCollection = useDepositedCollection()
   const deposited = (id: string) => {
     if (depositedCollection) {

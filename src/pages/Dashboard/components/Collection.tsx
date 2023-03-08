@@ -8,7 +8,6 @@ import { useCallback, useState } from 'react'
 import { SpaceBetweenBox, FlexBox } from 'styleds'
 import { useAccountNfts, useAddress, useDecimal, useUserNftConfig } from 'state/user/hooks'
 import { useCollections, useDepositedCollection, usePoolValues, useWalletModalToggle } from 'state/application/hooks'
-import { useNavigate } from 'react-router-dom'
 import CollectionSkeleton from './DashboardSkeleton/CollectionSkeleton'
 // import { decimalFormat, div, fixedFormat } from 'utils'
 import { decimalFormat, div, fixedFormat, times } from 'utils'
@@ -97,7 +96,6 @@ export default function Collection({ type, loading }: CollectionType) {
   const collection = useCollections()
   const address = useAddress()
   const toggleModal = useWalletModalToggle()
-  const navigate = useNavigate()
   const poolValues = usePoolValues()
   const decimal = useDecimal()
   const depositedCollection = useDepositedCollection()
