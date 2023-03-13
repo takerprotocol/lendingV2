@@ -183,11 +183,9 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
       setLoading(false)
     }
   }
-
   const riskLevelWarning = useMemo(() => {
     return new BigNumber(collateralRiskLevel).lt(150) && type === 'withdraw'
   }, [collateralRiskLevel, type])
-
   return (
     <Modal open={openSelectedModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -210,7 +208,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
         </FlexBox>
         <DepositList>
           {data.map((el: NftTokenModel, index: number) => (
-            <FlexBox mb={Number(plus(index, 1)) >= data.length ? '0' : '24px'} key={`Deposit${index}`}>
+            <FlexBox mb={Number(index + 1) >= data.length ? '0' : '24px'} key={`Deposit${index}`}>
               <img width="48px" src={el.media[0]?.gateway || ''} alt="" />
               <Box width="232px" ml="12px" mr="24px">
                 <BodyTypography color="#6E7191 !important" fontWeight="600 !important">

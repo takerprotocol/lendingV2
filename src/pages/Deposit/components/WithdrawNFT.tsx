@@ -1,8 +1,8 @@
-import styled from '@emotion/styled'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, styled, Typography } from '@mui/material'
 import XIcon from 'assets/images/svg/common/close.svg'
-import RefreshIcon2 from 'assets/images/svg/common/refresh2.svg'
-import redResetButton from 'assets/images/svg/deposit/redResetButton.svg'
+import nullNft from 'assets/images/svg/common/nullNft-icon.svg'
+// import RefreshIcon2 from 'assets/images/svg/common/refresh2.svg'
+// import redResetButton from 'assets/images/svg/deposit/redResetButton.svg'
 import redXButton from 'assets/images/svg/deposit/redXButton.svg'
 import NFTsList from './NFTsList'
 import Pager from '../../../components/Pages/Pager'
@@ -17,6 +17,7 @@ import WithdrawSelectedModal from './WithdrawSelectedModal'
 import { useAlchemy } from 'hooks/useAlchemy'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
+import { CenterBox } from 'styleds'
 const DepositedNFTsStyleBox = styled(Box)`
   margin-bottom: 200px;
 `
@@ -44,32 +45,46 @@ const WithdrawButtonBox = styled(Box)`
   height: 48px;
   border-radius: 24px;
 `
-const RefreshButtonBox = styled(Box)`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  width: 44px;
-  height: 44px;
-  border-radius: 100%;
-`
+// const RefreshButtonBox = styled(Box)`
+//   display: flex;
+//   align-items: center;
+//   cursor: pointer;
+//   width: 44px;
+//   height: 44px;
+//   border-radius: 100%;
+// `
 const XButtonBox = styled(Box)`
   display: flex;
   align-items: center;
+  margin-right: 16px;
   cursor: pointer;
   padding: 15px;
   width: 44px;
   height: 44px;
   border-radius: 100%;
 `
+const NullDepositBox = styled(CenterBox)`
+  background: rgba(217, 219, 233, 0.3);
+  border-radius: 12px;
+  flex-direction: column;
+`
 interface WithdrawNFTProps {
-  depositType: string
-  withdrawType: string
-  setWithdrawType: Function
+  // depositType: string
+  // withdrawType: string
+  // setWithdrawType: Function
+  checkedIndex: Array<string>
+  setCheckedIndex: Function
+  setDepositCheckedIndex: Function
   list: any[]
   loading: boolean
 }
-export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType, list, loading }: WithdrawNFTProps) {
-  const [checkedIndex, setCheckedIndex] = useState<Array<string>>([])
+export default function WithdrawNFT({
+  list,
+  loading,
+  checkedIndex,
+  setCheckedIndex,
+  setDepositCheckedIndex,
+}: WithdrawNFTProps) {
   const [withdrawList, setWithdrawList] = useState<Array<Nft>>([])
   const [openSelect, setOpenSelect] = useState<boolean>(false)
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
@@ -82,13 +97,13 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
       return tx && tx.receipt && tx.info.type === TransactionType.WITHDRAW_NFT && isTransactionRecent(tx)
     }).length
   }, [transactions])
-
   useEffect(() => {
     if (flag) {
       setOpenSelect(false)
       setOpenSureModal(false)
       setCheckedIndex([])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flag])
   const alchemy = useAlchemy()
   const withdrawAmount = useMemo(() => {
@@ -103,18 +118,17 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
   const withdrawLargeAmount = useMemo(() => {
     return new BigNumber(borrowLimitUsed).gte(1)
   }, [borrowLimitUsed])
-  function ButtonWithdraw() {
-    if (depositType === 'shut') {
-      setWithdrawType('open')
-    }
-  }
+  // function ButtonWithdraw() {
+  //   if (depositType === 'shut') {
+  //     setWithdrawType('open')
+  //   }
+  // }
   const [withdraw] = useState<string>('withdraw')
   const amount = useMemo(() => {
     return list.reduce((total: string, current: any) => {
       return new BigNumber(total).plus(current.amount || '0').toString()
     }, '0')
   }, [list])
-
   const getWithdrawList = useCallback(async () => {
     if (alchemy) {
       const arr: Array<Nft> = []
@@ -135,25 +149,27 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
   }, [getWithdrawList])
   return (
     <DepositedNFTsStyleBox
-      sx={{
-        opacity: `${depositType === 'open' ? '0.7' : '1'}`,
-      }}
+      sx={
+        {
+          // opacity: `${depositType === 'open' ? '0.7' : '1'}`,
+        }
+      }
     >
-      <DepositedNFTsBox
-        sx={{
-          background: `${
-            list.length === 0
-              ? ''
-              : 'linear-gradient(180deg, rgba(217, 219, 233, 0.3) 17.89%, rgba(217, 219, 233, 0) 100%)'
-          }`,
-        }}
-      >
-        {loading ? (
-          <AvailableAndDepositedSkeleton />
-        ) : (
-          <FlexBox mb="43px">
-            <>
-              {list.length !== 0 ? (
+      {list.length !== 0 ? (
+        <>
+          <DepositedNFTsBox
+            sx={{
+              background: `${
+                list.length === 0
+                  ? ''
+                  : 'linear-gradient(180deg, rgba(217, 219, 233, 0.3) 17.89%, rgba(217, 219, 233, 0) 100%)'
+              }`,
+            }}
+          >
+            {loading ? (
+              <AvailableAndDepositedSkeleton />
+            ) : (
+              <FlexBox height={'48px'} mb="43px">
                 <FlexStartBox>
                   <Typography lineHeight="38px" color="#4E4B66" fontWeight="700" fontSize=" 24px">
                     You can withdraw
@@ -162,109 +178,113 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
                     {list.length} NFTs / {amount} ETH
                   </Typography>
                 </FlexStartBox>
-              ) : (
-                <FlexStartBox>
-                  <Typography lineHeight="38px" color="#4E4B66" fontWeight="700" fontSize=" 24px">
-                    0 withdraw NFTs
-                  </Typography>
-                  <Typography mt="12px" ml="16px" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
-                    0.00 ETH
-                  </Typography>
-                </FlexStartBox>
-              )}
-            </>
-            {withdrawType === 'shut' ? (
-              <Button
-                sx={{ display: `${list.length === 0 && 'none'}`, marginRight: '24px' }}
-                variant="contained"
-                color="secondary"
-                onClick={ButtonWithdraw}
-              >
-                Choose
-              </Button>
-            ) : (
-              <FlexBox mr={'24px'}>
-                {withdrawLargeAmount && (
-                  <Box display={withdrawLargeAmount ? '' : 'none'} mr="16px">
-                    <Typography fontWeight="600" variant="body2" color="#E1536C">
-                      The amount of withdraw is too large
-                    </Typography>
-                    <Typography fontWeight="600" variant="body2" color="#E1536C">
-                      and it is easy to be liquidated
-                    </Typography>
-                  </Box>
-                )}
-                <XButtonBox
-                  onClick={() => setOpenSureModal(true)}
-                  sx={{ background: `${withdrawLargeAmount ? ' rgba(225, 83, 108, 0.1)' : '#e1e3ee'}` }}
-                >
-                  <img width={'14px'} height={'14px'} src={withdrawLargeAmount ? redXButton : XIcon} alt="" />
-                </XButtonBox>
-                <RefreshButtonBox
-                  mx="16px"
-                  sx={{
-                    borderRadius: '100%',
-                    background: `${withdrawLargeAmount ? '' : '#e1e3ee'}`,
-                  }}
-                  onClick={() => {
-                    setWithdrawType('shut')
-                    setCheckedIndex([])
-                  }}
-                >
-                  <img src={withdrawLargeAmount ? redResetButton : RefreshIcon2} alt="" />
-                </RefreshButtonBox>
-                <WithdrawButtonBox
-                  sx={{ background: `${withdrawLargeAmount ? ' rgba(225, 83, 108, 0.1)' : '#e1e3ee'}` }}
-                  onClick={() => {
-                    if (checkedIndex.length !== 0) {
-                      setOpenSelect(true)
-                    }
-                  }}
-                >
-                  <Typography
-                    variant="body1"
-                    component="h1"
-                    fontWeight="700"
-                    color={withdrawLargeAmount ? '#E1536C' : '#14142A'}
+                {/* {withdrawType === 'shut' ? (
+                  <Button
+                    sx={{ display: `${list.length === 0 && 'none'}`, marginRight: '24px' }}
+                    variant="contained"
+                    color="secondary"
+                    onClick={ButtonWithdraw}
                   >
-                    Withdraw {checkedIndex.length} NFTs
-                  </Typography>
-                </WithdrawButtonBox>
+                    Choose
+                  </Button>
+                ) : ( */}
+                {checkedIndex.length !== 0 && (
+                  <FlexBox mr={'24px'}>
+                    {withdrawLargeAmount && (
+                      <Box display={withdrawLargeAmount ? '' : 'none'} mr="16px">
+                        <Typography fontWeight="600" variant="body2" color="#E1536C">
+                          The amount of withdraw is too large
+                        </Typography>
+                        <Typography fontWeight="600" variant="body2" color="#E1536C">
+                          and it is easy to be liquidated
+                        </Typography>
+                      </Box>
+                    )}
+                    <XButtonBox
+                      onClick={() => {
+                        // setOpenSureModal(true)
+                        setCheckedIndex([])
+                      }}
+                      sx={{ background: `${withdrawLargeAmount ? ' rgba(225, 83, 108, 0.1)' : '#e1e3ee'}` }}
+                    >
+                      <img width={'14px'} height={'14px'} src={withdrawLargeAmount ? redXButton : XIcon} alt="" />
+                    </XButtonBox>
+                    {/* <RefreshButtonBox
+                      mr="16px"
+                      sx={{
+                        borderRadius: '100%',
+                        background: `${withdrawLargeAmount ? '' : '#e1e3ee'}`,
+                      }}
+                      onClick={() => {
+                        setWithdrawType('shut')
+                        setCheckedIndex([])
+                      }}
+                    >
+                      <img src={withdrawLargeAmount ? redResetButton : RefreshIcon2} alt="" />
+                    </RefreshButtonBox> */}
+                    <WithdrawButtonBox
+                      sx={{ background: `${withdrawLargeAmount ? ' rgba(225, 83, 108, 0.1)' : '#e1e3ee'}` }}
+                      onClick={() => {
+                        if (checkedIndex.length !== 0) {
+                          setOpenSelect(true)
+                        }
+                      }}
+                    >
+                      <Typography
+                        variant="body1"
+                        component="h1"
+                        fontWeight="700"
+                        color={withdrawLargeAmount ? '#E1536C' : '#14142A'}
+                      >
+                        Withdraw {checkedIndex.length} NFTs
+                      </Typography>
+                    </WithdrawButtonBox>
+                  </FlexBox>
+                )}
+                {/* )} */}
               </FlexBox>
             )}
-          </FlexBox>
-        )}
-        <NFTsList
-          loading={loading}
-          TypeKey={withdraw}
-          list={withdrawList}
-          depositType={withdrawType}
-          checked={checkedIndex}
-          onChange={(data: Array<string>) => {
-            setCheckedIndex(data)
-          }}
-        ></NFTsList>
-        <Pager TypeKey={withdraw} list={list}></Pager>
-      </DepositedNFTsBox>
-      <WithdrawSelectedModal
-        type={withdraw}
-        checkedIndex={checkedIndex}
-        amount={withdrawAmount}
-        amountList={list.filter((el) => checkedIndex.includes(el.id.split('-')[2]))}
-        data={withdrawList.filter((el) => checkedIndex.includes(el.tokenId))}
-        open={openSelect}
-        close={setOpenSelect}
-      ></WithdrawSelectedModal>
-      <SureModal
-        openSureModal={openSureModal}
-        handle={(type: string) => {
-          if (type === 'cancel') {
-            setWithdrawType('shut')
-            setCheckedIndex([])
-          }
-          setOpenSureModal(false)
-        }}
-      ></SureModal>
+            <NFTsList
+              loading={loading}
+              TypeKey={withdraw}
+              list={withdrawList}
+              setCheckedIndex={setDepositCheckedIndex}
+              // depositType={withdrawType}
+              checked={checkedIndex}
+              onChange={(data: Array<string>) => {
+                setCheckedIndex(data)
+              }}
+            ></NFTsList>
+            <Pager TypeKey={withdraw} list={list}></Pager>
+          </DepositedNFTsBox>
+          <WithdrawSelectedModal
+            type={withdraw}
+            checkedIndex={checkedIndex}
+            amount={withdrawAmount}
+            amountList={list.filter((el) => checkedIndex.includes(el.id.split('-')[2]))}
+            data={withdrawList.filter((el) => checkedIndex.includes(el.tokenId))}
+            open={openSelect}
+            close={setOpenSelect}
+          ></WithdrawSelectedModal>
+          <SureModal
+            openSureModal={openSureModal}
+            handle={(type: string) => {
+              if (type === 'cancel') {
+                // setWithdrawType('shut')
+                setCheckedIndex([])
+              }
+              setOpenSureModal(false)
+            }}
+          ></SureModal>
+        </>
+      ) : (
+        <NullDepositBox my="24px" py={'32px'}>
+          <img src={nullNft} alt="" />
+          <Typography mt={'16px'} color="#6E7191" variant="subtitle2" fontWeight="500">
+            You haven{`'`}t deposited any NFT yet
+          </Typography>
+        </NullDepositBox>
+      )}
     </DepositedNFTsStyleBox>
   )
 }

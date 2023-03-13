@@ -1,7 +1,7 @@
-import styled from '@emotion/styled'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, styled, Typography } from '@mui/material'
 import XIcon from 'assets/images/svg/common/close.svg'
-import RefreshIcon from 'assets/images/svg/common/refresh.svg'
+// import RefreshIcon from 'assets/images/svg/common/refresh.svg'
+import nullNft from 'assets/images/svg/common/nullNft-icon.svg'
 import NFTsList from './NFTsList'
 import Pager from '../../../components/Pages/Pager'
 import AvailableAndDepositedSkeleton from './depositSkeleton/AvailableAndDepositedSkeleton'
@@ -12,6 +12,7 @@ import SureModal from './SureModal'
 import { NftTokenModel } from 'services/type/nft'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
+import { CenterBox } from 'styleds'
 
 const AvailableNFTsBox = styled(Box)`
   width: 1012px;
@@ -38,17 +39,18 @@ const DepositButtonBox = styled(Box)`
   border-radius: 24px;
   background: #eff0f7;
 `
-const RefreshButtonBox = styled(Box)`
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  background: #eff0f7;
-  width: 44px;
-  height: 44px;
-  border-radius: 100%;
-`
+// const RefreshButtonBox = styled(Box)`
+//   display: flex;
+//   align-items: center;
+//   cursor: pointer;
+//   background: #eff0f7;
+//   width: 44px;
+//   height: 44px;
+//   border-radius: 100%;
+// `
 const XButtonBox = styled(Box)`
   display: flex;
+  margin-right: 16px;
   align-items: center;
   cursor: pointer;
   padding: 15px;
@@ -57,15 +59,28 @@ const XButtonBox = styled(Box)`
   height: 44px;
   border-radius: 100%;
 `
+const NullDepositBox = styled(CenterBox)`
+  background: rgba(217, 219, 233, 0.3);
+  border-radius: 12px;
+  flex-direction: column;
+`
 interface AvailableNFTsProps {
-  depositType: string
-  withdrawType: string
+  // depositType: string
+  // withdrawType: string
+  // setDepositType: Function
+  setWithdrawCheckedIndex: Function
+  checkedIndex: Array<string>
+  setCheckedIndex: Function
   list: NftTokenModel[]
-  setDepositType: Function
   loading: boolean
 }
-export default function DepositNFT({ depositType, withdrawType, list, loading, setDepositType }: AvailableNFTsProps) {
-  const [checkedIndex, setCheckedIndex] = useState<Array<string>>([])
+export default function DepositNFT({
+  list,
+  loading,
+  checkedIndex,
+  setCheckedIndex,
+  setWithdrawCheckedIndex,
+}: AvailableNFTsProps) {
   const [openSelectedModal, setOpenSelectedModal] = useState<boolean>(false)
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
   const transactions = useAllTransactions()
@@ -83,12 +98,13 @@ export default function DepositNFT({ depositType, withdrawType, list, loading, s
       setOpenSureModal(false)
       setCheckedIndex([])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flag])
-  function ButtonDeposit() {
-    if (withdrawType === 'shut') {
-      setDepositType('open')
-    }
-  }
+  // function ButtonDeposit() {
+  //   if (withdrawType === 'shut') {
+  //     setDepositType('open')
+  //   }
+  // }
   const [Deposit] = useState<string>('Deposit')
   const amount = useMemo(() => {
     return list.reduce((total: string, current: NftTokenModel) => {
@@ -96,17 +112,26 @@ export default function DepositNFT({ depositType, withdrawType, list, loading, s
     }, '0')
   }, [list])
   return (
-    <AvailableNFTsStyleBox sx={{ opacity: `${withdrawType === 'open' ? '0.7' : '1'}` }}>
+    <AvailableNFTsStyleBox
+      sx={
+        {
+          // opacity: `${withdrawType === 'open' ? '0.7' : '1'}`
+        }
+      }
+    >
       {list.length === 0 ? (
-        <Typography m="48px 24px 24px 24px" variant="h5" fontWeight="700" fontSize=" 24px">
-          0 NFT you can deposit
-        </Typography>
+        <NullDepositBox my="24px" py={'32px'}>
+          <img src={nullNft} alt="" />
+          <Typography mt={'16px'} color="#6E7191" variant="subtitle2" fontWeight="500">
+            You have no NFT to deposit to this collection
+          </Typography>
+        </NullDepositBox>
       ) : (
         <AvailableNFTsBox>
           {loading ? (
             <AvailableAndDepositedSkeleton />
           ) : (
-            <FlexBox sx={{ marginBottom: '30px' }}>
+            <FlexBox height={'48px'} sx={{ marginBottom: '30px' }}>
               <Box>
                 <Typography component="span" variant="h5" fontSize=" 24px" lineHeight="38px">
                   You can deposit
@@ -116,24 +141,30 @@ export default function DepositNFT({ depositType, withdrawType, list, loading, s
                 </Typography>
               </Box>
               <Box mr="24px">
-                {depositType === 'shut' ? (
+                {/* {depositType === 'shut' ? (
                   <Button variant="contained" onClick={ButtonDeposit}>
                     Choose
                   </Button>
-                ) : (
-                  <Box>
-                    <FlexBox width={'268px'}>
-                      <XButtonBox onClick={() => setOpenSureModal(true)}>
+                ) : ( */}
+                <Box>
+                  {checkedIndex.length !== 0 && (
+                    <FlexBox>
+                      <XButtonBox
+                        onClick={() => {
+                          // setOpenSureModal(true)
+                          setCheckedIndex([])
+                        }}
+                      >
                         <img width={'14px'} height={'14px'} src={XIcon} alt="" />
                       </XButtonBox>
-                      <RefreshButtonBox
+                      {/* <RefreshButtonBox
                         onClick={() => {
                           setCheckedIndex([])
                           setDepositType('shut')
                         }}
                       >
                         <img src={RefreshIcon} alt="" />
-                      </RefreshButtonBox>
+                      </RefreshButtonBox> */}
                       <DepositButtonBox
                         onClick={() => {
                           if (checkedIndex.length !== 0) {
@@ -146,15 +177,17 @@ export default function DepositNFT({ depositType, withdrawType, list, loading, s
                         </Typography>
                       </DepositButtonBox>
                     </FlexBox>
-                  </Box>
-                )}
+                  )}
+                </Box>
+                {/* )} */}
               </Box>
             </FlexBox>
           )}
           <NFTsList
-            depositType={depositType}
+            // depositType={depositType}
             TypeKey={Deposit}
             loading={loading}
+            setCheckedIndex={setWithdrawCheckedIndex}
             list={list}
             checked={checkedIndex}
             onChange={(data: Array<string>) => {
@@ -175,7 +208,7 @@ export default function DepositNFT({ depositType, withdrawType, list, loading, s
         openSureModal={openSureModal}
         handle={(type: string) => {
           if (type === 'cancel') {
-            setDepositType('shut')
+            // setDepositType('shut')
             setCheckedIndex([])
           }
           setOpenSureModal(false)

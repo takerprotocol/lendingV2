@@ -157,7 +157,6 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
       collections.find((cel) => cel.id.toLocaleLowerCase() === el.contract.address.toLocaleLowerCase())
     )
   }, [accountNfts, collections])
-  // console.log(supportNfts)
   const count = useMemo(() => {
     return depositedCollection.length >= 4
   }, [depositedCollection.length])

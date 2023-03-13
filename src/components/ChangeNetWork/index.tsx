@@ -18,7 +18,6 @@ const ChangeNetWorkBox = styled(Box)`
     cursor: pointer;
   }
 `
-
 export const ChangeNetWork = () => {
   const change = async () => {
     if (window.ethereum) {

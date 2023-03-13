@@ -18,7 +18,8 @@ import {
   useUserValue,
 } from 'state/user/hooks'
 // import { gasLimit } from 'config'
-import { getRiskLevel, getRiskLevelTag, minus, plus, times } from 'utils'
+// import { toast } from 'react-toastify'
+import { getRiskLevel, getRiskLevelTag, minus, times } from 'utils'
 import { useContract } from 'hooks/useContract'
 import { useParams } from 'react-router-dom'
 import { isTransactionRecent, useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
@@ -134,7 +135,6 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
       setLoading(false)
     }
   }
-  console.log(data)
   const riskLevelWarning = useMemo(() => {
     return new BigNumber(collateralRiskLevel).lt(150) && type === 'withdraw'
   }, [collateralRiskLevel, type])
@@ -161,8 +161,8 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
         </FlexBox>
         <WithdrawList>
           {data.map((el: Nft, index: number) => (
-            <FlexBox mb={Number(plus(index, 1)) >= data.length ? '0' : '24px'} key={`Withdraw${index}`}>
-              <img width="48px" src={el.rawMetadata?.image} alt="" />
+            <FlexBox mb={Number(index + 1) === data.length ? '0' : '24px'} key={`Withdraw${index}`}>
+              <img width="48px" height={'48px'} src={el.media[0]?.gateway || ''} alt="" />
               <Box width="232px" ml="12px" mr="24px">
                 <BodyTypography color="#6E7191 !important" fontWeight="600 !important">
                   {el.rawMetadata?.name}

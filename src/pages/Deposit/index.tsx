@@ -104,8 +104,10 @@ export default function Deposit() {
   const { id } = useParams()
   const alchemy = useAlchemy()
   const [TestWithdrawList, setWithdrawList] = useState<Array<Nft>>([])
-  const [depositType, setDepositType] = useState<string>('shut')
-  const [withdrawType, setWithdrawType] = useState<string>('shut')
+  // const [depositType, setDepositType] = useState<string>('shut')
+  // const [withdrawType, setWithdrawType] = useState<string>('shut')
+  const [depositCheckedIndex, setDepositCheckedIndex] = useState<Array<string>>([])
+  const [withdrawCheckedIndex, setWithdrawCheckedIndex] = useState<Array<string>>([])
   const depositedCollection = useDepositedCollection()
   const transactions = useAllTransactions()
   const depositFlag = useMemo(() => {
@@ -210,16 +212,22 @@ export default function Deposit() {
             <DepositNFT
               loading={loading}
               list={list}
-              setDepositType={setDepositType}
-              depositType={depositType}
-              withdrawType={withdrawType}
+              checkedIndex={depositCheckedIndex}
+              setCheckedIndex={setDepositCheckedIndex}
+              setWithdrawCheckedIndex={setWithdrawCheckedIndex}
+              // setDepositType={setDepositType}
+              // depositType={depositType}
+              // withdrawType={withdrawType}
             ></DepositNFT>
             <WithdrawNFT
               loading={loading}
               list={withdrawList}
-              depositType={depositType}
-              withdrawType={withdrawType}
-              setWithdrawType={setWithdrawType}
+              checkedIndex={withdrawCheckedIndex}
+              setDepositCheckedIndex={setDepositCheckedIndex}
+              setCheckedIndex={setWithdrawCheckedIndex}
+              // depositType={depositType}
+              // withdrawType={withdrawType}
+              // setWithdrawType={setWithdrawType}
             ></WithdrawNFT>
           </Main>
         </Body>

@@ -1,6 +1,6 @@
 import { Nft } from '@alch/alchemy-sdk'
 import styled from '@emotion/styled'
-import { Box, Checkbox, Skeleton, TextField, Typography } from '@mui/material'
+import { Box, Skeleton, TextField, Typography } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import { NftTokenModel } from 'services/type/nft'
 import NftListSkeleton from './depositSkeleton/NftListSkeleton'
@@ -16,12 +16,12 @@ const FlexBox = styled(Box)`
   align-items: center;
 `
 
-const StyledCheckbox = styled(Checkbox)(() => ({
-  width: 20,
-  height: 20,
-  boxShadow: '0px 4px 8px rgba(75, 75, 122, 0.1)',
-  color: 'trasnparent !important',
-}))
+// const StyledCheckbox = styled(Checkbox)(() => ({
+//   width: 20,
+//   height: 20,
+//   boxShadow: '0px 4px 8px rgba(75, 75, 122, 0.1)',
+//   color: 'trasnparent !important',
+// }))
 const NftBox = styled(Box)`
   width: 305px;
   padding: 12px;
@@ -32,7 +32,7 @@ const NftBox = styled(Box)`
   margin-bottom: 24px;
   &.isCheck {
     padding: 11px;
-    border: 1px solid #a0a3bd;
+    border: 1px solid #262338;
   }
 `
 const MaxBox = styled(Box)`
@@ -76,12 +76,13 @@ const Image = (props: any) => {
 interface NFTsLisProps {
   list: NftTokenModel[] | Nft[]
   loading: boolean
-  depositType: string
+  // depositType: string
+  setCheckedIndex: Function
   TypeKey: string
   onChange: Function
   checked: Array<string>
 }
-export default function NFTsList({ list, loading, depositType, onChange, TypeKey, checked }: NFTsLisProps) {
+export default function NFTsList({ list, loading, onChange, TypeKey, checked, setCheckedIndex }: NFTsLisProps) {
   const [checkboxType, setCheckboxType] = useState<Array<string>>([])
   // const [nftName, setNftName] = useState<string>('')
   // const [image, setImage] = useState<string>('')
@@ -112,9 +113,21 @@ export default function NFTsList({ list, loading, depositType, onChange, TypeKey
               <NftBox
                 className={checkboxType.includes(el.tokenId) ? 'isCheck' : ' '}
                 key={`nft${TypeKey}-${el.tokenId}`}
+                onClick={() => {
+                  if (checkboxType.length === 0) {
+                    setCheckedIndex([])
+                  }
+                  if (!checkboxType.includes(el.tokenId)) {
+                    onChange([...checkboxType, el.tokenId])
+                    setCheckboxType([...checkboxType, el.tokenId])
+                  } else {
+                    onChange(checkboxType.filter((cel) => cel !== el.tokenId))
+                    setCheckboxType(checkboxType.filter((cel) => cel !== el.tokenId))
+                  }
+                }}
               >
                 <FlexBox>
-                  <StyledCheckbox
+                  {/* <StyledCheckbox
                     checked={checkboxType.includes(el.tokenId)}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                       if (event.target.checked) {
@@ -127,7 +140,7 @@ export default function NFTsList({ list, loading, depositType, onChange, TypeKey
                     }}
                     sx={{ display: `${depositType === 'open' ? '' : 'none'}` }}
                     color="default"
-                  />
+                  /> */}
                   <Box ml="10px">
                     <Box sx={{ display: ' flex', alignItems: 'flex-start' }}>
                       <Image src={el.media[0]?.gateway || ''} alt={`nft-${el.title}`} />
