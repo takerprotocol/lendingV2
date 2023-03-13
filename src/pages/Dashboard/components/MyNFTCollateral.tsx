@@ -221,7 +221,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
             >
               <FlexBox>
                 {supportNfts &&
-                  supportNfts.map((el: any, index: number) => {
+                  supportNfts.slice(0, 13).map((el: any, index: number) => {
                     return (
                       <Tooltip
                         key={`support_collections_${el.contract.address}_${el.tokenId}`}

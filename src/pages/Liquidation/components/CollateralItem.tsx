@@ -43,11 +43,9 @@ const Value = styled(Box)`
   flex-wrap: wrap;
 `
 const ValueText = styled(Typography)`
-  font-family: 'Quicksand';
-  font-style: normal;
   font-weight: 500;
-  font-size: 14px;
-  line-height: 160%;
+  font-size: 12px;
+  line-height: 120%;
   color: #a0a3bd;
   display: flex;
   flex-wrap: wrap;
@@ -268,9 +266,8 @@ const CollateralItem = ({
       </DataItem>
       <DataItem width={'178px'}>
         <Header>Risk Level</Header>
-        <Value color={+riskPercentage <= 120 ? '#E1536C' : '#4E4B66'}>
-          {(+riskPercentage).toFixed(2)}%<ValueText>&nbsp;- {riskLevel}</ValueText>
-        </Value>
+        <Value color={+riskPercentage <= 120 ? '#E1536C' : '#4E4B66'}>{(+riskPercentage).toFixed(2)}%</Value>
+        <ValueText>{riskLevel}</ValueText>
       </DataItem>
       <Button
         onClick={() => navigate(`/liquidate/${address}`)}

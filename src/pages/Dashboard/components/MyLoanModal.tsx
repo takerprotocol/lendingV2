@@ -20,12 +20,13 @@ import {
 import { useLendingPool } from 'hooks/useLendingPool'
 // import { gasLimit } from 'config'
 import BigNumber from 'bignumber.js'
-import { useTransactionAdder } from 'state/transactions/hooks'
+import { useTransactionAdder, useTransactionPending } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { toast } from 'react-toastify'
 import { useGateway } from 'hooks/useGateway'
 import { useDTokenApproveCallback } from 'hooks/transactions/useApproveCallback'
 import { ApprovalState } from 'hooks/transactions/useApproval'
+import { Loading } from 'components/Loading'
 const style = {
   width: '420px',
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -130,6 +131,7 @@ const HealthyButton = styled(Box)`
   height: 30px;
   margin-top: 30px;
   border-radius: 20px;
+  margin-right: 24px;
   cursor: pointer;
   background: linear-gradient(180deg, #1cc1a4 0%, #1cb5ab 100%);
   box-shadow: 0px 4px 8px rgba(28, 183, 171, 0.1);
@@ -189,6 +191,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const [check, setCheck] = useState<number>(repayRoBorrow)
   const [amount, setAmount] = useState('')
   const heath = useHeath()
+  const [loading, setLoading] = useState(false)
   const debtRiskLevel = useDebtRiskLevel(times(amount, check === 1 ? 1 : -1))
   const upBorrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
   const borrowLimitUsed = useDebtBorrowLimitUsed()
@@ -204,6 +207,16 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const ethDebt = useEthDebt()
   const addTransaction = useTransactionAdder()
   const [tokenApproval, tokenApproveCallback] = useDTokenApproveCallback(amount, contract?.address)
+  const transactionPending = useTransactionPending()
+
+  const repayPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.REPAY)
+  }, [transactionPending])
+
+  const borrowPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.BORROW)
+  }, [transactionPending])
+
   const repayValue = useMemo(() => {
     return times(div(amount, ethDebt), 100)
   }, [amount, ethDebt])
@@ -236,13 +249,15 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   // }, [amount, ethDebt])
   const borrowSubmit = async () => {
     if (contract) {
+      setLoading(true)
       if (check === 1) {
         if (tokenApproval !== ApprovalState.APPROVED) {
-          await tokenApproveCallback()
+          await tokenApproveCallback().catch(() => setLoading(false))
         } else {
           contract
             .borrow(poolContract?.address, amountDecimal(amount, decimal))
             .then((res: any) => {
+              setLoading(false)
               addTransaction(res, {
                 type: TransactionType.BORROW,
                 recipient: address,
@@ -252,11 +267,12 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             })
             .catch((error: any) => {
               toast.error(error.message)
+              setLoading(false)
             })
         }
       } else {
         if (tokenApproval !== ApprovalState.APPROVED) {
-          await tokenApproveCallback()
+          await tokenApproveCallback().catch(() => setLoading(false))
         } else {
           contract
             .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
@@ -264,6 +280,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               // gasLimit,
             })
             .then((res: any) => {
+              setLoading(false)
               addTransaction(res, {
                 type: TransactionType.REPAY,
                 recipient: address,
@@ -272,10 +289,13 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               onClose(false)
             })
             .catch((error: any) => {
+              setLoading(false)
               toast.error(error.message)
             })
         }
       }
+    } else {
+      setLoading(false)
     }
   }
   const ethDebt_Length = useMemo(() => {
@@ -283,12 +303,14 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   }, [ethDebt])
   const repaySubmit = () => {
     if (contract) {
+      setLoading(true)
       contract
         .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
           value: amountDecimal(amount, decimal),
           // gasLimit,
         })
         .then((res: any) => {
+          setLoading(false)
           addTransaction(res, {
             type: TransactionType.REPAY,
             recipient: address,
@@ -297,6 +319,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
           onClose(false)
         })
         .catch((error: any) => {
+          setLoading(false)
           toast.error(error.message)
         })
     }
@@ -631,32 +654,49 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               </Typography>
             </LiquidatedBox>
           ) : (
-            <Button
-              disabled={+amount === 0 || buttonDisabled}
-              variant="contained"
-              sx={{ width: '372px', height: '54px', marginTop: '24px' }}
-              onClick={() => {
-                if (check === 1) {
-                  borrowSubmit()
-                  setAmount('')
-                } else {
-                  repaySubmit()
-                  setAmount('')
-                }
-              }}
-            >
-              {check === 1
-                ? tokenApproval === ApprovalState.APPROVED || !amount
-                  ? 'Borrow'
-                  : tokenApproval === ApprovalState.PENDING
-                  ? 'Pending'
-                  : 'Approve'
-                : tokenApproval === ApprovalState.APPROVED || !amount
-                ? 'Repay'
-                : tokenApproval === ApprovalState.PENDING
-                ? 'Pending'
-                : 'Approve'}
-            </Button>
+            <Box marginTop="24px" display="flex" alignItems="center" justifyContent="space-between">
+              {tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+                <Button
+                  variant="contained"
+                  disabled={tokenApproval !== ApprovalState.NOT_APPROVED}
+                  sx={{ width: '217px', height: '54px' }}
+                  onClick={() => {
+                    if (check === 1) {
+                      borrowSubmit()
+                    } else {
+                      repaySubmit()
+                    }
+                  }}
+                >
+                  {repayPending.length > 0 || borrowSubmit.length > 0 || loading ? <Loading></Loading> : <></>}
+                  Approve
+                </Button>
+              )}
+              <Button
+                disabled={+amount === 0 || buttonDisabled}
+                variant="contained"
+                sx={{
+                  width: tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '139px' : '372px',
+                  height: '54px',
+                }}
+                onClick={() => {
+                  if (check === 1) {
+                    borrowSubmit()
+                  } else {
+                    repaySubmit()
+                  }
+                }}
+              >
+                {repayPending.length > 0 ||
+                borrowPending.length > 0 ||
+                (loading && tokenApproval === ApprovalState.APPROVED) ? (
+                  <Loading></Loading>
+                ) : (
+                  <></>
+                )}
+                {check === 1 ? 'Borrow' : 'Repay'}
+              </Button>
+            </Box>
           )}
         </BottomBox>
       </Box>

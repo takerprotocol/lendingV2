@@ -23,7 +23,7 @@ import {
   useWalletBalance,
 } from 'state/user/hooks'
 // import { gasLimit } from 'config'
-import { useTransactionAdder } from 'state/transactions/hooks'
+import { useTransactionAdder, useTransactionPending } from 'state/transactions/hooks'
 // import { TransactionType } from 'state/transactions/types'
 // import { useApproveCallback } from 'hooks/transactions/useApproveCallback'
 // import { ApprovalState } from 'hooks/transactions/useApproval'
@@ -32,6 +32,7 @@ import { useGateway } from 'hooks/useGateway'
 import { SpaceBetweenBox } from 'styleds'
 import { useApproveCallback, useTTokenApproveCallback } from 'hooks/transactions/useApproveCallback'
 import { ApprovalState } from 'hooks/transactions/useApproval'
+import { Loading } from 'components/Loading'
 // import { useContract } from 'hooks/useContract'
 // import erc20Abi from 'abis/MockErc20.json'
 // import { fromWei } from 'web3-utils'
@@ -129,6 +130,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   // const [supplyLimit, setSupplyLimit] = useState('')
   const supplyLimit = useWalletBalance()
   const ethLiquidity = useEthLiquidity()
+  const [loading, setLoading] = useState(false)
   const [amount, setAmount] = useState('')
   const contract = useGateway()
   const poolContract = useLendingPool()
@@ -146,6 +148,15 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const addTransaction = useTransactionAdder()
   const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
   const [tokenApproval, tokenApproveCallback] = useTTokenApproveCallback(amount, contract?.address)
+  const transactionPending = useTransactionPending()
+
+  const depositPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.DEPOSIT)
+  }, [transactionPending])
+
+  const withdrawPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.WITHDRAW)
+  }, [transactionPending])
   // const erc20Contract = useContract(ERC20_ADDRESS, erc20Abi)
   const decimal = useDecimal()
   // useEffect(() => {
@@ -164,8 +175,9 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
       return
     }
     if (contract && address) {
+      setLoading(true)
       if (approval !== ApprovalState.APPROVED) {
-        await approveCallback()
+        await approveCallback().catch(() => setLoading(false))
       } else {
         contract
           .deposit(poolContract?.address, address, {
@@ -173,6 +185,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             // gasLimit,
           })
           .then((res: any) => {
+            setLoading(false)
             addTransaction(res, {
               type: TransactionType.DEPOSIT,
               recipient: address,
@@ -183,6 +196,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             setOpenMySupplyModal(false)
           })
           .catch((error: any) => {
+            setLoading(false)
             toast.error(error.message)
           })
       }
@@ -194,12 +208,14 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
       return
     }
     if (contract && address) {
+      setLoading(true)
       if (tokenApproval !== ApprovalState.APPROVED) {
-        await tokenApproveCallback()
+        await tokenApproveCallback().catch(() => setLoading(false))
       } else {
         contract
           .withdraw(poolContract?.address, amountDecimal(amount, decimal), address)
           .then((res: any) => {
+            setLoading(false)
             toast.success(desensitization(res.hash))
             addTransaction(res, {
               type: TransactionType.WITHDRAW,
@@ -210,6 +226,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             setOpenMySupplyModal(false)
           })
           .catch((error: any) => {
+            setLoading(false)
             toast.error(error.message)
           })
       }
@@ -226,6 +243,10 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const ModalType = useMemo(() => {
     return amount !== ''
   }, [amount])
+
+  const finalApprove = useMemo(() => {
+    return borrowOrRepay === 1 ? approval : tokenApproval
+  }, [approval, borrowOrRepay, tokenApproval])
 
   const overSupply = useMemo(() => {
     if (borrowOrRepay === 2) {
@@ -498,34 +519,56 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Typography>
             </FlexBox>
           </Box>
-          <Button
-            disabled={buttonDisabled}
-            variant="contained"
-            color={overSupply ? 'error' : 'primary'}
-            sx={{ width: '372px', height: '54px' }}
-            onClick={() => {
-              // supply
-              if (borrowOrRepay === 1) {
-                supplySubmit()
-                // setAmount('')
-              } else {
-                withdrawSubmit()
-                // setAmount('')
-              }
-            }}
-          >
-            {borrowOrRepay === 1
-              ? approval === ApprovalState.APPROVED || !amount
-                ? 'Supply'
-                : approval === ApprovalState.PENDING
-                ? 'Loading'
-                : 'Approve'
-              : tokenApproval === ApprovalState.APPROVED || !amount
-              ? 'Withdraw'
-              : tokenApproval === ApprovalState.PENDING
-              ? 'Loading'
-              : 'Approve'}
-          </Button>
+          <Box justifyContent="space-between" marginTop="24px" display="flex" alignItems="center">
+            {tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+              <Button
+                variant="contained"
+                disabled={finalApprove !== ApprovalState.NOT_APPROVED}
+                sx={{ width: '217px', height: '54px' }}
+                onClick={() => {
+                  // supply
+                  if (borrowOrRepay === 1) {
+                    supplySubmit()
+                    // setAmount('')
+                  } else {
+                    withdrawSubmit()
+                    // setAmount('')
+                  }
+                }}
+              >
+                {depositPending.length > 0 || withdrawPending.length > 0 || loading ? <Loading></Loading> : <></>}
+                Approve
+              </Button>
+            )}
+            <Button
+              disabled={buttonDisabled}
+              variant="contained"
+              sx={{
+                width: finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '139px' : '372px',
+                height: '54px',
+              }}
+              color={overSupply ? 'error' : 'primary'}
+              onClick={() => {
+                // supply
+                if (borrowOrRepay === 1) {
+                  supplySubmit()
+                  // setAmount('')
+                } else {
+                  withdrawSubmit()
+                  // setAmount('')
+                }
+              }}
+            >
+              {depositPending.length > 0 ||
+              withdrawPending.length > 0 ||
+              (loading && finalApprove === ApprovalState.APPROVED) ? (
+                <Loading></Loading>
+              ) : (
+                <></>
+              )}
+              {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}
+            </Button>
+          </Box>
         </BottomBox>
       </Box>
     </Modal>

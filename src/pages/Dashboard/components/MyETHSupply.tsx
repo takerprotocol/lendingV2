@@ -138,7 +138,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const flag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
-      return tx && tx.receipt && tx.info.type !== TransactionType.USE_COLLATERAL && isTransactionRecent(tx)
+      return tx && tx.receipt && tx.info.type === TransactionType.USE_COLLATERAL && isTransactionRecent(tx)
     }).length
   }, [transactions])
   useEffect(() => {

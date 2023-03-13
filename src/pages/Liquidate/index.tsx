@@ -67,7 +67,6 @@ const Liquidate = () => {
         //   })
         // })
       }
-      console.log(user.data)
       let _heath = '0'
       if (user.data.user.healthFactor) {
         _heath = new BigNumber(fromWei(user.data.user.healthFactor)).toFixed(2, 1)

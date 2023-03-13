@@ -59,7 +59,7 @@ export const ChangeNetWork = () => {
   }
   return (
     <ChangeNetWorkBox>
-      Taker is currently only available on Ethereum
+      Taker is currently only available on Ethereum Goerli Network
       <span onClick={() => change()}>{`Click here to change networks >>`}</span>
     </ChangeNetWorkBox>
   )
