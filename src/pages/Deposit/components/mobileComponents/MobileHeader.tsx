@@ -162,7 +162,7 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
                 {collection?.symbol}
               </Typography>
               <Typography mt="0.5rem" variant="body1" lineHeight="0.875rem" color="#A0A3BD">
-                {collection?.activeUser} Active Users
+                {total || 0} NFTS
               </Typography>
             </Box>
             <ImgBoxBorder></ImgBoxBorder>
@@ -188,9 +188,9 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
                 </Typography>
               </FlexBox>
             </Box>
-            <Typography variant="body1" color="#A0A3BD" lineHeight="0.875rem" fontWeight="500">
+            {/* <Typography variant="body1" color="#A0A3BD" lineHeight="0.875rem" fontWeight="500">
               {total || 0} NFTs
-            </Typography>
+            </Typography> */}
           </TotalBox>
           <FloorBox>
             <Box>

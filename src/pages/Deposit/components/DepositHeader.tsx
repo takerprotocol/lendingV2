@@ -165,7 +165,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 {collection?.symbol}
               </Typography>
               <Typography mt="12px" variant="subtitle2" fontWeight="500" lineHeight="16px" color="#A0A3BD">
-                {collection?.activeUser} Active Users
+                {total || 0} NFTS
               </Typography>
             </Box>
             <FlexEndBox>
@@ -177,9 +177,9 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                     {totalValue || 0}
                   </BigTypography>
                 </FlexBox>
-                <Typography mt="4px" component="p" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
+                {/* <Typography mt="4px" component="p" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
                   {total || 0} NFTs
-                </Typography>
+                </Typography> */}
               </Box>
               <Box width="148px">
                 <SmallTypography>Floor Price</SmallTypography>
@@ -194,16 +194,16 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 </Box>
               </Box>
               <Box width="198px">
-                <SmallTypography>Loan to value</SmallTypography>
+                <SmallTypography>Loan to Value</SmallTypography>
                 <FlexBox mt="8px">
                   <img src={myCollateralIcon} alt="" />
                   <BigTypography ml="4px" variant="body1">
-                    {decimalFormat(times(collection?.floorPrice || 0, div(collection?.ltv, 10000)), decimal)}
+                    {div(collection?.ltv, 100)}%
                   </BigTypography>
+                  <Typography mt="4px" variant="subtitle1" marginLeft="8px" lineHeight="18px" color="#A0A3BD">
+                    Ξ {decimalFormat(times(collection?.floorPrice || 0, div(collection?.ltv, 10000)), decimal)}
+                  </Typography>
                 </FlexBox>
-                <Typography mt="4px" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
-                  {div(collection?.ltv, 100)}%
-                </Typography>
               </Box>
             </FlexEndBox>
           </FlexBox>

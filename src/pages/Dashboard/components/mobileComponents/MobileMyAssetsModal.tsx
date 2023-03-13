@@ -218,7 +218,7 @@ export default function MobileMyAssetsModal({
               recipient: address,
               amount,
             })
-            setAmount('')
+            // setAmount('')
             setOpenMySupplyModal(false)
           })
           .catch((error: any) => {
@@ -471,10 +471,10 @@ export default function MobileMyAssetsModal({
             onClick={() => {
               if (borrowOrRepay === 1) {
                 supplySubmit()
-                setAmount('')
+                // setAmount('')
               } else {
                 withdrawSubmit()
-                setAmount('')
+                // setAmount('')
               }
             }}
           >

@@ -179,7 +179,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               amount,
             })
             toast.success(desensitization(res.hash))
-            setAmount('')
+            // setAmount('')
             setOpenMySupplyModal(false)
           })
           .catch((error: any) => {
@@ -507,10 +507,10 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               // supply
               if (borrowOrRepay === 1) {
                 supplySubmit()
-                setAmount('')
+                // setAmount('')
               } else {
                 withdrawSubmit()
-                setAmount('')
+                // setAmount('')
               }
             }}
           >

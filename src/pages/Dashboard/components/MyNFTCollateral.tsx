@@ -208,7 +208,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
         </BottomTopBox>
         <NftListBox>
           <Typography variant="body2" lineHeight="12px" fontWeight="600" color="#A0A3BD">
-            {collections.length > 0 ? (
+            {supportNfts.length > 0 ? (
               <>You have {supportNfts.length} NFTs can deposit</>
             ) : (
               <>We support these collections</>
