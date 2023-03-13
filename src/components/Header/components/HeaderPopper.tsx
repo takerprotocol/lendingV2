@@ -12,7 +12,7 @@ import { useAppDispatch } from 'state/hooks'
 import { setAddress } from 'state/user/reducer'
 import Copy from 'components/Copy'
 import Blockies from 'react-blockies'
-import { useAllTransactions } from 'state/transactions/hooks'
+import { useAllTransactions, useTransactionPending } from 'state/transactions/hooks'
 import { TransactionDetails, TransactionType } from 'state/transactions/types'
 import dayjs from 'dayjs'
 
@@ -63,6 +63,7 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
   const dispatch = useAppDispatch()
   const { deactivate } = useWeb3React()
   const transactions = useAllTransactions()
+  const transactionsPending = useTransactionPending()
   const getNoticeTitle = (transaction: TransactionDetails) => {
     switch (transaction.info.type) {
       case TransactionType.APPROVAL:
@@ -75,6 +76,8 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
         return `Deposit ${transaction.info.amount} ETH`
       case TransactionType.WITHDRAW:
         return `Withdraw ${transaction.info.amount} ETH`
+      case TransactionType.USE_COLLATERAL:
+        return `Use Collateral`
       default:
         return 'Approval'
     }
@@ -150,6 +153,31 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
                     {dayjs(transactions[hash].addedTime).format('h:mm A')}
                   </Typography>
                 </SpaceBetweenBox>
+                <FlexBox ml="8px">
+                  <img src={BoxETH} alt="" />
+                  <Typography ml="8px" mt="4px" variant="body1" component="h1" fontWeight="600" color="#4E4B66">
+                    {getNoticeTitle(transactions[hash])}
+                  </Typography>
+                </FlexBox>
+                <FlexBox ml="34px">
+                  <Typography variant="body2" component="h1" color="#4E4B66">
+                    Txid
+                  </Typography>
+                  <Typography
+                    marginX="8px"
+                    variant="body2"
+                    component="h1"
+                    color="#4E4B66"
+                    sx={{ textDecorationLine: 'underline' }}
+                  >
+                    {desensitization(hash)}
+                  </Typography>
+                  <Copy color={'Txid'} text={hash} />
+                </FlexBox>
+              </Box>
+            ))}
+            {Object.keys(transactionsPending).map((hash) => (
+              <Box key={`notifications-hash-${hash}`}>
                 <FlexBox ml="8px">
                   <img src={BoxETH} alt="" />
                   <Typography ml="8px" mt="4px" variant="body1" component="h1" fontWeight="600" color="#4E4B66">

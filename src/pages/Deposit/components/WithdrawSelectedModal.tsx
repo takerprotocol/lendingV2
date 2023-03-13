@@ -4,7 +4,7 @@ import redPrompt from 'assets/images/svg/common/redPrompt.svg'
 import rightIcon from 'assets/images/svg/common/rightIcon.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds/index'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
 import MockERC721Abi from 'abis/MockERC721.json'
@@ -18,13 +18,13 @@ import {
   useUserValue,
 } from 'state/user/hooks'
 // import { gasLimit } from 'config'
-import { toast } from 'react-toastify'
 import { getRiskLevel, getRiskLevelTag, minus, plus, times } from 'utils'
 import { useContract } from 'hooks/useContract'
 import { useParams } from 'react-router-dom'
-import { useTransactionAdder } from 'state/transactions/hooks'
+import { isTransactionRecent, useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { Nft } from '@alch/alchemy-sdk'
+import { Loading } from 'components/Loading'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -74,6 +74,7 @@ interface NFTsSelectedType {
 export default function WithdrawSelectedModal({ open, close, data, type, amount, amountList }: NFTsSelectedType) {
   const { id } = useParams()
   const contract = useLendingPool()
+  const [loading, setLoading] = useState(false)
   const address = useAddress()
   const userValue = useUserValue()
   const heath = useHeath()
@@ -87,7 +88,24 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
   const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, -1))
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
   const upBorrowLimit = useBorrowLimit(times(amount, -1)) //操作后的borrowLimit
+  const transactions = useAllTransactions()
+  const flag = useMemo(() => {
+    return (
+      transactions &&
+      Object.keys(transactions).some((hash) => {
+        const tx = transactions[hash]
+        return tx && tx.receipt && tx.info.type === TransactionType.WITHDRAW_NFT && isTransactionRecent(tx)
+      })
+    )
+  }, [transactions])
+
+  useEffect(() => {
+    if (flag) {
+      setLoading(false)
+    }
+  }, [flag])
   const withdraw = async () => {
+    setLoading(true)
     if (contract && address && ercContract) {
       contract
         .withdrawNFTs(
@@ -99,6 +117,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
         )
         .then((res: any) => {
           if (res && res.hash) {
+            setLoading(false)
             close(false)
             addTransaction(res, {
               type: TransactionType.WITHDRAW_NFT,
@@ -106,9 +125,13 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
               amount,
               count: data.length,
             })
-            toast.success('success')
           }
         })
+        .catch(() => {
+          setLoading(false)
+        })
+    } else {
+      setLoading(false)
     }
   }
   console.log(data)
@@ -288,6 +311,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
             withdraw()
           }}
         >
+          {loading && <Loading></Loading>}
           Withdraw {data.length} NFTs
         </Button>
       </Box>

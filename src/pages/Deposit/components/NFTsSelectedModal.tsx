@@ -23,8 +23,14 @@ import {
 import { getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
 import { useContract } from 'hooks/useContract'
 import { useParams } from 'react-router-dom'
-import { isTransactionRecent, useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
+import {
+  isTransactionRecent,
+  useAllTransactions,
+  useTransactionAdder,
+  useTransactionPending,
+} from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
+import { Loading } from 'components/Loading'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -72,6 +78,7 @@ interface NFTsSelectedType {
 export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedModal, data, type }: NFTsSelectedType) {
   const { id } = useParams()
   const contract = useLendingPool()
+  const [loading, setLoading] = useState(false)
   const address = useAddress()
   const userValue = useUserValue()
   const erc20ReserveData = useErc20ReserveData()
@@ -83,6 +90,20 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const addTransaction = useTransactionAdder()
   const transactions = useAllTransactions()
   const borrowLimitUsed = useCollateralBorrowLimitUsed()
+  const transactionPending = useTransactionPending()
+
+  const approvePending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.APPROVAL_NFT)
+  }, [transactionPending])
+
+  const depositPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.DEPOSIT_NFT)
+  }, [transactionPending])
+
+  const withdrawPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.WITHDRAW_NFT)
+  }, [transactionPending])
+
   const flag = useMemo(() => {
     return (
       transactions &&
@@ -114,6 +135,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
   const upBorrowLimit = useBorrowLimit(times(amount, type === 'Deposit' ? 1 : -1)) //操作后的borrowLimit
   const deposit = async () => {
+    setLoading(true)
     if (contract && address && ercContract) {
       if (isApproved) {
         contract
@@ -125,6 +147,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             // { gasLimit }
           )
           .then((res: any) => {
+            setLoading(false)
             if (res && res.hash) {
               setOpenSelectedModal(false)
               addTransaction(res, {
@@ -136,17 +159,28 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
               // toast.success('success')
             }
           })
-      } else {
-        ercContract.setApprovalForAll(contract.address, true).then((res: any) => {
-          setIsApproved(1)
-          addTransaction(res, {
-            type: TransactionType.APPROVAL_NFT,
-            spender: contract.address,
-            amount,
-            message: 'Approve all NFT',
+          .catch(() => {
+            setLoading(false)
           })
-        })
+      } else {
+        ercContract
+          .setApprovalForAll(contract.address, true)
+          .then((res: any) => {
+            setLoading(false)
+            setIsApproved(1)
+            addTransaction(res, {
+              type: TransactionType.APPROVAL_NFT,
+              spender: contract.address,
+              amount,
+              message: 'Approve all NFT',
+            })
+          })
+          .catch(() => {
+            setLoading(false)
+          })
       }
+    } else {
+      setLoading(false)
     }
   }
 
@@ -318,29 +352,50 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             </Typography>
           </FlexBox>
         </Box>
-        <Button
-          variant="contained"
-          disabled={isApproved === 1}
-          sx={{ width: '372px', height: '54px' }}
-          color={riskLevelWarning ? 'error' : 'primary'}
-          onClick={() => {
-            if (type === 'Withdraw') {
-              withdraw()
-            } else {
-              deposit()
-            }
-          }}
-        >
-          {type === 'Withdraw'
-            ? isApproved === 2
-              ? type
-              : 'Pending'
-            : isApproved === 2
-            ? `Deposit ${data.length} NFTs`
-            : isApproved === 1
-            ? 'Pending'
-            : 'Approve'}
-        </Button>
+        <FlexBox justifyContent="space-between">
+          {isApproved !== 2 && (
+            <Button
+              variant="contained"
+              disabled={isApproved !== 0}
+              sx={{ width: '217px', height: '54px' }}
+              color={riskLevelWarning ? 'error' : 'primary'}
+              onClick={() => {
+                if (type === 'Withdraw') {
+                  withdraw()
+                } else {
+                  deposit()
+                }
+              }}
+            >
+              {approvePending.length > 0 || withdrawPending.length > 0 || depositPending.length > 0 || loading ? (
+                <Loading></Loading>
+              ) : (
+                <></>
+              )}
+              Approve
+            </Button>
+          )}
+          <Button
+            variant="contained"
+            disabled={isApproved !== 2}
+            sx={{ width: isApproved === 0 ? '139px' : '372px', height: '54px' }}
+            color={riskLevelWarning ? 'error' : 'primary'}
+            onClick={() => {
+              if (type === 'Withdraw') {
+                withdraw()
+              } else {
+                deposit()
+              }
+            }}
+          >
+            {withdrawPending.length > 0 || depositPending.length > 0 || (loading && isApproved === 2) ? (
+              <Loading></Loading>
+            ) : (
+              <></>
+            )}
+            {type === 'Withdraw' ? type : isApproved === 0 ? 'Deposit' : `Deposit ${data.length} NFTs`}
+          </Button>
+        </FlexBox>
       </Box>
     </Modal>
   )
