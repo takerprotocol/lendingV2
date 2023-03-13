@@ -18,7 +18,7 @@ import {
   useHeath,
 } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { gasLimit } from 'config'
+// import { gasLimit } from 'config'
 import BigNumber from 'bignumber.js'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
@@ -105,6 +105,10 @@ const FlexBox = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+`
+const FlexEndBox = styled(Box)`
+  display: flex;
+  align-items: flex-end;
 `
 const RightBox = styled(Box)`
   display: flex;
@@ -237,7 +241,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
           await tokenApproveCallback()
         } else {
           contract
-            .borrow(poolContract?.address, amountDecimal(amount, decimal), { gasLimit })
+            .borrow(poolContract?.address, amountDecimal(amount, decimal))
             .then((res: any) => {
               addTransaction(res, {
                 type: TransactionType.BORROW,
@@ -257,7 +261,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
           contract
             .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
               value: amountDecimal(amount, decimal),
-              gasLimit,
+              // gasLimit,
             })
             .then((res: any) => {
               addTransaction(res, {
@@ -274,12 +278,15 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
       }
     }
   }
+  const ethDebt_Length = useMemo(() => {
+    return Number(fixedFormat(ethDebt).split('.').join('')).toString.length > 11
+  }, [ethDebt])
   const repaySubmit = () => {
     if (contract) {
       contract
         .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
           value: amountDecimal(amount, decimal),
-          gasLimit,
+          // gasLimit,
         })
         .then((res: any) => {
           addTransaction(res, {
@@ -320,16 +327,22 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               <Typography mt="16px" variant="body1" component="h1" color="#A0A3BD">
                 My Debt
               </Typography>
-              <Box mt="4px">
-                <Typography variant="h4" component="span" fontWeight="600" color="#EFF0F6">
+              <FlexEndBox mt={ethDebt_Length ? '4px' : '16px'}>
+                <Typography
+                  sx={{ maxWidth: '208px' }}
+                  fontSize={ethDebt_Length ? '28px' : '22px'}
+                  lineHeight={ethDebt_Length ? '45px' : '26px'}
+                  fontWeight="600"
+                  color="#EFF0F6"
+                >
                   {fixedFormat(ethDebt)}
                 </Typography>
-                <Typography ml="6px" variant="subtitle1" component="span" fontWeight="600" color="#EFF0F6">
+                <Typography ml="6px" variant="subtitle1" color="#EFF0F6">
                   ETH
                 </Typography>
-              </Box>
+              </FlexEndBox>
             </Box>
-            <Box m="32px 24px 0px 0px">
+            <Box mt="32px">
               <Box
                 sx={{ display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }}
                 mr="8px"

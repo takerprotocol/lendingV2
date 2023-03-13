@@ -25,14 +25,13 @@ import { getWETH, getERC721Address, DECIMALS_MASK, LTV_MASK, COLLATERAL_MASK, CH
 import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
 import { useActiveWeb3React } from 'hooks/web3'
-import { toast } from 'react-toastify'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { getClient } from 'apollo/client'
 import { LendingPool, UserNftCollection } from 'apollo/queries'
 // import { getCollectionStats } from 'services/module/collection'
 import erc721abi from 'abis/MockERC721.json'
-import { setCollections, setDepositedCollection, setLoading } from 'state/application/reducer'
+import { setCollections, setDepositedCollection, setLoading, setShowChangeNetWork } from 'state/application/reducer'
 import ERC721 from 'assets/images/png/collection/721.png'
 import Azuki from 'assets/images/png/collection/azuki.png'
 import Bayc from 'assets/images/png/collection/bayc.png'
@@ -64,10 +63,10 @@ export default function CustomizeRoutes() {
     }).length
   }, [transactions])
   useEffect(() => {
-    if (address && chainId && !CHAIN_IDs.includes(chainId)) {
-      toast.error('Please switch network')
+    if (address && chainId) {
+      dispatch(setShowChangeNetWork(chainId !== 5))
     }
-  }, [chainId, address])
+  }, [chainId, address, dispatch])
   useEffect(() => {
     if (contract && address && chainId && CHAIN_IDs.includes(chainId)) {
       // contract

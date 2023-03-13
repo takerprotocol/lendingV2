@@ -378,7 +378,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                         component="span"
                         color="#29C3A8"
                       >
-                        +20%
+                        +0%
                       </Typography>{' '}
                       token reward
                     </Typography>

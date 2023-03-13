@@ -33,3 +33,7 @@ export function useDepositedCollection() {
 export function useLoading() {
   return useAppSelector((state: AppState) => state.application.loading)
 }
+
+export function useShowChangeNetWork() {
+  return useAppSelector((state: AppState) => state.application.showChangeNetWork)
+}

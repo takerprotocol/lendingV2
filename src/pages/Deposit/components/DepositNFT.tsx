@@ -5,11 +5,13 @@ import RefreshIcon from 'assets/images/svg/common/refresh.svg'
 import NFTsList from './NFTsList'
 import Pager from '../../../components/Pages/Pager'
 import AvailableAndDepositedSkeleton from './depositSkeleton/AvailableAndDepositedSkeleton'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import NFTsSelectedModal from './NFTsSelectedModal'
 import SureModal from './SureModal'
 import { NftTokenModel } from 'services/type/nft'
+import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 
 const AvailableNFTsBox = styled(Box)`
   width: 1012px;
@@ -66,7 +68,22 @@ export default function DepositNFT({ depositType, withdrawType, list, loading, s
   const [checkedIndex, setCheckedIndex] = useState<Array<string>>([])
   const [openSelectedModal, setOpenSelectedModal] = useState<boolean>(false)
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
+  const transactions = useAllTransactions()
 
+  const flag = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return tx && tx.receipt && tx.info.type === TransactionType.DEPOSIT_NFT && isTransactionRecent(tx)
+    }).length
+  }, [transactions])
+
+  useEffect(() => {
+    if (flag) {
+      setOpenSelectedModal(false)
+      setOpenSureModal(false)
+      setCheckedIndex([])
+    }
+  }, [flag])
   function ButtonDeposit() {
     if (withdrawType === 'shut') {
       setDepositType('open')

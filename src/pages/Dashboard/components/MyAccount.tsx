@@ -1,6 +1,6 @@
 import { Box, styled, Typography } from '@mui/material'
 import { SpaceBetweenBox, CenterBox, FlexBox, SpaceBox } from 'styleds/index'
-import OverviewIcon from 'assets/images/svg/dashboard/overview-icon.svg'
+// import OverviewIcon from 'assets/images/svg/dashboard/overview-icon.svg'
 import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
 import MyNFTCollateral from './MyNFTCollateral'
 import MyETHSupply from './MyETHSupply'
@@ -21,16 +21,17 @@ const MyAccountBox = styled(Box)`
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
   border-radius: 12px;
 `
-const RewardsBox = styled(Box)`
-  background: #f7f7fc;
-  border-radius: 6px;
-  height: 48px;
-  cursor: pointer;
-  padding: 13px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
+// const RewardsBox = styled(Box)`
+//   background: #f7f7fc;
+//   display: none;
+//   border-radius: 6px;
+//   height: 48px;
+//   cursor: pointer;
+//   padding: 13px 16px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+// `
 const MyAssetsBox = styled(Box)`
   margin: 36px 0 36px 24px;
 `
@@ -66,7 +67,7 @@ export default function MyAccount({ type, loading }: MyAccountProps) {
         <>
           <SpaceBox sx={{ alignItems: 'flex-start' }}>
             <Typography variant="h4">My Account</Typography>
-            <RewardsBox display="">
+            {/* <RewardsBox>
               <Typography mr="10px" variant="body1" fontWeight="600">
                 Rewards
               </Typography>
@@ -77,7 +78,7 @@ export default function MyAccount({ type, loading }: MyAccountProps) {
               <Typography ml="16px" variant="body1" fontWeight="700">
                 Claim{' >'}
               </Typography>
-            </RewardsBox>
+            </RewardsBox> */}
           </SpaceBox>
           <MyAssetsBox>
             <Typography variant="subtitle2" fontWeight="500" component="p" color="#A0A3BD">

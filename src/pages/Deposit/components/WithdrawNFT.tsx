@@ -15,6 +15,8 @@ import { Nft } from '@alch/alchemy-sdk'
 import { useCollateralBorrowLimitUsed } from 'state/user/hooks'
 import WithdrawSelectedModal from './WithdrawSelectedModal'
 import { useAlchemy } from 'hooks/useAlchemy'
+import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 const DepositedNFTsStyleBox = styled(Box)`
   margin-bottom: 200px;
 `
@@ -71,6 +73,23 @@ export default function WithdrawNFT({ depositType, withdrawType, setWithdrawType
   const [withdrawList, setWithdrawList] = useState<Array<Nft>>([])
   const [openSelect, setOpenSelect] = useState<boolean>(false)
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
+
+  const transactions = useAllTransactions()
+
+  const flag = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return tx && tx.receipt && tx.info.type === TransactionType.WITHDRAW_NFT && isTransactionRecent(tx)
+    }).length
+  }, [transactions])
+
+  useEffect(() => {
+    if (flag) {
+      setOpenSelect(false)
+      setOpenSureModal(false)
+      setCheckedIndex([])
+    }
+  }, [flag])
   const alchemy = useAlchemy()
   const withdrawAmount = useMemo(() => {
     let totalAmount = '0'

@@ -3,8 +3,10 @@ import { SpaceBetweenBox } from 'styleds'
 import { NftTokenModel } from 'services/type/nft'
 import { Nft } from '@alch/alchemy-sdk'
 import MobileWithdrawSelectedModal from './MobileWithdrawSelectedModal'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import MobileSureModal from './MobileSureModal'
+import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 
 const FooterBox = styled(Box)`
   margin-top: 1rem;
@@ -55,6 +57,28 @@ export default function MobileFooter({
 }: MobileFooterProps) {
   const [openSelect, setOpenSelect] = useState<boolean>(false)
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
+
+  const transactions = useAllTransactions()
+
+  const flag = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return (
+        tx &&
+        tx.receipt &&
+        (tx.info.type === TransactionType.DEPOSIT_NFT || tx.info.type === TransactionType.WITHDRAW_NFT) &&
+        isTransactionRecent(tx)
+      )
+    }).length
+  }, [transactions])
+
+  useEffect(() => {
+    if (flag) {
+      setOpenSelect(false)
+      setOpenSureModal(false)
+    }
+  }, [flag])
+
   const modalType = useMemo(() => {
     return type === 1 ? 'deposit' : 'withdraw'
   }, [type])

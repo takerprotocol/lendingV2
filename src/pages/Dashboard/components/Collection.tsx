@@ -80,10 +80,10 @@ const LabelBox = styled(Box)`
   font-weight: 500;
   font-size: 12px;
   line-height: 150%;
-  color: #6e7191;
+  color: #7646ff;
   margin-right: 8px;
   margin-top: 5px;
-  background: #eff0f6;
+  background: rgba(118, 70, 255, 0.1);
   border-radius: 4px;
 `
 interface CollectionType {
@@ -149,7 +149,7 @@ export default function Collection({ type, loading }: CollectionType) {
                 </TokenUpBox>
                 <Box>
                   <Typography mr="8px" component="span" fontSize="24px" lineHeight="38px" color="#4BC8B1" variant="h5">
-                    +20%
+                    +0%
                   </Typography>
                   <Typography component="span" variant="subtitle2" fontWeight="700">
                     Token Reward !
@@ -171,10 +171,10 @@ export default function Collection({ type, loading }: CollectionType) {
                   <TitleTypography>Floor Price</TitleTypography>
                 </Box>
                 <Box sx={{ width: '248px' }}>
-                  <TitleTypography> Loan to value </TitleTypography>
+                  <TitleTypography> Loan to Value </TitleTypography>
                 </Box>
                 <Box sx={{ width: '248px' }}>
-                  <TitleTypography>Active user</TitleTypography>
+                  <TitleTypography>Supplied</TitleTypography>
                 </Box>
                 <Box>
                   <TitleTypography>Token reward</TitleTypography>
@@ -199,7 +199,7 @@ export default function Collection({ type, loading }: CollectionType) {
                           {el?.name}
                         </Typography>
                         <FlexBox>
-                          {nftBalance(el.id) > 0 && <LabelBox>Can Deposit</LabelBox>}
+                          {nftBalance(el.id) > 0 && <LabelBox>Available</LabelBox>}
                           {deposited(el.id) > 0 && <LabelBox>Deposited</LabelBox>}
                         </FlexBox>
                       </Box>
@@ -211,12 +211,14 @@ export default function Collection({ type, loading }: CollectionType) {
                       </Typography>
                     </CollectionFlexBox>
                     <CollectionFlexBox sx={{ width: '248px' }}>
-                      <img src={minMyCollateralIcon} alt="" />
-                      <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
-                        {/* {''} */}
-                        {fixedFormat(fromWei(times(el?.floorPrice || 0, div(el.ltv, 10000))))}
-                      </Typography>
-                      <TitleTypography>{div(el.ltv, 100)}%</TitleTypography>
+                      <Box>
+                        <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
+                          {div(el.ltv, 100)}%
+                        </Typography>
+                        <TitleTypography>
+                          {fixedFormat(fromWei(times(el?.floorPrice || 0, div(el.ltv, 10000))))} ETH/NFT
+                        </TitleTypography>
+                      </Box>
                     </CollectionFlexBox>
                     <CollectionFlexBox sx={{ width: '248px' }}>
                       <Typography component="span" variant="body1" fontWeight="700">

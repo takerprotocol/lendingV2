@@ -18,8 +18,8 @@ import {
   useHeath,
   useUserValue,
 } from 'state/user/hooks'
-import { gasLimit } from 'config'
-import { toast } from 'react-toastify'
+// import { gasLimit } from 'config'
+// import { toast } from 'react-toastify'
 import { getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
 import { useContract } from 'hooks/useContract'
 import { useParams } from 'react-router-dom'
@@ -121,8 +121,8 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             data.map((el) => el.contract.address),
             data.map((el) => el.tokenId),
             data.map((el) => el.balance),
-            address,
-            { gasLimit }
+            address
+            // { gasLimit }
           )
           .then((res: any) => {
             if (res && res.hash) {
@@ -133,7 +133,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
                 amount,
                 count: data.length,
               })
-              toast.success('success')
+              // toast.success('success')
             }
           })
       } else {
@@ -255,7 +255,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           <FlexBox>
             <Box width={'65px'}>
               <Typography variant="subtitle2" color="#4BC8B1">
-                20%
+                0%
               </Typography>
             </Box>
             <Box sx={{ width: '52px' }}>
@@ -334,11 +334,11 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           {type === 'Withdraw'
             ? isApproved === 2
               ? type
-              : 'Loading'
+              : 'Pending'
             : isApproved === 2
             ? `Deposit ${data.length} NFTs`
             : isApproved === 1
-            ? 'Loading'
+            ? 'Pending'
             : 'Approve'}
         </Button>
       </Box>

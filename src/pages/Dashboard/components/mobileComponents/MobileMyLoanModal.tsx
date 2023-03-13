@@ -17,7 +17,7 @@ import {
   useHeath,
 } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { gasLimit } from 'config'
+// import { gasLimit } from 'config'
 import BigNumber from 'bignumber.js'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
@@ -256,7 +256,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
           await tokenApproveCallback()
         } else {
           contract
-            .borrow(poolContract?.address, amountDecimal(amount, decimal), { gasLimit })
+            .borrow(poolContract?.address, amountDecimal(amount, decimal))
             .then((res: any) => {
               addTransaction(res, {
                 type: TransactionType.BORROW,
@@ -276,7 +276,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
           contract
             .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
               value: amountDecimal(amount, decimal),
-              gasLimit,
+              // gasLimit,
             })
             .then((res: any) => {
               addTransaction(res, {
@@ -298,7 +298,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
       contract
         .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
           value: amountDecimal(amount, decimal),
-          gasLimit,
+          // gasLimit,
         })
         .then((res: any) => {
           addTransaction(res, {

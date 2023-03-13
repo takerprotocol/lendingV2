@@ -18,7 +18,7 @@ import {
   useUsedCollateral,
   useWalletBalance,
 } from 'state/user/hooks'
-import { gasLimit } from 'config'
+// import { gasLimit } from 'config'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { useGateway } from 'hooks/useGateway'
@@ -182,7 +182,7 @@ export default function MobileMyAssetsModal({
         contract
           .deposit(poolContract?.address, address, {
             value: amountDecimal(amount, decimal),
-            gasLimit,
+            // gasLimit,
           })
           .then((res: any) => {
             addTransaction(res, {
@@ -210,7 +210,7 @@ export default function MobileMyAssetsModal({
         await tokenApproveCallback()
       } else {
         contract
-          .withdraw(poolContract?.address, amountDecimal(amount, decimal), address, { gasLimit })
+          .withdraw(poolContract?.address, amountDecimal(amount, decimal), address)
           .then((res: any) => {
             toast.success(desensitization(res.hash))
             addTransaction(res, {

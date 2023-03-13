@@ -22,7 +22,7 @@ import {
   useUsedCollateral,
   useWalletBalance,
 } from 'state/user/hooks'
-import { gasLimit } from 'config'
+// import { gasLimit } from 'config'
 import { useTransactionAdder } from 'state/transactions/hooks'
 // import { TransactionType } from 'state/transactions/types'
 // import { useApproveCallback } from 'hooks/transactions/useApproveCallback'
@@ -170,7 +170,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
         contract
           .deposit(poolContract?.address, address, {
             value: amountDecimal(amount, decimal),
-            gasLimit,
+            // gasLimit,
           })
           .then((res: any) => {
             addTransaction(res, {
@@ -198,7 +198,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
         await tokenApproveCallback()
       } else {
         contract
-          .withdraw(poolContract?.address, amountDecimal(amount, decimal), address, { gasLimit })
+          .withdraw(poolContract?.address, amountDecimal(amount, decimal), address)
           .then((res: any) => {
             toast.success(desensitization(res.hash))
             addTransaction(res, {
@@ -445,7 +445,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             <FlexBox>
               <Box width={'65px'}>
                 <Typography variant="subtitle2" color="#4BC8B1">
-                  20%
+                  0%
                 </Typography>
               </Box>
               <Box sx={{ width: '52px' }}>

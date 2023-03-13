@@ -1,7 +1,8 @@
 import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
 import MyNFTCollateralBg from 'assets/images/svg/dashboard/MyNFTCollateralBg.svg'
 import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
-import { FlexBox, SpaceBetweenBox, SpaceBox } from 'styleds'
+import more from 'assets/images/svg/dashboard/more-icon.svg'
+import { SpaceBetweenBox, FlexBox, SpaceBox } from 'styleds'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAccountNfts, useAddress, useUserValue } from 'state/user/hooks'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
@@ -68,9 +69,6 @@ const BottomTopBox = styled(Box)`
   display: flex;
 `
 const ImgBox = styled(`img`)`
-  width: 24px;
-  height: 24px;
-  margin-left: 4px;
   border-radius: 4px;
   cursor: pointer;
   :hover {
@@ -79,10 +77,8 @@ const ImgBox = styled(`img`)`
   }
 `
 const RightImgBox = styled(`img`)`
-  width: 24px;
-  height: 24px;
-  margin-right: 4px;
   border-radius: 4px;
+  z-index: 2;
   cursor: pointer;
   :hover {
     transform: translateY(-4px);
@@ -161,6 +157,10 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
       collections.find((cel) => cel.id.toLocaleLowerCase() === el.contract.address.toLocaleLowerCase())
     )
   }, [accountNfts, collections])
+  // console.log(supportNfts)
+  const count = useMemo(() => {
+    return depositedCollection.length >= 4
+  }, [depositedCollection.length])
   return (
     <MyNFTCollateralBox>
       <BottomBox>
@@ -174,12 +174,22 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
               </Box>
               <EndBox>
                 {depositedCollection &&
-                  depositedCollection.map((el: any) => {
+                  depositedCollection.map((el: any, index: number) => {
                     return (
                       <ImgBox
-                        key={`ImgBoxDepositedCollection${el.id}`}
+                        key={`Img-Box-Deposited-Collection-${el.userNftCollection.id}-${el.index}`}
                         src={renderImg(el.userNftCollection.id)}
                         alt=""
+                        sx={{
+                          zIndex: index,
+                          height: `${count ? '28px' : '24px'}`,
+                          width: `${count ? '26px' : '24px'}`,
+                          marginLeft: `${count ? '0px' : '4px'}`,
+                          marginRight: `${count && depositedCollection.length > index + 1 ? '-6px' : '0'}`,
+                          borderLeft: `${count ? '2px solid #F3F3F9' : '0'}`,
+                          borderTop: `${count ? '2px solid  #F3F3F9' : '0'}`,
+                          borderBottom: `${count ? '2px solid #F3F3F9' : '0'}`,
+                        }}
                         onClick={() => {
                           if (el.userNftCollection && el.userNftCollection.id) {
                             window.location.href = `/deposit/${el.userNftCollection.id.split('-')[1]}`
@@ -205,44 +215,84 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
             )}
           </Typography>
           {supportNfts.length > 0 ? (
-            <FlexBox mt="12px">
-              {supportNfts &&
-                supportNfts.map((el: any) => {
-                  return (
-                    <Tooltip
-                      key={`support_collections_${el.contract.address}_${el.tokenId}`}
-                      title={el.title || ''}
-                      arrow
-                      placement="top"
-                    >
-                      <RightImgBox
-                        src={el.media[0]?.gateway || ''}
-                        alt=""
-                        onClick={() => {
-                          window.location.href = `/deposit/${el.contract.address}`
-                        }}
-                      ></RightImgBox>
-                    </Tooltip>
-                  )
-                })}
-            </FlexBox>
+            <SpaceBetweenBox
+              height={`${supportNfts.length > 10 ? '28px' : '24px'}`}
+              mt={`${supportNfts.length > 10 ? '8px' : '12px'}`}
+            >
+              <FlexBox>
+                {supportNfts &&
+                  supportNfts.map((el: any, index: number) => {
+                    return (
+                      <Tooltip
+                        key={`support_collections_${el.contract.address}_${el.tokenId}`}
+                        title={el.title || ''}
+                        arrow
+                        placement="top"
+                      >
+                        <RightImgBox
+                          src={el.media[0]?.gateway || ''}
+                          alt=""
+                          sx={{
+                            zIndex: index,
+                            height: `${supportNfts.length > 10 ? '28px' : '24px'}`,
+                            width: `${supportNfts.length > 10 ? '26px' : '24px'}`,
+                            marginRight: `${supportNfts.length > 10 ? '0px' : '4px'}`,
+                            marginLeft: `${supportNfts.length > 10 && index > 0 ? '-8px' : '0'}`,
+                            borderLeft: `${supportNfts.length > 10 ? '2px solid #ffffff' : '0'}`,
+                            borderTop: `${supportNfts.length > 10 ? '2px solid #ffffff' : '0'}`,
+                            borderBottom: `${supportNfts.length > 10 ? '2px solid #ffffff' : '0'}`,
+                          }}
+                          onClick={() => {
+                            window.location.href = `/deposit/${el.contract.address}`
+                          }}
+                        ></RightImgBox>
+                      </Tooltip>
+                    )
+                  })}
+              </FlexBox>
+              {supportNfts.length > 10 && (
+                <Box width="24px" sx={{ cursor: 'pointer' }} height="24px">
+                  <img width="24px" height="24px" src={more} alt="" />
+                </Box>
+              )}
+            </SpaceBetweenBox>
           ) : (
-            <FlexBox mt="12px">
-              {collections &&
-                collections.map((el: any) => {
-                  return (
-                    <Tooltip key={`collections_${el.id}`} title={el.name || ''} arrow placement="top">
-                      <RightImgBox
-                        src={el.icon || ''}
-                        alt=""
-                        onClick={() => {
-                          window.location.href = `/deposit/${el.id}`
-                        }}
-                      ></RightImgBox>
-                    </Tooltip>
-                  )
-                })}
-            </FlexBox>
+            <SpaceBetweenBox
+              height={`${collections.length > 10 ? '28px' : '24px'}`}
+              mt={`${collections.length > 10 ? '8px' : '12px'}`}
+            >
+              <FlexBox>
+                {collections &&
+                  collections.map((el: any, index: number) => {
+                    return (
+                      <Tooltip key={`collections_${el.id}`} title={el.name || ''} arrow placement="top">
+                        <RightImgBox
+                          src={el.icon || ''}
+                          alt=""
+                          sx={{
+                            zIndex: index,
+                            height: `${collections.length > 10 ? '28px' : '24px'}`,
+                            width: `${collections.length > 10 ? '26px' : '24px'}`,
+                            marginRight: `${collections.length > 10 ? '0px' : '4px'}`,
+                            marginLeft: `${collections.length > 10 && index > 0 ? '-8px' : '0'}`,
+                            borderLeft: `${collections.length > 10 ? '2px solid #ffffff' : '0'}`,
+                            borderTop: `${collections.length > 10 ? '2px solid #ffffff' : '0'}`,
+                            borderBottom: `${collections.length > 10 ? '2px solid #ffffff' : '0'}`,
+                          }}
+                          onClick={() => {
+                            window.location.href = `/deposit/${el.id}`
+                          }}
+                        ></RightImgBox>
+                      </Tooltip>
+                    )
+                  })}
+              </FlexBox>
+              {collections.length > 10 && (
+                <Box width="24px" sx={{ cursor: 'pointer' }} height="24px">
+                  <img width="24px" height="24px" src={more} alt="" />
+                </Box>
+              )}
+            </SpaceBetweenBox>
           )}
         </NftListBox>
         <Button

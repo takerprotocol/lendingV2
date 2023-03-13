@@ -53,6 +53,14 @@ export function useIsTransactionPending(transactionHash?: string): boolean {
   return !transactions[transactionHash].receipt
 }
 
+export function useTransactionPending() {
+  const transactions = useAllTransactions()
+
+  return Object.keys(transactions)
+    .filter((el) => !transactions[el].receipt)
+    .map((el) => transactions[el])
+}
+
 export function useIsTransactionConfirmed(transactionHash?: string): boolean {
   const transactions = useAllTransactions()
 

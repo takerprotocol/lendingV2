@@ -124,7 +124,7 @@ export default function MobileCollection() {
                   {address && nftBalance(el.id) > 0 && (
                     <LabelBox>
                       <Typography variant="body2" color="#ffffff" lineHeight="1.125rem" fontWeight="700">
-                        Can Deposit
+                        Available
                       </Typography>
                     </LabelBox>
                   )}

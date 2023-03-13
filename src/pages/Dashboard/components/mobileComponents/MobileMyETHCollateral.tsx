@@ -15,7 +15,7 @@ import {
 import { fixedFormat, times } from 'utils'
 import { toast } from 'react-toastify'
 import BigNumber from 'bignumber.js'
-import { getWETH, gasLimit } from 'config'
+import { getWETH } from 'config'
 import MobileMySupplySwitchModal from './MobileMySupplySwitchModal'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useLendingPool } from 'hooks/useLendingPool'
@@ -113,7 +113,7 @@ export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeMod
   }, [ethDebt])
   const changeUsedAsCollateral = () => {
     if (contract) {
-      contract.setUserUsingAsCollateral(getWETH(chainId), !usedCollateral, { gasLimit }).then(() => {
+      contract.setUserUsingAsCollateral(getWETH(chainId), !usedCollateral).then(() => {
         toast.success('success')
         dispatch(setUsedCollateral(!usedCollateral))
       })

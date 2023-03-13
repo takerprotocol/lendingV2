@@ -15,6 +15,8 @@ import MobileDepositRoWithdraw from './components/mobileComponents/MobileDeposit
 import MobileFooter from './components/mobileComponents/MobileFooter'
 import BigNumber from 'bignumber.js'
 import { useAlchemy } from 'hooks/useAlchemy'
+import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 
 const Body = styled(Box)`
   padding-top: 233px;
@@ -101,11 +103,19 @@ export default function Deposit() {
   const address = useAddress()
   const { id } = useParams()
   const alchemy = useAlchemy()
-  const { list, loading } = useDepositableNfts(address, id)
   const [TestWithdrawList, setWithdrawList] = useState<Array<Nft>>([])
   const [depositType, setDepositType] = useState<string>('shut')
   const [withdrawType, setWithdrawType] = useState<string>('shut')
   const depositedCollection = useDepositedCollection()
+  const transactions = useAllTransactions()
+  const depositFlag = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return tx && tx.receipt && tx.info.type === TransactionType.DEPOSIT_NFT && isTransactionRecent(tx)
+    }).length
+  }, [transactions])
+  const { list, loading } = useDepositableNfts(address, id, depositFlag)
+
   const withdrawList = useMemo(() => {
     if (depositedCollection && id) {
       const collection = depositedCollection.find((el) => {
@@ -127,6 +137,26 @@ export default function Deposit() {
   const [type, setType] = useState<number>(1)
   const [mobileWithdrawCheckedIndex, setMobileWithdrawCheckedIndex] = useState<Array<string>>([])
   const [mobileDepositCheckedIndex, setMobileDepositCheckedIndex] = useState<Array<string>>([])
+
+  const mobileFlag = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return (
+        tx &&
+        tx.receipt &&
+        (tx.info.type === TransactionType.DEPOSIT_NFT || tx.info.type === TransactionType.WITHDRAW_NFT) &&
+        isTransactionRecent(tx)
+      )
+    }).length
+  }, [transactions])
+
+  useEffect(() => {
+    if (mobileFlag) {
+      setMobileWithdrawCheckedIndex([])
+      setMobileDepositCheckedIndex([])
+    }
+  }, [mobileFlag])
+
   const withdrawAmount = useMemo(() => {
     let totalAmount = '0'
     mobileWithdrawCheckedIndex.forEach((el) => {

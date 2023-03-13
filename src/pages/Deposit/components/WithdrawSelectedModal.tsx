@@ -17,7 +17,7 @@ import {
   useHeath,
   useUserValue,
 } from 'state/user/hooks'
-import { gasLimit } from 'config'
+// import { gasLimit } from 'config'
 import { toast } from 'react-toastify'
 import { getRiskLevel, getRiskLevelTag, minus, plus, times } from 'utils'
 import { useContract } from 'hooks/useContract'
@@ -94,8 +94,8 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
           data.map((el) => el.contract.address),
           data.map((el) => el.tokenId),
           amountList.map((el) => el.amount),
-          address,
-          { gasLimit }
+          address
+          // { gasLimit }
         )
         .then((res: any) => {
           if (res && res.hash) {
@@ -217,7 +217,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
           <FlexBox>
             <Box width={'65px'}>
               <Typography component="p" variant="subtitle2" color="#4BC8B1">
-                20%
+                0%
               </Typography>
             </Box>
             <Box sx={{ width: '52px' }}>

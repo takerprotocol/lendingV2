@@ -30,6 +30,7 @@ import WalletMessage from 'components/Header/components/WalletMessage'
 import WalletModal from 'components/WalletModal'
 import { useAppDispatch } from 'state/hooks'
 import MobileCollateralSkeleton from './components/MobileLiquidationSkeleton/MobileCollateralSkeleton'
+import BigNumber from 'bignumber.js'
 
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 
@@ -195,8 +196,8 @@ export default function Liquidation() {
           //   }
           //   depositedAmount = plus(depositedAmount, rel.depositedAmount)
           //   borrowedAmount = plus(borrowedAmount, rel.borrowedAmount)
-          // })
-          const heath = decimalFormat(element.healthFactor, decimal, false)
+          // }
+          const heath = BigNumber.min(decimalFormat(element.healthFactor, decimal, false), 1000).toString()
           users.push({
             address: element.id,
             collateral: fromWei(element.totalCollateral),

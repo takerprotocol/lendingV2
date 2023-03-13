@@ -2,7 +2,7 @@ import { getNftsForOwner, OwnedNftsResponse, getNftMetadata, NftTokenType, Alche
 import { useAlchemy } from 'hooks/useAlchemy'
 import { useCallback, useEffect, useState } from 'react'
 
-export function useDepositableNfts(address: string, id?: string) {
+export function useDepositableNfts(address: string, id?: string, depositFlag?: number) {
   // TODO check if NFT wasn't deposited yet
   const [list, setList] = useState<OwnedNftsResponse | any>([])
   const [loading, setLoading] = useState<boolean>(true)
@@ -27,7 +27,7 @@ export function useDepositableNfts(address: string, id?: string) {
     if (address) {
       getList()
     }
-  }, [address, getList, id])
+  }, [address, getList, id, depositFlag])
   return { loading, list }
 }
 

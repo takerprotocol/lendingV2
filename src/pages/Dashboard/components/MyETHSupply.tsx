@@ -6,7 +6,7 @@ import addBox from 'assets/images/svg/dashboard/addBox.svg'
 import ButtonSupply from 'assets/images/svg/dashboard/Button-Supply.svg'
 import switchIcon from 'assets/images/svg/dashboard/Switch-icon.svg'
 import { FlexBox, SpaceBetweenBox, SpaceBox } from 'styleds'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
 import {
@@ -21,14 +21,17 @@ import {
   useUserValue,
 } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { toast } from 'react-toastify'
-import { getWETH, gasLimit } from 'config'
+// import { toast } from 'react-toastify'
+import { getWETH } from 'config'
 import { useAppDispatch } from 'state'
-import { setUsedCollateral } from 'state/user/reducer'
+// import { setUsedCollateral } from 'state/user/reducer'
 import { decimalFormat, fixedFormat, times } from 'utils'
 import BigNumber from 'bignumber.js'
 import TipsTooltip from './TipsTooltip'
 import { useActiveWeb3React } from 'hooks/web3'
+import { isTransactionRecent, useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
+import { setUsedCollateral } from 'state/user/reducer'
 // import { useWalletBalance } from 'state/user/hooks'
 
 const MyETHSupplyBox = styled(Box)`
@@ -121,6 +124,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const erc20ReserveData = useErc20ReserveData()
   const contract = useLendingPool()
   const ethDebt = useEthDebt()
+  const addTransaction = useTransactionAdder()
   // const heath = useHeath()
   const ethCollateral = useEthCollateral()
   const ethLiquidity = useEthLiquidity()
@@ -129,14 +133,31 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const usedCollateral = useUsedCollateral()
   const dispatch = useAppDispatch()
   const timesEthBorrowLimit = useBorrowLimit(times(ethCollateral, -1))
+  const transactions = useAllTransactions()
+
+  const flag = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return tx && tx.receipt && tx.info.type !== TransactionType.USE_COLLATERAL && isTransactionRecent(tx)
+    }).length
+  }, [transactions])
+  useEffect(() => {
+    if (flag) {
+      dispatch(setUsedCollateral(!usedCollateral))
+    }
+  }, [dispatch, flag, usedCollateral])
   const loanType = useMemo(() => {
     return +ethDebt === 0
   }, [ethDebt])
   const changeUsedAsCollateral = () => {
     if (contract) {
-      contract.setUserUsingAsCollateral(getWETH(chainId), !usedCollateral, { gasLimit }).then(() => {
-        toast.success('success')
-        dispatch(setUsedCollateral(!usedCollateral))
+      contract.setUserUsingAsCollateral(getWETH(chainId), !usedCollateral).then((res: any) => {
+        addTransaction(res, {
+          type: TransactionType.USE_COLLATERAL,
+          value: !usedCollateral,
+        })
+        // toast.success('success')
+        // dispatch(setUsedCollateral(!usedCollateral))
       })
     }
   }
@@ -254,7 +275,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
         openMySupplyModal={openMySupplyModal}
         setOpenMySupplyModal={setOpenMySupplyModal}
         type={typeModal}
-        mySupply={decimalFormat(ethCollateral.replace(/,/g, ''), 0)}
+        mySupply={decimalFormat(ethLiquidity.replace(/,/g, ''), 0)}
       ></MySupplyModal>
       <MySupplySwitchModal
         loanType={loanType}

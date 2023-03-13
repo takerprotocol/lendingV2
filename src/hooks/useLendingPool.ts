@@ -14,11 +14,13 @@ export function useLendingPool() {
   const lendingPoolContract = useContract(address, lendingPoolAbi)
   useEffect(() => {
     if (contract && !address) {
-      contract.getLendingPool().then((res: string) => {
-        if (res) {
-          setAddress(res)
-        }
-      })
+      if (chainId === 5) {
+        contract.getLendingPool().then((res: string) => {
+          if (res) {
+            setAddress(res)
+          }
+        })
+      }
     }
   }, [contract, address, account, chainId])
   return lendingPoolContract

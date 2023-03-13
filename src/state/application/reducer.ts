@@ -17,6 +17,7 @@ export interface ApplicationState {
   collections: any[]
   depositedCollection: any[]
   loading: boolean
+  showChangeNetWork: boolean
 }
 
 export interface TokenDecimals {
@@ -32,6 +33,7 @@ const initialState: ApplicationState = {
   collections: [],
   depositedCollection: [],
   loading: true,
+  showChangeNetWork: false,
 }
 
 const applicationSlice = createSlice({
@@ -53,9 +55,12 @@ const applicationSlice = createSlice({
     setLoading(state, action) {
       state.loading = action.payload
     },
+    setShowChangeNetWork(state, action) {
+      state.showChangeNetWork = action.payload
+    },
   },
 })
 
-export const { setOpenModal, setPoolValues, setCollections, setDepositedCollection, setLoading } =
+export const { setOpenModal, setPoolValues, setCollections, setDepositedCollection, setLoading, setShowChangeNetWork } =
   applicationSlice.actions
 export default applicationSlice.reducer

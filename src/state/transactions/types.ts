@@ -23,6 +23,7 @@ export enum TransactionType {
   REPAY,
   APPROVAL_NFT,
   LIQUIDATE,
+  USE_COLLATERAL,
 }
 
 export interface BaseTransactionInfo {
@@ -68,6 +69,10 @@ export interface LiquidateTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.LIQUIDATE
   amount: string
 }
+export interface UseCollateralTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.USE_COLLATERAL
+  value: boolean
+}
 
 export type TransactionInfo =
   | ApproveTransactionInfo
@@ -77,6 +82,7 @@ export type TransactionInfo =
   | RepayTransactionInfo
   | ApproveNFTTransactionInfo
   | LiquidateTransactionInfo
+  | UseCollateralTransactionInfo
 
 export interface TransactionDetails {
   hash: string
