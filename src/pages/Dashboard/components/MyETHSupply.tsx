@@ -201,7 +201,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
               </Typography>
             </Box>
             <ImgBox src={addBox} alt="" />
-            <Box ml="22px" width="51px">
+            <Box ml="22px" overflow="hidden" width="51px">
               <Typography variant="subtitle2" color="#6E7191">
                 {erc20ReserveData.depositRate}%
               </Typography>

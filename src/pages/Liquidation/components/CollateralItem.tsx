@@ -35,6 +35,8 @@ const Header = styled(Typography)`
 const Value = styled(Box)`
   font-family: 'Quicksand';
   font-style: normal;
+  overflow: hidden;
+  width: 134px;
   font-weight: 700;
   font-size: 14px;
   line-height: 160%;
@@ -261,7 +263,9 @@ const CollateralItem = ({
             />
             <path d="M4 10.5L8.5 13L13 10.5" stroke="#14142A" strokeLinejoin="round" />
           </svg>
-          {fixedFormat(debt)}
+          <Typography width="100px" overflow="hidden" variant="body1" fontWeight="700">
+            {fixedFormat(debt)}
+          </Typography>
         </Value>
       </DataItem>
       <DataItem width={'178px'}>

@@ -149,7 +149,6 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
   const [tokenApproval, tokenApproveCallback] = useTTokenApproveCallback(amount, contract?.address)
   const transactionPending = useTransactionPending()
-  console.log(tokenApproval, 'tokenApproval')
   const depositPending = useMemo(() => {
     return transactionPending.filter((el) => el.info.type === TransactionType.DEPOSIT)
   }, [transactionPending])
@@ -524,7 +523,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               <Button
                 variant="contained"
                 disabled={finalApprove !== ApprovalState.NOT_APPROVED}
-                sx={{ width: '217px', height: '54px' }}
+                sx={{ width: '176px', height: '54px', marginRight: '16px' }}
                 onClick={() => {
                   // supply
                   if (borrowOrRepay === 1) {
@@ -544,7 +543,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               disabled={buttonDisabled}
               variant="contained"
               sx={{
-                width: finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '139px' : '372px',
+                width: finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '176px' : '100%',
                 height: '54px',
               }}
               color={overSupply ? 'error' : 'primary'}

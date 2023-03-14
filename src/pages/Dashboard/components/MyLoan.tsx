@@ -215,14 +215,14 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                   </Typography>
                 </Box>
                 <ImgBox src={addBox} alt="" />
-                <Box ml="33px" width="67px">
+                <Box ml="33px" overflow="hidden" width="67px">
                   <Typography variant="subtitle2" color="#6E7191">
                     {erc20ReserveData.borrowRate}%
                   </Typography>
                 </Box>
                 <ImgBox src={rightBox} alt="" />
                 <Box>
-                  <Typography ml="33px" variant="subtitle2" color="#4E4B66">
+                  <Typography ml="33px" overflow="hidden" variant="subtitle2" color="#4E4B66">
                     {erc20ReserveData.borrowRate}%
                   </Typography>
                 </Box>

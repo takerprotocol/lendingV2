@@ -100,14 +100,19 @@ const MobileFilterBg = styled(Box)`
   z-index: -1;
 `
 export default function Deposit() {
-  const address = useAddress()
   const { id } = useParams()
   const alchemy = useAlchemy()
+  const address = useAddress()
   const [TestWithdrawList, setWithdrawList] = useState<Array<Nft>>([])
   // const [depositType, setDepositType] = useState<string>('shut')
   // const [withdrawType, setWithdrawType] = useState<string>('shut')
   const [depositCheckedIndex, setDepositCheckedIndex] = useState<Array<string>>([])
   const [withdrawCheckedIndex, setWithdrawCheckedIndex] = useState<Array<string>>([])
+  const mobile = useMobileType()
+  const [type, setType] = useState<number>(1)
+  const [mobileWithdrawCheckedIndex, setMobileWithdrawCheckedIndex] = useState<Array<string>>([])
+  const [mobileDepositCheckedIndex, setMobileDepositCheckedIndex] = useState<Array<string>>([])
+  const collections = useCollections()
   const depositedCollection = useDepositedCollection()
   const transactions = useAllTransactions()
   const depositFlag = useMemo(() => {
@@ -117,7 +122,6 @@ export default function Deposit() {
     }).length
   }, [transactions])
   const { list, loading } = useDepositableNfts(address, id, depositFlag)
-
   const withdrawList = useMemo(() => {
     if (depositedCollection && id) {
       const collection = depositedCollection.find((el) => {
@@ -127,7 +131,6 @@ export default function Deposit() {
     }
     return []
   }, [depositedCollection, id])
-  const collections = useCollections()
   const collection = useMemo(() => {
     if (collections && id) {
       return collections.find((el) => el.id.toLocaleLowerCase() === id.toLocaleLowerCase())
@@ -135,11 +138,6 @@ export default function Deposit() {
       return null
     }
   }, [collections, id])
-  const mobile = useMobileType()
-  const [type, setType] = useState<number>(1)
-  const [mobileWithdrawCheckedIndex, setMobileWithdrawCheckedIndex] = useState<Array<string>>([])
-  const [mobileDepositCheckedIndex, setMobileDepositCheckedIndex] = useState<Array<string>>([])
-
   const mobileFlag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
@@ -193,7 +191,6 @@ export default function Deposit() {
   useEffect(() => {
     getWithdrawList()
   }, [getWithdrawList])
-  // #eff0f5
   return (
     <>
       {mobile ? (

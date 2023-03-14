@@ -104,7 +104,7 @@ interface MobileNFTCollateralsProps {
 }
 export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsProps) {
   const [checkboxType, setCheckboxType] = useState<Array<string>>([])
-  const [list] = useState<Array<number>>([1, 2, 3, 4, 5, 6, 7, 8, 9, 0])
+  const [list] = useState<Array<number>>([])
   const [NftType] = useState<string>('ERC721')
   const [openFilter, setOpenFilter] = useState(false)
   const [collectionFilter, setCollectionFilter] = useState(0)
@@ -130,8 +130,8 @@ export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsPr
         <MobileNFTCollateralsSkeleton></MobileNFTCollateralsSkeleton>
       ) : (
         <>
-          <Typography mb="1rem" variant="subtitle2">
-            37 NFT Collaterals
+          <Typography mb={list.length !== 0 ? '1rem' : '0'} variant="subtitle2">
+            {list.length} NFT Collaterals
           </Typography>
           {list.length > 9 && (
             <SortAndFilterBox>

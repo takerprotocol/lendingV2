@@ -2,7 +2,7 @@ import { Box, Button, Modal, styled, Typography } from '@mui/material'
 import redPrompt from 'assets/images/svg/common/redPrompt.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
 import { FlexBox, SpaceBetweenBox } from 'styleds/index'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
 import MockERC721Abi from 'abis/MockERC721.json'
@@ -20,11 +20,17 @@ import { toast } from 'react-toastify'
 import { getRiskLevel, getRiskLevelTag, minus, plus, times } from 'utils'
 import { useContract } from 'hooks/useContract'
 import { useParams } from 'react-router-dom'
-import { useTransactionAdder } from 'state/transactions/hooks'
+import {
+  isTransactionRecent,
+  useAllTransactions,
+  useTransactionAdder,
+  useTransactionPending,
+} from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { Nft } from '@alch/alchemy-sdk'
 import { NftTokenModel } from 'services/type/nft'
 import TipsTooltip from 'pages/Dashboard/components/TipsTooltip'
+import { Loading } from 'components/Loading'
 
 const style = {
   width: '100%',
@@ -95,6 +101,7 @@ export default function MobileWithdrawSelectedModal({
   const userValue = useUserValue()
   const heath = useHeath()
   const collateralRiskLevel = useCollateralRiskLevel()
+  const [loading, setLoading] = useState(false)
   const TypographyRiskLevel = getRiskLevel(heath)
   const erc20ReserveData = useErc20ReserveData()
   const riskLevelTag = getRiskLevelTag(heath)
@@ -104,9 +111,41 @@ export default function MobileWithdrawSelectedModal({
   const borrowLimitUsed = useCollateralBorrowLimitUsed()
   const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, -1))
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
+  const transactionPending = useTransactionPending()
+  const transactions = useAllTransactions()
   const upBorrowLimit = useBorrowLimit(times(amount, -1)) //操作后的borrowLimit
   //操作后的borrowLimit
+  const approvePending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.APPROVAL_NFT)
+  }, [transactionPending])
+
+  const depositPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.DEPOSIT_NFT)
+  }, [transactionPending])
+
+  const withdrawPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.WITHDRAW_NFT)
+  }, [transactionPending])
+  const flag = useMemo(() => {
+    return (
+      transactions &&
+      Object.keys(transactions).some((hash) => {
+        const tx = transactions[hash]
+        return tx && tx.receipt && tx.info.type === TransactionType.APPROVAL_NFT && isTransactionRecent(tx)
+      })
+    )
+  }, [transactions])
+  useEffect(() => {
+    if (contract && ercContract && address) {
+      ercContract.isApprovedForAll(address, contract.address).then((res: boolean) => {
+        if (res) {
+          setIsApproved(2)
+        }
+      })
+    }
+  }, [contract, address, ercContract, flag])
   const deposit = async () => {
+    setLoading(true)
     if (contract && address && ercContract) {
       if (isApproved) {
         contract
@@ -118,27 +157,40 @@ export default function MobileWithdrawSelectedModal({
             // { gasLimit }
           )
           .then((res: any) => {
+            setLoading(false)
             if (res && res.hash) {
               close(false)
               addTransaction(res, {
-                type: TransactionType.DEPOSIT,
+                type: TransactionType.DEPOSIT_NFT,
                 recipient: address,
                 amount,
+                count: depositData.length,
               })
-              toast.success('success')
+              // toast.success('success')
             }
           })
-      } else {
-        ercContract.setApprovalForAll(contract.address, true).then((res: any) => {
-          setIsApproved(1)
-          addTransaction(res, {
-            type: TransactionType.APPROVAL_NFT,
-            spender: contract.address,
-            amount,
-            message: 'Approve all NFT',
+          .catch(() => {
+            setLoading(false)
           })
-        })
+      } else {
+        ercContract
+          .setApprovalForAll(contract.address, true)
+          .then((res: any) => {
+            setLoading(false)
+            setIsApproved(1)
+            addTransaction(res, {
+              type: TransactionType.APPROVAL_NFT,
+              spender: contract.address,
+              amount,
+              message: 'Approve all NFT',
+            })
+          })
+          .catch(() => {
+            setLoading(false)
+          })
       }
+    } else {
+      setLoading(false)
     }
   }
   const withdraw = async () => {
@@ -164,8 +216,6 @@ export default function MobileWithdrawSelectedModal({
         })
     }
   }
-  console.log(depositData, '111')
-  console.log(data, '222')
   const depositAmount = useMemo(() => {
     return depositData.reduce((total: string, current: NftTokenModel) => {
       return new BigNumber(total).plus(current.balance || '0').toString()
@@ -221,7 +271,7 @@ export default function MobileWithdrawSelectedModal({
                     key={`Withdraw${index}`}
                   >
                     <FlexBox>
-                      <NftImg width="3rem" height="3rem" src={el.rawMetadata?.image} alt="" />
+                      <NftImg width="3rem" height="3rem" src={el.media[0]?.gateway || ''} alt="" />
                       <Box ml="0.75rem">
                         <BodyTypography color="#6E7191 !important" fontWeight="600 !important">
                           {el.rawMetadata?.name}
@@ -324,7 +374,7 @@ export default function MobileWithdrawSelectedModal({
             </Typography>
             <TipsTooltip size="14" value="1234"></TipsTooltip>
           </RightFlexBox>
-          <Button
+          {/* <Button
             variant="contained"
             sx={{ width: '100%', height: '3rem' }}
             color={riskLevelWarning ? 'error' : 'primary'}
@@ -336,9 +386,59 @@ export default function MobileWithdrawSelectedModal({
               }
             }}
           >
-            {/* {type === 'Withdraw' ? type : isApproved === 2 ? 'Deposit' : isApproved === 1 ? 'Pending' : 'Approve'} */}
+            {type === 'Withdraw' ? type : isApproved === 2 ? 'Deposit' : isApproved === 1 ? 'Pending' : 'Approve'}
             {type === 'Withdraw' ? `Withdraw ${data.length} NFTs` : `Deposit ${depositData.length} NFTs`}
-          </Button>
+          </Button> */}
+          {type === 'deposit' ? (
+            <FlexBox justifyContent="space-between">
+              {isApproved !== 2 && (
+                <Button
+                  variant="contained"
+                  disabled={isApproved !== 0}
+                  sx={{ width: '50%', height: '3rem', marginRight: '1rem' }}
+                  color={riskLevelWarning ? 'error' : 'primary'}
+                  onClick={() => {
+                    deposit()
+                  }}
+                >
+                  {approvePending.length > 0 || withdrawPending.length > 0 || depositPending.length > 0 || loading ? (
+                    <Loading></Loading>
+                  ) : (
+                    <></>
+                  )}
+                  Approve
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                disabled={isApproved !== 2}
+                sx={{ width: isApproved !== 2 ? '50%' : '100%', height: '3rem' }}
+                color={riskLevelWarning ? 'error' : 'primary'}
+                onClick={() => {
+                  deposit()
+                }}
+              >
+                {withdrawPending.length > 0 || depositPending.length > 0 || (loading && isApproved === 2) ? (
+                  <Loading></Loading>
+                ) : (
+                  <></>
+                )}
+                {isApproved === 0 ? 'Deposit' : `Deposit ${depositData.length} NFTs`}
+              </Button>
+            </FlexBox>
+          ) : (
+            <Button
+              variant="contained"
+              sx={{ width: '100%', height: '3rem' }}
+              color={riskLevelWarning ? 'error' : 'primary'}
+              onClick={() => {
+                withdraw()
+              }}
+            >
+              {loading && <Loading></Loading>}
+              Withdraw {data.length} NFTs
+            </Button>
+          )}
           <Box mb="1rem" display={riskLevelWarning ? '' : 'none'}>
             <FlexBox>
               <Box mr="0.5rem" pt="0.1875rem" height="3.5625rem">

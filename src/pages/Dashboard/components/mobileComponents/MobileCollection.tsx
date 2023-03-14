@@ -13,6 +13,7 @@ import { div, fixedFormat, times } from 'utils'
 import { useAccountNfts, useAddress } from 'state/user/hooks'
 import MobileCollectionSkeleton from '../mobileDashboardSkeleton/MobileCollectionSkeleton'
 import { OwnedNft } from '@alch/alchemy-sdk'
+import { useNavigate } from 'react-router-dom'
 const Collection = styled(Box)`
   width: 100%;
   padding: 1.3125rem 1rem 2rem 1rem;
@@ -72,6 +73,7 @@ export default function MobileCollection() {
   const address = useAddress()
   const loading = useLoading()
   const list = useAccountNfts()
+  const navigate = useNavigate()
   const depositedCollection = useDepositedCollection()
   const deposited = (id: string) => {
     if (depositedCollection) {
@@ -82,6 +84,9 @@ export default function MobileCollection() {
     }
     return '0'
   }
+
+  // const nftBalance = (id: string) => {
+  // }
   const nftBalance = useCallback(
     (id: string) => {
       if (list) {
@@ -178,17 +183,20 @@ export default function MobileCollection() {
                         </FlexBox>
                       </Box>
                     </FlexBox>
-                    <Box sx={{ height: '2.375rem', width: '2.375rem', marginTop: '0.0625rem' }}>
-                      <img
-                        src={address && nftBalance(el.id) > 0 ? mobileCollateralRight : mobileCollateralRight2}
-                        alt=""
-                        onClick={() => {
-                          if (address && nftBalance(el.id) > 0) {
-                            window.location.href = `/deposit/${el.id}`
-                          }
-                        }}
-                      />
-                    </Box>
+                    {address && (
+                      <Box sx={{ height: '2.375rem', width: '2.375rem', marginTop: '0.0625rem' }}>
+                        <img
+                          src={address && nftBalance(el.id) > 0 ? mobileCollateralRight : mobileCollateralRight2}
+                          alt=""
+                          onClick={() => {
+                            if (address && nftBalance(el.id) > 0) {
+                              // window.location.href = `/deposit/${el.id}`
+                              navigate(`/deposit/${el.id}`)
+                            }
+                          }}
+                        />
+                      </Box>
+                    )}
                   </SpaceBetweenBox>
                 </NftBox>
                 <NftFooterBox>

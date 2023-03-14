@@ -114,7 +114,7 @@ const LiquidateButton = styled(Button)`
   border-radius: 6px !important;
 `
 export default function MobileFooter() {
-  const list: Array<number> = [1, 2, 3]
+  const list: Array<number> = []
   const [checkboxType, setCheckboxType] = useState<Array<string>>([])
   const [details, setDetails] = useState<boolean>(false)
   return (
@@ -153,8 +153,8 @@ export default function MobileFooter() {
                 <StyleCheckbox
                   sx={{ marginTop: '0.375rem' }}
                   checked={checkboxType.includes(el)}
-                  checkedIcon={<img src={liquidateChecked_Icon} alt="" />}
-                  icon={<img src={liquidateNotChecked_Icon} alt="" />}
+                  checkedIcon={<img style={{ transform: 'translateY(4px)' }} src={liquidateChecked_Icon} alt="" />}
+                  icon={<img style={{ transform: 'translateY(4px)' }} src={liquidateNotChecked_Icon} alt="" />}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     if (event.target.checked) {
                       setCheckboxType([...checkboxType, el])

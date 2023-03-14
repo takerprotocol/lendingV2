@@ -91,7 +91,6 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const transactions = useAllTransactions()
   const borrowLimitUsed = useCollateralBorrowLimitUsed()
   const transactionPending = useTransactionPending()
-
   const approvePending = useMemo(() => {
     return transactionPending.filter((el) => el.info.type === TransactionType.APPROVAL_NFT)
   }, [transactionPending])
@@ -103,7 +102,6 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const withdrawPending = useMemo(() => {
     return transactionPending.filter((el) => el.info.type === TransactionType.WITHDRAW_NFT)
   }, [transactionPending])
-
   const flag = useMemo(() => {
     return (
       transactions &&
@@ -355,7 +353,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             <Button
               variant="contained"
               disabled={isApproved !== 0}
-              sx={{ width: '217px', height: '54px' }}
+              sx={{ width: '176px', height: '54px', marginRight: '16px' }}
               color={riskLevelWarning ? 'error' : 'primary'}
               onClick={() => {
                 if (type === 'Withdraw') {
@@ -376,14 +374,10 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           <Button
             variant="contained"
             disabled={isApproved !== 2}
-            sx={{ width: isApproved !== 2 ? '139px' : '372px', height: '54px' }}
+            sx={{ width: isApproved !== 2 ? '176px' : '100%', height: '54px' }}
             color={riskLevelWarning ? 'error' : 'primary'}
             onClick={() => {
-              if (type === 'Withdraw') {
-                withdraw()
-              } else {
-                deposit()
-              }
+              deposit()
             }}
           >
             {withdrawPending.length > 0 || depositPending.length > 0 || (loading && isApproved === 2) ? (
@@ -391,7 +385,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
             ) : (
               <></>
             )}
-            {type === 'Withdraw' ? type : isApproved === 0 ? 'Deposit' : `Deposit ${data.length} NFTs`}
+            {isApproved === 0 ? 'Deposit' : `Deposit ${data.length} NFTs`}
           </Button>
         </FlexBox>
       </Box>

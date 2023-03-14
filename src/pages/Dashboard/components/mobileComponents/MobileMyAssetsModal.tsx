@@ -19,13 +19,14 @@ import {
   useWalletBalance,
 } from 'state/user/hooks'
 // import { gasLimit } from 'config'
-import { useTransactionAdder } from 'state/transactions/hooks'
+import { useTransactionAdder, useTransactionPending } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { useGateway } from 'hooks/useGateway'
 import { SpaceBetweenBox } from 'styleds'
 import { useApproveCallback, useTTokenApproveCallback } from 'hooks/transactions/useApproveCallback'
 import { ApprovalState } from 'hooks/transactions/useApproval'
 import TipsTooltip from '../TipsTooltip'
+import { Loading } from 'components/Loading'
 
 const style = {
   width: '100%',
@@ -140,6 +141,7 @@ export default function MobileMyAssetsModal({
   const [borrowOrRepay, setBorrowOrRepay] = useState<number>(type)
   // const [supplyLimit, setSupplyLimit] = useState('')
   const supplyLimit = useWalletBalance()
+  const [loading, setLoading] = useState(false)
   const [amount, setAmount] = useState('')
   const contract = useGateway()
   const poolContract = useLendingPool()
@@ -158,6 +160,7 @@ export default function MobileMyAssetsModal({
   const addTransaction = useTransactionAdder()
   const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
   const [tokenApproval, tokenApproveCallback] = useTTokenApproveCallback(amount, contract?.address)
+  const transactionPending = useTransactionPending()
   // const erc20Contract = useContract(ERC20_ADDRESS, erc20Abi)
   const decimal = useDecimal()
   // useEffect(() => {
@@ -170,14 +173,22 @@ export default function MobileMyAssetsModal({
   useEffect(() => {
     setBorrowOrRepay(type)
   }, [type])
+  const depositPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.DEPOSIT)
+  }, [transactionPending])
+
+  const withdrawPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.WITHDRAW)
+  }, [transactionPending])
   const supplySubmit = async () => {
     if (new BigNumber(amount).lte(0)) {
       toast.error('Minimum supply 0')
       return
     }
     if (contract && address) {
+      setLoading(true)
       if (approval !== ApprovalState.APPROVED) {
-        await approveCallback()
+        await approveCallback().catch(() => setLoading(false))
       } else {
         contract
           .deposit(poolContract?.address, address, {
@@ -185,16 +196,18 @@ export default function MobileMyAssetsModal({
             // gasLimit,
           })
           .then((res: any) => {
+            setLoading(false)
             addTransaction(res, {
               type: TransactionType.DEPOSIT,
               recipient: address,
               amount,
             })
             toast.success(desensitization(res.hash))
-            setAmount('')
+            // setAmount('')
             setOpenMySupplyModal(false)
           })
           .catch((error: any) => {
+            setLoading(false)
             toast.error(error.message)
           })
       }
@@ -206,27 +219,33 @@ export default function MobileMyAssetsModal({
       return
     }
     if (contract && address) {
+      setLoading(true)
       if (tokenApproval !== ApprovalState.APPROVED) {
-        await tokenApproveCallback()
+        await tokenApproveCallback().catch(() => setLoading(false))
       } else {
         contract
           .withdraw(poolContract?.address, amountDecimal(amount, decimal), address)
           .then((res: any) => {
+            setLoading(false)
             toast.success(desensitization(res.hash))
             addTransaction(res, {
               type: TransactionType.WITHDRAW,
               recipient: address,
               amount,
             })
-            // setAmount('')
+            setAmount('')
             setOpenMySupplyModal(false)
           })
           .catch((error: any) => {
+            setLoading(false)
             toast.error(error.message)
           })
       }
     }
   }
+  const finalApprove = useMemo(() => {
+    return borrowOrRepay === 1 ? approval : tokenApproval
+  }, [approval, borrowOrRepay, tokenApproval])
 
   const overSupply = useMemo(() => {
     if (borrowOrRepay === 2) {
@@ -462,7 +481,7 @@ export default function MobileMyAssetsModal({
             </Typography>
             <TipsTooltip size="14" value="1234"></TipsTooltip>
           </NetSupplyAPY>
-          <Button
+          {/* <Button
             disabled={buttonDisabled}
             variant="contained"
             className={overSupply ? 'error' : ''}
@@ -478,7 +497,7 @@ export default function MobileMyAssetsModal({
               }
             }}
           >
-            {/* {borrowOrRepay === 1
+             {borrowOrRepay === 1
               ? approval === ApprovalState.APPROVED || !amount
                 ? 'Supply'
                 : approval === ApprovalState.PENDING
@@ -488,9 +507,59 @@ export default function MobileMyAssetsModal({
               ? 'Withdraw'
               : tokenApproval === ApprovalState.PENDING
               ? 'Pending'
-              : 'Approve'} */}
+              : 'Approve'} 
             {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}
-          </Button>
+          </Button> */}
+          <Box justifyContent="space-between" marginTop="24px" display="flex" alignItems="center">
+            {tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+              <Button
+                variant="contained"
+                disabled={finalApprove !== ApprovalState.NOT_APPROVED}
+                sx={{ width: '50%', height: '3rem', marginRight: '1rem' }}
+                onClick={() => {
+                  // supply
+                  if (borrowOrRepay === 1) {
+                    supplySubmit()
+                    // setAmount('')
+                  } else {
+                    withdrawSubmit()
+                    // setAmount('')
+                  }
+                }}
+              >
+                {depositPending.length > 0 || withdrawPending.length > 0 || loading ? <Loading></Loading> : <></>}
+                Approve
+              </Button>
+            )}
+            <Button
+              disabled={buttonDisabled}
+              variant="contained"
+              sx={{
+                width: finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '50%' : '100%',
+                height: '3rem',
+              }}
+              color={overSupply ? 'error' : 'primary'}
+              onClick={() => {
+                // supply
+                if (borrowOrRepay === 1) {
+                  supplySubmit()
+                  // setAmount('')
+                } else {
+                  withdrawSubmit()
+                  // setAmount('')
+                }
+              }}
+            >
+              {depositPending.length > 0 ||
+              withdrawPending.length > 0 ||
+              (loading && finalApprove === ApprovalState.APPROVED) ? (
+                <Loading></Loading>
+              ) : (
+                <></>
+              )}
+              {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}
+            </Button>
+          </Box>
           {overSupply && (
             <Box mt="1rem">
               <FlexBox>

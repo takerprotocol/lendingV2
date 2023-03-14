@@ -298,9 +298,6 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
       setLoading(false)
     }
   }
-  const ethDebt_Length = useMemo(() => {
-    return Number(fixedFormat(ethDebt).split('.').join('')).toString.length > 11
-  }, [ethDebt])
   const repaySubmit = () => {
     if (contract) {
       setLoading(true)
@@ -324,7 +321,13 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
         })
     }
   }
-
+  const ethDebt_Length = useMemo(() => {
+    if (fixedFormat(ethDebt).includes('.')) {
+      return !(fixedFormat(ethDebt).length > 13)
+    } else {
+      return !(fixedFormat(ethDebt).length > 12)
+    }
+  }, [ethDebt])
   const buttonDisabled = useMemo(() => {
     return check === 1 ? !amount || new BigNumber(amount).gt(borrowLimit) : !amount || new BigNumber(amount).gt(ethDebt)
   }, [amount, borrowLimit, check, ethDebt])
@@ -360,7 +363,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 >
                   {fixedFormat(ethDebt)}
                 </Typography>
-                <Typography ml="6px" variant="subtitle1" color="#EFF0F6">
+                <Typography ml="6px" mb={ethDebt_Length ? '4px' : '0'} variant="subtitle1" color="#EFF0F6">
                   ETH
                 </Typography>
               </FlexEndBox>
@@ -368,7 +371,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             <Box mt="32px">
               <Box
                 sx={{ display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }}
-                mr="8px"
+                mr="32px"
                 onClick={() => {
                   setAmount('')
                   onClose(false)
@@ -404,7 +407,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </Box>
           </SpaceBetweenBox>
           <Box display={+ethDebt === 0 ? 'none' : ''}>
-            <CenterBox mt="24px">
+            <CenterBox mt={ethDebt_Length ? '24px' : '28px'}>
               <Box ml="115px">
                 <BorrowTypography
                   variant="subtitle1"
@@ -659,7 +662,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 <Button
                   variant="contained"
                   disabled={tokenApproval !== ApprovalState.NOT_APPROVED}
-                  sx={{ width: '217px', height: '54px' }}
+                  sx={{ width: '176px', height: '54px', marginRight: '16px' }}
                   onClick={() => {
                     if (check === 1) {
                       borrowSubmit()
@@ -676,7 +679,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 disabled={+amount === 0 || buttonDisabled}
                 variant="contained"
                 sx={{
-                  width: tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '139px' : '372px',
+                  width: tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '176px' : '372px',
                   height: '54px',
                 }}
                 onClick={() => {

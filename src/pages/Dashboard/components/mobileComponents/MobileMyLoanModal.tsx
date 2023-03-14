@@ -1,5 +1,6 @@
 import greyShutOff from 'assets/images/svg/common/greyShutOff.svg'
 import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material'
+import { Loading } from 'components/Loading'
 import redPrompt from 'assets/images/svg/common/redPrompt.svg'
 import { useEffect, useMemo, useState } from 'react'
 import loanModalBefore from 'assets/images/svg/dashboard/loanModal-before.svg'
@@ -19,7 +20,7 @@ import {
 import { useLendingPool } from 'hooks/useLendingPool'
 // import { gasLimit } from 'config'
 import BigNumber from 'bignumber.js'
-import { useTransactionAdder } from 'state/transactions/hooks'
+import { useTransactionAdder, useTransactionPending } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { toast } from 'react-toastify'
 import { useGateway } from 'hooks/useGateway'
@@ -194,6 +195,15 @@ const NetBorrowAPY = styled(Box)`
   align-items: center;
   margin-top: 1.625rem;
 `
+const LiquidatedBox = styled(Box)`
+  width: 100%;
+  height: 3rem;
+  background: #f9e7ea;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
 interface MyLoanModalProps {
   open: boolean
   repayRoBorrow: number
@@ -201,8 +211,10 @@ interface MyLoanModalProps {
 }
 export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModalProps) {
   const [check, setCheck] = useState<number>(repayRoBorrow)
+  const [loading, setLoading] = useState(false)
   const [amount, setAmount] = useState<string>('')
   const [slider, setSlider] = useState<number>(0)
+  const transactionPending = useTransactionPending()
   const heath = useHeath()
   const debtRiskLevel = useDebtRiskLevel(times(amount, check === 1 ? 1 : -1))
   const upBorrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
@@ -231,6 +243,12 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
       return upBorrowLimitUsed
     }
   }, [upBorrowLimitUsed])
+  const repayPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.REPAY)
+  }, [transactionPending])
+  const borrowPending = useMemo(() => {
+    return transactionPending.filter((el) => el.info.type === TransactionType.BORROW)
+  }, [transactionPending])
   // const bef = useMemo(() => {
   //   if (new BigNumber(beforeValue).gte(100)) {
   //     return 94
@@ -251,13 +269,15 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
   }, [repayRoBorrow])
   const borrowSubmit = async () => {
     if (contract) {
+      setLoading(true)
       if (check === 1) {
         if (tokenApproval !== ApprovalState.APPROVED) {
-          await tokenApproveCallback()
+          await tokenApproveCallback().catch(() => setLoading(false))
         } else {
           contract
             .borrow(poolContract?.address, amountDecimal(amount, decimal))
             .then((res: any) => {
+              setLoading(false)
               addTransaction(res, {
                 type: TransactionType.BORROW,
                 recipient: address,
@@ -267,11 +287,12 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
             })
             .catch((error: any) => {
               toast.error(error.message)
+              setLoading(false)
             })
         }
       } else {
         if (tokenApproval !== ApprovalState.APPROVED) {
-          await tokenApproveCallback()
+          await tokenApproveCallback().catch(() => setLoading(false))
         } else {
           contract
             .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
@@ -279,6 +300,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
               // gasLimit,
             })
             .then((res: any) => {
+              setLoading(false)
               addTransaction(res, {
                 type: TransactionType.REPAY,
                 recipient: address,
@@ -287,20 +309,25 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
               onClose(false)
             })
             .catch((error: any) => {
+              setLoading(false)
               toast.error(error.message)
             })
         }
       }
+    } else {
+      setLoading(false)
     }
   }
   const repaySubmit = () => {
     if (contract) {
+      setLoading(true)
       contract
         .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
           value: amountDecimal(amount, decimal),
           // gasLimit,
         })
         .then((res: any) => {
+          setLoading(false)
           addTransaction(res, {
             type: TransactionType.REPAY,
             recipient: address,
@@ -309,6 +336,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
           onClose(false)
         })
         .catch((error: any) => {
+          setLoading(false)
           toast.error(error.message)
         })
     }
@@ -552,7 +580,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
             </Typography>
             <TipsTooltip value="1122"></TipsTooltip>
           </NetBorrowAPY>
-          <Button
+          {/* <Button
             disabled={Number(amount) === 0 || buttonDisabled}
             color={new BigNumber(debtRiskLevel).lt(110) && check === 1 ? 'error' : 'primary'}
             variant="contained"
@@ -578,7 +606,66 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
               : tokenApproval === ApprovalState.PENDING
               ? 'Loading'
               : 'Approve'}
-          </Button>
+          </Button> */}
+          {check === 1 && new BigNumber(amount).gt(borrowLimit) ? (
+            // {check === 1 && +debtRiskLevel < 110 ? (
+            <LiquidatedBox>
+              <Typography
+                sx={{
+                  cursor: 'not-allowed',
+                }}
+                variant="body1"
+                fontWeight="700"
+                color="#E1536C"
+              >
+                Borrow
+              </Typography>
+            </LiquidatedBox>
+          ) : (
+            <Box marginTop="24px" display="flex" alignItems="center" justifyContent="space-between">
+              {tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+                <Button
+                  variant="contained"
+                  disabled={tokenApproval !== ApprovalState.NOT_APPROVED}
+                  sx={{ width: '217px', height: '3rem' }}
+                  onClick={() => {
+                    if (check === 1) {
+                      borrowSubmit()
+                    } else {
+                      repaySubmit()
+                    }
+                  }}
+                >
+                  {repayPending.length > 0 || borrowSubmit.length > 0 || loading ? <Loading></Loading> : <></>}
+                  Approve
+                </Button>
+              )}
+              <Button
+                disabled={+amount === 0 || buttonDisabled}
+                variant="contained"
+                sx={{
+                  width: tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '139px' : '372px',
+                  height: '3rem',
+                }}
+                onClick={() => {
+                  if (check === 1) {
+                    borrowSubmit()
+                  } else {
+                    repaySubmit()
+                  }
+                }}
+              >
+                {repayPending.length > 0 ||
+                borrowPending.length > 0 ||
+                (loading && tokenApproval === ApprovalState.APPROVED) ? (
+                  <Loading></Loading>
+                ) : (
+                  <></>
+                )}
+                {check === 1 ? 'Borrow' : 'Repay'}
+              </Button>
+            </Box>
+          )}
           {new BigNumber(debtRiskLevel).lt(110) && check === 1 && (
             <StartBox>
               <Box mt="0.125rem" mr="0.5rem">
