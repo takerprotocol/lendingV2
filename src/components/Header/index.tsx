@@ -17,6 +17,7 @@ import MobileHeader from './MobileHeader'
 import { ChangeNetWork } from 'components/ChangeNetWork'
 import { useTransactionPending } from 'state/transactions/hooks'
 import { Loading } from 'components/Loading'
+import { useCallback, useEffect, useState } from 'react'
 
 const HeaderBox = styled(Box, {
   shouldForwardProp: (prop) => true,
@@ -109,12 +110,35 @@ export const Header = () => {
   const location = useLocation()
   const mobile = useMobileType()
   const lightBackground = location.pathname.includes('/deposit') || location.pathname.includes('/liquidate')
+  const [scrollTop, setScrollTop] = useState(0)
+
+  const bindHandleScroll = useCallback(() => {
+    let scrollTop = 0
+    if (document?.documentElement && document?.documentElement?.scrollTop) {
+      scrollTop = document?.documentElement.scrollTop
+    } else if (document?.body) {
+      scrollTop = document?.body.scrollTop
+    }
+    setScrollTop(scrollTop)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('scroll', bindHandleScroll)
+    return () => {
+      window.removeEventListener('scroll', bindHandleScroll)
+    }
+  }, [bindHandleScroll])
   return (
     <>
       {mobile ? (
         <>
           {showChangeNetWork && <ChangeNetWork></ChangeNetWork>}
-          <HeaderBox lightBackground={lightBackground}>
+          <HeaderBox
+            sx={{
+              top: scrollTop > 70 ? 0 : 'unset',
+            }}
+            lightBackground={lightBackground}
+          >
             <HeaderLogo onClick={() => navigate('/')} alt="logo" src={LogoIcon} />
             <FlexBox>
               {/* <Link to="/">

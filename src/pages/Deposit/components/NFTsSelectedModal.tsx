@@ -376,7 +376,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
           <Button
             variant="contained"
             disabled={isApproved !== 2}
-            sx={{ width: isApproved !== 0 ? '139px' : '372px', height: '54px' }}
+            sx={{ width: isApproved !== 2 ? '139px' : '372px', height: '54px' }}
             color={riskLevelWarning ? 'error' : 'primary'}
             onClick={() => {
               if (type === 'Withdraw') {
