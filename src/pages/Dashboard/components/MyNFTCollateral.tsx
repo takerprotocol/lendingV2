@@ -31,7 +31,6 @@ const TopBox = styled(Box)`
   background-repeat: no-repeat;
 `
 const ButtonBox = styled(Box)`
-  background: rgba(255, 255, 255, 0.15);
   border-radius: 4px;
   margin-top: 24px;
   height: 28px;
