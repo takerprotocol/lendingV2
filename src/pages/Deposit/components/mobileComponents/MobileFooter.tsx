@@ -42,6 +42,7 @@ interface MobileFooterProps {
   withdrawLargeAmount: boolean
   mobileWithdrawCheckedIndex: Array<string>
   mobileDepositCheckedIndex: Array<string>
+  floorPrice: string
 }
 export default function MobileFooter({
   type,
@@ -51,6 +52,7 @@ export default function MobileFooter({
   setMobileDepositCheckedIndex,
   TestWithdrawList,
   withdrawList,
+  floorPrice,
   withdrawLargeAmount,
   mobileWithdrawCheckedIndex,
   mobileDepositCheckedIndex,
@@ -156,6 +158,7 @@ export default function MobileFooter({
       </SpaceBetweenBox>
       <MobileWithdrawSelectedModal
         type={modalType}
+        floorPrice={floorPrice}
         checkedIndex={type === 1 ? mobileDepositCheckedIndex : mobileWithdrawCheckedIndex}
         amount={withdrawAmount}
         amountList={withdrawList.filter((el) => mobileWithdrawCheckedIndex.includes(el.id.split('-')[2]))}

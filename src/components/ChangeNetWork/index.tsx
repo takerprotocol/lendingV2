@@ -3,6 +3,10 @@ import { Box, styled } from '@mui/material'
 const ChangeNetWorkBox = styled(Box)`
   width: 100%;
   height: 48px;
+  position: fixed;
+  z-index: 10000;
+  top: 0px;
+  left: 0px;
   font-weight: 600;
   font-size: 16px;
   color: #ffffff;

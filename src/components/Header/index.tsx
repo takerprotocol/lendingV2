@@ -111,7 +111,6 @@ export const Header = () => {
   const mobile = useMobileType()
   const lightBackground = location.pathname.includes('/deposit') || location.pathname.includes('/liquidate')
   const [scrollTop, setScrollTop] = useState(0)
-
   const bindHandleScroll = useCallback(() => {
     let scrollTop = 0
     if (document?.documentElement && document?.documentElement?.scrollTop) {
@@ -121,7 +120,7 @@ export const Header = () => {
     }
     setScrollTop(scrollTop)
   }, [])
-
+  console.log(showChangeNetWork)
   useEffect(() => {
     window.addEventListener('scroll', bindHandleScroll)
     return () => {
@@ -135,7 +134,7 @@ export const Header = () => {
           {showChangeNetWork && <ChangeNetWork></ChangeNetWork>}
           <HeaderBox
             sx={{
-              top: scrollTop > 70 ? 0 : 'unset',
+              top: showChangeNetWork ? '48px' : scrollTop > 70 ? 0 : 'unset',
             }}
             lightBackground={lightBackground}
           >

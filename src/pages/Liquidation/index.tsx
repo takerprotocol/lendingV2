@@ -15,7 +15,7 @@ import {
   useMobileMenuType,
   useMobileType,
 } from 'state/user/hooks'
-import { useCollections } from 'state/application/hooks'
+import { useCollections, useShowChangeNetWork } from 'state/application/hooks'
 import { CollateralModel } from 'services/type/nft'
 import { getRiskLevel, getRiskLevelTag, times } from 'utils'
 import MobileHeader from './components/mobileLiquidation/MobileHeader'
@@ -46,7 +46,6 @@ const BodyBg = styled(Box)`
   background-size: cover;
   max-height: 66.11319444444445vw;
   height: 66.11319444444445vw;
-  top: 0px;
   left: 0px;
   position: absolute;
   z-index: 1;
@@ -84,6 +83,7 @@ export default function Liquidation() {
   const mobileMenuType = useMobileMenuType()
   const loginWalletType = useLoginWalletType()
   const { chainId } = useActiveWeb3React()
+  const showChangeNetWork = useShowChangeNetWork()
   const [loading, setLoading] = useState(true)
   const [collaterals, setCollaterals] = useState<Array<CollateralModel>>([])
   const address = useAddress()
@@ -230,10 +230,12 @@ export default function Liquidation() {
   return (
     <>
       {mobile ? (
-        <Body className="header-padding">
-          <BodyBg></BodyBg>
+        <Body
+          // className="header-padding"
+          sx={{ paddingTop: showChangeNetWork ? '118px' : '70px' }}
+        >
+          <BodyBg top={showChangeNetWork ? '48px' : '0'}></BodyBg>
           <Header />
-          <Box height="308px"></Box>
           <Collaterals
             debtFilter={debtFilter}
             setDebtFilter={setDebtFilter}

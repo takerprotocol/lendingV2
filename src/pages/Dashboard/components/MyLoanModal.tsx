@@ -136,7 +136,6 @@ const HealthyButton = styled(Box)`
   height: 30px;
   margin-top: 30px;
   border-radius: 20px;
-  margin-right: 24px;
   cursor: pointer;
   background: linear-gradient(180deg, #1cc1a4 0%, #1cb5ab 100%);
   box-shadow: 0px 4px 8px rgba(28, 183, 171, 0.1);
@@ -185,6 +184,13 @@ const LiquidatedBox = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
+`
+const StepTypography = styled(Typography)`
+  font-weight: 500;
+  font-size: 12px;
+  margin-right: 8px;
+  line-height: 160%;
+  color: #ffffff;
 `
 interface MyLoanModalProps {
   open: boolean
@@ -400,31 +406,33 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               >
                 <img src={greyShutOff} alt="" />
               </Box>
-              {new BigNumber(debtRiskLevel).lt(100) ? (
-                <HighRiskButton>
-                  <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
-                    In liquidation...
-                  </Typography>
-                </HighRiskButton>
-              ) : new BigNumber(debtRiskLevel).gte(100) && new BigNumber(debtRiskLevel).lte(110) ? (
-                <HighRiskButton>
-                  <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
-                    HIGH RISK
-                  </Typography>
-                </HighRiskButton>
-              ) : new BigNumber(debtRiskLevel).gt(110) && new BigNumber(debtRiskLevel).lte(130) ? (
-                <RiskyButton>
-                  <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
-                    RISKY
-                  </Typography>
-                </RiskyButton>
-              ) : (
-                <HealthyButton>
-                  <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
-                    HEALTHY
-                  </Typography>
-                </HealthyButton>
-              )}
+              <Box mr="24px">
+                {new BigNumber(debtRiskLevel).lt(100) ? (
+                  <HighRiskButton>
+                    <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
+                      In liquidation...
+                    </Typography>
+                  </HighRiskButton>
+                ) : new BigNumber(debtRiskLevel).gte(100) && new BigNumber(debtRiskLevel).lte(110) ? (
+                  <HighRiskButton>
+                    <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
+                      HIGH RISK
+                    </Typography>
+                  </HighRiskButton>
+                ) : new BigNumber(debtRiskLevel).gt(110) && new BigNumber(debtRiskLevel).lte(130) ? (
+                  <RiskyButton>
+                    <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
+                      RISKY
+                    </Typography>
+                  </RiskyButton>
+                ) : (
+                  <HealthyButton>
+                    <Typography variant="body1" component="p" fontWeight="700" color="#FFFFFF">
+                      HEALTHY
+                    </Typography>
+                  </HealthyButton>
+                )}
+              </Box>
             </Box>
           </SpaceBetweenBox>
           <Box display={+ethDebt === 0 ? 'none' : ''}>
@@ -693,7 +701,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                   }}
                 >
                   {repayPending.length > 0 || borrowSubmit.length > 0 || loading ? <Loading></Loading> : <></>}
-                  Approve
+                  {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
                 </Button>
               )}
               <Button
@@ -717,6 +725,9 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                   <Loading></Loading>
                 ) : (
                   <></>
+                )}
+                {!loading && tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+                  <StepTypography>Step2</StepTypography>
                 )}
                 {check === 1 ? 'Borrow' : 'Repay'}
               </Button>

@@ -69,6 +69,13 @@ const BodyTypography = styled(Typography)`
   line-height: 160%;
   color: #a0a3bd;
 `
+const StepTypography = styled(Typography)`
+  font-weight: 500;
+  font-size: 12px;
+  margin-right: 8px;
+  line-height: 160%;
+  color: #ffffff;
+`
 interface NFTsSelectedType {
   openSelectedModal: boolean
   data: NftTokenModel[]
@@ -208,7 +215,6 @@ export default function NFTsSelectedModal({
   const riskLevelWarning = useMemo(() => {
     return new BigNumber(collateralRiskLevel).lt(150) && type === 'withdraw'
   }, [collateralRiskLevel, type])
-
   return (
     <Modal open={openSelectedModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -393,7 +399,7 @@ export default function NFTsSelectedModal({
               ) : (
                 <></>
               )}
-              Approve
+              {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
             </Button>
           )}
           <Button
@@ -410,6 +416,7 @@ export default function NFTsSelectedModal({
             ) : (
               <></>
             )}
+            {!loading && isApproved !== 2 && <StepTypography>Step2</StepTypography>}
             {isApproved === 0 ? 'Deposit' : `Deposit ${data.length} NFTs`}
           </Button>
         </FlexBox>

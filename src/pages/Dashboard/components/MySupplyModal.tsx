@@ -38,6 +38,7 @@ import { SpaceBetweenBox } from 'styleds'
 import { useApproveCallback, useTTokenApproveCallback } from 'hooks/transactions/useApproveCallback'
 import { ApprovalState } from 'hooks/transactions/useApproval'
 import { Loading } from 'components/Loading'
+import { useShowChangeNetWork } from 'state/application/hooks'
 // import { useContract } from 'hooks/useContract'
 // import erc20Abi from 'abis/MockErc20.json'
 // import { fromWei } from 'web3-utils'
@@ -73,6 +74,13 @@ const CenterBox = styled(Box)`
   .MuiInputBase-input {
     font-size: 28px;
   }
+`
+const StepTypography = styled(Typography)`
+  font-weight: 500;
+  font-size: 12px;
+  margin-right: 8px;
+  line-height: 160%;
+  color: #ffffff;
 `
 const FlexBox = styled(Box)`
   display: flex;
@@ -141,6 +149,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const poolContract = useLendingPool()
   const address = useAddress()
   const heath = useHeath()
+  const showChangeNetWork = useShowChangeNetWork()
   const collateralRiskLevel = useCollateralRiskLevel(times(amount, borrowOrRepay === 1 ? 1 : -1))
   const TypographyRiskLevel = getRiskLevel(collateralRiskLevel)
   const riskLevelTag = getRiskLevelTag(collateralRiskLevel)
@@ -286,7 +295,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
         <TopBox>
-          <SupplySpaceBetweenBox alignItems="flex-start">
+          <SupplySpaceBetweenBox mb={showChangeNetWork ? '24px' : ''} alignItems="flex-start">
             <Box>
               <Typography mt="16px" variant="body1" component="h1" color="#FFFFFF">
                 Currently Supplying
@@ -318,46 +327,48 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </FlexBox> */}
             </Box>
           </SupplySpaceBetweenBox>
-          <SpaceBetweenBox mt="24px">
-            <Box ml="80px" display={supplyLimit !== '0' ? '' : 'none'}>
-              <Typography
-                variant="subtitle1"
-                fontWeight="700"
-                lineHeight="28px"
-                sx={{ cursor: 'pointer' }}
-                color={borrowOrRepay === 1 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
-                onClick={() => {
-                  setBorrowOrRepay(1)
-                  setAmount('')
-                }}
-              >
-                Supply
-              </Typography>
-              <Box
-                className={borrowOrRepay === 1 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '100%', height: '5px', borderRadius: '21px', marginTop: '14px' }}
-              ></Box>
-            </Box>
-            <Box mr="72px" display={supplyLimit !== '0' ? '' : 'none'}>
-              <Typography
-                variant="subtitle1"
-                fontWeight="700"
-                lineHeight="28px"
-                sx={{ cursor: 'pointer' }}
-                color={borrowOrRepay === 2 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
-                onClick={() => {
-                  setBorrowOrRepay(2)
-                  setAmount('')
-                }}
-              >
-                Withdraw
-              </Typography>
-              <Box
-                className={borrowOrRepay === 2 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '100%', height: '5px', borderRadius: '21px', marginTop: '14px' }}
-              ></Box>
-            </Box>
-          </SpaceBetweenBox>
+          {!showChangeNetWork && (
+            <SpaceBetweenBox mt="24px">
+              <Box ml="80px" display={supplyLimit !== '0' ? '' : 'none'}>
+                <Typography
+                  variant="subtitle1"
+                  fontWeight="700"
+                  lineHeight="28px"
+                  sx={{ cursor: 'pointer' }}
+                  color={borrowOrRepay === 1 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
+                  onClick={() => {
+                    setBorrowOrRepay(1)
+                    setAmount('')
+                  }}
+                >
+                  Supply
+                </Typography>
+                <Box
+                  className={borrowOrRepay === 1 ? 'BorrowOrRepay' : ''}
+                  sx={{ width: '100%', height: '5px', borderRadius: '21px', marginTop: '14px' }}
+                ></Box>
+              </Box>
+              <Box mr="72px" display={supplyLimit !== '0' ? '' : 'none'}>
+                <Typography
+                  variant="subtitle1"
+                  fontWeight="700"
+                  lineHeight="28px"
+                  sx={{ cursor: 'pointer' }}
+                  color={borrowOrRepay === 2 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
+                  onClick={() => {
+                    setBorrowOrRepay(2)
+                    setAmount('')
+                  }}
+                >
+                  Withdraw
+                </Typography>
+                <Box
+                  className={borrowOrRepay === 2 ? 'BorrowOrRepay' : ''}
+                  sx={{ width: '100%', height: '5px', borderRadius: '21px', marginTop: '14px' }}
+                ></Box>
+              </Box>
+            </SpaceBetweenBox>
+          )}
         </TopBox>
         <BottomBox>
           <BorrowAmountBox>
@@ -557,7 +568,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 }}
               >
                 {depositPending.length > 0 || withdrawPending.length > 0 || loading ? <Loading></Loading> : <></>}
-                Approve
+                {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
               </Button>
             )}
             <Button
@@ -585,6 +596,9 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 <Loading></Loading>
               ) : (
                 <></>
+              )}
+              {!loading && finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+                <StepTypography>Step2</StepTypography>
               )}
               {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}
             </Button>

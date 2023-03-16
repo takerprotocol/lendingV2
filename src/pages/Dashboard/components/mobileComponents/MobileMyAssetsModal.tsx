@@ -50,6 +50,13 @@ const TopBox = styled(Box)`
     background: #ffffff;
   }
 `
+const StepTypography = styled(Typography)`
+  font-weight: 500;
+  font-size: 12px;
+  margin-right: 8px;
+  line-height: 160%;
+  color: #ffffff;
+`
 const BottomBox = styled(Box)`
   margin-left: 2.375rem;
   margin-right: 2.375rem;
@@ -550,7 +557,7 @@ export default function MobileMyAssetsModal({
                 }}
               >
                 {depositPending.length > 0 || withdrawPending.length > 0 || loading ? <Loading></Loading> : <></>}
-                Approve
+                {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
               </Button>
             )}
             <Button
@@ -578,6 +585,9 @@ export default function MobileMyAssetsModal({
                 <Loading></Loading>
               ) : (
                 <></>
+              )}
+              {!loading && finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+                <StepTypography>Step2</StepTypography>
               )}
               {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}
             </Button>

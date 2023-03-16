@@ -18,12 +18,12 @@ import MobileETHCollateral from './components/mobileComponents/MobileETHCollater
 import MobileNFTCollaterals from './components/mobileComponents/MobileNFTCollaterals'
 import MobileFooter from './components/mobileComponents/MobileFooter'
 import MobileLiquidateTitleSkeleton from './components/mobileLiquidateSkeleton/MobileLiquidateTitleSkeleton'
+import { useShowChangeNetWork } from 'state/application/hooks'
 
 const Body = styled(Box)`
   width: 100%;
   max-width: 1012px;
   margin: 0 auto;
-  padding-top: 5.125rem;
 `
 const MobileBody = styled(Box)`
   width: 100%;
@@ -35,6 +35,7 @@ const Liquidate = () => {
   const { chainId } = useActiveWeb3React()
   const [collaterals, setCollaterals] = useState<CollateralModel | null>(null)
   const [totalDebt, setTotalDebt] = useState('0')
+  const showChangeNetWork = useShowChangeNetWork()
   const [totalCollateral, setTotalCollateral] = useState('0')
   const [nftCollateral, setNftCollateral] = useState('0')
   const [heath, setHeath] = useState('0')
@@ -94,7 +95,7 @@ const Liquidate = () => {
   return (
     <>
       {mobile ? (
-        <Body>
+        <Body pt={showChangeNetWork ? '130px' : '82px'}>
           <LiquidateHeader
             address={address || ''}
             riskPercentage={heath}

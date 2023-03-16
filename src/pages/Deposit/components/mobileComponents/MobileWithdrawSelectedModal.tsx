@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Button, Modal, styled, Typography } from '@mui/material'
 import redPrompt from 'assets/images/svg/common/redPrompt.svg'
 import shutOff from 'assets/images/svg/common/shutOff.svg'
@@ -57,6 +58,13 @@ const RightFlexBox = styled(Box)`
   align-items: center;
   justify-content: center;
 `
+const StepTypography = styled(Typography)`
+  font-weight: 500;
+  font-size: 12px;
+  margin-right: 8px;
+  line-height: 160%;
+  color: #ffffff;
+`
 const DepositList = styled(Box)`
   max-height: 12.5rem;
   margin-top: 1rem;
@@ -85,10 +93,12 @@ interface NFTsSelectedProps {
   type: string
   amount: string
   checkedIndex: string[]
+  floorPrice: string
 }
 export default function MobileWithdrawSelectedModal({
   open,
   close,
+  floorPrice,
   depositData,
   data,
   type,
@@ -233,10 +243,10 @@ export default function MobileWithdrawSelectedModal({
     }
   }
   const depositAmount = useMemo(() => {
-    return depositData.reduce((total: string, current: NftTokenModel) => {
-      return new BigNumber(total).plus(current.balance || '0').toString()
+    return data.reduce((total: string) => {
+      return new BigNumber(total).plus(fromWei(floorPrice || '0')).toString()
     }, '0')
-  }, [depositData])
+  }, [floorPrice])
   const riskLevelWarning = useMemo(() => {
     return new BigNumber(collateralRiskLevel).lt(150) && type === 'withdraw'
   }, [collateralRiskLevel, type])
@@ -422,7 +432,7 @@ export default function MobileWithdrawSelectedModal({
                   ) : (
                     <></>
                   )}
-                  Approve
+                  {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
                 </Button>
               )}
               <Button
@@ -439,6 +449,7 @@ export default function MobileWithdrawSelectedModal({
                 ) : (
                   <></>
                 )}
+                {!loading && isApproved !== 2 && <StepTypography>Step2</StepTypography>}
                 {isApproved === 0 ? 'Deposit' : `Deposit ${depositData.length} NFTs`}
               </Button>
             </FlexBox>
@@ -469,4 +480,7 @@ export default function MobileWithdrawSelectedModal({
       </Box>
     </Modal>
   )
+}
+function fromWei(arg0: any): BigNumber.Value {
+  throw new Error('Function not implemented.')
 }

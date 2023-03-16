@@ -1,12 +1,9 @@
-import { Typography } from '@mui/material'
+import { Typography, Box } from '@mui/material'
 import { styled } from '@mui/system'
 const Title = styled(Typography)`
-  position: absolute;
-  height: 58px;
-  left: 140px;
-  top: 157px;
   font-family: 'Quicksand';
   font-style: normal;
+  position: relative;
   font-weight: 700;
   font-size: 36px;
   line-height: 160%;
@@ -17,15 +14,14 @@ const Title = styled(Typography)`
 `
 
 const Subtitle = styled(Typography)`
-  position: absolute;
   width: 482px;
   height: 70px;
-  left: 140px;
-  top: 234px;
   font-family: 'Quicksand';
   font-style: normal;
+  position: relative;
   font-weight: 500;
   font-size: 22px;
+  margin-top: 19px;
   line-height: 160%;
   letter-spacing: 0.05em;
   color: #ffffff;
@@ -34,10 +30,10 @@ const Subtitle = styled(Typography)`
 
 const LiquidationHeader = () => {
   return (
-    <>
+    <Box m="157px 0  74px 140px">
       <Title variant="h3">found some treasure !</Title>
       <Subtitle>Liquidate with a floor price to get some NFTs you like</Subtitle>
-    </>
+    </Box>
   )
 }
 

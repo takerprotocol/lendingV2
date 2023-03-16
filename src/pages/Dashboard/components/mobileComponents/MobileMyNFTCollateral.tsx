@@ -37,6 +37,7 @@ export default function MobileMyNFTCollateral({ myLoanType }: MobileMyNFTCollate
       collections.find((cel) => cel.id.toLocaleLowerCase() === el.contract.address.toLocaleLowerCase())
     )
   }, [accountNfts, collections])
+  console.log(nftConfig)
   return (
     <MyNFTCollateralBox>
       <SpaceBox>

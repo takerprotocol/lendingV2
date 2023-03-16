@@ -9,7 +9,7 @@ import { useDepositableNfts } from 'services/module/deposit'
 import { useAddress, useCollateralBorrowLimitUsed, useMobileType } from 'state/user/hooks'
 import { useParams } from 'react-router-dom'
 import { getAlchemyNftMetadata } from 'services/module/deposit'
-import { useCollections, useDepositedCollection } from 'state/application/hooks'
+import { useCollections, useDepositedCollection, useShowChangeNetWork } from 'state/application/hooks'
 import MobileHeader from './components/mobileComponents/MobileHeader'
 import MobileDepositRoWithdraw from './components/mobileComponents/MobileDepositRoWithdraw'
 import MobileFooter from './components/mobileComponents/MobileFooter'
@@ -103,6 +103,7 @@ export default function Deposit() {
   const { id } = useParams()
   const alchemy = useAlchemy()
   const address = useAddress()
+  const showChangeNetWork = useShowChangeNetWork()
   const [TestWithdrawList, setWithdrawList] = useState<Array<Nft>>([])
   // const [depositType, setDepositType] = useState<string>('shut')
   // const [withdrawType, setWithdrawType] = useState<string>('shut')
@@ -154,7 +155,7 @@ export default function Deposit() {
       )
     }).length
   }, [transactions])
-
+  console.log(showChangeNetWork)
   useEffect(() => {
     if (mobileFlag) {
       setMobileWithdrawCheckedIndex([])
@@ -199,14 +200,17 @@ export default function Deposit() {
   return (
     <>
       {mobile ? (
-        <Body className="header-padding">
+        <Body sx={{ marginTop: showChangeNetWork ? '48px' : '0' }}>
           {loading ? (
-            <LadingHeaderBg></LadingHeaderBg>
+            <LadingHeaderBg top={showChangeNetWork ? '48px' : '0'}></LadingHeaderBg>
           ) : (
             <>
-              <HeaderBg sx={{ backgroundImage: `url(${collection?.icon})` }}></HeaderBg>
-              <FilterBg></FilterBg>
-              <OpacityBg></OpacityBg>
+              <HeaderBg
+                top={showChangeNetWork ? '48px' : '0'}
+                sx={{ backgroundImage: `url(${collection?.icon})` }}
+              ></HeaderBg>
+              <FilterBg top={showChangeNetWork ? '48px' : '0'}></FilterBg>
+              <OpacityBg top={showChangeNetWork ? '48px' : '0'}></OpacityBg>
             </>
           )}
           <Main>
@@ -269,6 +273,7 @@ export default function Deposit() {
               mobileWithdrawCheckedIndex={mobileWithdrawCheckedIndex}
               mobileDepositCheckedIndex={mobileDepositCheckedIndex}
               depositedList={list}
+              floorPrice={collection ? collection.floorPrice : '0'}
               TestWithdrawList={TestWithdrawList}
               withdrawAmount={withdrawAmount}
               setMobileWithdrawCheckedIndex={setMobileWithdrawCheckedIndex}

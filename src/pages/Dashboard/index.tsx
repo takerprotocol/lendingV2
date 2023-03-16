@@ -5,7 +5,7 @@ import growthBg from 'assets/images/svg/dashboard/growthBg.svg'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
 import DataNFTs from './components/DataNFTs'
-import { useLoading } from 'state/application/hooks'
+import { useLoading, useShowChangeNetWork } from 'state/application/hooks'
 import { useAddress, useDashboardType, useLoginWalletType, useMobileMenuType, useMobileType } from 'state/user/hooks'
 import { useDepositableNfts } from 'services/module/deposit'
 import { useEffect } from 'react'
@@ -73,6 +73,7 @@ export default function Dashboard() {
   const type = useDashboardType()
   const loading = useLoading()
   const address = useAddress()
+  const showChangeNetWork = useShowChangeNetWork()
   const mobileMenuType = useMobileMenuType()
   const dispatch = useAppDispatch()
   const { list } = useDepositableNfts(address)
@@ -103,8 +104,11 @@ export default function Dashboard() {
     <>
       {mobile ? (
         <Body
-          className="header-padding"
-          sx={{ backgroundImage: `${type === 1 ? `url(${BgIcon})` : `url(${growthBg})`}` }}
+          // className="header-padding"
+          sx={{
+            backgroundImage: `${type === 1 ? `url(${BgIcon})` : `url(${growthBg})`}`,
+            paddingTop: showChangeNetWork ? '118px' : '70px',
+          }}
         >
           <Main>
             <BlueChipNFTs type={type}></BlueChipNFTs>

@@ -115,6 +115,13 @@ const StartBox = styled(Box)`
   align-items: flex-start;
   justify-content: flex-start;
 `
+const StepTypography = styled(Typography)`
+  font-weight: 500;
+  font-size: 12px;
+  margin-right: 8px;
+  line-height: 160%;
+  color: #ffffff;
+`
 // const RightBox = styled(Box)`
 //   display: flex;
 //   align-items: center;
@@ -659,7 +666,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
                   }}
                 >
                   {repayPending.length > 0 || borrowSubmit.length > 0 || loading ? <Loading></Loading> : <></>}
-                  Approve
+                  {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
                 </Button>
               )}
               <Button
@@ -683,6 +690,9 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
                   <Loading></Loading>
                 ) : (
                   <></>
+                )}
+                {!loading && tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+                  <StepTypography>Step2</StepTypography>
                 )}
                 {check === 1 ? 'Borrow' : 'Repay'}
               </Button>

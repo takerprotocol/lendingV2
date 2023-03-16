@@ -19,6 +19,7 @@ import {
   // useNftCollateral,
   useUsedCollateral,
   useUserValue,
+  useWalletBalance,
 } from 'state/user/hooks'
 import { useLendingPool } from 'hooks/useLendingPool'
 // import { toast } from 'react-toastify'
@@ -31,6 +32,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { isTransactionRecent, useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { setUsedCollateral } from 'state/user/reducer'
+import { useShowChangeNetWork } from 'state/application/hooks'
 // import { useWalletBalance } from 'state/user/hooks'
 
 const MyETHSupplyBox = styled(Box)`
@@ -117,6 +119,8 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
   const [openMySupplyModal, setOpenMySupplyModal] = useState(false)
   const [dataType] = useState<boolean>(true)
+  const balance = useWalletBalance()
+  const showChangeNetWork = useShowChangeNetWork()
   const [typeModal, setTypeModal] = useState<number>(1) // MySupplyModal State Supply(1) ro Withdraw(0)
   const [openMySupplySwitchModal, setOpenMySupplySwitchModal] = useState<boolean>(false)
   const [switchType] = useState<number>(0) // SwitchModal 关->开 ro 开->关
@@ -191,24 +195,11 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
               }}
             /> */}
             <Typography variant="body1" my="3px" fontWeight="600" color="#6E7191">
-              Withdraw my Supply
+              I Can Supply
             </Typography>
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clipPath="url(#clip0_11036_18939)">
-                <path
-                  d="M7.00016 4L11.9997 9L6.99972 14"
-                  stroke="#4E4B66"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </g>
-              <defs>
-                <clipPath id="clip0_11036_18939">
-                  <rect width="18" height="18" fill="white" transform="translate(0 18) rotate(-90)" />
-                </clipPath>
-              </defs>
-            </svg>
+            <Typography variant="body1" my="3px" fontWeight="700">
+              {balance} ETH
+            </Typography>
           </SpaceBetweenBox>
         </BottomTopBox>
         <RewardAPYBox>
@@ -250,6 +241,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
           </FlexBox>
         </RewardAPYBox>
         <Button
+          disabled={showChangeNetWork}
           sx={{ width: '274px', marginLeft: '8px', height: '48px' }}
           variant="contained"
           onClick={() => {
