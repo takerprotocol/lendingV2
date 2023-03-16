@@ -224,7 +224,6 @@ export const User = (id: string) => {
   const queryString = `
     query user {
       user(id: "${id.toLocaleLowerCase()}") {
-        id
         nftCollateral
         reserveSupply
         totalDebt
