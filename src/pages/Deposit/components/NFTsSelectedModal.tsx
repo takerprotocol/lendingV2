@@ -91,6 +91,22 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const transactions = useAllTransactions()
   const borrowLimitUsed = useCollateralBorrowLimitUsed()
   const transactionPending = useTransactionPending()
+  const depositTransaction = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return (
+        tx &&
+        tx.receipt &&
+        (tx.info.type === TransactionType.APPROVAL_NFT ||
+          tx.info.type === TransactionType.DEPOSIT_NFT ||
+          tx.info.type === TransactionType.WITHDRAW_NFT) &&
+        isTransactionRecent(tx)
+      )
+    }).length
+  }, [transactions])
+  useEffect(() => {
+    setLoading(false)
+  }, [depositTransaction])
   const approvePending = useMemo(() => {
     return transactionPending.filter((el) => el.info.type === TransactionType.APPROVAL_NFT)
   }, [transactionPending])

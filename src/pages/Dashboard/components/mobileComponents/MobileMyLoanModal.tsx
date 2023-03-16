@@ -20,7 +20,12 @@ import {
 import { useLendingPool } from 'hooks/useLendingPool'
 // import { gasLimit } from 'config'
 import BigNumber from 'bignumber.js'
-import { useTransactionAdder, useTransactionPending } from 'state/transactions/hooks'
+import {
+  isTransactionRecent,
+  useAllTransactions,
+  useTransactionAdder,
+  useTransactionPending,
+} from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { toast } from 'react-toastify'
 import { useGateway } from 'hooks/useGateway'
@@ -231,6 +236,23 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
   const ethDebt = useEthDebt()
   const addTransaction = useTransactionAdder()
   const [tokenApproval, tokenApproveCallback] = useDTokenApproveCallback(amount, contract?.address)
+  const transactions = useAllTransactions()
+  const flag = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return (
+        tx &&
+        tx.receipt &&
+        (tx.info.type === TransactionType.APPROVAL ||
+          tx.info.type === TransactionType.BORROW ||
+          tx.info.type === TransactionType.REPAY) &&
+        isTransactionRecent(tx)
+      )
+    }).length
+  }, [transactions])
+  useEffect(() => {
+    setLoading(false)
+  }, [flag])
   const repayValue = useMemo(() => {
     return times(div(amount, ethDebt), 100)
   }, [amount, ethDebt])

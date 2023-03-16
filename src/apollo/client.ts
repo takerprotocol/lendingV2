@@ -8,9 +8,15 @@ export const clientEth = new ApolloClient({
   }),
   cache: new InMemoryCache(),
 })
-export const clientGoerli = new ApolloClient({
+export const blueChipClientGoerli = new ApolloClient({
   link: new HttpLink({
-    uri: ' https://api.thegraph.com/subgraphs/name/takerprotocol/lending-subgraph-2',
+    uri: 'https://api.thegraph.com/subgraphs/name/takerprotocol/lending-subgraph-2',
+  }),
+  cache: new InMemoryCache(),
+})
+export const growthClientGoerli = new ApolloClient({
+  link: new HttpLink({
+    uri: 'https://api.thegraph.com/subgraphs/name/takerprotocol/taker-lending-growth',
   }),
   cache: new InMemoryCache(),
 })
@@ -60,10 +66,10 @@ export const clientBsc1155 = new ApolloClient({
   cache: new InMemoryCache(),
 })
 
-export const getClient = () => {
+export const getClient = (type: number) => {
   return {
     [SupportedChainId.MAINNET]: clientEth,
-    [SupportedChainId.GOERLI]: clientGoerli,
+    [SupportedChainId.GOERLI]: type === 1 ? blueChipClientGoerli : growthClientGoerli,
     [SupportedChainId.RINKEBY]: clientRINKEBY,
     [SupportedChainId.KOVAN]: clientKOVAN,
     [SupportedChainId.POLYGON_MAINNET]: clientPolygon,

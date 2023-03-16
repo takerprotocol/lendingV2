@@ -19,7 +19,12 @@ import {
   useWalletBalance,
 } from 'state/user/hooks'
 // import { gasLimit } from 'config'
-import { useTransactionAdder, useTransactionPending } from 'state/transactions/hooks'
+import {
+  isTransactionRecent,
+  useAllTransactions,
+  useTransactionAdder,
+  useTransactionPending,
+} from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { useGateway } from 'hooks/useGateway'
 import { SpaceBetweenBox } from 'styleds'
@@ -163,6 +168,23 @@ export default function MobileMyAssetsModal({
   const transactionPending = useTransactionPending()
   // const erc20Contract = useContract(ERC20_ADDRESS, erc20Abi)
   const decimal = useDecimal()
+  const transactions = useAllTransactions()
+  const flag = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return (
+        tx &&
+        tx.receipt &&
+        (tx.info.type === TransactionType.APPROVAL ||
+          tx.info.type === TransactionType.DEPOSIT ||
+          tx.info.type === TransactionType.WITHDRAW) &&
+        isTransactionRecent(tx)
+      )
+    }).length
+  }, [transactions])
+  useEffect(() => {
+    setLoading(false)
+  }, [flag])
   // useEffect(() => {
   //   if (erc20Contract && address) {
   //     erc20Contract.balanceOf(address).then((res: BigNumber) => {

@@ -5,13 +5,13 @@ import Deposit from 'pages/Deposit'
 import Liquidate from 'pages/Liquidate'
 import { useCallback, useMemo, useEffect, useLayoutEffect, useState } from 'react'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { useAddress } from 'state/user/hooks'
+import { useAddress, useDashboardType } from 'state/user/hooks'
 import BigNumber from 'bignumber.js'
 import { useAppDispatch } from 'state'
 import {
   setDecimal,
   setErc20Ltv,
-  setErc721Ltv,
+  // setErc721Ltv,
   setReserveData,
   setUsedCollateral,
   setUserEthAsset,
@@ -21,7 +21,7 @@ import {
   setUserValues,
 } from 'state/user/reducer'
 import { bigNumberToString, div, times } from 'utils'
-import { getWETH, getERC721Address, DECIMALS_MASK, LTV_MASK, COLLATERAL_MASK, CHAIN_IDs } from 'config'
+import { getWETH, DECIMALS_MASK, LTV_MASK, COLLATERAL_MASK, CHAIN_IDs } from 'config'
 import { fromWei } from 'web3-utils'
 import BN from 'bn.js'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -39,6 +39,7 @@ import Mayc from 'assets/images/png/collection/mayc.png'
 import { Contract } from '@ethersproject/contracts'
 import { setMobileType } from 'state/user/reducer'
 import { isMobile } from 'utils/userAgent'
+import Mint from 'pages/Mint'
 
 export default function CustomizeRoutes() {
   const location = useLocation()
@@ -51,11 +52,13 @@ export default function CustomizeRoutes() {
   const address = useAddress()
   const transactions = useAllTransactions()
   const [client, setClient] = useState<any>(null)
+  const dashboardType = useDashboardType()
+
   useEffect(() => {
     if (chainId) {
-      setClient(getClient()[chainId === 1 ? 42 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
+      setClient(getClient(dashboardType)[chainId === 1 ? 42 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
-  }, [chainId])
+  }, [chainId, dashboardType])
   const flag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
@@ -69,31 +72,16 @@ export default function CustomizeRoutes() {
   }, [chainId, address, dispatch])
   useEffect(() => {
     if (contract && address && chainId && CHAIN_IDs.includes(chainId)) {
-      // contract
-      //   .getUserAssetValues(address, getWETH(chainId))
-      //   .then((res: Array<BigNumber>) => {
-      //     dispatch(setLoading(false))
-      //     dispatch(
-      //       setUserNftValues(
-      //         res.map((el) => {
-      //           return stringFormat(fromWei(el.toString()))
-      //         })
-      //       )
-      //     )
-      //   })
-      //   .catch((err: any) => {
-      //     console.log(err)
-      //   })
       contract.getUserConfig(address).then((res: any) => {
         dispatch(setUsedCollateral(new BN(res.toString()).and(new BN(COLLATERAL_MASK, 16)).toString() !== '0'))
       })
-      contract.getReserveConfig(getWETH(chainId).toLocaleLowerCase()).then((res: any) => {
+      contract.getReserveConfig(getWETH(chainId).toLocaleLowerCase(), false).then((res: any) => {
         dispatch(setDecimal(new BN(res.toString()).and(new BN(DECIMALS_MASK, 16)).shrn(32).toString()))
         dispatch(setErc20Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
       })
-      contract.getReserveConfig(getERC721Address(chainId)).then((res: any) => {
-        dispatch(setErc721Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
-      })
+      // contract.getReserveConfig(getERC721Address(chainId)).then((res: any) => {
+      //   dispatch(setErc721Ltv(new BN(res.toString()).and(new BN(LTV_MASK, 16)).toString()))
+      // })
       contract.getReserveData(getWETH(chainId)).then((res: any) => {
         dispatch(
           setReserveData({
@@ -110,16 +98,15 @@ export default function CustomizeRoutes() {
           })
         )
       })
+
       contract.getUserState(address).then((res: Array<BigNumber>) => {
         dispatch(
           setUserState({
-            loanToValue: div(res[0].toString(), 10000),
-            liquidationThreshold: div(res[1].toString(), 10000),
-            heathFactor: res[2].toString(),
+            loanToValue: div(res[4].toString(), 10000),
+            liquidationThreshold: div(res[5].toString(), 10000),
+            heathFactor: res[6].toString(),
           })
         )
-      })
-      contract.getUserValues(address).then((res: Array<BigNumber>) => {
         dispatch(
           setUserValues({
             borrowLiquidity: fromWei(res[0].toString()),
@@ -138,9 +125,6 @@ export default function CustomizeRoutes() {
           ])
         )
       })
-      // contract.getReserveConfig('0x6310098a56F9dd4D1F2a8A0Ab0E82565415054D8').then((res: any) => {
-      //   console.log('getReserveConfig', res)
-      // })
       contract.getUserConfig(address).then((res: BigNumber) => {
         dispatch(setLoading(false))
         dispatch(setUserNftConfig(bigNumberToString(res)))
@@ -230,11 +214,12 @@ export default function CustomizeRoutes() {
   }, [dispatch])
   useEffect(() => {
     getCollection()
-  }, [getCollection, flag])
+  }, [getCollection, flag, dashboardType])
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
       <Route path="/deposit/:id" element={<Deposit />} />
+      <Route path="/mint" element={<Mint />} />
       <Route path="/liquidate" element={<Liquidate />} />
       <Route path="/liquidate/:address" element={<Liquidate />} />
       <Route path="/liquidation" element={<Liquidation />} />

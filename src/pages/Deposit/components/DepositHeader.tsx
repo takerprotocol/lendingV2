@@ -4,7 +4,7 @@ import myCollateralIcon from 'assets/images/svg/dashboard/myCollateral-icon.svg'
 import addIcon from 'assets/images/svg/common/addIcon.svg'
 import rightIcon from 'assets/images/svg/common/rightIcon.svg'
 import DepositHeaderSkeleton from './depositSkeleton/DepositHeaderSkeleton'
-import { useDecimal, useErc20ReserveData } from 'state/user/hooks'
+import { useDashboardType, useDecimal, useErc20ReserveData } from 'state/user/hooks'
 import { useCollections } from 'state/application/hooks'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -109,11 +109,13 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
   const { id } = useParams()
   const contract = useLendingPool()
   const [client, setClient] = useState<any>(null)
+  const dashboardType = useDashboardType()
+
   useEffect(() => {
     if (chainId) {
-      setClient(getClient()[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
+      setClient(getClient(dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
-  }, [chainId])
+  }, [chainId, dashboardType])
   const collection = useMemo(() => {
     if (collections && id) {
       return collections.find((el) => el.id.toLocaleLowerCase() === id.toLocaleLowerCase())
@@ -147,7 +149,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
   }, [client, id])
   useEffect(() => {
     getCollection()
-  }, [getCollection])
+  }, [getCollection, dashboardType])
   return (
     <Box>
       {loading ? (

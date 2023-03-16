@@ -23,7 +23,12 @@ import {
   useWalletBalance,
 } from 'state/user/hooks'
 // import { gasLimit } from 'config'
-import { useTransactionAdder, useTransactionPending } from 'state/transactions/hooks'
+import {
+  isTransactionRecent,
+  useAllTransactions,
+  useTransactionAdder,
+  useTransactionPending,
+} from 'state/transactions/hooks'
 // import { TransactionType } from 'state/transactions/types'
 // import { useApproveCallback } from 'hooks/transactions/useApproveCallback'
 // import { ApprovalState } from 'hooks/transactions/useApproval'
@@ -149,6 +154,23 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
   const [tokenApproval, tokenApproveCallback] = useTTokenApproveCallback(amount, contract?.address)
   const transactionPending = useTransactionPending()
+  const transactions = useAllTransactions()
+  const flag = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return (
+        tx &&
+        tx.receipt &&
+        (tx.info.type === TransactionType.APPROVAL ||
+          tx.info.type === TransactionType.DEPOSIT ||
+          tx.info.type === TransactionType.WITHDRAW) &&
+        isTransactionRecent(tx)
+      )
+    }).length
+  }, [transactions])
+  useEffect(() => {
+    setLoading(false)
+  }, [flag])
   const depositPending = useMemo(() => {
     return transactionPending.filter((el) => el.info.type === TransactionType.DEPOSIT)
   }, [transactionPending])
@@ -260,7 +282,6 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
       ? !amount || new BigNumber(amount).gt(supplyLimit)
       : !amount || new BigNumber(amount).gt(ethLiquidity)
   }, [amount, borrowOrRepay, ethLiquidity, supplyLimit])
-
   return (
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -519,7 +540,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             </FlexBox>
           </Box>
           <Box justifyContent="space-between" marginTop="24px" display="flex" alignItems="center">
-            {tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+            {finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
               <Button
                 variant="contained"
                 disabled={finalApprove !== ApprovalState.NOT_APPROVED}
@@ -540,7 +561,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Button>
             )}
             <Button
-              disabled={buttonDisabled}
+              disabled={buttonDisabled || finalApprove !== ApprovalState.APPROVED}
               variant="contained"
               sx={{
                 width: finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '176px' : '100%',

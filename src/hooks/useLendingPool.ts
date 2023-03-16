@@ -1,27 +1,43 @@
 import lendingPoolAbi from 'abis/ILendingPool.json'
 import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
+import AddressesProviderRegistryAbi from 'abis/TakerAddressesProviderRegistry.json'
 import { useContract } from 'hooks/useContract'
 import { useEffect, useState } from 'react'
-import { useAddress } from 'state/user/hooks'
+import { useAddress, useDashboardType } from 'state/user/hooks'
 import { useActiveWeb3React } from './web3'
-import { getProxyAddressesProvider } from 'config'
+import { getProxyAddressesRegistry } from 'config'
+// eslint-disable-next-line no-restricted-imports
+import { ethers } from 'ethers'
+// import { getProxyAddressesProvider, getProxyAddressesRegistry } from 'config'
 
 export function useLendingPool() {
   const [address, setAddress] = useState('')
+  const [addressProvider, setAddressProvider] = useState('')
+  const dashboardType = useDashboardType()
   const { chainId } = useActiveWeb3React()
   const account = useAddress()
-  const contract = useContract(getProxyAddressesProvider(chainId), ILendingPoolAddressesProviderAbi)
+  const contract = useContract(getProxyAddressesRegistry(chainId), AddressesProviderRegistryAbi)
+  const providerContract = useContract(addressProvider, ILendingPoolAddressesProviderAbi)
+  useEffect(() => {
+    if (contract) {
+      contract
+        .getAddressProvider(ethers.utils.formatBytes32String(dashboardType ? 'bluechip' : 'growth'))
+        .then((res: any) => {
+          setAddressProvider(res)
+        })
+    }
+  }, [contract, dashboardType])
   const lendingPoolContract = useContract(address, lendingPoolAbi)
   useEffect(() => {
-    if (contract && !address) {
+    if (providerContract && !address) {
       if (chainId === 5) {
-        contract.getLendingPool().then((res: string) => {
+        providerContract.getLendingPool().then((res: string) => {
           if (res) {
             setAddress(res)
           }
         })
       }
     }
-  }, [contract, address, account, chainId])
+  }, [providerContract, address, account, chainId])
   return lendingPoolContract
 }

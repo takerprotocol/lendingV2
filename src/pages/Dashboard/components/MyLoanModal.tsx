@@ -20,7 +20,12 @@ import {
 import { useLendingPool } from 'hooks/useLendingPool'
 // import { gasLimit } from 'config'
 import BigNumber from 'bignumber.js'
-import { useTransactionAdder, useTransactionPending } from 'state/transactions/hooks'
+import {
+  isTransactionRecent,
+  useAllTransactions,
+  useTransactionAdder,
+  useTransactionPending,
+} from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { toast } from 'react-toastify'
 import { useGateway } from 'hooks/useGateway'
@@ -208,7 +213,23 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const addTransaction = useTransactionAdder()
   const [tokenApproval, tokenApproveCallback] = useDTokenApproveCallback(amount, contract?.address)
   const transactionPending = useTransactionPending()
-
+  const transactions = useAllTransactions()
+  const flag = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return (
+        tx &&
+        tx.receipt &&
+        (tx.info.type === TransactionType.APPROVAL ||
+          tx.info.type === TransactionType.BORROW ||
+          tx.info.type === TransactionType.REPAY) &&
+        isTransactionRecent(tx)
+      )
+    }).length
+  }, [transactions])
+  useEffect(() => {
+    setLoading(false)
+  }, [flag])
   const repayPending = useMemo(() => {
     return transactionPending.filter((el) => el.info.type === TransactionType.REPAY)
   }, [transactionPending])
@@ -676,7 +697,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 </Button>
               )}
               <Button
-                disabled={+amount === 0 || buttonDisabled}
+                disabled={+amount === 0 || buttonDisabled || tokenApproval !== ApprovalState.APPROVED}
                 variant="contained"
                 sx={{
                   width: tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '176px' : '372px',

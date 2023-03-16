@@ -114,6 +114,22 @@ export default function MobileWithdrawSelectedModal({
   const transactionPending = useTransactionPending()
   const transactions = useAllTransactions()
   const upBorrowLimit = useBorrowLimit(times(amount, -1)) //操作后的borrowLimit
+  const depositTransaction = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return (
+        tx &&
+        tx.receipt &&
+        (tx.info.type === TransactionType.APPROVAL_NFT ||
+          tx.info.type === TransactionType.DEPOSIT_NFT ||
+          tx.info.type === TransactionType.WITHDRAW_NFT) &&
+        isTransactionRecent(tx)
+      )
+    }).length
+  }, [transactions])
+  useEffect(() => {
+    setLoading(false)
+  }, [depositTransaction])
   //操作后的borrowLimit
   const approvePending = useMemo(() => {
     return transactionPending.filter((el) => el.info.type === TransactionType.APPROVAL_NFT)

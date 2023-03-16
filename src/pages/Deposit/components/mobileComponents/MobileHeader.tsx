@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom'
 import { getClient } from 'apollo/client'
 import { useActiveWeb3React } from 'hooks/web3'
 import { decimalFormat, div, times } from 'utils'
-import { useDecimal, useErc20ReserveData } from 'state/user/hooks'
+import { useDashboardType, useDecimal, useErc20ReserveData } from 'state/user/hooks'
 import { useAppDispatch } from 'state'
 import { setMobileSecondHeaderName } from 'state/user/reducer'
 import { useLendingPool } from 'hooks/useLendingPool'
@@ -106,6 +106,8 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
   const contract = useLendingPool()
   const dispatch = useAppDispatch()
   const collections = useCollections()
+  const dashboardType = useDashboardType()
+
   const collection = useMemo(() => {
     if (collections && id) {
       return collections.find((el) => el.id.toLocaleLowerCase() === id.toLocaleLowerCase())
@@ -115,9 +117,9 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
   }, [collections, id])
   useEffect(() => {
     if (chainId) {
-      setClient(getClient()[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
+      setClient(getClient(dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
-  }, [chainId])
+  }, [chainId, dashboardType])
   useEffect(() => {
     dispatch(setMobileSecondHeaderName(collection?.symbol))
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,7 +150,7 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
   }, [client, id])
   useEffect(() => {
     getCollection()
-  }, [getCollection])
+  }, [getCollection, dashboardType])
   return (
     <>
       {loading ? (

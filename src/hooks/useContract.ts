@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { useMemo } from 'react'
 import { getContract } from 'utils'
-
+import MockMAYC_ABI from 'abis/MockMAYC.json'
 import ERC20_ABI from 'abis/erc20.json'
 import IGO_ABI from 'abis/igo.json'
 import MULTICALL2_ABI from 'abis/multicall2.json'
@@ -41,4 +41,8 @@ export function useIGOContract(tokenAddress?: string, withSignerIfPossible?: boo
 
 export function useMulticall2Contract(tokenAddress?: string, withSignerIfPossible?: boolean) {
   return useContract(tokenAddress, MULTICALL2_ABI, withSignerIfPossible)
+}
+
+export function useMockMAYCContract(tokenAddress?: string, withSignerIfPossible?: boolean) {
+  return useContract(tokenAddress, MockMAYC_ABI, withSignerIfPossible)
 }

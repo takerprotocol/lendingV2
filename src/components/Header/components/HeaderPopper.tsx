@@ -65,21 +65,25 @@ export default function HeaderPopper({ open, anchorEl, placement, setOpen }: Hea
   const transactions = useAllTransactions()
   const transactionsPending = useTransactionPending()
   const getNoticeTitle = (transaction: TransactionDetails) => {
-    switch (transaction.info.type) {
-      case TransactionType.APPROVAL:
-        return 'Approval'
-      case TransactionType.BORROW:
-        return `Borrow ${transaction.info.amount} ETH`
-      case TransactionType.REPAY:
-        return `Repay ${transaction.info.amount} ETH`
-      case TransactionType.DEPOSIT:
-        return `Deposit ${transaction.info.amount} ETH`
-      case TransactionType.WITHDRAW:
-        return `Withdraw ${transaction.info.amount} ETH`
-      case TransactionType.USE_COLLATERAL:
-        return `Use Collateral`
-      default:
-        return 'Approval'
+    if (transaction && transaction.info) {
+      switch (transaction.info.type) {
+        case TransactionType.APPROVAL:
+          return 'Approval'
+        case TransactionType.BORROW:
+          return `Borrow ${transaction.info.amount} ETH`
+        case TransactionType.REPAY:
+          return `Repay ${transaction.info.amount} ETH`
+        case TransactionType.DEPOSIT:
+          return `Deposit ${transaction.info.amount} ETH`
+        case TransactionType.WITHDRAW:
+          return `Withdraw ${transaction.info.amount} ETH`
+        case TransactionType.USE_COLLATERAL:
+          return `Use Collateral`
+        default:
+          return 'Approval'
+      }
+    } else {
+      return 'Approval'
     }
   }
   return (

@@ -4,7 +4,7 @@ import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
 import more from 'assets/images/svg/dashboard/more-icon.svg'
 import { SpaceBetweenBox, FlexBox, SpaceBox } from 'styleds'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useAccountNfts, useAddress, useUserValue } from 'state/user/hooks'
+import { useAccountNfts, useAddress, useDashboardType, useUserValue } from 'state/user/hooks'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
 import ERC721 from 'assets/images/png/collection/721.png'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -106,11 +106,12 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const { chainId } = useActiveWeb3React()
   const address = useAddress()
   const [client, setClient] = useState<any>(null)
+  const dashboardType = useDashboardType()
   useEffect(() => {
     if (chainId) {
-      setClient(getClient()[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
+      setClient(getClient(dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
-  }, [chainId])
+  }, [chainId, dashboardType])
   const [nftCount, setNftCount] = useState(0)
   const [dataType] = useState<boolean>(true)
   const userValue = useUserValue()
@@ -145,7 +146,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   }, [client, address])
   useEffect(() => {
     getUser()
-  }, [getUser])
+  }, [getUser, dashboardType])
 
   const renderImg = (id: string) => {
     const item = collections.find((el) => el.id.toLocaleLowerCase() === id.split('-')[1].toLocaleLowerCase())

@@ -10,6 +10,7 @@ import { AllUser } from 'apollo/queries'
 import {
   useAddress,
   useCollateralsType,
+  useDashboardType,
   useDecimal,
   useLoginWalletType,
   useMobileMenuType,
@@ -173,11 +174,13 @@ export default function Liquidation() {
       ]
     }
   }, [collection, collectionFilter, conditionDebtFilter, debtFilter])
+  const dashboardType = useDashboardType()
+
   useEffect(() => {
     if (chainId) {
-      setClient(getClient()[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
+      setClient(getClient(dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
-  }, [chainId])
+  }, [chainId, dashboardType])
   const getCollaterals = useCallback(async () => {
     if (client) {
       const user = await client.query({
@@ -215,7 +218,7 @@ export default function Liquidation() {
 
   useEffect(() => {
     getCollaterals()
-  }, [getCollaterals])
+  }, [getCollaterals, dashboardType])
   const mobile = useMobileType()
   return (
     <>

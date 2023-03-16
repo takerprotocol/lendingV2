@@ -11,7 +11,7 @@ import BigNumber from 'bignumber.js'
 import { CollateralModel } from 'services/type/nft'
 import { useParams } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useMobileType } from 'state/user/hooks'
+import { useDashboardType, useMobileType } from 'state/user/hooks'
 import MobileHeader from './components/mobileComponents/MobileHeader'
 import MobileMain from './components/mobileComponents/MobileMain'
 import MobileETHCollateral from './components/mobileComponents/MobileETHCollateral'
@@ -41,12 +41,13 @@ const Liquidate = () => {
   const [loading, setLoading] = useState(false)
   const { address } = useParams()
   const [client, setClient] = useState<any>(null)
+  const dashboardType = useDashboardType()
 
   useEffect(() => {
     if (chainId) {
-      setClient(getClient()[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 42])
+      setClient(getClient(dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 42])
     }
-  }, [chainId])
+  }, [chainId, dashboardType])
   const getCollaterals = useCallback(async () => {
     if (address && client) {
       const user = await client.query({
@@ -88,7 +89,7 @@ const Liquidate = () => {
   }, [address, client])
   useEffect(() => {
     getCollaterals()
-  }, [getCollaterals])
+  }, [getCollaterals, dashboardType])
   const mobile = useMobileType()
   return (
     <>
