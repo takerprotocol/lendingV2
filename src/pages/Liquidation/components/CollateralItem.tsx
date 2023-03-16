@@ -91,7 +91,7 @@ const CollectionImage = (props: any & { src?: string; overflow?: boolean }) => {
   const [error, setError] = useState(false)
   if (props.src || error) {
     return (
-      <Tooltip title={'123456'} arrow placement="top">
+      <Tooltip title={props.text} arrow placement="top">
         <StyledCollectionImage onLoad={() => setError(false)} onError={() => setError(true)} {...props} />
       </Tooltip>
     )
@@ -188,6 +188,7 @@ const CollateralItem = ({
         <CollectionImage
           key={`collection-${collection.id}${index}`}
           alt="collection"
+          text={collection.collection.symbol}
           src={renderImg(collection.collection.symbol)}
         />
       ))

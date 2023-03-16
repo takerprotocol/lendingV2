@@ -1,5 +1,5 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import { gasLimit, getWETH } from 'config'
+import { getWETH } from 'config'
 import { useContract } from 'hooks/useContract'
 import { useCallback, useEffect, useState } from 'react'
 import erc20 from 'abis/MockErc20.json'
@@ -196,9 +196,7 @@ export function useDTokenApproval(
     // })
     setApprovalState(ApprovalState.PENDING)
     return tokenContract
-      .delegate(spender, MaxUint256, {
-        gasLimit,
-      })
+      .delegate(spender, MaxUint256)
       .then((response: any) => {
         setApprovalState(ApprovalState.PENDING)
         return {

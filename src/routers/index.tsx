@@ -168,11 +168,11 @@ export default function CustomizeRoutes() {
   const renderName = (symbol?: string) => {
     if (symbol) {
       if (symbol.toLocaleLowerCase().indexOf('mayc') > -1) {
-        return 'Bored Ape Yacht Club'
+        return 'Mutant Ape Yacht Club'
       } else if (symbol.toLocaleLowerCase().indexOf('azuki') > -1) {
         return 'Azuki'
       } else if (symbol.toLocaleLowerCase().indexOf('bayc') > -1) {
-        return 'Mutant Ape Yacht Club'
+        return 'Bored Ape Yacht Club'
       } else if (symbol.toLocaleLowerCase().indexOf('world_of_women') > -1) {
         return 'World of Women'
       } else if (symbol.toLocaleLowerCase().indexOf('doodles') > -1) {

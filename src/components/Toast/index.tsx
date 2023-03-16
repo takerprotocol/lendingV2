@@ -4,7 +4,6 @@ import { chainScanUrlList } from 'constants/chains'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import React from 'react'
 import { colors } from 'theme'
-import { desensitization } from 'utils'
 
 interface ToastProps {
   title?: string
@@ -29,13 +28,21 @@ export default function Toast({ title, message, txId }: ToastProps) {
             alignItems="center"
           >
             {message}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            color="#262338"
+            sx={{ wordBreak: 'break-all' }}
+            display="flex"
+            alignItems="center"
+          >
             <Link
               variant="subtitle2"
-              sx={{ textDecorationColor: colors.white, marginLeft: '8px' }}
+              sx={{ textDecorationColor: colors.white }}
               color="#7646FF"
               href={`${chainId ? chainScanUrlList[chainId] : ''}/tx/${txId}`}
             >
-              {desensitization(txId)}
+              {txId}
             </Link>
             <Copy color="#7646FF" text={txId} />
           </Typography>
