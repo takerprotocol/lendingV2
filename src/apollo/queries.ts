@@ -230,6 +230,7 @@ export const User = (id: string) => {
         ltvAcc
         liqThreshAcc
         healthFactor
+        totalCollateral
         reserves {
           id
           reserve {

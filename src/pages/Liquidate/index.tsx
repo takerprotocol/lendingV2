@@ -74,7 +74,7 @@ const Liquidate = () => {
       }
       setCollaterals({
         address,
-        collateral: fromWei(user.data.user.totalCollateral || '0'),
+        collateral: fromWei(user.data.user.totalCollateral),
         collections: user.data.user.collections,
         debt: fromWei(user.data.user.totalDebt),
         riskPercentage: _heath,
@@ -84,7 +84,7 @@ const Liquidate = () => {
       setNftCollateral(fromWei(user.data.user.nftCollateral))
       setHeath(_heath)
       setTotalDebt(fromWei(user.data.user.totalDebt))
-      setTotalCollateral(fromWei(user.data.user.totalCollateral || '0'))
+      setTotalCollateral(fromWei(user.data.user.totalCollateral))
     }
   }, [address, client])
   useEffect(() => {
