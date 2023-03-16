@@ -138,7 +138,7 @@ export default function Liquidation() {
       case 6:
         return ['healthFactor', 'asc']
       default:
-        return ['null', 'desc']
+        return ['nftCollateral', 'desc']
     }
   }, [sort])
   const searchValue = useMemo(() => {

@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress, useEthLiquidity, useUserValue } from 'state/user/hooks'
-import TipsTooltip from './TipsTooltip'
+// import TipsTooltip from './TipsTooltip'
 import { fixedFormat, plus } from 'utils'
 import { setLoading } from 'state/application/reducer'
 
@@ -92,7 +92,8 @@ export default function MyAccount({ type, loading }: MyAccountProps) {
                 </Typography>
               </CenterBox>
               <FlexBox mt="-15px">
-                <Box>
+                <></>
+                {/* <Box>
                   <Typography variant="subtitle2" color="#A0A3BD">
                     15%
                   </Typography>
@@ -108,29 +109,30 @@ export default function MyAccount({ type, loading }: MyAccountProps) {
                       }
                     ></TipsTooltip>
                   </CenterBox>
-                </Box>
+                </Box> */}
                 {data ? (
-                  <Box ml="36px" width="198px">
-                    <Typography variant="subtitle2" component="span" color="#A0A3BD">
-                      {'≈ 0.46 ETH '}
-                    </Typography>
-                    <Typography variant="body1" component="span" fontWeight="600" color="#A0A3BD">
-                      {'/day '}
-                    </Typography>
-                    <FlexBox mt="2px">
-                      <Typography mr="4px" component="span" variant="body2" color="#A0A3BD">
-                        Income Estimation
-                      </Typography>
-                      <TipsTooltip
-                        size="14"
-                        grey="grey"
-                        value={
-                          'Income Estimation is the amount converted based on the current Net APY and the current ETH price.'
-                        }
-                      ></TipsTooltip>
-                    </FlexBox>
-                  </Box>
+                  <></>
                 ) : (
+                  // <Box ml="36px" width="198px">
+                  //   <Typography variant="subtitle2" component="span" color="#A0A3BD">
+                  //     {'≈ 0.46 ETH '}
+                  //   </Typography>
+                  //   <Typography variant="body1" component="span" fontWeight="600" color="#A0A3BD">
+                  //     {'/day '}
+                  //   </Typography>
+                  //   <FlexBox mt="2px">
+                  //     <Typography mr="4px" component="span" variant="body2" color="#A0A3BD">
+                  //       Income Estimation
+                  //     </Typography>
+                  //     <TipsTooltip
+                  //       size="14"
+                  //       grey="grey"
+                  //       value={
+                  //         'Income Estimation is the amount converted based on the current Net APY and the current ETH price.'
+                  //       }
+                  //     ></TipsTooltip>
+                  //   </FlexBox>
+                  // </Box>
                   <>
                     <Box ml="36px">
                       <Typography variant="subtitle2" color="#A0A3BD">
