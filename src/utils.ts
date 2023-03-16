@@ -70,9 +70,11 @@ export function updateUserState(
 
   if (totalCollateral.notEqual(BigDecimal.zero())) {
     // Weighted avg of ltv & threshold
-    user.ltvAcc = user.ltvAcc.plus(assetPrice.times(assetLtv));
+    user.ltvAcc = user.ltvAcc.plus(
+      assetPrice.times(assetLtv).div(BigInt.fromI32(10000))
+    );
     user.liqThreshAcc = user.liqThreshAcc.plus(
-      assetPrice.times(assetLiqThresh)
+      assetPrice.times(assetLiqThresh).div(BigInt.fromI32(10000))
     );
   } else {
     // Can't borrow anything.
@@ -85,6 +87,7 @@ export function updateUserState(
     user.healthFactor = user.totalCollateral
       .toBigDecimal()
       .times(user.liqThreshAcc.toBigDecimal())
+      .div(BigDecimal.fromString("10000"))
       .div(totalDebt);
   } else {
     // Hf = allowance / 0
@@ -100,7 +103,8 @@ export function updateHealthFactor(user: User): User {
     user.healthFactor = BigInt.fromU64(u64.MAX_VALUE).toBigDecimal();
     return user;
   }
-  user.healthFactor = user.liqThreshAcc
+  user.healthFactor = user.totalCollateral
+    .times(user.liqThreshAcc)
     .toBigDecimal()
     .div(BigDecimal.fromString("10000"))
     .div(user.totalDebt.toBigDecimal());

@@ -209,39 +209,6 @@ export function handleWithdrawn(event: Withdrawn): void {
   userReserve.save();
 }
 
-// export function handleGatewayWithdrawn(event: GatewayWithdrawn): void {
-//   let userId = event.params.to.toHex();
-//   let reserveId = WETH;
-//   let userReserveId = userId + "-" + reserveId;
-//
-//   let user = User.load(userId);
-//   let reserve = Reserve.load(reserveId);
-//   let userReserve = UserReserve.load(userReserveId);
-//   if (!user){
-//     log.warning('Found Withdrawn event for unknown user - {}', [userId]);
-//     user = utils.newUser(userId);
-//   }
-//   if (!reserve) {
-//     log.warning('Found Withdrawn event for unknown reserve - {}', [reserveId]);
-//     return;
-//   }
-//   if (!userReserve) {
-//     userReserve = utils.newUserReserve(userReserveId);
-//     userReserve.user = userId;
-//     userReserve.reserve = reserveId;
-//   }
-//
-//   user.reserveSupply = user.reserveSupply.minus(event.params.amount);
-//   if (userReserve.usedAsCollateral) {
-//     user.totalCollateral = user.totalCollateral.minus(event.params.amount);
-//     user = utils.updateUserState(user, event.params.amount.neg(), reserve.ltv, reserve.liqThreshold);
-//   }
-//   userReserve.depositedAmount = userReserve.depositedAmount.minus(event.params.amount);
-//
-//   user.save();
-//   userReserve.save();
-// }
-
 export function handleBorrowed(event: Borrowed): void {
   let userId = event.params.from.toHex();
   let reserveId = event.params.asset.toHex();
