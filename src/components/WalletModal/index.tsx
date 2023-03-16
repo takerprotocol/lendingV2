@@ -47,6 +47,14 @@ export default function WalletModal() {
   const address = useAddress()
   const previousWalletView = usePrevious(walletView)
   useEffect(() => {
+    injected.isAuthorized().then((isAuthorized) => {
+      if (isAuthorized) {
+        activate(injected, undefined, true)
+      }
+    })
+  }, [activate])
+
+  useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
       toggleWalletModal()
     }

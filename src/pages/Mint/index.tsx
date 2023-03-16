@@ -65,31 +65,31 @@ export default function Mint() {
     return [
       {
         id: '0x1326578b741311773b21b22dd22d047e8289fc1f',
-        name: 'bayc',
+        name: 'Bored Ape Yacht Club',
       },
       {
         id: '0x7629aa9f796f230c48e126425545ebf5eb57fde6',
-        name: 'mayc',
+        name: 'Mutant Ape Yacht Club',
       },
       {
         id: '0x77a136db5131bd2a547e56aad40b4e8fbec6e3b7',
-        name: 'azuki',
+        name: 'Azuki',
       },
       {
         id: '0x81dbc3bc6bfa0640cffb9b6b667987c97f35a588',
-        name: 'world_of_women',
+        name: 'World of Women',
       },
       {
         id: '0x8c8f9db836049a7b11c561510d5b8318cccb6e0b',
-        name: 'doodles',
+        name: 'Doodles',
       },
       {
         id: '0xdcb017b5b37cf40d4955c5df42964464b5b0ea36',
-        name: 'clonex',
+        name: 'CLONE X - X TAKASHI MURAKAMI',
       },
       {
         id: '0x9a79bccd419c9604ce02645950e994b708553165',
-        name: 'cool_cats',
+        name: 'Cool Cats NFT',
       },
     ]
   }, [])
@@ -113,7 +113,7 @@ export default function Mint() {
   }, [collections])
   return (
     <TestBox>
-      <TitleBox mb="16px">请使用goerli网络</TitleBox>
+      <TitleBox mb="16px">Please switch to Ethereum Goerli Network</TitleBox>
       <CustomizedSelect
         options={collectionOptions}
         startAdornment={
@@ -178,7 +178,7 @@ export default function Mint() {
           })
         }}
       >
-        生成
+        Generate
       </Button>
     </TestBox>
   )

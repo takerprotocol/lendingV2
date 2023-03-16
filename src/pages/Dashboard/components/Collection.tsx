@@ -13,6 +13,8 @@ import CollectionSkeleton from './DashboardSkeleton/CollectionSkeleton'
 import { decimalFormat, div, fixedFormat, times } from 'utils'
 import { OwnedNft } from '@alch/alchemy-sdk'
 import { fromWei } from 'web3-utils'
+import orderBy from 'lodash/orderBy'
+// import BigNumber from 'bignumber.js'
 
 // import { gasLimit } from 'config'
 
@@ -114,7 +116,6 @@ export default function Collection({ type, loading }: CollectionType) {
   // const nftBalance = (id: string) => {
 
   // }
-  console.log(collection)
   const nftBalance = useCallback(
     (id: string) => {
       if (list) {
@@ -182,154 +183,155 @@ export default function Collection({ type, loading }: CollectionType) {
                 </Box>
               </CollectionFlexBox>
             </CollectionHeader>
-            {collection.map((el: any) => (
-              <CollectionBox key={`${el.id}collection`} className={el === check ? 'open' : ''}>
-                <Box padding="24px 24px 21px 24px">
-                  <CollectionFlexBox>
-                    <CollectionFlexBox sx={{ width: '272px' }}>
-                      <img
-                        src={el.icon}
-                        alt=""
-                        style={{
-                          width: '48px',
-                          borderRadius: '6px',
-                        }}
-                      />
-                      <Box ml="10px">
-                        <Typography lineHeight="150%" variant="body1" fontWeight="700">
-                          {el?.name}
-                        </Typography>
-                        <FlexBox>
-                          {nftBalance(el.id) > 0 && <LabelBox>Available</LabelBox>}
-                          {deposited(el.id) > 0 && <LabelBox>Deposited</LabelBox>}
-                        </FlexBox>
-                      </Box>
-                    </CollectionFlexBox>
-                    <CollectionFlexBox sx={{ width: '222px' }}>
-                      <img src={minMyCollateralIcon} alt="" />
-                      <Typography ml="2px" component="span" variant="body1" fontWeight="700">
-                        {fixedFormat(fromWei(el?.floorPrice || 0))}
-                      </Typography>
-                    </CollectionFlexBox>
-                    <CollectionFlexBox sx={{ width: '222px' }}>
-                      <Box>
-                        <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
-                          {div(el.ltv, 100)}%
-                        </Typography>
-                        <TitleTypography>
-                          {fixedFormat(fromWei(times(el?.floorPrice || 0, div(el.ltv, 10000))))} ETH/NFT
-                        </TitleTypography>
-                      </Box>
-                    </CollectionFlexBox>
-                    <CollectionFlexBox sx={{ width: '222px' }}>
-                      <Typography component="span" variant="body1" fontWeight="700">
-                        {el?.activeUser}
-                      </Typography>
-                    </CollectionFlexBox>
-                    <CollectionFlexBox sx={{ width: '122px' }}>
-                      <Typography component="span" variant="subtitle2" fontWeight="700" color="#4BC8B1">
-                        0
-                      </Typography>
-                    </CollectionFlexBox>
-                    <CollectionFlexBox sx={{ width: '48px' }}>
-                      <img
-                        src={el === check ? ButtonUp : ButtonDown}
-                        alt=""
-                        onClick={() => {
-                          if (el === check) {
-                            setCheck(null)
-                          } else {
-                            setCheck(el)
-                          }
-                        }}
-                      />
-                    </CollectionFlexBox>
-                  </CollectionFlexBox>
-                  {el === check && (
-                    <CollectionUpBox>
-                      <CollectionFlexBox m="48px 0 0 0">
-                        <LiquidationBox>
-                          <Typography ml="58px" fontWeight="600" color="#A0A3BD" variant="body1">
-                            Liquidation Threshold
+            {collection &&
+              orderBy(collection, ['floorPrice'], ['desc']).map((el: any) => (
+                <CollectionBox key={`${el.id}collection`} className={el === check ? 'open' : ''}>
+                  <Box padding="24px 24px 21px 24px">
+                    <CollectionFlexBox>
+                      <CollectionFlexBox sx={{ width: '272px' }}>
+                        <img
+                          src={el.icon}
+                          alt=""
+                          style={{
+                            width: '48px',
+                            borderRadius: '6px',
+                          }}
+                        />
+                        <Box ml="10px">
+                          <Typography lineHeight="150%" variant="body1" fontWeight="700">
+                            {el?.name}
                           </Typography>
-                          <Typography ml="24px" variant="subtitle2">
-                            {div(el.liqThreshold, 100)}%
-                          </Typography>
-                          <Typography ml="63px" fontWeight="600" color="#A0A3BD" variant="body1">
-                            Liquidation Profit
-                          </Typography>
-                          <Typography ml="24px" variant="subtitle2">
-                            20%
-                          </Typography>
-                        </LiquidationBox>
-                        <Box className={address ? '' : 'none'} width="164px">
-                          <AlignEndBox>
-                            <Typography
-                              variant="subtitle1"
-                              fontWeight="700"
-                              color={+deposited(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
-                            >
-                              {deposited(el.id)}&nbsp;
-                            </Typography>
-                            <Typography
-                              fontWeight="700"
-                              lineHeight="160%"
-                              fontSize={+deposited(el.id) !== 0 ? '18px' : '14px'}
-                              color={+deposited(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
-                            >
-                              NTFs
-                            </Typography>
-                          </AlignEndBox>
-                          <Typography mt="2px" variant="body1" fontWeight="600" color="#A0A3BD">
-                            My Deposited
-                          </Typography>
-                        </Box>
-                        <Box className={address ? '' : 'none'} width="130px">
-                          <AlignEndBox>
-                            <Typography
-                              variant="subtitle1"
-                              fontWeight="700"
-                              color={nftBalance(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
-                            >
-                              {nftBalance(el.id)}&nbsp;
-                            </Typography>
-                            <Typography
-                              lineHeight="160%"
-                              fontSize={nftBalance(el.id) !== 0 ? '18px' : '14px'}
-                              fontWeight="700"
-                              color={nftBalance(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
-                            >
-                              NTFs
-                            </Typography>
-                          </AlignEndBox>
-                          <Typography mt="2px" variant="body1" fontWeight="600" color="#A0A3BD">
-                            My Balance
-                          </Typography>
+                          <FlexBox>
+                            {nftBalance(el.id) > 0 && <LabelBox>Available</LabelBox>}
+                            {deposited(el.id) > 0 && <LabelBox>Deposited</LabelBox>}
+                          </FlexBox>
                         </Box>
                       </CollectionFlexBox>
-                      {address ? (
-                        <Box mt="50px">
-                          <Button onClick={() => (window.location.href = `/deposit/${el.id}`)} variant="contained">
-                            Deposit
-                          </Button>
+                      <CollectionFlexBox sx={{ width: '222px' }}>
+                        <img src={minMyCollateralIcon} alt="" />
+                        <Typography ml="2px" component="span" variant="body1" fontWeight="700">
+                          {fixedFormat(fromWei(el?.floorPrice || 0))}
+                        </Typography>
+                      </CollectionFlexBox>
+                      <CollectionFlexBox sx={{ width: '222px' }}>
+                        <Box>
+                          <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
+                            {div(el.ltv, 100)}%
+                          </Typography>
+                          <TitleTypography>
+                            {fixedFormat(fromWei(times(el?.floorPrice || 0, div(el.ltv, 10000))))} ETH/NFT
+                          </TitleTypography>
                         </Box>
-                      ) : (
-                        <Box mt="50px">
-                          <Button
-                            variant="contained"
-                            onClick={() => {
-                              toggleModal()
-                            }}
-                          >
-                            Connect Wallet
-                          </Button>
-                        </Box>
-                      )}
-                    </CollectionUpBox>
-                  )}
-                </Box>
-              </CollectionBox>
-            ))}
+                      </CollectionFlexBox>
+                      <CollectionFlexBox sx={{ width: '222px' }}>
+                        <Typography component="span" variant="body1" fontWeight="700">
+                          {el?.activeUser}
+                        </Typography>
+                      </CollectionFlexBox>
+                      <CollectionFlexBox sx={{ width: '122px' }}>
+                        <Typography component="span" variant="subtitle2" fontWeight="700" color="#4BC8B1">
+                          0
+                        </Typography>
+                      </CollectionFlexBox>
+                      <CollectionFlexBox sx={{ width: '48px' }}>
+                        <img
+                          src={el === check ? ButtonUp : ButtonDown}
+                          alt=""
+                          onClick={() => {
+                            if (el === check) {
+                              setCheck(null)
+                            } else {
+                              setCheck(el)
+                            }
+                          }}
+                        />
+                      </CollectionFlexBox>
+                    </CollectionFlexBox>
+                    {el === check && (
+                      <CollectionUpBox>
+                        <CollectionFlexBox m="48px 0 0 0">
+                          <LiquidationBox>
+                            <Typography ml="58px" fontWeight="600" color="#A0A3BD" variant="body1">
+                              Liquidation Threshold
+                            </Typography>
+                            <Typography ml="24px" variant="subtitle2">
+                              {div(el.liqThreshold, 100)}%
+                            </Typography>
+                            <Typography ml="63px" fontWeight="600" color="#A0A3BD" variant="body1">
+                              Liquidation Profit
+                            </Typography>
+                            <Typography ml="24px" variant="subtitle2">
+                              20%
+                            </Typography>
+                          </LiquidationBox>
+                          <Box className={address ? '' : 'none'} width="164px">
+                            <AlignEndBox>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight="700"
+                                color={+deposited(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
+                              >
+                                {deposited(el.id)}&nbsp;
+                              </Typography>
+                              <Typography
+                                fontWeight="700"
+                                lineHeight="160%"
+                                fontSize={+deposited(el.id) !== 0 ? '18px' : '14px'}
+                                color={+deposited(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
+                              >
+                                NTFs
+                              </Typography>
+                            </AlignEndBox>
+                            <Typography mt="2px" variant="body1" fontWeight="600" color="#A0A3BD">
+                              My Deposited
+                            </Typography>
+                          </Box>
+                          <Box className={address ? '' : 'none'} width="130px">
+                            <AlignEndBox>
+                              <Typography
+                                variant="subtitle1"
+                                fontWeight="700"
+                                color={nftBalance(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
+                              >
+                                {nftBalance(el.id)}&nbsp;
+                              </Typography>
+                              <Typography
+                                lineHeight="160%"
+                                fontSize={nftBalance(el.id) !== 0 ? '18px' : '14px'}
+                                fontWeight="700"
+                                color={nftBalance(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
+                              >
+                                NTFs
+                              </Typography>
+                            </AlignEndBox>
+                            <Typography mt="2px" variant="body1" fontWeight="600" color="#A0A3BD">
+                              My Balance
+                            </Typography>
+                          </Box>
+                        </CollectionFlexBox>
+                        {address ? (
+                          <Box mt="50px">
+                            <Button onClick={() => (window.location.href = `/deposit/${el.id}`)} variant="contained">
+                              Deposit
+                            </Button>
+                          </Box>
+                        ) : (
+                          <Box mt="50px">
+                            <Button
+                              variant="contained"
+                              onClick={() => {
+                                toggleModal()
+                              }}
+                            >
+                              Connect Wallet
+                            </Button>
+                          </Box>
+                        )}
+                      </CollectionUpBox>
+                    )}
+                  </Box>
+                </CollectionBox>
+              ))}
           </BgBox>
         </>
       )}
