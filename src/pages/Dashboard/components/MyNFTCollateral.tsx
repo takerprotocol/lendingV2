@@ -11,6 +11,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { getClient } from 'apollo/client'
 import { User } from 'apollo/queries'
 import { decimalFormat } from 'utils'
+import { useNavigate } from 'react-router-dom'
 
 // import ILendingPoolAddressesProviderAbi from 'abis/MockERC721.json'
 // import { useContract } from 'hooks/useContract'
@@ -116,6 +117,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const userValue = useUserValue()
   const collections = useCollections()
   const accountNfts = useAccountNfts()
+  const navigate = useNavigate()
   const depositedCollection = useDepositedCollection()
   // const address = useAddress()
   // const contract = useContract(ERC721_ADDRESS, ILendingPoolAddressesProviderAbi)
@@ -191,7 +193,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                         }}
                         onClick={() => {
                           if (el.userNftCollection && el.userNftCollection.id) {
-                            window.location.href = `/deposit/${el.userNftCollection.id.split('-')[1]}`
+                            navigate(`/deposit/${el.userNftCollection.id.split('-')[1]}`)
                           }
                         }}
                       ></ImgBox>
@@ -242,7 +244,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                             borderBottom: `${supportNfts.length > 10 ? '2px solid #ffffff' : '0'}`,
                           }}
                           onClick={() => {
-                            window.location.href = `/deposit/${el.contract.address}`
+                            navigate(`/deposit/${el.contract.address}`)
                           }}
                         ></RightImgBox>
                       </Tooltip>
@@ -279,7 +281,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                             borderBottom: `${collections.length > 10 ? '2px solid #ffffff' : '0'}`,
                           }}
                           onClick={() => {
-                            window.location.href = `/deposit/${el.id}`
+                            navigate(`/deposit/${el.id}`)
                           }}
                         ></RightImgBox>
                       </Tooltip>

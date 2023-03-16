@@ -17,6 +17,14 @@ import BigNumber from 'bignumber.js'
 import { useAlchemy } from 'hooks/useAlchemy'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
+import { useAppDispatch } from 'state/hooks'
+import { setDashboardType } from 'state/user/reducer'
+const growths = [
+  '0x81dbc3bc6bfa0640cffb9b6b667987c97f35a588',
+  '0x8c8f9db836049a7b11c561510d5b8318cccb6e0b',
+  '0xdcb017b5b37cf40d4955c5df42964464b5b0ea36',
+  '0x9a79bccd419c9604ce02645950e994b708553165',
+]
 
 const Body = styled(Box)`
   padding-top: 233px;
@@ -110,6 +118,7 @@ export default function Deposit() {
   const [depositCheckedIndex, setDepositCheckedIndex] = useState<Array<string>>([])
   const [withdrawCheckedIndex, setWithdrawCheckedIndex] = useState<Array<string>>([])
   const mobile = useMobileType()
+  const dispatch = useAppDispatch()
   const [type, setType] = useState<number>(1)
   const [mobileWithdrawCheckedIndex, setMobileWithdrawCheckedIndex] = useState<Array<string>>([])
   const [mobileDepositCheckedIndex, setMobileDepositCheckedIndex] = useState<Array<string>>([])
@@ -200,6 +209,11 @@ export default function Deposit() {
   useEffect(() => {
     getWithdrawList()
   }, [getWithdrawList, mobileFlag])
+  useEffect(() => {
+    if (id) {
+      dispatch(setDashboardType(growths.some((el) => el.toLocaleLowerCase() === id.toLocaleLowerCase()) ? 2 : 1))
+    }
+  }, [dispatch, id])
   return (
     <>
       {mobile ? (

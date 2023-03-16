@@ -14,6 +14,7 @@ import { decimalFormat, div, fixedFormat, times } from 'utils'
 import { OwnedNft } from '@alch/alchemy-sdk'
 import { fromWei } from 'web3-utils'
 import orderBy from 'lodash/orderBy'
+import { useNavigate } from 'react-router-dom'
 // import BigNumber from 'bignumber.js'
 
 // import { gasLimit } from 'config'
@@ -103,6 +104,7 @@ export default function Collection({ type, loading }: CollectionType) {
   const depositedCollection = useDepositedCollection()
   const nftConfig = useUserNftConfig()
   const list = useAccountNfts()
+  const navigate = useNavigate()
   const deposited = (id: string) => {
     if (depositedCollection) {
       const item = depositedCollection.find(
@@ -311,7 +313,7 @@ export default function Collection({ type, loading }: CollectionType) {
                         </CollectionFlexBox>
                         {address ? (
                           <Box mt="50px">
-                            <Button onClick={() => (window.location.href = `/deposit/${el.id}`)} variant="contained">
+                            <Button onClick={() => navigate(`/deposit/${el.id}`)} variant="contained">
                               Deposit
                             </Button>
                           </Box>

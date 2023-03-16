@@ -687,7 +687,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </LiquidatedBox>
           ) : (
             <Box marginTop="24px" display="flex" alignItems="center" justifyContent="space-between">
-              {tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+              {tokenApproval !== ApprovalState.APPROVED && (
                 <Button
                   variant="contained"
                   disabled={loading}
