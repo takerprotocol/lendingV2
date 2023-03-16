@@ -377,7 +377,7 @@ export default function NFTsSelectedModal({
           {isApproved !== 2 && (
             <Button
               variant="contained"
-              disabled={isApproved !== 0}
+              disabled={loading}
               sx={{ width: '176px', height: '54px', marginRight: '16px' }}
               color={riskLevelWarning ? 'error' : 'primary'}
               onClick={() => {

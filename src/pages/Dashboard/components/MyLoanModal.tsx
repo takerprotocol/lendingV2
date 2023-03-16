@@ -682,7 +682,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               {tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
                 <Button
                   variant="contained"
-                  disabled={tokenApproval !== ApprovalState.NOT_APPROVED}
+                  disabled={loading}
                   sx={{ width: '176px', height: '54px', marginRight: '16px' }}
                   onClick={() => {
                     if (check === 1) {

@@ -543,7 +543,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             {finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
               <Button
                 variant="contained"
-                disabled={finalApprove !== ApprovalState.NOT_APPROVED}
+                disabled={loading}
                 sx={{ width: '176px', height: '54px', marginRight: '16px' }}
                 onClick={() => {
                   // supply
