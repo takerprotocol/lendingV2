@@ -46,7 +46,7 @@ export default function MobileMyNFTCollateral({ myLoanType }: MobileMyNFTCollate
           </Typography>
           <Typography variant="subtitle1" component="span" fontWeight="700" color="#ffffff">
             {decimalFormat(userValue.NFTLiquidity, 0)}
-            <Typography variant="body1" component="span" fontWeight="700" color="#ffffff">
+            <Typography variant="body1" ml="4px" component="span" fontWeight="700" color="#ffffff">
               ETH
             </Typography>
           </Typography>

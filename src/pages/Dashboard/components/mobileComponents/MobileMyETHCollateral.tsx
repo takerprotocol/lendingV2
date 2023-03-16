@@ -1,20 +1,20 @@
-import { Box, styled, Typography, Button, Checkbox } from '@mui/material'
+import { Box, styled, Typography, Button } from '@mui/material'
 import mobileButtonRight from 'assets/images/svg/dashboard/mobileButtonRight.svg'
 import mobileMyETHCollateralPrompt from 'assets/images/svg/dashboard/mobileMyETHCollateralPrompt.svg'
-import mobileChecked from 'assets/images/svg/dashboard/mobileChecked-Icon.svg'
-import mobileChecked2 from 'assets/images/svg/dashboard/mobileChecked2-Icon.svg'
+// import mobileChecked from 'assets/images/svg/dashboard/mobileChecked-Icon.svg'
+// import mobileChecked2 from 'assets/images/svg/dashboard/mobileChecked2-Icon.svg'
 import { useMemo, useState } from 'react'
 import {
-  useBorrowLimit,
+  // useBorrowLimit,
   useEthCollateral,
   useEthDebt,
   useEthLiquidity,
   useUsedCollateral,
   useUserValue,
 } from 'state/user/hooks'
-import { fixedFormat, times } from 'utils'
+import { fixedFormat } from 'utils'
 import { toast } from 'react-toastify'
-import BigNumber from 'bignumber.js'
+// import BigNumber from 'bignumber.js'
 import { getWETH } from 'config'
 import MobileMySupplySwitchModal from './MobileMySupplySwitchModal'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -89,7 +89,7 @@ const NetSupplyBox = styled(Box)`
   padding: 0.375rem 0.5rem 0.375rem 0.6875rem;
   margin-top: 0.25rem;
 `
-const CheckboxImg = styled(`img`)``
+// const CheckboxImg = styled(`img`)``
 interface MobileMyETHCollateralProps {
   setOpenMySupplyModal: Function
   setTypeModal: Function
@@ -103,11 +103,11 @@ export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeMod
   const { chainId } = useActiveWeb3React()
   const ethDebt = useEthDebt()
   const contract = useLendingPool()
-  const [dataType] = useState<boolean>(true)
+  // const [dataType] = useState<boolean>(true)
   const userValue = useUserValue()
   const dispatch = useAppDispatch()
-  const timesEthBorrowLimit = useBorrowLimit(times(ethCollateral, -1))
-  const [switchType, setSwitchType] = useState<number>(0) // SwitchModal 关->开 ro 开->关
+  // const timesEthBorrowLimit = useBorrowLimit(times(ethCollateral, -1))
+  const [switchType] = useState<number>(0) // SwitchModal 关->开 ro 开->关
   const loanType = useMemo(() => {
     return +ethDebt === 0
   }, [ethDebt])
@@ -126,7 +126,7 @@ export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeMod
           <Typography variant="body2" color="#ffffff">
             My ETH Collateral
           </Typography>
-          <FlexEndBox>
+          {/* <FlexEndBox>
             {usedCollateral ? (
               <Typography mt="-0.3125rem" mr="0.5rem" variant="body2" fontWeight="700" color="#ffffff">
                 Used as Collateral
@@ -163,7 +163,7 @@ export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeMod
                 }
               }}
             />
-          </FlexEndBox>
+          </FlexEndBox> */}
         </SpaceBetweenBox>
         <Typography
           sx={{ textOverflow: 'ellipsis', maxWidth: '17.625rem', overflow: 'hidden' }}

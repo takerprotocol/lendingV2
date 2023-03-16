@@ -158,7 +158,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                   <Typography mr="0.5rem" color="#A0A3BD" variant="body2" fontWeight="600">
                     {heath}%
                   </Typography>
-                  <TipsTooltip value="11"></TipsTooltip>
+                  <TipsTooltip value="Net APY is the effective annual return that a user can expect from their investments, taking into account the deposit APY, borrow APY, and any additional token rewards. This value may be negative."></TipsTooltip>
                 </ClaimBox>
               )}
             </SpaceBetweenBox>
@@ -283,7 +283,11 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                       <Box m="0.5rem 0.5rem 0 0">
                         <FlexEndBox>
                           {/* <img width="16px" height="16px" src={mobilePrompt2} alt="" /> */}
-                          <TipsTooltip size="16" value="11"></TipsTooltip>
+                          <TipsTooltip
+                            size="16"
+                            value="The risk level reflects the user's current loan risk situation. When the utilization rate reaches the weighted average liquidation threshold, the rish level will reach the liquidation level, and the liquidator can start to liquidate the user's nft assets one by one.
+"
+                          ></TipsTooltip>
                         </FlexEndBox>
                       </Box>
                     </RiskFlexBox>
@@ -316,7 +320,10 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                       <Box m="0.5rem 0.5rem 0 0">
                         <FlexEndBox>
                           {/* <img width="16px" height="16px" src={mobilePrompt2} alt="" /> */}
-                          <TipsTooltip size="16" value="11"></TipsTooltip>
+                          <TipsTooltip
+                            size="16"
+                            value="The risk level reflects the user's current loan risk situation. When the utilization rate reaches the weighted average liquidation threshold, the rish level will reach the liquidation level, and the liquidator can start to liquidate the user's nft assets one by one."
+                          ></TipsTooltip>
                         </FlexEndBox>
                         <Typography mt="-0.25rem" variant="body1" color="#6E7191" fontWeight="600">
                           {heath}%
@@ -351,7 +358,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                           Net Borrow APY
                         </Typography>
                         {/* <img src={mobilePrompt2} alt="" /> */}
-                        <TipsTooltip value="11"></TipsTooltip>
+                        <TipsTooltip value="The risk level reflects the user's current loan risk situation. When the utilization rate reaches the weighted average liquidation threshold, the rish level will reach the liquidation level, and the liquidator can start to liquidate the user's nft assets one by one."></TipsTooltip>
                       </FlexBox>
                     </Box>
                     <Button

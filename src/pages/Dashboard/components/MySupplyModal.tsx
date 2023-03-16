@@ -1,5 +1,5 @@
 import greyShutOff from 'assets/images/svg/common/close-white.svg'
-import prompt from 'assets/images/svg/common/prompt.svg'
+// import prompt from 'assets/images/svg/common/prompt.svg'
 import redPrompt from 'assets/images/svg/common/redPrompt.svg'
 import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
@@ -19,7 +19,7 @@ import {
   useErc20ReserveData,
   useEthLiquidity,
   useHeath,
-  useUsedCollateral,
+  // useUsedCollateral,
   useWalletBalance,
 } from 'state/user/hooks'
 // import { gasLimit } from 'config'
@@ -148,7 +148,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, borrowOrRepay === 1 ? 1 : -1))
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
   const upBorrowLimit = useBorrowLimit(times(amount, borrowOrRepay === 1 ? 1 : -1)) //操作后的borrowLimit
-  const usedCollateral = useUsedCollateral()
+  // const usedCollateral = useUsedCollateral()
   const erc20ReserveData = useErc20ReserveData()
   const addTransaction = useTransactionAdder()
   const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
@@ -253,17 +253,17 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
       }
     }
   }
-  const nonCollateral = useMemo(() => {
-    if (usedCollateral) {
-      return 'Used as Collateral'
-    } else {
-      return 'Non-collateral'
-    }
-  }, [usedCollateral])
+  // const nonCollateral = useMemo(() => {
+  //   if (usedCollateral) {
+  //     return 'Used as Collateral'
+  //   } else {
+  //     return 'Non-collateral'
+  //   }
+  // }, [usedCollateral])
 
-  const ModalType = useMemo(() => {
-    return amount !== ''
-  }, [amount])
+  // const ModalType = useMemo(() => {
+  //   return amount !== ''
+  // }, [amount])
 
   const finalApprove = useMemo(() => {
     return borrowOrRepay === 1 ? approval : tokenApproval
@@ -310,12 +310,12 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               >
                 <img src={greyShutOff} alt="" />
               </Box>
-              <FlexBox mt="43px">
+              {/* <FlexBox mt="43px">
                 <Typography mr="6px" variant="body1" component="p" color="#FFFFFF">
                   {nonCollateral}
                 </Typography>
                 <img src={prompt} alt="" />
-              </FlexBox>
+              </FlexBox> */}
             </Box>
           </SupplySpaceBetweenBox>
           <SpaceBetweenBox mt="24px">
@@ -421,7 +421,7 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                 </Typography>
               </Box>
             </SpaceBetweenBox>
-            {ModalType && (
+            {false && (
               <Box>
                 <SpaceBetweenBox mt="16px">
                   <Typography variant="body1" color="#A0A3BD">

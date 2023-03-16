@@ -168,7 +168,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
           {dataType ? (
             <SpaceBetweenBox width="100%">
               <Box>
-                <Typography variant="body1" fontWeight="700" color="#6E7191">
+                <Typography variant="body1" fontWeight="600" color="#6E7191">
                   My Deposited Collections
                 </Typography>
               </Box>

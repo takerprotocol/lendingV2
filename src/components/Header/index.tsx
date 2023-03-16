@@ -170,7 +170,7 @@ export const Header = () => {
                   Liquidation
                 </StyledLinkText>
               </Link>
-              <Link to="/faqs">
+              {/* <Link to="/faqs">
                 <StyledLinkText
                   color={String(location.pathname === '/faqs' ? theme.palette.primary.main : theme.palette.text)}
                   variant="button"
@@ -178,7 +178,7 @@ export const Header = () => {
                 >
                   FAQs
                 </StyledLinkText>
-              </Link>
+              </Link> */}
               {!address ? (
                 <WalletButton
                   variant="contained"

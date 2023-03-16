@@ -62,7 +62,10 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
                 <Typography component="span" variant="subtitle1" fontWeight="500" lineHeight="18px" marginRight="8px">
                   Total Liquidity
                 </Typography>
-                <TipsTooltip size="16" value={'Total Liquidity'}></TipsTooltip>
+                <TipsTooltip
+                  size="16"
+                  value={'Total liquidity is a combination of NFT assets and crypto assets(ETH).'}
+                ></TipsTooltip>
               </CenterBox>
               <CenterBox marginTop="16px">
                 <img src={BottomLiquidity} alt="" />

@@ -140,10 +140,10 @@ export default function MobileCollection() {
                         {el?.name}
                       </Typography>
                       <FlexBox>
-                        <Typography variant="body2" lineHeight="1.125rem" color="#A0A3BD">
+                        {/* <Typography  mr={'0.5rem'} variant="body2" lineHeight="1.125rem" color="#A0A3BD">
                           {el?.activeUser} Users
-                        </Typography>
-                        <Typography ml={'0.5rem'} variant="body2" lineHeight="1.125rem" color="#A0A3BD">
+                        </Typography> */}
+                        <Typography variant="body2" lineHeight="1.125rem" color="#A0A3BD">
                           230 NFTs
                         </Typography>
                       </FlexBox>

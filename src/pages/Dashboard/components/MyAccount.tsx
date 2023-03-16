@@ -100,7 +100,13 @@ export default function MyAccount({ type, loading }: MyAccountProps) {
                     <Typography mr="4px" variant="body2" color="#A0A3BD">
                       Net APY
                     </Typography>
-                    <TipsTooltip size="14" grey="grey" value={'1111111'}></TipsTooltip>
+                    <TipsTooltip
+                      size="14"
+                      grey="grey"
+                      value={
+                        'Net APY is the effective annual return that a user can expect from their investments, taking into account the deposit APY, borrow APY, and any additional token rewards. This value may be negative.'
+                      }
+                    ></TipsTooltip>
                   </CenterBox>
                 </Box>
                 {data ? (
@@ -113,9 +119,15 @@ export default function MyAccount({ type, loading }: MyAccountProps) {
                     </Typography>
                     <FlexBox mt="2px">
                       <Typography mr="4px" component="span" variant="body2" color="#A0A3BD">
-                        Income estimation
+                        Income Estimation
                       </Typography>
-                      <TipsTooltip size="14" grey="grey" value={'1111111'}></TipsTooltip>
+                      <TipsTooltip
+                        size="14"
+                        grey="grey"
+                        value={
+                          'Income Estimation is the amount converted based on the current Net APY and the current ETH price.'
+                        }
+                      ></TipsTooltip>
                     </FlexBox>
                   </Box>
                 ) : (

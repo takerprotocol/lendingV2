@@ -240,7 +240,7 @@ export const theme = createTheme({
             box-shadow: 0px 4px 8px rgba(75, 75, 122, 0.1), inset 0px 2px 2px rgba(75, 86, 132, 0.5);
           }
           &.MuiButton-containedPrimary:hover {
-            box-shadow: 0px 4px 8px rgba(75, 75, 122, 0.3), inset 0px 2px 2px rgba(75, 86, 132, 0.5) !important;
+            box-shadow: 0px 4px 8px rgba(75, 75, 122, 0.3), inset 0px 2px 2px rgba(75, 86, 132, 0.5);
             border: none !important;
           }
           &.MuiButton-containedPrimary.Mui-disabled {
@@ -362,7 +362,6 @@ export const theme = createTheme({
       styleOverrides: {
         popper: `
         .MuiTooltip-tooltip {
-          height: 27px !important;
           background: #14142a !important;
           border-radius: 6px !important;
           font-family: 'Quicksand' !important;

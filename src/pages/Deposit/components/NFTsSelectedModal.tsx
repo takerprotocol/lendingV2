@@ -200,6 +200,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const riskLevelWarning = useMemo(() => {
     return new BigNumber(collateralRiskLevel).lt(150) && type === 'withdraw'
   }, [collateralRiskLevel, type])
+  console.log(isApproved)
   return (
     <Modal open={openSelectedModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>

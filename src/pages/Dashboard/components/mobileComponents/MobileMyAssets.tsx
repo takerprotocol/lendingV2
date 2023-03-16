@@ -147,7 +147,11 @@ export default function MobileMyAssets() {
                   <Typography mr="0.5rem" variant="body2" fontWeight="600" lineHeight="0.75rem" color="#6E7191">
                     Total Liquidity
                   </Typography>
-                  <TipsTooltip grey="grey" value={'111111'} size={''}></TipsTooltip>
+                  <TipsTooltip
+                    grey="grey"
+                    value={'Total liquidity is a combination of NFT assets and crypto assets(ETH).'}
+                    size={''}
+                  ></TipsTooltip>
                 </FlexBox>
                 <FlexBox mt="0.75rem">
                   <img src={type === 1 ? mobileEth : mobilePurpleETH} alt="" />
@@ -318,7 +322,7 @@ export default function MobileMyAssets() {
                             <Typography mr="0.25rem" variant="body2" color="#A0A3BD">
                               Net APY
                             </Typography>
-                            <TipsTooltip value="11"></TipsTooltip>
+                            <TipsTooltip value="Net APY is the effective annual return that a user can expect from their investments, taking into account the deposit APY, borrow APY, and any additional token rewards. This value may be negative."></TipsTooltip>
                           </FlexBox>
                         </Box>
                       </SpaceBetweenBox>

@@ -114,6 +114,7 @@ export default function Collection({ type, loading }: CollectionType) {
   // const nftBalance = (id: string) => {
 
   // }
+  console.log(collection)
   const nftBalance = useCallback(
     (id: string) => {
       if (list) {
@@ -167,14 +168,14 @@ export default function Collection({ type, loading }: CollectionType) {
                 <Box sx={{ width: '272px' }}>
                   <TitleTypography>Collection</TitleTypography>
                 </Box>
-                <Box sx={{ width: '124px' }}>
+                <Box sx={{ width: '222px' }}>
                   <TitleTypography>Floor Price</TitleTypography>
                 </Box>
-                <Box sx={{ width: '248px' }}>
+                <Box sx={{ width: '222px' }}>
                   <TitleTypography> Loan to Value </TitleTypography>
                 </Box>
-                <Box sx={{ width: '248px' }}>
-                  <TitleTypography>Supplied</TitleTypography>
+                <Box sx={{ width: '222px' }}>
+                  <TitleTypography>Total Value Locked</TitleTypography>
                 </Box>
                 <Box>
                   <TitleTypography>Token reward</TitleTypography>
@@ -204,13 +205,13 @@ export default function Collection({ type, loading }: CollectionType) {
                         </FlexBox>
                       </Box>
                     </CollectionFlexBox>
-                    <CollectionFlexBox sx={{ width: '124px' }}>
+                    <CollectionFlexBox sx={{ width: '222px' }}>
                       <img src={minMyCollateralIcon} alt="" />
                       <Typography ml="2px" component="span" variant="body1" fontWeight="700">
                         {fixedFormat(fromWei(el?.floorPrice || 0))}
                       </Typography>
                     </CollectionFlexBox>
-                    <CollectionFlexBox sx={{ width: '248px' }}>
+                    <CollectionFlexBox sx={{ width: '222px' }}>
                       <Box>
                         <Typography ml="2px" mr="8px" component="span" variant="body1" fontWeight="700">
                           {div(el.ltv, 100)}%
@@ -220,12 +221,12 @@ export default function Collection({ type, loading }: CollectionType) {
                         </TitleTypography>
                       </Box>
                     </CollectionFlexBox>
-                    <CollectionFlexBox sx={{ width: '248px' }}>
+                    <CollectionFlexBox sx={{ width: '222px' }}>
                       <Typography component="span" variant="body1" fontWeight="700">
                         {el?.activeUser}
                       </Typography>
                     </CollectionFlexBox>
-                    <CollectionFlexBox sx={{ width: '172px' }}>
+                    <CollectionFlexBox sx={{ width: '122px' }}>
                       <Typography component="span" variant="subtitle2" fontWeight="700" color="#4BC8B1">
                         0
                       </Typography>

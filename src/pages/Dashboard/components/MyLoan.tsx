@@ -1,7 +1,7 @@
 import { Box, Button, styled, Typography } from '@mui/material'
 import { FlexBox, SpaceBetweenBox, CenterBox } from 'styleds'
 import rightBox from 'assets/images/svg/dashboard/rightBox.svg'
-import ButtonSupply from 'assets/images/svg/dashboard/Button-Supply.svg'
+// import ButtonSupply from 'assets/images/svg/dashboard/Button-Supply.svg'
 import addBox from 'assets/images/svg/dashboard/addBox.svg'
 import blackEthLogo from 'assets/images/svg/dashboard/blackEthLogo.svg'
 import riskLevelBefore from 'assets/images/svg/dashboard/riskLevelBefore.svg'
@@ -27,8 +27,19 @@ const MyLoanBox = styled(Box)`
   border-radius: 12px;
   .Padding-button {
     min-width: 104px;
+    width: 124px;
     height: 46px;
     padding: 5px 16px;
+    background: #f7f7fc !important;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 160%;
+    color: #373737;
+    box-shadow: none !important;
+    &:hover {
+      box-shadow: none !important;
+    }
   }
 `
 const FlexEndBox = styled(Box)`
@@ -127,7 +138,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
               <Box mt="26px">
                 <Button
                   disabled={+ethDebt === 0}
-                  className="Padding-button"
+                  className={+ethDebt !== 0 ? 'Padding-button' : ''}
                   variant="contained"
                   onClick={() => {
                     if (+ethDebt !== 0) {
@@ -136,7 +147,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                     }
                   }}
                 >
-                  Repay {'>'}
+                  Repay
                 </Button>
               </Box>
             </RepayBox>
@@ -166,7 +177,13 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                   <Box>
                     <Box>
                       <FlexEndBox>
-                        <TipsTooltip size="16px" grey="grey" value={'1111111'}></TipsTooltip>
+                        <TipsTooltip
+                          size="16px"
+                          grey="grey"
+                          value={
+                            "The risk level reflects the user's current loan risk situation. When the utilization rate reaches the weighted average liquidation threshold, the rish level will reach the liquidation level, and the liquidator can start to liquidate the user's nft assets one by one."
+                          }
+                        ></TipsTooltip>
                       </FlexEndBox>
                       <Box mr="24px">
                         <Typography component="p" variant="subtitle2" color="#6E7191">
@@ -188,7 +205,13 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                     No loan amount
                   </Typography>
                   <FlexEndBox>
-                    <TipsTooltip size="16px" grey="grey" value={'1111111'}></TipsTooltip>
+                    <TipsTooltip
+                      size="16px"
+                      grey="grey"
+                      value={
+                        "The risk level reflects the user's current loan risk situation. When the utilization rate reaches the weighted average liquidation threshold, the rish level will reach the liquidation level, and the liquidator can start to liquidate the user's nft assets one by one."
+                      }
+                    ></TipsTooltip>
                   </FlexEndBox>
                 </FlexStartBox>
                 <Typography variant="body2" lineHeight="18px" color="#A0A3BD">
@@ -256,14 +279,15 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
               </Box>
               <Button
                 disabled={Number(minus(borrowLimit, ethDebt)) === 0}
-                sx={{ width: '174px', height: '48px' }}
+                sx={{ width: '125px', height: '48px' }}
                 variant="contained"
                 onClick={() => {
                   setOpen(true)
                   setRepayRoBorrow(1)
                 }}
               >
-                Borrow{Number(minus(borrowLimit, ethDebt)) !== 0 && <img className="left" src={ButtonSupply} alt="" />}
+                Borrow
+                {/* {Number(minus(borrowLimit, ethDebt)) !== 0 && <img className="left" src={ButtonSupply} alt="" />} */}
               </Button>
             </SpaceBetweenBox>
           </BottomBox>

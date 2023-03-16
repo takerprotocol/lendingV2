@@ -1,20 +1,20 @@
-import prompt from 'assets/images/svg/common/prompt.svg'
+// import prompt from 'assets/images/svg/common/prompt.svg'
 import redPrompt from 'assets/images/svg/common/redPrompt.svg'
 import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import myCollateral from 'assets/images/svg/common/myCollateral.svg'
-import { amountDecimal, desensitization, fixedFormat, getRiskLevel, getRiskLevelTag, plus, times } from 'utils'
+import { amountDecimal, desensitization, fixedFormat, plus, times } from 'utils'
 import BigNumber from 'bignumber.js'
 import { toast } from 'react-toastify'
 import { useLendingPool } from 'hooks/useLendingPool'
 import {
   useAddress,
-  useBorrowLimit,
-  useCollateralBorrowLimitUsed,
+  // useBorrowLimit,
+  // useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
   useDecimal,
   useEthCollateral,
-  useHeath,
+  // useHeath,
   useUsedCollateral,
   useWalletBalance,
 } from 'state/user/hooks'
@@ -151,15 +151,15 @@ export default function MobileMyAssetsModal({
   const contract = useGateway()
   const poolContract = useLendingPool()
   const address = useAddress()
-  const heath = useHeath()
+  // const heath = useHeath()
   const ethCollateral = useEthCollateral()
   const collateralRiskLevel = useCollateralRiskLevel(times(amount, borrowOrRepay === 1 ? 1 : -1))
-  const TypographyRiskLevel = getRiskLevel(collateralRiskLevel)
-  const riskLevelTag = getRiskLevelTag(collateralRiskLevel)
-  const borrowLimitUsed = useCollateralBorrowLimitUsed()
-  const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, borrowOrRepay === 1 ? 1 : -1))
-  const borrowLimit = useBorrowLimit() //操作前的borrowLimit
-  const upBorrowLimit = useBorrowLimit(times(amount, borrowOrRepay === 1 ? 1 : -1)) //操作后的borrowLimit
+  // const TypographyRiskLevel = getRiskLevel(collateralRiskLevel)
+  // const riskLevelTag = getRiskLevelTag(collateralRiskLevel)
+  // const borrowLimitUsed = useCollateralBorrowLimitUsed()
+  // const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, borrowOrRepay === 1 ? 1 : -1))
+  // const borrowLimit = useBorrowLimit() //操作前的borrowLimit
+  // const upBorrowLimit = useBorrowLimit(times(amount, borrowOrRepay === 1 ? 1 : -1)) //操作后的borrowLimit
   const usedCollateral = useUsedCollateral()
   // const erc20ReserveData = useErc20ReserveData()
   const addTransaction = useTransactionAdder()
@@ -315,7 +315,7 @@ export default function MobileMyAssetsModal({
                   />
                 </svg>
               </Box>
-              <FlexBox mt={usedCollateral ? '0.75rem' : '1.8125rem'}>
+              {/* <FlexBox mt={usedCollateral ? '0.75rem' : '1.8125rem'}>
                 {!usedCollateral ? (
                   <Typography mr="0.375rem" variant="body2" color="rgba(255, 255, 255, 0.7)">
                     Non-collateral
@@ -331,7 +331,7 @@ export default function MobileMyAssetsModal({
                   </Box>
                 )}
                 <img src={prompt} alt="" />
-              </FlexBox>
+              </FlexBox> */}
             </Box>
           </SupplySpaceBetweenBox>
           <SpaceBetweenBox m="1.125rem 3.375rem 0 3.5rem">
@@ -435,7 +435,7 @@ export default function MobileMyAssetsModal({
                 </Typography>
               </FlexBox>
             </SpaceBetweenBox>
-            {usedCollateral && (
+            {/* {usedCollateral && (
               <Box>
                 <SpaceBetweenBox mt="1rem">
                   <Typography variant="body2" color="#A0A3BD">
@@ -492,7 +492,7 @@ export default function MobileMyAssetsModal({
                   </Box>
                 </SpaceBetweenBox>
               </Box>
-            )}
+            )} */}
           </Box>
           <NetSupplyAPY>
             <Typography variant="body2" ml="4.25rem" fontWeight="600" color="#A0A3BD" lineHeight="0.75rem">

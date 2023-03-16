@@ -1,16 +1,16 @@
-import { Box, Button, styled, Switch, Typography } from '@mui/material'
+import { Box, Button, styled, Typography } from '@mui/material'
 import MyETHSupplyBg from 'assets/images/svg/dashboard/MyETHSupplyBg.svg'
 import rightBox from 'assets/images/svg/dashboard/rightBox.svg'
 import MySupplySwitchUnableOffModal from './MySupplySwitchUnableOffModal'
 import addBox from 'assets/images/svg/dashboard/addBox.svg'
-import ButtonSupply from 'assets/images/svg/dashboard/Button-Supply.svg'
+// import ButtonSupply from 'assets/images/svg/dashboard/Button-Supply.svg'
 import switchIcon from 'assets/images/svg/dashboard/Switch-icon.svg'
 import { FlexBox, SpaceBetweenBox, SpaceBox } from 'styleds'
 import { useEffect, useMemo, useState } from 'react'
 import MySupplyModal from './MySupplyModal'
 import MySupplySwitchModal from './MySupplySwitchModal'
 import {
-  useBorrowLimit,
+  // useBorrowLimit,
   useErc20ReserveData,
   useEthCollateral,
   useEthDebt,
@@ -25,9 +25,8 @@ import { useLendingPool } from 'hooks/useLendingPool'
 import { getWETH } from 'config'
 import { useAppDispatch } from 'state'
 // import { setUsedCollateral } from 'state/user/reducer'
-import { decimalFormat, fixedFormat, times } from 'utils'
-import BigNumber from 'bignumber.js'
-import TipsTooltip from './TipsTooltip'
+import { decimalFormat, fixedFormat } from 'utils'
+// import TipsTooltip from './TipsTooltip'
 import { useActiveWeb3React } from 'hooks/web3'
 import { isTransactionRecent, useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
@@ -120,7 +119,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const [dataType] = useState<boolean>(true)
   const [typeModal, setTypeModal] = useState<number>(1) // MySupplyModal State Supply(1) ro Withdraw(0)
   const [openMySupplySwitchModal, setOpenMySupplySwitchModal] = useState<boolean>(false)
-  const [switchType, setSwitchType] = useState<number>(0) // SwitchModal 关->开 ro 开->关
+  const [switchType] = useState<number>(0) // SwitchModal 关->开 ro 开->关
   const erc20ReserveData = useErc20ReserveData()
   const contract = useLendingPool()
   const ethDebt = useEthDebt()
@@ -132,7 +131,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
   const userValue = useUserValue()
   const usedCollateral = useUsedCollateral()
   const dispatch = useAppDispatch()
-  const timesEthBorrowLimit = useBorrowLimit(times(ethCollateral, -1))
+  // const timesEthBorrowLimit = useBorrowLimit(times(ethCollateral, -1))
   const transactions = useAllTransactions()
 
   const flag = useMemo(() => {
@@ -165,12 +164,12 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
     <MyETHSupplyBox>
       <BottomBox>
         <BottomTopBox>
-          <SpaceBetweenBox>
-            <FlexBox>
-              <Typography variant="body1" mr="8px" fontWeight="700" color="#6E7191">
+          <SpaceBetweenBox px="4px">
+            {/*<FlexBox>
+               <Typography variant="body1" mr="8px" fontWeight="700" color="#6E7191">
                 Used as Collateral
               </Typography>
-              <TipsTooltip size="14" grey="grey" value={'1111111'}></TipsTooltip>
+              <TipsTooltip size="14" grey="grey" value={'1111111'}></TipsTooltip> 
             </FlexBox>
             <Switch
               className={usedCollateral ? 'open' : ''}
@@ -190,7 +189,26 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
                   }
                 }
               }}
-            />
+            /> */}
+            <Typography variant="body1" my="3px" fontWeight="600" color="#6E7191">
+              Withdraw my Supply
+            </Typography>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clipPath="url(#clip0_11036_18939)">
+                <path
+                  d="M7.00016 4L11.9997 9L6.99972 14"
+                  stroke="#4E4B66"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </g>
+              <defs>
+                <clipPath id="clip0_11036_18939">
+                  <rect width="18" height="18" fill="white" transform="translate(0 18) rotate(-90)" />
+                </clipPath>
+              </defs>
+            </svg>
           </SpaceBetweenBox>
         </BottomTopBox>
         <RewardAPYBox>
@@ -240,7 +258,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
           }}
         >
           Supply
-          <img className="left" src={ButtonSupply} alt="" />
+          {/* <img className="left" src={ButtonSupply} alt="" /> */}
         </Button>
       </BottomBox>
       <TopBox>
