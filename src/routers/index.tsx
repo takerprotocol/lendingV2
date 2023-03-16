@@ -36,7 +36,7 @@ import ERC721 from 'assets/images/png/collection/721.png'
 import Azuki from 'assets/images/png/collection/azuki.png'
 import Bayc from 'assets/images/png/collection/bayc.png'
 import Mayc from 'assets/images/png/collection/mayc.png'
-import Women from 'assets/images/png/collection/women.webp'
+import Women from 'assets/images/png/collection/women.gif'
 import Cat from 'assets/images/png/collection/cat.png'
 import Clonex from 'assets/images/png/collection/clonex.png'
 import Doodles from 'assets/images/png/collection/doodles.png'
@@ -165,6 +165,27 @@ export default function CustomizeRoutes() {
     return ERC721
   }
 
+  const renderName = (symbol?: string) => {
+    if (symbol) {
+      if (symbol.toLocaleLowerCase().indexOf('mayc') > -1) {
+        return 'Bored Ape Yacht Club'
+      } else if (symbol.toLocaleLowerCase().indexOf('azuki') > -1) {
+        return 'Azuki'
+      } else if (symbol.toLocaleLowerCase().indexOf('bayc') > -1) {
+        return 'Mutant Ape Yacht Club'
+      } else if (symbol.toLocaleLowerCase().indexOf('world_of_women') > -1) {
+        return 'World of Women'
+      } else if (symbol.toLocaleLowerCase().indexOf('doodles') > -1) {
+        return 'Doodles'
+      } else if (symbol.toLocaleLowerCase().indexOf('cool_cats') > -1) {
+        return 'Cool Cats NFT'
+      } else if (symbol.toLocaleLowerCase().indexOf('clonex') > -1) {
+        return 'CLONE X - X TAKASHI MURAKAMI'
+      }
+    }
+    return 'ERC721'
+  }
+
   const getCollection = useCallback(async () => {
     if (client && contract) {
       const lendingPoolRes = await client.query({
@@ -201,7 +222,7 @@ export default function CustomizeRoutes() {
           // item.stats = stats.data
           item.activeUser = element.users ? element.users.length : 0
           item.id = element.id
-          item.name = element.name
+          item.name = renderName(element.name)
           item.symbol = element.symbol
           item.floorPrice = element.floorPrice
           item.interestRateCalculator = element.interestRateCalculator
@@ -225,6 +246,7 @@ export default function CustomizeRoutes() {
       }
     }
   }, [client, contract, library, address, chainId, dispatch])
+
   useEffect(() => {
     dispatch(setMobileType(!isMobile))
   }, [dispatch])

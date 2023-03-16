@@ -89,6 +89,7 @@ export default function Liquidation() {
   const address = useAddress()
   const collection = useCollections()
   const [client, setClient] = useState<any>(null)
+  const [otherClient, setOtherClient] = useState<any>(null)
   const [searchTerms, setSearchTerms] = useState<string[]>([]) //搜索value
   const [sort, setSort] = useState(0) //排序方法
   const [debtFilter, setDebtFilter] = useState(0) //过滤条件
@@ -177,30 +178,22 @@ export default function Liquidation() {
   useEffect(() => {
     if (chainId) {
       setClient(getClient(dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
+      setOtherClient(getClient(3 - dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
   }, [chainId, dashboardType])
   const getCollaterals = useCallback(async () => {
-    if (client) {
+    if (client && otherClient) {
       const user = await client.query({
         query: AllUser(healthFactor, searchValue, conditionSort, allUserWhere),
       })
+      const otherUser = await otherClient.query({
+        query: AllUser(healthFactor, searchValue, conditionSort, allUserWhere),
+      })
       setLoading(false)
+      const users: Array<CollateralModel> = []
       if (user.data.users) {
-        const users: Array<CollateralModel> = []
         user.data.users.forEach((element: any) => {
-          // let depositedAmount = '0'
-          // let borrowedAmount = '0'
-          // let liqThreshold = '0'
-          // element.reserves.forEach((rel: any) => {
-          //   if (rel.id.split('-')[1].toLocaleLowerCase() === WETH.toLocaleLowerCase()) {
-          //     liqThreshold = rel.reserve.liqThreshold
-          //   }
-          //   depositedAmount = plus(depositedAmount, rel.depositedAmount)
-          //   borrowedAmount = plus(borrowedAmount, rel.borrowedAmount)
-          // }
           const heath = BigNumber.min(times(fromWei(element.healthFactor), 100), 1000).toString()
-          console.log(element.healthFactor)
-          console.log(fromWei(element.healthFactor))
           users.push({
             address: element.id,
             collateral: fromWei(element.totalCollateral),
@@ -211,10 +204,24 @@ export default function Liquidation() {
             riskLevelTag: getRiskLevelTag(heath),
           })
         })
-        setCollaterals(users)
       }
+      if (otherUser.data.users) {
+        otherUser.data.users.forEach((element: any) => {
+          const heath = BigNumber.min(times(fromWei(element.healthFactor), 100), 1000).toString()
+          users.push({
+            address: element.id,
+            collateral: fromWei(element.totalCollateral),
+            collections: element.collections,
+            debt: fromWei(element.totalDebt),
+            riskPercentage: heath,
+            riskLevel: getRiskLevel(heath),
+            riskLevelTag: getRiskLevelTag(heath),
+          })
+        })
+      }
+      setCollaterals(users)
     }
-  }, [client, healthFactor, searchValue, conditionSort, allUserWhere])
+  }, [client, otherClient, healthFactor, searchValue, conditionSort, allUserWhere])
 
   useEffect(() => {
     getCollaterals()

@@ -118,7 +118,12 @@ export default function Deposit() {
   const depositFlag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
-      return tx && tx.receipt && tx.info.type === TransactionType.DEPOSIT_NFT && isTransactionRecent(tx)
+      return (
+        tx &&
+        tx.receipt &&
+        (tx.info.type === TransactionType.DEPOSIT_NFT || tx.info.type === TransactionType.WITHDRAW_NFT) &&
+        isTransactionRecent(tx)
+      )
     }).length
   }, [transactions])
   const { list, loading } = useDepositableNfts(address, id, depositFlag)
