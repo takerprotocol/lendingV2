@@ -36,6 +36,10 @@ import ERC721 from 'assets/images/png/collection/721.png'
 import Azuki from 'assets/images/png/collection/azuki.png'
 import Bayc from 'assets/images/png/collection/bayc.png'
 import Mayc from 'assets/images/png/collection/mayc.png'
+import Women from 'assets/images/png/collection/women.webp'
+import Cat from 'assets/images/png/collection/cat.png'
+import Clonex from 'assets/images/png/collection/clonex.png'
+import Doodles from 'assets/images/png/collection/doodles.png'
 import { Contract } from '@ethersproject/contracts'
 import { setMobileType } from 'state/user/reducer'
 import { isMobile } from 'utils/userAgent'
@@ -144,6 +148,14 @@ export default function CustomizeRoutes() {
         return Azuki
       } else if (symbol.toLocaleLowerCase().indexOf('bayc') > -1) {
         return Bayc
+      } else if (symbol.toLocaleLowerCase().indexOf('world_of_women') > -1) {
+        return Women
+      } else if (symbol.toLocaleLowerCase().indexOf('doodles') > -1) {
+        return Doodles
+      } else if (symbol.toLocaleLowerCase().indexOf('cool_cats') > -1) {
+        return Cat
+      } else if (symbol.toLocaleLowerCase().indexOf('clonex') > -1) {
+        return Clonex
       }
     }
     return ERC721
