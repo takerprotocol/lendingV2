@@ -1,4 +1,4 @@
-const gasLimit = 5000000
+const gasLimit = 21000
 // RINKEBY
 export const getProxyAddressesRegistry = (chainId?: number) => {
   if (chainId === 42) {

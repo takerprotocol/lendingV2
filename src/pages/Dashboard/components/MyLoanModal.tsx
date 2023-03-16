@@ -599,7 +599,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             <FlexBox>
               <Box width={'65px'}>
                 <Typography variant="subtitle2" color="#4BC8B1">
-                  20%
+                  0%
                 </Typography>
               </Box>
               <Box sx={{ width: '52px' }}>

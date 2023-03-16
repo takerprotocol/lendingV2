@@ -5,7 +5,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useContract } from 'hooks/useContract'
 import MockMAYC_ABI from 'abis/MockMAYC.json'
 import { useMemo, useState } from 'react'
-import { useCollections } from 'state/application/hooks'
+// import { useCollections } from 'state/application/hooks'
 import { hexToNumberString } from 'web3-utils'
 // import { RetryableError } from 'utils/retry'
 // import { Box, styled } from '@mui/material'
@@ -52,32 +52,65 @@ const CollectionSortItem = styled(Box)`
   }
 `
 export default function Mint() {
-  const collection = useCollections()
+  // const collection = useCollections()
   const [valueIndex, setValueIndex] = useState<number>(0)
-  const useMockMAYCContract = useContract(collection[valueIndex - 1]?.id, MockMAYC_ABI)
   const { library: provider } = useActiveWeb3React()
   const allFilterType = 0
   const [result, setResult] = useState<Array<any>>([])
   // const res = useMemo(() => {
   //   return [...result]
   // }, [result])
+  // console.log(collection)
+  const collections = useMemo(() => {
+    return [
+      {
+        id: '0x1326578b741311773b21b22dd22d047e8289fc1f',
+        name: 'bayc',
+      },
+      {
+        id: '0x7629aa9f796f230c48e126425545ebf5eb57fde6',
+        name: 'mayc',
+      },
+      {
+        id: '0x77a136db5131bd2a547e56aad40b4e8fbec6e3b7',
+        name: 'azuki',
+      },
+      {
+        id: '0x81dbc3bc6bfa0640cffb9b6b667987c97f35a588',
+        name: 'world_of_women',
+      },
+      {
+        id: '0x8c8f9db836049a7b11c561510d5b8318cccb6e0b',
+        name: 'doodles',
+      },
+      {
+        id: '0xdcb017b5b37cf40d4955c5df42964464b5b0ea36',
+        name: 'clonex',
+      },
+      {
+        id: '0x9a79bccd419c9604ce02645950e994b708553165',
+        name: 'cool_cats',
+      },
+    ]
+  }, [])
+  const useMockMAYCContract = useContract(collections[valueIndex - 1]?.id, MockMAYC_ABI)
   const collectionOptions = useMemo(() => {
     return [
       {
         value: 0,
         name: 'All Collections',
       },
-      ...collection.map((collection: any, index: number) => ({
+      ...collections.map((collection: any, index: number) => ({
         value: index + 1,
         name: (
           <CollectionSortItem>
-            <img alt={collection.name} src={collection.icon} />
+            {/* <img alt={collection.name} src={collection.icon} /> */}
             {collection.name}
           </CollectionSortItem>
         ),
       })),
     ]
-  }, [collection])
+  }, [collections])
   return (
     <TestBox>
       <TitleBox mb="16px">请使用goerli网络</TitleBox>
@@ -97,10 +130,10 @@ export default function Mint() {
         allFilterType={allFilterType}
         setValueIndex={setValueIndex}
       />
-      {collection[valueIndex - 1]?.id && (
+      {collections[valueIndex - 1]?.id && (
         <TitleBox>
           id:
-          <ValueBox>{collection[valueIndex - 1]?.id}</ValueBox>{' '}
+          <ValueBox>{collections[valueIndex - 1]?.id}</ValueBox>{' '}
         </TitleBox>
       )}
       {result.slice(0, 5).map((el: any) => (

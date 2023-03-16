@@ -11,14 +11,13 @@ import {
   useAddress,
   useCollateralsType,
   useDashboardType,
-  useDecimal,
   useLoginWalletType,
   useMobileMenuType,
   useMobileType,
 } from 'state/user/hooks'
 import { useCollections } from 'state/application/hooks'
 import { CollateralModel } from 'services/type/nft'
-import { decimalFormat, getRiskLevel, getRiskLevelTag } from 'utils'
+import { getRiskLevel, getRiskLevelTag, times } from 'utils'
 import MobileHeader from './components/mobileLiquidation/MobileHeader'
 import MobileCollateral from './components/mobileLiquidation/MobileCollateral'
 // import { WETH } from 'config'
@@ -85,7 +84,6 @@ export default function Liquidation() {
   const mobileMenuType = useMobileMenuType()
   const loginWalletType = useLoginWalletType()
   const { chainId } = useActiveWeb3React()
-  const decimal = useDecimal()
   const [loading, setLoading] = useState(true)
   const [collaterals, setCollaterals] = useState<Array<CollateralModel>>([])
   const address = useAddress()
@@ -200,7 +198,9 @@ export default function Liquidation() {
           //   depositedAmount = plus(depositedAmount, rel.depositedAmount)
           //   borrowedAmount = plus(borrowedAmount, rel.borrowedAmount)
           // }
-          const heath = BigNumber.min(decimalFormat(element.healthFactor, decimal, false), 1000).toString()
+          const heath = BigNumber.min(times(fromWei(element.healthFactor), 100), 1000).toString()
+          console.log(element.healthFactor)
+          console.log(fromWei(element.healthFactor))
           users.push({
             address: element.id,
             collateral: fromWei(element.totalCollateral),
@@ -214,7 +214,7 @@ export default function Liquidation() {
         setCollaterals(users)
       }
     }
-  }, [client, healthFactor, searchValue, conditionSort, allUserWhere, decimal])
+  }, [client, healthFactor, searchValue, conditionSort, allUserWhere])
 
   useEffect(() => {
     getCollaterals()

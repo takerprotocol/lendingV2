@@ -89,11 +89,15 @@ export default function CustomizeRoutes() {
       contract.getReserveData(getWETH(chainId)).then((res: any) => {
         dispatch(
           setReserveData({
-            borrowRate: new BigNumber(times(fromWei(res.borrowRate.toString()), 100)).decimalPlaces(2, 1).toString(),
+            borrowRate: new BigNumber(times(fromWei(res.borrowRate.toString(), 'gether'), 100))
+              .decimalPlaces(2, 1)
+              .toString(),
             configuration: res.configuration.toString(),
             debtIndex: res.debtIndex.toString(),
             debtTokenAddress: res.debtTokenAddress.toString(),
-            depositRate: new BigNumber(times(fromWei(res.depositRate.toString()), 100)).decimalPlaces(2, 1).toString(),
+            depositRate: new BigNumber(times(fromWei(res.depositRate.toString(), 'gether'), 100))
+              .decimalPlaces(2, 1)
+              .toString(),
             interestRateCalculatorAddress: res.interestRateCalculatorAddress.toString(),
             tTokenAddress: res.tTokenAddress.toString(),
             treasury: res.treasury.toString(),
@@ -115,8 +119,8 @@ export default function CustomizeRoutes() {
           setUserValues({
             borrowLiquidity: fromWei(res[0].toString()),
             NFTLiquidity: fromWei(res[1].toString()),
-            totalDebt: fromWei(res[2].toString()),
-            totalCollateral: fromWei(res[3].toString()),
+            totalDebt: fromWei(res[3].toString()),
+            totalCollateral: fromWei(res[2].toString()),
           })
         )
       })
