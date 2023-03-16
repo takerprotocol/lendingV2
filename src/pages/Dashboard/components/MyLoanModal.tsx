@@ -708,7 +708,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 disabled={+amount === 0 || buttonDisabled || tokenApproval !== ApprovalState.APPROVED}
                 variant="contained"
                 sx={{
-                  width: tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '176px' : '372px',
+                  width: tokenApproval !== ApprovalState.APPROVED ? '176px' : '372px',
                   height: '54px',
                 }}
                 onClick={() => {

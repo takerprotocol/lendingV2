@@ -186,7 +186,13 @@ export default function Collection({ type, loading }: CollectionType) {
               </CollectionFlexBox>
             </CollectionHeader>
             {collection &&
-              orderBy(collection, ['floorPrice'], ['desc']).map((el: any) => (
+              orderBy(
+                collection,
+                function (o) {
+                  return Number(o.floorPrice)
+                },
+                ['desc']
+              ).map((el: any) => (
                 <CollectionBox key={`${el.id}collection`} className={el === check ? 'open' : ''}>
                   <Box padding="24px 24px 21px 24px">
                     <CollectionFlexBox>

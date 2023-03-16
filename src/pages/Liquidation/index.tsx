@@ -31,6 +31,7 @@ import WalletModal from 'components/WalletModal'
 import { useAppDispatch } from 'state/hooks'
 import MobileCollateralSkeleton from './components/MobileLiquidationSkeleton/MobileCollateralSkeleton'
 import BigNumber from 'bignumber.js'
+import orderBy from 'lodash/orderBy'
 
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 
@@ -138,7 +139,7 @@ export default function Liquidation() {
       case 6:
         return ['healthFactor', 'asc']
       default:
-        return ['nftCollateral', 'desc']
+        return ['totalCollateral', 'desc']
     }
   }, [sort])
   const searchValue = useMemo(() => {
@@ -219,7 +220,15 @@ export default function Liquidation() {
           })
         })
       }
-      setCollaterals(users)
+      setCollaterals(
+        orderBy(
+          users,
+          function (o) {
+            return Number(o.collateral)
+          },
+          ['desc']
+        )
+      )
     }
   }, [client, otherClient, healthFactor, searchValue, conditionSort, allUserWhere])
 
