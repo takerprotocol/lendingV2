@@ -726,9 +726,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                 ) : (
                   <></>
                 )}
-                {!loading && tokenApproval !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
-                  <StepTypography>Step2</StepTypography>
-                )}
+                {tokenApproval !== ApprovalState.APPROVED && <StepTypography>Step2</StepTypography>}
                 {check === 1 ? 'Borrow' : 'Repay'}
               </Button>
             </Box>
