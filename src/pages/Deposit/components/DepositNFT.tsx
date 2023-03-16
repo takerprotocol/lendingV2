@@ -13,6 +13,7 @@ import { NftTokenModel } from 'services/type/nft'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { CenterBox } from 'styleds'
+import { fromWei } from 'web3-utils'
 
 const AvailableNFTsBox = styled(Box)`
   width: 1012px;
@@ -71,12 +72,14 @@ interface AvailableNFTsProps {
   setWithdrawCheckedIndex: Function
   checkedIndex: Array<string>
   setCheckedIndex: Function
+  floorPrice: string
   list: NftTokenModel[]
   loading: boolean
 }
 export default function DepositNFT({
   list,
   loading,
+  floorPrice,
   checkedIndex,
   setCheckedIndex,
   setWithdrawCheckedIndex,
@@ -107,10 +110,10 @@ export default function DepositNFT({
   // }
   const [Deposit] = useState<string>('Deposit')
   const amount = useMemo(() => {
-    return list.reduce((total: string, current: NftTokenModel) => {
-      return new BigNumber(total).plus(current.balance || '0').toString()
+    return list.reduce((total: string) => {
+      return new BigNumber(total).plus(fromWei(floorPrice || '0')).toString()
     }, '0')
-  }, [list])
+  }, [floorPrice, list])
   return (
     <AvailableNFTsStyleBox
       sx={
@@ -199,6 +202,7 @@ export default function DepositNFT({
       )}
       <NFTsSelectedModal
         type={Deposit}
+        floorPrice={floorPrice}
         checkedIndex={checkedIndex}
         data={list.filter((el) => checkedIndex.includes(el.tokenId))}
         openSelectedModal={openSelectedModal}

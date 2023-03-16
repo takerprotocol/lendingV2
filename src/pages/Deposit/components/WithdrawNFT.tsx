@@ -18,6 +18,8 @@ import { useAlchemy } from 'hooks/useAlchemy'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { CenterBox } from 'styleds'
+import { fromWei } from 'web3-utils'
+
 const DepositedNFTsStyleBox = styled(Box)`
   margin-bottom: 200px;
 `
@@ -76,11 +78,13 @@ interface WithdrawNFTProps {
   setCheckedIndex: Function
   setDepositCheckedIndex: Function
   list: any[]
+  floorPrice: string
   loading: boolean
 }
 export default function WithdrawNFT({
   list,
   loading,
+  floorPrice,
   checkedIndex,
   setCheckedIndex,
   setDepositCheckedIndex,
@@ -109,11 +113,10 @@ export default function WithdrawNFT({
   const withdrawAmount = useMemo(() => {
     let totalAmount = '0'
     checkedIndex.forEach((el) => {
-      const checkedNft = list.find((nft) => nft.id.split('-')[2] === el)
-      totalAmount = new BigNumber(checkedNft.amount).plus(totalAmount).toString()
+      totalAmount = new BigNumber(fromWei(floorPrice)).plus(totalAmount).toString()
     })
     return totalAmount
-  }, [checkedIndex, list])
+  }, [checkedIndex, floorPrice])
   const borrowLimitUsed = useCollateralBorrowLimitUsed(withdrawAmount)
   const withdrawLargeAmount = useMemo(() => {
     return new BigNumber(borrowLimitUsed).gte(1)
@@ -125,10 +128,10 @@ export default function WithdrawNFT({
   // }
   const [withdraw] = useState<string>('withdraw')
   const amount = useMemo(() => {
-    return list.reduce((total: string, current: any) => {
-      return new BigNumber(total).plus(current.amount || '0').toString()
+    return list.reduce((total: string) => {
+      return new BigNumber(total).plus(fromWei(floorPrice || '0')).toString()
     }, '0')
-  }, [list])
+  }, [floorPrice, list])
   const getWithdrawList = useCallback(async () => {
     if (alchemy) {
       const arr: Array<Nft> = []

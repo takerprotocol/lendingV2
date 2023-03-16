@@ -31,6 +31,7 @@ import {
 } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { Loading } from 'components/Loading'
+import { fromWei } from 'web3-utils'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -74,8 +75,15 @@ interface NFTsSelectedType {
   setOpenSelectedModal: Function
   type: string
   checkedIndex: string[]
+  floorPrice: string
 }
-export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedModal, data, type }: NFTsSelectedType) {
+export default function NFTsSelectedModal({
+  openSelectedModal,
+  setOpenSelectedModal,
+  data,
+  type,
+  floorPrice,
+}: NFTsSelectedType) {
   const { id } = useParams()
   const contract = useLendingPool()
   const [loading, setLoading] = useState(false)
@@ -128,10 +136,10 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
     )
   }, [transactions])
   const amount = useMemo(() => {
-    return data.reduce((total: string, current: NftTokenModel) => {
-      return new BigNumber(total).plus(current.balance || '0').toString()
+    return data.reduce((total: string) => {
+      return new BigNumber(total).plus(fromWei(floorPrice || '0')).toString()
     }, '0')
-  }, [data])
+  }, [data, floorPrice])
   const collateralRiskLevel = useCollateralRiskLevel(amount)
   useEffect(() => {
     if (contract && ercContract && address) {
@@ -200,7 +208,7 @@ export default function NFTsSelectedModal({ openSelectedModal, setOpenSelectedMo
   const riskLevelWarning = useMemo(() => {
     return new BigNumber(collateralRiskLevel).lt(150) && type === 'withdraw'
   }, [collateralRiskLevel, type])
-  console.log(isApproved)
+
   return (
     <Modal open={openSelectedModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>

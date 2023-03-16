@@ -6,6 +6,7 @@ import { NftTokenModel } from 'services/type/nft'
 import BigNumber from 'bignumber.js'
 import depositNotChecked_Icon from 'assets/images/svg/deposit/depositNotChecked_Icon.svg'
 import depositChecked_Icon from 'assets/images/svg/deposit/depositChecked_Icon.svg'
+import { fromWei } from 'web3-utils'
 
 const DepositBox = styled(Box)`
   background: #ffffff;
@@ -56,19 +57,21 @@ interface MobileDepositProps {
   mobileDepositCheckedIndex: Array<string>
   setMobileDepositCheckedIndex: Function
   onChange: Function
+  floorPrice: string
 }
 export default function MobileDeposit({
   depositedList,
+  floorPrice,
   mobileDepositCheckedIndex,
   onChange,
   setMobileDepositCheckedIndex,
 }: MobileDepositProps) {
   const [TypeKey] = useState<string>('mobileDeposit')
   const amount = useMemo(() => {
-    return depositedList.reduce((total: string, current: NftTokenModel) => {
-      return new BigNumber(total).plus(current.balance || '0').toString()
+    return depositedList.reduce((total: string) => {
+      return new BigNumber(total).plus(fromWei(floorPrice || '0')).toString()
     }, '0')
-  }, [depositedList])
+  }, [depositedList, floorPrice])
   return (
     <DepositBox>
       <SpaceBetweenBox>

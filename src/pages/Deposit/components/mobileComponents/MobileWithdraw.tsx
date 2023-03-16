@@ -6,6 +6,8 @@ import BigNumber from 'bignumber.js'
 import { Nft } from '@alch/alchemy-sdk'
 import depositNotChecked_Icon from 'assets/images/svg/deposit/depositNotChecked_Icon.svg'
 import depositChecked_Icon from 'assets/images/svg/deposit/depositChecked_Icon.svg'
+import { fromWei } from 'web3-utils'
+
 const DepositBox = styled(Box)`
   background: #ffffff;
   position: relative;
@@ -54,10 +56,12 @@ interface MobileWithdrawProps {
   TestWithdrawList: Array<Nft>
   setMobileWithdrawCheckedIndex: Function
   onChange: Function
+  floorPrice: string
   mobileWithdrawCheckedIndex: Array<string>
 }
 export default function MobileWithdraw({
   list,
+  floorPrice,
   TestWithdrawList,
   setMobileWithdrawCheckedIndex,
   mobileWithdrawCheckedIndex,
@@ -66,9 +70,9 @@ export default function MobileWithdraw({
   const [TypeKey] = useState<string>('mobileWithdraw')
   const amount = useMemo(() => {
     return list.reduce((total: string, current: any) => {
-      return new BigNumber(total).plus(current.amount || '0').toString()
+      return new BigNumber(total).plus(fromWei(floorPrice || '0')).toString()
     }, '0')
-  }, [list])
+  }, [floorPrice, list])
   return (
     <DepositBox>
       <SpaceBetweenBox>

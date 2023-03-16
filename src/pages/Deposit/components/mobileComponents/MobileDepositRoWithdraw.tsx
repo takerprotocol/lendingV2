@@ -59,11 +59,13 @@ interface MobileDepositRoWithdrawProps {
   setMobileWithdrawCheckedIndex: Function
   setMobileDepositCheckedIndex: Function
   loading: boolean
+  floorPrice: string
 }
 export default function MobileDepositRoWithdraw({
   setType,
   type,
   withdrawList,
+  floorPrice,
   TestWithdrawList,
   depositedList,
   mobileWithdrawCheckedIndex,
@@ -155,6 +157,7 @@ export default function MobileDepositRoWithdraw({
           <>
             {type === 1 ? (
               <MobileDeposit
+                floorPrice={floorPrice}
                 depositedList={depositedList}
                 mobileDepositCheckedIndex={mobileDepositCheckedIndex}
                 setMobileDepositCheckedIndex={setMobileDepositCheckedIndex}
@@ -164,6 +167,7 @@ export default function MobileDepositRoWithdraw({
               ></MobileDeposit>
             ) : (
               <MobileWithdraw
+                floorPrice={floorPrice}
                 mobileWithdrawCheckedIndex={mobileWithdrawCheckedIndex}
                 setMobileWithdrawCheckedIndex={setMobileWithdrawCheckedIndex}
                 list={withdrawList}

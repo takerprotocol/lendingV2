@@ -190,7 +190,7 @@ export default function Deposit() {
   }, [alchemy, withdrawList])
   useEffect(() => {
     getWithdrawList()
-  }, [getWithdrawList])
+  }, [getWithdrawList, mobileFlag])
   return (
     <>
       {mobile ? (
@@ -209,6 +209,7 @@ export default function Deposit() {
             <DepositNFT
               loading={loading}
               list={list}
+              floorPrice={collection ? collection.floorPrice : '0'}
               checkedIndex={depositCheckedIndex}
               setCheckedIndex={setDepositCheckedIndex}
               setWithdrawCheckedIndex={setWithdrawCheckedIndex}
@@ -219,6 +220,7 @@ export default function Deposit() {
             <WithdrawNFT
               loading={loading}
               list={withdrawList}
+              floorPrice={collection ? collection.floorPrice : '0'}
               checkedIndex={withdrawCheckedIndex}
               setDepositCheckedIndex={setDepositCheckedIndex}
               setCheckedIndex={setWithdrawCheckedIndex}
@@ -247,6 +249,7 @@ export default function Deposit() {
               loading={loading}
               depositedList={list}
               withdrawList={withdrawList}
+              floorPrice={collection ? collection.floorPrice : '0'}
               type={type}
               setType={setType}
               TestWithdrawList={TestWithdrawList}
