@@ -21,7 +21,7 @@ export function useLendingPool() {
   useEffect(() => {
     if (contract) {
       contract
-        .getAddressProvider(ethers.utils.formatBytes32String(dashboardType ? 'bluechip' : 'growth'))
+        .getAddressProvider(ethers.utils.formatBytes32String(dashboardType === 1 ? 'bluechip' : 'growth'))
         .then((res: any) => {
           setAddressProvider(res)
         })
@@ -29,7 +29,7 @@ export function useLendingPool() {
   }, [contract, dashboardType])
   const lendingPoolContract = useContract(address, lendingPoolAbi)
   useEffect(() => {
-    if (providerContract && !address) {
+    if (providerContract) {
       if (chainId === 5) {
         providerContract.getLendingPool().then((res: string) => {
           if (res) {
@@ -38,6 +38,6 @@ export function useLendingPool() {
         })
       }
     }
-  }, [providerContract, address, account, chainId])
+  }, [providerContract, address, account, chainId, providerContract?.address])
   return lendingPoolContract
 }

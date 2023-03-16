@@ -34,6 +34,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
   const contract = useLendingPool()
   useEffect(() => {
     if (contract) {
+      console.log(contract?.address, 'contract?.addresscontract?.address')
       contract
         .getPoolValues()
         .then((res: Array<BigNumber>) => {
@@ -44,7 +45,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
           setLoading(false)
         })
     }
-  }, [contract, dispatch])
+  }, [contract, dispatch, contract?.address])
   return (
     <Box>
       {loading ? (
