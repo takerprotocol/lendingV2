@@ -1,13 +1,14 @@
 import {
   LendingPool,
   Reserve,
+  NftToken,
   NftCollection,
   User,
   UserReserve,
   UserNftCollection,
 } from "../generated/schema";
 import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
-import { log } from "@graphprotocol/graph-ts";
+import { log, store } from "@graphprotocol/graph-ts";
 import { IPriceOracleGetter } from "../generated/IPriceOracleGetter/IPriceOracleGetter";
 
 export function newUser(Id: string): User {

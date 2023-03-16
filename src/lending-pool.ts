@@ -22,7 +22,6 @@ import {
   IPriceOracleGetter,
   NewNFTPrice,
 } from "../generated/IPriceOracleGetter/IPriceOracleGetter";
-// import {Withdrawn as GatewayWithdrawn} from "../generated/IWETHGateway/IWETHGateway";
 import {
   LendingPool,
   Reserve,
@@ -34,12 +33,9 @@ import {
 } from "../generated/schema";
 import * as utils from "./utils";
 
-export const POOLID = "0xA58Dd872770dD6b1107a8f4A039Cd6Bb63F9db56";
+export const POOLID = "0xc8fAD9B421c7617878341648AfB05Fd5e27086a9";
 export const ORACLE =
-  "0xE2CCD3C11848B986A7dab1B4F99D46a401674aA8";
-
-// toLowerCase for comparison
-// export const GATEWAY = "0x898b4faA08FDd29726793CBd06a3da553d8Bb638".toLowerCase();
+  "0x2059f9D80aCCFCba1B7643E77F882cbEFE450AFb";
 
 export function handleNftReserveInitialized(
   event: NftReserveInitialized
@@ -402,7 +398,7 @@ export function handleLiquidated(event: Liquidated): void {
 
     utils.updateCollectionPrice(collection, oracle);
 
-    removeNftToken(
+    utils.removeNftToken(
       userNftCollection,
       event.params.tokenIds[i],
       event.params.amounts[i]
@@ -466,7 +462,7 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
     let oracle = IPriceOracleGetter.bind(Address.fromString(ORACLE));
     utils.updateCollectionPrice(collection, oracle);
 
-    addNftToken(
+    utils.addNftToken(
       userNftCollection,
       event.params.tokenIds[i],
       event.params.amounts[i]
@@ -519,7 +515,7 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
     let oracle = IPriceOracleGetter.bind(Address.fromString(ORACLE));
     utils.updateCollectionPrice(collection, oracle);
 
-    removeNftToken(
+    utils.removeNftToken(
       userNftCollection,
       event.params.tokenIds[i],
       event.params.amounts[i]
@@ -548,45 +544,4 @@ export function handleNewNFTPrice(event: NewNFTPrice): void {
   }
   collection.floorPrice = event.params.price;
   collection.save();
-}
-
-function addNftToken(
-  userNftCollection: UserNftCollection,
-  tokenId: BigInt,
-  amount: BigInt
-): void {
-  let nftTokenId = userNftCollection.id + "-" + tokenId.toString();
-  let nftToken = NftToken.load(nftTokenId);
-  if (nftToken) {
-    nftToken.amount = nftToken.amount.plus(amount);
-  } else {
-    nftToken = new NftToken(nftTokenId);
-    nftToken.userCollection = userNftCollection.id;
-    nftToken.amount = amount;
-    log.info("New nftToken {}", [nftTokenId.toString()]);
-  }
-  nftToken.save();
-}
-
-function removeNftToken(
-  userNftCollection: UserNftCollection,
-  tokenId: BigInt,
-  amount: BigInt
-): void {
-  let nftTokenId = userNftCollection.id + "-" + tokenId.toString();
-  let nftToken = NftToken.load(nftTokenId);
-  if (nftToken) {
-    let newAmount = nftToken.amount.minus(amount);
-    if (newAmount == BigInt.zero()) {
-      store.remove("NftToken", nftTokenId);
-      return;
-    }
-    nftToken.amount = nftToken.amount.minus(amount);
-  } else {
-    log.warning("Found withdraw event for unknown nftToken - {}", [nftTokenId]);
-    nftToken = new NftToken(nftTokenId);
-    nftToken.userCollection = userNftCollection.id;
-    nftToken.amount = amount.neg();
-  }
-  nftToken.save();
 }

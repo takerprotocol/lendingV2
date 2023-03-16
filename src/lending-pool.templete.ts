@@ -22,7 +22,6 @@ import {
   IPriceOracleGetter,
   NewNFTPrice,
 } from "../generated/IPriceOracleGetter/IPriceOracleGetter";
-// import {Withdrawn as GatewayWithdrawn} from "../generated/IWETHGateway/IWETHGateway";
 import {
   LendingPool,
   Reserve,
@@ -37,9 +36,6 @@ import * as utils from "./utils";
 export const POOLID = "{{#LendingPool}}{{address}}{{/LendingPool}}";
 export const ORACLE =
   "{{#IPriceOracleGetter}}{{address}}{{/IPriceOracleGetter}}";
-
-// toLowerCase for comparison
-// export const GATEWAY = "{{#WETHGateway}}{{address}}{{/WETHGateway}}".toLowerCase();
 
 export function handleNftReserveInitialized(
   event: NftReserveInitialized
@@ -402,7 +398,7 @@ export function handleLiquidated(event: Liquidated): void {
 
     utils.updateCollectionPrice(collection, oracle);
 
-    removeNftToken(
+    utils.removeNftToken(
       userNftCollection,
       event.params.tokenIds[i],
       event.params.amounts[i]
@@ -466,7 +462,7 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
     let oracle = IPriceOracleGetter.bind(Address.fromString(ORACLE));
     utils.updateCollectionPrice(collection, oracle);
 
-    addNftToken(
+    utils.addNftToken(
       userNftCollection,
       event.params.tokenIds[i],
       event.params.amounts[i]
@@ -519,7 +515,7 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
     let oracle = IPriceOracleGetter.bind(Address.fromString(ORACLE));
     utils.updateCollectionPrice(collection, oracle);
 
-    removeNftToken(
+    utils.removeNftToken(
       userNftCollection,
       event.params.tokenIds[i],
       event.params.amounts[i]

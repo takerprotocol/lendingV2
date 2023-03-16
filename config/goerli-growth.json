@@ -1,0 +1,15 @@
+{
+  "network": "goerli",
+  "LendingPool": {
+    "startBlock": 8565231,
+    "address": "0xc8fAD9B421c7617878341648AfB05Fd5e27086a9"
+  },
+  "PoolConfigurator": {
+    "startBlock": 8565231,
+    "address": "0x2AE4D873727cA8B5d05b36Fa41b680badD70A9C2"
+  },
+  "IPriceOracleGetter": {
+    "startBlock": 8549602,
+    "address": "0x2059f9D80aCCFCba1B7643E77F882cbEFE450AFb"
+  }
+}
