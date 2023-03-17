@@ -138,7 +138,7 @@ export default function Deposit() {
   // useEffect(() => {
   //   window.location.reload()
   // }, [depositFlag])
-  const { list, loading } = useDepositableNfts(address, id, depositFlag)
+  const { list, loading } = useDepositableNfts(address, id || '', id, depositFlag)
   const withdrawList = useMemo(() => {
     if (depositedCollection && id) {
       const collection = depositedCollection.find((el) => {

@@ -5,7 +5,7 @@ import growthBg from 'assets/images/svg/dashboard/growthBg.svg'
 import Collection from './components/Collection'
 import BlueChipNFTs from './components/BlueChipNFTs'
 import DataNFTs from './components/DataNFTs'
-import { useLoading, useShowChangeNetWork } from 'state/application/hooks'
+import { useCollections, useLoading, useShowChangeNetWork } from 'state/application/hooks'
 import { useAddress, useDashboardType, useLoginWalletType, useMobileMenuType, useMobileType } from 'state/user/hooks'
 import { useDepositableNfts } from 'services/module/deposit'
 import { useEffect } from 'react'
@@ -75,7 +75,8 @@ export default function Dashboard() {
   const showChangeNetWork = useShowChangeNetWork()
   const mobileMenuType = useMobileMenuType()
   const dispatch = useAppDispatch()
-  const { list } = useDepositableNfts(address)
+  const collection = useCollections()
+  const { list } = useDepositableNfts(address, collection.map(({ id }) => id).join(','), '', 1)
   const loginWalletType = useLoginWalletType()
   function ConnectWallet() {
     return (
