@@ -239,14 +239,14 @@ export default function MobileHeader({ loading }: MobileHeaderProps) {
                   {div(collection?.liqThreshold, 100)}%
                 </Typography>
               </SpaceBetweenBox>
-              <SpaceBetweenBox m="0 0.75rem" mt="0.5rem">
+              {/* <SpaceBetweenBox m="0 0.75rem" mt="0.5rem">
                 <Typography variant="body2" color="#A0A3BD">
                   Liquidation Threshold
                 </Typography>
                 <Typography variant="body2" fontWeight="600">
                   70%
                 </Typography>
-              </SpaceBetweenBox>
+              </SpaceBetweenBox> */}
               <RewardBox>
                 <FlexBox>
                   <Box width="3.3125rem">

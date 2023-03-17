@@ -5,6 +5,7 @@ import { erc20ReserveData, userState, UserValues } from 'state/types'
 import { decimalFormat, div, plus, times } from 'utils'
 import { AppState } from '../index'
 import { setAddress } from './reducer'
+import numbro from 'numbro'
 
 export function useUpdateAddress(address: string): () => void {
   const dispatch = useAppDispatch()
@@ -40,10 +41,10 @@ export function useUserNftConfig(): string {
 }
 export function useHeath(): string {
   const value = decimalFormat(times(useUserState().heathFactor, 100), Number(useDecimal()), false)
-  if (new BigNumber(value).gt(1000)) {
-    return '1000'
+  if (new BigNumber(value).gt(1000000)) {
+    return '>1M'
   } else {
-    return value
+    return numbro(value).format({ spaceSeparated: true, average: true })
   }
 }
 export function useEthCollateral(): string {
@@ -108,40 +109,42 @@ export function useCollateralBorrowLimitUsed(value?: string | number): string {
   return times(borrowLimitUsed, 100)
 }
 export function useDebtRiskLevel(value?: string | number): string {
-  const [debtRiskLevel, setDebtRiskLevel] = useState('1000')
+  const [debtRiskLevel, setDebtRiskLevel] = useState('Infinite')
   const userValue = useUserValue()
   const userState = useUserState()
   const ethDebt = useEthDebt()
   useEffect(() => {
     if (plus(ethDebt, value || 0) === '0') {
-      setDebtRiskLevel('1000')
+      setDebtRiskLevel('Infinite')
     } else {
       const riskLevel = decimalFormat(
         times(div(times(userValue.totalCollateral, userState.liquidationThreshold), plus(ethDebt, value || 0)), 100),
         0,
         false
       )
-      if (new BigNumber(riskLevel).gt(1000)) {
-        setDebtRiskLevel('1000')
+      if (new BigNumber(riskLevel).gt(10000000)) {
+        setDebtRiskLevel('>1M')
       } else {
-        setDebtRiskLevel(new BigNumber(riskLevel).decimalPlaces(2, 1).toString())
+        setDebtRiskLevel(numbro(times(riskLevel, 100)).format({ spaceSeparated: true, average: true }))
       }
     }
   }, [ethDebt, userState.liquidationThreshold, userValue.totalCollateral, value])
   return debtRiskLevel
 }
 export function useCollateralRiskLevel(value?: string | number): string {
-  const [collateralRiskLevel, setCollateralRiskLevel] = useState('1000')
+  const [collateralRiskLevel, setCollateralRiskLevel] = useState('Infinite')
   const userValue = useUserValue()
   const userState = useUserState()
   const ethDebt = useEthDebt()
   useEffect(() => {
     if (new BigNumber(ethDebt).lte(0)) {
-      setCollateralRiskLevel('1000')
+      setCollateralRiskLevel('Infinite')
     } else {
       const riskLevel = times(plus(userValue.totalCollateral, value || 0), div(userState.liquidationThreshold, ethDebt))
-      if (new BigNumber(riskLevel).lt(1000)) {
-        setCollateralRiskLevel(decimalFormat(times(riskLevel, 100), 0, false))
+      if (new BigNumber(riskLevel).lt(10000000)) {
+        setCollateralRiskLevel(numbro(times(riskLevel, 100)).format({ spaceSeparated: true, average: true }))
+      } else {
+        setCollateralRiskLevel('>1M')
       }
     }
   }, [ethDebt, userState.liquidationThreshold, userValue.totalCollateral, value])

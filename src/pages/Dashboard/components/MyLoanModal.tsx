@@ -217,7 +217,6 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const address = useAddress()
   const ethDebt = useEthDebt()
   const addTransaction = useTransactionAdder()
-  const [tokenApproval, tokenApproveCallback] = useDTokenApproveCallback(amount, contract?.address)
   const transactionPending = useTransactionPending()
   const transactions = useAllTransactions()
   const flag = useMemo(() => {
@@ -233,6 +232,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
       )
     }).length
   }, [transactions])
+  const [tokenApproval, tokenApproveCallback] = useDTokenApproveCallback(amount, contract?.address, flag)
+
   useEffect(() => {
     setLoading(false)
   }, [flag])

@@ -10,8 +10,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { decimalFormat, div, times } from 'utils'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { fromWei } from 'web3-utils'
-import BigNumber from 'bignumber.js'
 import { useActiveWeb3React } from 'hooks/web3'
 import { getClient } from 'apollo/client'
 import { NftCollection } from 'apollo/queries'
@@ -103,7 +101,6 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
   const collections = useCollections()
   const decimal = useDecimal()
   const [totalValue, setTotalValue] = useState('')
-  const [borrowRate, setBorrowRate] = useState('')
   const erc20ReserveData = useErc20ReserveData()
   const [total, setTotal] = useState(0)
   const { id } = useParams()
@@ -127,9 +124,6 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
     if (contract && id) {
       contract.getAssetValues(id).then((res: any) => {
         setTotalValue(decimalFormat(res[0].toString(), decimal))
-      })
-      contract.getReserveData(id).then((res: any) => {
-        setBorrowRate(new BigNumber(times(fromWei(res.borrowRate.toString()), 100)).decimalPlaces(2, 1).toString())
       })
     }
   }, [contract, decimal, id])
@@ -222,7 +216,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                 </Box>
                 <Box width={'86px'}>
                   <BigTypography variant="h1" color="#6E7191 !important">
-                    {borrowRate}%
+                    {erc20ReserveData.borrowRate}%
                   </BigTypography>
                 </Box>
                 <Box width="60px">
@@ -252,12 +246,6 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
                   <BigTypography> {div(collection?.liqThreshold, 100)}%</BigTypography>
                   <TokenTypography mt="4px" color="#A0A3BD !important">
                     Liquidation Threshold
-                  </TokenTypography>
-                </Box>
-                <Box>
-                  <BigTypography>10%</BigTypography>
-                  <TokenTypography mt="4px" color="#A0A3BD !important">
-                    Liquidation Profit
                   </TokenTypography>
                 </Box>
               </FlexBox>

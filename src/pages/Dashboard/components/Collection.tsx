@@ -66,7 +66,7 @@ const CollectionUpBox = styled(Box)`
 const LiquidationBox = styled(Box)`
   display: flex;
   align-items: center;
-  width: 568px;
+  width: 313px;
   height: 50px;
   background: #f7f7fc;
   opacity: 0.7;
@@ -264,12 +264,6 @@ export default function Collection({ type, loading }: CollectionType) {
                             </Typography>
                             <Typography ml="24px" variant="subtitle2">
                               {div(el.liqThreshold, 100)}%
-                            </Typography>
-                            <Typography ml="63px" fontWeight="600" color="#A0A3BD" variant="body1">
-                              Liquidation Profit
-                            </Typography>
-                            <Typography ml="24px" variant="subtitle2">
-                              20%
                             </Typography>
                           </LiquidationBox>
                           <Box className={address ? '' : 'none'} width="164px">

@@ -31,7 +31,11 @@ export function useTTokenApproveCallback(amount: string, spender?: string): [App
 }
 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
-export function useDTokenApproveCallback(amount: string, spender?: string): [ApprovalState, () => Promise<any>] {
-  const [approval, getApproval] = useDTokenApproval(amount, spender)
+export function useDTokenApproveCallback(
+  amount: string,
+  spender?: string,
+  flag?: number
+): [ApprovalState, () => Promise<any>] {
+  const [approval, getApproval] = useDTokenApproval(amount, spender, flag)
   return [approval, useGetAndTrackApproval(getApproval)]
 }

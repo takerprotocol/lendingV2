@@ -153,7 +153,8 @@ export function useTWETHApproval(
 
 export function useDTokenApproval(
   amount: string,
-  spender: string | undefined
+  spender: string | undefined,
+  flag?: number
 ): [
   ApprovalState,
   () => Promise<{ response: TransactionResponse; tokenAddress: string; spenderAddress: string } | undefined>
@@ -173,7 +174,7 @@ export function useDTokenApproval(
         }
       })
     }
-  }, [tokenContract, address, spender, amount, hasPendingApproval])
+  }, [tokenContract, address, spender, amount, hasPendingApproval, flag])
   const approve = useCallback(async () => {
     function logFailure(error: Error | string): undefined {
       console.warn(`Token approval failed:`, error)

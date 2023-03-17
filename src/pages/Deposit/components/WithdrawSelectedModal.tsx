@@ -80,7 +80,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
   const userValue = useUserValue()
   const heath = useHeath()
   const erc20ReserveData = useErc20ReserveData()
-  const collateralRiskLevel = useCollateralRiskLevel()
+  const collateralRiskLevel = useCollateralRiskLevel(times(amount, -1))
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
   const ercContract = useContract(id, MockERC721Abi)
@@ -258,7 +258,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
             </Box>
             <Box width={'66px'}>
               <Typography component="p" variant="subtitle2" color="#6E7191">
-                -10%
+                {erc20ReserveData.borrowRate}%
               </Typography>
             </Box>
             <Box width="50px">
@@ -305,6 +305,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
         </Box>
         <Button
           variant="contained"
+          disabled={riskLevelWarning}
           sx={{ width: '372px', height: '54px' }}
           color={riskLevelWarning ? 'error' : 'primary'}
           onClick={() => {

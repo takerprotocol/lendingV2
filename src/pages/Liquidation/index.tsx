@@ -34,6 +34,8 @@ import MobileCollateralSkeleton from './components/MobileLiquidationSkeleton/Mob
 import BigNumber from 'bignumber.js'
 import orderBy from 'lodash/orderBy'
 import { toWei } from 'web3-utils'
+import numbro from 'numbro'
+
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 const Body = styled(Box)`
   background-color: #f7f7fc;
@@ -200,7 +202,12 @@ export default function Liquidation() {
       const otherUsersCollateral: Array<CollateralModel> = []
       if (user.data.users) {
         user.data.users.forEach((element: any) => {
-          const heath = BigNumber.min(times(fromWei(element.healthFactor), 100), 1000).toString()
+          let heath = times(fromWei(element.healthFactor), 100)
+          if (new BigNumber(heath).gt(1000000)) {
+            heath = '>1M'
+          } else {
+            heath = numbro(heath).format({ spaceSeparated: true, average: true })
+          }
           users.push({
             address: element.id,
             collateral: fromWei(element.totalCollateral),
@@ -214,7 +221,12 @@ export default function Liquidation() {
       }
       if (otherUser.data.users) {
         otherUser.data.users.forEach((element: any) => {
-          const heath = BigNumber.min(times(fromWei(element.healthFactor), 100), 1000).toString()
+          let heath = times(fromWei(element.healthFactor), 100)
+          if (new BigNumber(heath).gt(1000000)) {
+            heath = '>1M'
+          } else {
+            heath = numbro(heath).format({ spaceSeparated: true, average: true })
+          }
           otherUsersCollateral.push({
             address: element.id,
             collateral: fromWei(element.totalCollateral),

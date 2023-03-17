@@ -210,14 +210,14 @@ export default function MobileCollection() {
                           {div(el.liqThreshold, 100)}%
                         </Typography>
                       </SpaceBetweenBox>
-                      <SpaceBetweenBox>
+                      {/* <SpaceBetweenBox>
                         <Typography variant="body2" color="#A0A3BD">
                           Liquidation Profit
                         </Typography>
                         <Typography variant="body2" fontWeight="600">
                           20%
                         </Typography>
-                      </SpaceBetweenBox>
+                      </SpaceBetweenBox> */}
                       <MyDepositedBox>
                         <FlexBox>
                           <Box mr="3.125rem">
