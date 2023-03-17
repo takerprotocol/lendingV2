@@ -1,4 +1,5 @@
 import { Box, styled } from '@mui/material'
+import { useMobileType } from 'state/user/hooks'
 
 const ChangeNetWorkBox = styled(Box)`
   width: 100%;
@@ -22,7 +23,31 @@ const ChangeNetWorkBox = styled(Box)`
     cursor: pointer;
   }
 `
+const MobileChangeNetWorkBox = styled(Box)`
+  width: 100%;
+  height: 4.0625rem;
+  position: fixed;
+  z-index: 10000;
+  top: 0px;
+  left: 0px;
+  padding: 0.75rem 0 0.75rem 0.9375rem;
+  font-family: 'Quicksand';
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 150%;
+  color: #ffffff;
+  background: #7646ff;
+  p {
+    margin: 0.125rem 0 0 0;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 150%;
+    text-decoration-line: underline;
+    color: #ffffff;
+  }
+`
 export const ChangeNetWork = () => {
+  const mobile = useMobileType()
   const change = async () => {
     if (window.ethereum) {
       try {
@@ -61,9 +86,18 @@ export const ChangeNetWork = () => {
     }
   }
   return (
-    <ChangeNetWorkBox>
-      Taker is currently only available on Ethereum Goerli Network
-      <span onClick={() => change()}>{`Click here to change networks >>`}</span>
-    </ChangeNetWorkBox>
+    <>
+      {mobile ? (
+        <ChangeNetWorkBox>
+          Taker is currently only available on Ethereum Goerli Network
+          <span onClick={() => change()}>{`Click here to change networks >>`}</span>
+        </ChangeNetWorkBox>
+      ) : (
+        <MobileChangeNetWorkBox>
+          Taker is currently only available on Ethereum
+          <p onClick={() => change()}>{`Click here to change networks >>`}</p>
+        </MobileChangeNetWorkBox>
+      )}
+    </>
   )
 }

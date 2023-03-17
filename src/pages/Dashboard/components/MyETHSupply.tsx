@@ -249,7 +249,7 @@ export default function MyETHSupply({ type, loading }: MyETHSupplyProps) {
             setOpenMySupplyModal(true)
           }}
         >
-          Supply
+          Supply {'>'}
           {/* <img className="left" src={ButtonSupply} alt="" /> */}
         </Button>
       </BottomBox>

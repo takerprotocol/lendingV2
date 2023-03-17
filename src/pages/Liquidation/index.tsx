@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Header from './components/Header'
 import Collaterals from './components/Collaterals'
-import liquidationBg from 'assets/images/svg/liquidation/liquidation-icon.svg'
+import liquidationBg from 'assets/images/png/liquidation/liquidation-icon.png'
 import mobileLiquidationBg from 'assets/images/svg/liquidation/mobileLiquidation-bg.svg'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getClient } from 'apollo/client'
@@ -10,6 +10,7 @@ import { AllUser } from 'apollo/queries'
 import {
   useAddress,
   useCollateralsType,
+  // useCollateralsType,
   useDashboardType,
   useLoginWalletType,
   useMobileMenuType,
@@ -32,9 +33,8 @@ import { useAppDispatch } from 'state/hooks'
 import MobileCollateralSkeleton from './components/MobileLiquidationSkeleton/MobileCollateralSkeleton'
 import BigNumber from 'bignumber.js'
 import orderBy from 'lodash/orderBy'
-
+import { toWei } from 'web3-utils'
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
-
 const Body = styled(Box)`
   background-color: #f7f7fc;
   width: 100%;
@@ -74,7 +74,6 @@ const MenuBg = styled(Box)`
   backdrop-filter: blur(150px);
   -webkit-backdrop-filter: blur(150px);
   width: 100wh;
-  padding-top: 58px;
   height: 100vh;
   top: 0;
   left: 0;
@@ -87,6 +86,8 @@ export default function Liquidation() {
   const showChangeNetWork = useShowChangeNetWork()
   const [loading, setLoading] = useState(true)
   const [collaterals, setCollaterals] = useState<Array<CollateralModel>>([])
+  const [otherCollaterals, setOtherCollaterals] = useState<Array<CollateralModel>>([])
+  const [inLiquidation, setInLiquidation] = useState<string>('')
   const address = useAddress()
   const collection = useCollections()
   const [client, setClient] = useState<any>(null)
@@ -95,8 +96,9 @@ export default function Liquidation() {
   const [sort, setSort] = useState(0) //排序方法
   const [debtFilter, setDebtFilter] = useState(0) //过滤条件
   const [collectionFilter, setCollectionFilter] = useState(0)
-  const collateralsType = useCollateralsType()
   const dispatch = useAppDispatch()
+  const collateralsType = useCollateralsType()
+
   function ConnectWallet() {
     return (
       <ConnectWalletBox
@@ -149,17 +151,20 @@ export default function Liquidation() {
       return ''
     }
   }, [searchTerms])
+  // const healthFactor = useMemo(() => {
+  //   if (inLiquidation === '1') {
+  //     return `healthFactor_lt:1000000000000000000`
+  //   } else {
+  //     return ''
+  //   }
+  // }, [inLiquidation])
   const healthFactor = useMemo(() => {
-    if (collateralsType === 'All Borrowers') {
-      return ''
+    if (inLiquidation === '1') {
+      return `healthFactor_lt: ${toWei('1')},`
     } else {
-      if (collateralsType !== 'Liquidate') {
-        return 'healthFactor_gt: 110,'
-      } else {
-        return 'healthFactor_lt: 110,'
-      }
+      return ` `
     }
-  }, [collateralsType])
+  }, [inLiquidation])
   const allUserWhere = useMemo(() => {
     if (collectionFilter === 0 && debtFilter === 0) {
       return ['']
@@ -178,8 +183,8 @@ export default function Liquidation() {
 
   useEffect(() => {
     if (chainId) {
-      setClient(getClient(dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
-      setOtherClient(getClient(3 - dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
+      setClient(getClient(1)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
+      setOtherClient(getClient(2)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
   }, [chainId, dashboardType])
   const getCollaterals = useCallback(async () => {
@@ -192,6 +197,7 @@ export default function Liquidation() {
       })
       setLoading(false)
       const users: Array<CollateralModel> = []
+      const otherUsersCollateral: Array<CollateralModel> = []
       if (user.data.users) {
         user.data.users.forEach((element: any) => {
           const heath = BigNumber.min(times(fromWei(element.healthFactor), 100), 1000).toString()
@@ -209,7 +215,7 @@ export default function Liquidation() {
       if (otherUser.data.users) {
         otherUser.data.users.forEach((element: any) => {
           const heath = BigNumber.min(times(fromWei(element.healthFactor), 100), 1000).toString()
-          users.push({
+          otherUsersCollateral.push({
             address: element.id,
             collateral: fromWei(element.totalCollateral),
             collections: element.collections,
@@ -229,6 +235,15 @@ export default function Liquidation() {
           ['desc']
         )
       )
+      setOtherCollaterals(
+        orderBy(
+          otherUsersCollateral,
+          function (o) {
+            return Number(o.collateral)
+          },
+          ['desc']
+        )
+      )
     }
   }, [client, otherClient, healthFactor, searchValue, conditionSort, allUserWhere])
 
@@ -236,6 +251,21 @@ export default function Liquidation() {
     getCollaterals()
   }, [getCollaterals, dashboardType])
   const mobile = useMobileType()
+
+  const finalCollaterals = useMemo(() => {
+    return collateralsType === 'All Borrowers'
+      ? orderBy(
+          [...collaterals, ...otherCollaterals],
+          function (o) {
+            return Number(o.collateral)
+          },
+          ['desc']
+        )
+      : collateralsType === 'blueChip'
+      ? collaterals
+      : otherCollaterals
+  }, [collaterals, collateralsType, otherCollaterals])
+  console.log(finalCollaterals, 'finalCollaterals')
   return (
     <>
       {mobile ? (
@@ -249,9 +279,10 @@ export default function Liquidation() {
             debtFilter={debtFilter}
             setDebtFilter={setDebtFilter}
             sort={sort}
+            setInLiquidation={setInLiquidation}
             setSort={setSort}
             loading={loading}
-            collaterals={collaterals}
+            collaterals={finalCollaterals}
             setSearchTerms={setSearchTerms}
             searchTerms={searchTerms}
             setCollectionFilter={setCollectionFilter}
@@ -274,12 +305,12 @@ export default function Liquidation() {
                 setCollectionFilter={setCollectionFilter}
                 searchTerms={searchTerms}
                 setSearchTerms={setSearchTerms}
-                collaterals={collaterals}
+                collaterals={finalCollaterals}
               ></MobileCollateral>
             )}
           </Box>
           {!mobileMenuType && (
-            <MenuBg>
+            <MenuBg pt={showChangeNetWork ? '7.6875rem' : '3.625rem'}>
               {loginWalletType ? (
                 <>
                   <MobileMenu></MobileMenu>

@@ -120,7 +120,6 @@ export const Header = () => {
     }
     setScrollTop(scrollTop)
   }, [])
-  console.log(showChangeNetWork)
   useEffect(() => {
     window.addEventListener('scroll', bindHandleScroll)
     return () => {

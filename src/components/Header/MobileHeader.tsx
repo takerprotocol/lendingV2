@@ -7,6 +7,8 @@ import { useAppDispatch } from 'state'
 import { useMobileMenuType, useMobileSecondHeaderName } from 'state/user/hooks'
 import { setLoginWalletType, setMobileMenuType } from 'state/user/reducer'
 import { FlexBox } from 'styleds'
+import { ChangeNetWork } from 'components/ChangeNetWork'
+import { useShowChangeNetWork } from 'state/application/hooks'
 const MobileHerderBox = styled(Box, {
   shouldForwardProp: (prop) => true,
 })<{}>(({ theme }) => ({
@@ -24,6 +26,7 @@ const MobileHerderBox = styled(Box, {
 const DepositRoLiquidateBox = styled(FlexBox)`
   padding: 0 4rem 0 1rem;
   position: fixed;
+  height: 3.125rem;
   width: 100%;
   z-index: 10;
 `
@@ -38,6 +41,7 @@ const NameTypography = styled(Typography)`
 `
 export default function MobileHeader() {
   const menuType = useMobileMenuType()
+  const showChangeNetWork = useShowChangeNetWork()
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -46,9 +50,13 @@ export default function MobileHeader() {
   const deposit = location.pathname.includes('/deposit')
   return (
     <>
+      {showChangeNetWork && <ChangeNetWork></ChangeNetWork>}
       {lightBackground ? (
         <>
-          <DepositRoLiquidateBox sx={{ background: `${deposit ? '#F7F7FC' : '#262338'}` }}>
+          <DepositRoLiquidateBox
+            top={showChangeNetWork ? '65px' : '0px'}
+            sx={{ background: `${deposit ? '#F7F7FC' : '#262338'}` }}
+          >
             <svg
               width="48"
               onClick={() => {
@@ -82,7 +90,7 @@ export default function MobileHeader() {
           </DepositRoLiquidateBox>
         </>
       ) : (
-        <MobileHerderBox>
+        <MobileHerderBox top={showChangeNetWork ? '4.0625rem' : '0px'}>
           <Box
             height="1rem"
             onClick={() => {

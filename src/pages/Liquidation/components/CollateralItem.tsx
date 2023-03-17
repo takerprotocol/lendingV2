@@ -36,7 +36,6 @@ const Value = styled(Box)`
   font-family: 'Quicksand';
   font-style: normal;
   overflow: hidden;
-  width: 134px;
   font-weight: 700;
   font-size: 14px;
   line-height: 160%;
@@ -44,14 +43,14 @@ const Value = styled(Box)`
   display: flex;
   flex-wrap: wrap;
 `
-const ValueText = styled(Typography)`
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 120%;
-  color: #a0a3bd;
-  display: flex;
-  flex-wrap: wrap;
-`
+// const ValueText = styled(Typography)`
+//   font-weight: 500;
+//   font-size: 12px;
+//   line-height: 120%;
+//   color: #a0a3bd;
+//   display: flex;
+//   flex-wrap: wrap;
+// `
 
 const DataItem = styled(Box)`
   display: flex;
@@ -59,7 +58,7 @@ const DataItem = styled(Box)`
 `
 
 const CollectionDataItem = styled(DataItem)`
-  width: 250px;
+  width: 222px;
 `
 
 const StyledCollectionImage = styled('img', {
@@ -201,31 +200,18 @@ const CollateralItem = ({
 
   return (
     <Card>
-      <DataItem width={'198px'}>
+      <DataItem width={'222px'}>
         <Header>Address</Header>
         <Value>
           {abbrevAddress(address)}&nbsp;
           <Copy text={address} />
         </Value>
       </DataItem>
-      <DataItem width={'148px'}>
-        <Header>Collateral</Header>
-        <Value>
-          <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M4 10.7121L8.5 3.5L13 10.7121L8.5 17.5L4 10.7121Z"
-              stroke="#14142A"
-              strokeWidth="1.5"
-              strokeLinejoin="round"
-            />
-            <path d="M4 10.5L8.5 13L13 10.5" stroke="#14142A" strokeLinejoin="round" />
-          </svg>
-          {collateral}
-        </Value>
-      </DataItem>
-      <CollectionDataItem width={'222px'}>
+      <CollectionDataItem>
         <Header>
-          {collections?.length || 0} Collections / {nfts} NFTs
+          {/* {collections?.length || 0} Collections / {nfts} NFTs
+           */}
+          {collections?.length || 0} Blue Chip NFTs
         </Header>
         <Value>
           <CollectionImageContainer style={{ marginLeft: overflow ? 10 : 0 }}>
@@ -253,6 +239,21 @@ const CollateralItem = ({
         </Value>
       </CollectionDataItem>
       <DataItem width={'148px'}>
+        <Header>Collateral</Header>
+        <Value>
+          <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M4 10.7121L8.5 3.5L13 10.7121L8.5 17.5L4 10.7121Z"
+              stroke="#14142A"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <path d="M4 10.5L8.5 13L13 10.5" stroke="#14142A" strokeLinejoin="round" />
+          </svg>
+          {collateral}
+        </Value>
+      </DataItem>
+      <DataItem width={'148px'}>
         <Header>Total Debt</Header>
         <Value>
           <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -269,10 +270,9 @@ const CollateralItem = ({
           </Typography>
         </Value>
       </DataItem>
-      <DataItem width={'178px'}>
-        <Header>Risk Level</Header>
+      <DataItem width={'154px'}>
+        <Header>Health Level</Header>
         <Value color={+riskPercentage <= 120 ? '#E1536C' : '#4E4B66'}>{(+riskPercentage).toFixed(2)}%</Value>
-        <ValueText>{riskLevel}</ValueText>
       </DataItem>
       <Button
         onClick={() => navigate(`/liquidate/${address}`)}

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Button, styled, Typography } from '@mui/material'
 import { SpaceBetweenBox } from 'styleds'
 import { NftTokenModel } from 'services/type/nft'
@@ -7,6 +8,8 @@ import { useEffect, useMemo, useState } from 'react'
 import MobileSureModal from './MobileSureModal'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
+import BigNumber from 'bignumber.js'
+import { fromWei } from 'web3-utils'
 
 const FooterBox = styled(Box)`
   margin-top: 1rem;
@@ -80,7 +83,11 @@ export default function MobileFooter({
       setOpenSureModal(false)
     }
   }, [flag])
-
+  const amount = useMemo(() => {
+    return withdrawList.reduce((total: string) => {
+      return new BigNumber(total).plus(fromWei(floorPrice || '0')).toString()
+    }, '0')
+  }, [floorPrice])
   const modalType = useMemo(() => {
     return type === 1 ? 'deposit' : 'withdraw'
   }, [type])
@@ -160,7 +167,7 @@ export default function MobileFooter({
         type={modalType}
         floorPrice={floorPrice}
         checkedIndex={type === 1 ? mobileDepositCheckedIndex : mobileWithdrawCheckedIndex}
-        amount={withdrawAmount}
+        amount={amount}
         amountList={withdrawList.filter((el) => mobileWithdrawCheckedIndex.includes(el.id.split('-')[2]))}
         data={TestWithdrawList.filter((el) => mobileWithdrawCheckedIndex.includes(el.tokenId))}
         depositData={depositedList.filter((el) => mobileDepositCheckedIndex.includes(el.tokenId))}

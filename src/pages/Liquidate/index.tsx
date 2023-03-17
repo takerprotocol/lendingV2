@@ -114,7 +114,10 @@ const Liquidate = () => {
           />
         </Body>
       ) : (
-        <MobileBody sx={{ paddingBottom: `${loading ? '1.4375rem' : '7.25rem'}` }}>
+        <MobileBody
+          pt={showChangeNetWork ? '7.1875rem' : '3.125rem'}
+          sx={{ paddingBottom: `${loading ? '1.4375rem' : '7.25rem'}` }}
+        >
           <MobileHeader
             address={address || ''}
             riskPercentage={heath}

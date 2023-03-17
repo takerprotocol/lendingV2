@@ -23,6 +23,7 @@ import { useAppDispatch } from 'state/hooks'
 import { setUsedCollateral } from 'state/user/reducer'
 import MobileMySupplySwitchUnableOffModal from './MobileMySupplySwitchUnableOffModal'
 import { SpaceBetweenBox, SpaceBox } from 'styleds'
+import { useShowChangeNetWork } from 'state/application/hooks'
 
 const MyETHCollateralBox = styled(Box)`
   background: linear-gradient(249.47deg, #6aa2f7 0%, #627eea 100%);
@@ -98,6 +99,7 @@ export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeMod
   const ethCollateral = useEthCollateral()
   const ethLiquidity = useEthLiquidity()
   const usedCollateral = useUsedCollateral()
+  const showChangeNetWork = useShowChangeNetWork()
   const [switchUnableOffModal, setSwitchUnableOffModal] = useState<boolean>(false)
   const [openMySupplySwitchModal, setOpenMySupplySwitchModal] = useState<boolean>(false)
   const { chainId } = useActiveWeb3React()
@@ -210,6 +212,7 @@ export default function MobileMyETHCollateral({ setOpenMySupplyModal, setTypeMod
           <MyETHRightBox>
             <FlexEndBox mb={!usedCollateral ? '0.25rem' : '0'}>
               <Button
+                disabled={showChangeNetWork}
                 onClick={() => {
                   setOpenMySupplyModal(true)
                   setTypeModal(1)

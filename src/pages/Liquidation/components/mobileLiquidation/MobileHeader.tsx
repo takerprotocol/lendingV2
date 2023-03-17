@@ -1,7 +1,7 @@
 import { Box, styled, Typography } from '@mui/material'
+import { useShowChangeNetWork } from 'state/application/hooks'
 import { CenterBox } from 'styleds'
 const HeaderCenterBox = styled(Box)`
-  padding-top: 5.375rem;
   padding-bottom: 5.375rem;
 `
 const FoundTypography = styled(Typography)`
@@ -24,8 +24,9 @@ const LiquidateTypography = styled(Typography)`
   color: #ffffff;
 `
 export default function MobileHeader() {
+  const showChangeNetWork = useShowChangeNetWork()
   return (
-    <HeaderCenterBox>
+    <HeaderCenterBox pt={showChangeNetWork ? '9.4375rem' : '5.375rem'}>
       <FoundTypography>found some treasure !</FoundTypography>
       <LiquidateTypography mt="1.5rem">Liquidate with a floor price to </LiquidateTypography>
       <LiquidateTypography mb="1.5rem">get some NFTs you like </LiquidateTypography>

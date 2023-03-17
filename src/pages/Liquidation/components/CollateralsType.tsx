@@ -77,22 +77,22 @@ export default function CollateralsType({ open, anchorEl, setAnchorEl }: Collate
           All Borrowers
         </StyledMenuItem>
         <StyledMenuItem
-          className={collateralsType === 'Liquidate' ? 'selected' : ''}
+          className={collateralsType === 'blueChip' ? 'selected' : ''}
           onClick={() => {
             setAnchorEl(null)
-            dispatch(setCollateralsType('Liquidate'))
+            dispatch(setCollateralsType('blueChip'))
           }}
         >
-          Liquidate
+          Blue Chip NFTs
         </StyledMenuItem>
         <StyledMenuItem
-          className={collateralsType === 'Without Liquidation' ? 'selected' : ''}
+          className={collateralsType === 'growth' ? 'selected' : ''}
           onClick={() => {
             setAnchorEl(null)
-            dispatch(setCollateralsType('Without Liquidation'))
+            dispatch(setCollateralsType('growth'))
           }}
         >
-          Without Liquidation
+          Growth NFTs
         </StyledMenuItem>
       </CollateralsMenu>
     </div>

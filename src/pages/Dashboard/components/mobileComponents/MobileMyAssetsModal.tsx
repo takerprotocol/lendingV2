@@ -32,6 +32,7 @@ import { useApproveCallback, useTTokenApproveCallback } from 'hooks/transactions
 import { ApprovalState } from 'hooks/transactions/useApproval'
 import TipsTooltip from '../TipsTooltip'
 import { Loading } from 'components/Loading'
+import { useShowChangeNetWork } from 'state/application/hooks'
 
 const style = {
   width: '100%',
@@ -158,6 +159,7 @@ export default function MobileMyAssetsModal({
   const contract = useGateway()
   const poolContract = useLendingPool()
   const address = useAddress()
+  const showChangeNetWork = useShowChangeNetWork()
   // const heath = useHeath()
   const ethCollateral = useEthCollateral()
   const collateralRiskLevel = useCollateralRiskLevel(times(amount, borrowOrRepay === 1 ? 1 : -1))
@@ -289,12 +291,12 @@ export default function MobileMyAssetsModal({
       ? !amount || new BigNumber(amount).gt(supplyLimit)
       : !amount || new BigNumber(amount).gt(ethCollateral)
   }, [amount, borrowOrRepay, ethCollateral, supplyLimit])
-
+  console.log(showChangeNetWork)
   return (
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
         <TopBox>
-          <SupplySpaceBetweenBox alignItems="flex-start">
+          <SupplySpaceBetweenBox mb={showChangeNetWork ? '18px' : '0'} alignItems="flex-start">
             <Box>
               <Typography mt="2rem" variant="body2" color="rgba(255, 255, 255, 0.7)">
                 Currently Supplying
@@ -341,44 +343,46 @@ export default function MobileMyAssetsModal({
               </FlexBox> */}
             </Box>
           </SupplySpaceBetweenBox>
-          <SpaceBetweenBox m="1.125rem 3.375rem 0 3.5rem">
-            <Box display={usedCollateral ? '' : 'none'}>
-              <Typography
-                variant="body1"
-                fontWeight="700"
-                sx={{ cursor: 'pointer' }}
-                color={borrowOrRepay === 1 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
-                onClick={() => {
-                  setBorrowOrRepay(1)
-                  setAmount('')
-                }}
-              >
-                Supply
-              </Typography>
-              <Box
-                className={borrowOrRepay === 1 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.3125rem' }}
-              ></Box>
-            </Box>
-            <Box display={usedCollateral ? '' : 'none'}>
-              <Typography
-                variant="body1"
-                fontWeight="700"
-                sx={{ cursor: 'pointer' }}
-                color={borrowOrRepay === 2 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
-                onClick={() => {
-                  setBorrowOrRepay(2)
-                  setAmount('')
-                }}
-              >
-                Withdraw
-              </Typography>
-              <Box
-                className={borrowOrRepay === 2 ? 'BorrowOrRepay' : ''}
-                sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.3125rem' }}
-              ></Box>
-            </Box>
-          </SpaceBetweenBox>
+          {!showChangeNetWork && (
+            <SpaceBetweenBox m="1.125rem 3.375rem 0 3.5rem">
+              <Box display={usedCollateral ? '' : 'none'}>
+                <Typography
+                  variant="body1"
+                  fontWeight="700"
+                  sx={{ cursor: 'pointer' }}
+                  color={borrowOrRepay === 1 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
+                  onClick={() => {
+                    setBorrowOrRepay(1)
+                    setAmount('')
+                  }}
+                >
+                  Supply
+                </Typography>
+                <Box
+                  className={borrowOrRepay === 1 ? 'BorrowOrRepay' : ''}
+                  sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.3125rem' }}
+                ></Box>
+              </Box>
+              <Box display={usedCollateral ? '' : 'none'}>
+                <Typography
+                  variant="body1"
+                  fontWeight="700"
+                  sx={{ cursor: 'pointer' }}
+                  color={borrowOrRepay === 2 ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'}
+                  onClick={() => {
+                    setBorrowOrRepay(2)
+                    setAmount('')
+                  }}
+                >
+                  Withdraw
+                </Typography>
+                <Box
+                  className={borrowOrRepay === 2 ? 'BorrowOrRepay' : ''}
+                  sx={{ width: '100%', height: '0.3125rem', borderRadius: '1.3125rem', marginTop: '0.3125rem' }}
+                ></Box>
+              </Box>
+            </SpaceBetweenBox>
+          )}
         </TopBox>
         <BottomBox>
           <BorrowAmountBox>

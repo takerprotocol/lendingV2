@@ -53,7 +53,6 @@ const MenuBg = styled(Box)`
   -webkit-backdrop-filter: blur(150px);
   backdrop-filter: blur(150px);
   width: 100wh;
-  padding-top: 58px;
   height: 100vh;
   top: 0;
   left: 0;
@@ -118,7 +117,7 @@ export default function Dashboard() {
         </Body>
       ) : (
         <MobileBody
-          pt="3.625rem"
+          pt={showChangeNetWork ? '7.6875rem' : '3.625rem'}
           height={mobileMenuType ? '100%' : '100vh'}
           sx={{ backgroundImage: `${type === 1 ? `url(${MobileBgIcon})` : `url(${MobileGrowthBg})`}` }}
         >
@@ -129,7 +128,7 @@ export default function Dashboard() {
               <MobileCollection></MobileCollection>
             </>
             {!mobileMenuType && (
-              <MenuBg>
+              <MenuBg pt={showChangeNetWork ? '7.6875rem' : '3.625rem'}>
                 {loginWalletType ? (
                   <>
                     <MobileMenu></MobileMenu>

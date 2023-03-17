@@ -77,7 +77,6 @@ const OpacityBg = styled(Box)`
   z-index: -1;
 `
 const MobileBody = styled(Box)`
-  margin-top: 3.125rem;
   width: 100%;
   background: #f7f7fc;
 `
@@ -258,6 +257,7 @@ export default function Deposit() {
         </Body>
       ) : (
         <MobileBody
+          pt={showChangeNetWork ? '7.1875rem' : '3.125rem'}
           pb={
             mobileWithdrawCheckedIndex.length !== 0 || mobileDepositCheckedIndex.length !== 0 ? '7.5625rem' : '1.25rem'
           }

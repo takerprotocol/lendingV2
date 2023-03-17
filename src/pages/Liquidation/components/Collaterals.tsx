@@ -1,23 +1,23 @@
-import { styled } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import { SelectChangeEvent, Typography } from '@mui/material'
+import { Checkbox, Typography, Box, styled } from '@mui/material'
 import CustomizedSelect from 'components/Select'
 import BigNumber from 'bignumber.js'
-import { ReactNode, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import CollateralItem from './CollateralItem'
 import EmptyState from './EmptyState'
 import CollateralPagination from './CollateralPagination'
 import React from 'react'
-import { FlexBox } from 'styleds'
+import { FlexBox, SpaceBetweenBox } from 'styleds'
 import CollateralsType from './CollateralsType'
 import { useCollateralsType } from 'state/user/hooks'
 import { CollateralModel, CollectionsModel } from 'services/type/nft'
 import { plus, minus, times } from 'utils'
-import { useCollections } from 'state/application/hooks'
+// import { useCollections } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { setCollateralsType } from 'state/user/reducer'
 import CollateralItemSkeleton from './LiquidationSkeleton/CollateralItemSkeleton'
 import CollateralSkeleton from './LiquidationSkeleton/CollateralSkeleton'
+import liquidationChecked from 'assets/images/svg/liquidation/liquidationChecked-Icon.svg'
+import liquidationNotChecked from 'assets/images/svg/liquidation/liquidationNotChecked-Icon.svg'
 // import { setUserValues } from 'state/user/reducer'
 
 const CollateralsBox = styled(Box)`
@@ -39,6 +39,7 @@ const CollateralsBg = styled(Box)`
   max-height: 856px;
   height: 100%;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 15.73%, rgba(255, 255, 255, 0) 78.72%);
+  backdrop-filter: blur(40px);
   margin: 0 auto;
   top: 0px;
   left: 0px;
@@ -54,14 +55,7 @@ const CollateralSelectText = styled(Typography)`
   font-weight: 700;
   font-size: 28px;
   line-height: 160%;
-  /* identical to box height, or 45px */
-
-  /* Cool Gray 800 */
-
   color: #14142a;
-
-  /* Inside auto layout */
-
   flex: none;
   order: 0;
   flex-grow: 0;
@@ -81,55 +75,55 @@ const CollateralsFilterHeader = styled(Box)`
   justify-content: space-between;
 `
 
-const InputContainer = styled(Box)`
-  position: relative;
-`
+// const InputContainer = styled(Box)`
+//   position: relative;
+// `
 
-const KeywordSearchInput = styled('input')`
-  width: 343px;
-  height: 54px;
-  right: 190px;
-  top: 405px;
-  background: #ffffff;
-  box-shadow: 0px 10px 20px rgba(208, 217, 244, 0.15);
-  border-radius: 12px;
-  outline: none;
-  border: none;
-  padding: 16px;
-  padding-left: 48px;
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 22px;
-  :focus {
-    border: 1px solid #7646ff !important;
-    box-shadow: 0px 10px 20px rgba(208, 217, 244, 0.5) !important;
-  }
-  &::placeholder {
-    color: rgba(110, 113, 145, 0.7);
-  }
-  display: flex;
-  align-items: center;
-`
+// const KeywordSearchInput = styled('input')`
+//   width: 343px;
+//   height: 54px;
+//   right: 190px;
+//   top: 405px;
+//   background: #ffffff;
+//   box-shadow: 0px 10px 20px rgba(208, 217, 244, 0.15);
+//   border-radius: 12px;
+//   outline: none;
+//   border: none;
+//   padding: 16px;
+//   padding-left: 48px;
+//   font-family: 'Quicksand';
+//   font-style: normal;
+//   font-weight: 500;
+//   font-size: 16px;
+//   line-height: 22px;
+//   :focus {
+//     border: 1px solid #7646ff !important;
+//     box-shadow: 0px 10px 20px rgba(208, 217, 244, 0.5) !important;
+//   }
+//   &::placeholder {
+//     color: rgba(110, 113, 145, 0.7);
+//   }
+//   display: flex;
+//   align-items: center;
+// `
 
-const SearchIcon = styled('svg')`
-  position: absolute;
-  top: 16px;
-  left: 18px;
-`
+// const SearchIcon = styled('svg')`
+//   position: absolute;
+//   top: 16px;
+//   left: 18px;
+// `
 
-const SortFilterContainer = styled(Box)`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-`
+// const SortFilterContainer = styled(Box)`
+//   width: 100%;
+//   display: flex;
+//   justify-content: space-between;
+// `
 
-const FilterContainer = styled(Box)`
-  display: flex;
-  width: 100%;
-  gap: 20px;
-`
+// const FilterContainer = styled(Box)`
+//   display: flex;
+//   width: 100%;
+//   gap: 20px;
+// `
 
 const SortContainer = styled(Box)`
   display: flex;
@@ -137,62 +131,107 @@ const SortContainer = styled(Box)`
   justify-content: flex-end;
 `
 
-const DebtFilterSelect = styled(CustomizedSelect)`
-  margin-left: 2px;
-`
+// const DebtFilterSelect = styled(CustomizedSelect)`
+//   margin-left: 2px;
+// `
 
 const CollateralItems = styled(Box)`
-  margin-top: 36px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 `
 
-const CollectionSortItem = styled(Box)`
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  img {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background-color: #7646ff;
-    object-fit: cover;
-  }
-`
+// const CollectionSortItem = styled(Box)`
+//   display: flex;
+//   gap: 6px;
+//   align-items: center;
+//   white-space: nowrap;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   img {
+//     width: 16px;
+//     height: 16px;
+//     border-radius: 50%;
+//     background-color: #7646ff;
+//     object-fit: cover;
+//   }
+// `
 
-const AutoCompleteContainer = styled(Box)`
-  background: #ffffff;
-  border: 1px solid #eff0f6;
-  box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
-  border-radius: 12px;
-  width: 100%;
-  position: absolute;
-  z-index: 4;
-  top: 62px;
-  padding: 12px;
-`
+// const AutoCompleteContainer = styled(Box)`
+//   background: #ffffff;
+//   border: 1px solid #eff0f6;
+//   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.3);
+//   border-radius: 12px;
+//   width: 100%;
+//   position: absolute;
+//   z-index: 4;
+//   top: 62px;
+//   padding: 12px;
+// `
 
-const AutoCompleteItem = styled(Typography)`
-  border-radius: 6px;
-  padding: 12px;
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 22px;
-  color: #a0a3bd !important;
-  color: grey;
-  &:hover {
-    cursor: pointer;
-    background: #f7f7fc;
-  }
-  .searchterm {
-    color: #14142a;
-  }
+// const AutoCompleteItem = styled(Typography)`
+//   border-radius: 6px;
+//   padding: 12px;
+//   font-family: 'Quicksand';
+//   font-style: normal;
+//   font-weight: 600;
+//   font-size: 16px;
+//   line-height: 22px;
+//   color: #a0a3bd !important;
+//   color: grey;
+//   &:hover {
+//     cursor: pointer;
+//     background: #f7f7fc;
+//   }
+//   .searchterm {
+//     color: #14142a;
+//   }
+// `
+
+// const TermsContainer = styled(Box)`
+//   position: absolute;
+//   height: 100%;
+//   display: flex;
+//   align-items: center;
+//   left: 50px;
+// `
+
+// const TermItem = styled(Box)`
+//   height: 40px;
+//   left: 48px;
+//   top: 7px;
+//   background: #f7f7fc;
+//   border-radius: 6px;
+//   padding: 8px 14px 8px 12px;
+//   display: flex;
+//   align-items: center;
+//   gap: 18px;
+// `
+// const TermTypography = styled(Typography)`
+//   max-width: 227px;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+// `
+
+// const CloseTermIcon = styled('svg')`
+//   cursor: pointer;
+// `
+//---------------//
+const PaddingBox = styled(Box)`
+  padding-left: 50px;
+  padding-right: 50px;
+  // max-height: 735px;
+  // overflow: scroll;
+`
+const LiquidationBox = styled(SpaceBetweenBox)`
+  min-width: 246px;
+  padding: 9px 12px;
+  margin-right: 24px;
+  height: 48px;
+  border-radius: 8px;
+`
+const CheckedImg = styled(`img`)`
+  transform: translateY(4px);
 `
 interface CollateralsProps {
   collaterals: Array<CollateralModel>
@@ -205,6 +244,7 @@ interface CollateralsProps {
   collectionFilter: number
   setSearchTerms: Function
   searchTerms: Array<string>
+  setInLiquidation: Function
 }
 const Collaterals = ({
   collaterals,
@@ -217,10 +257,12 @@ const Collaterals = ({
   searchTerms,
   setCollectionFilter,
   collectionFilter,
+  setInLiquidation,
 }: CollateralsProps) => {
-  const [search, setSearch] = useState('')
+  // const [search, setSearch] = useState('')
   const dispatch = useAppDispatch()
-  const collection = useCollections()
+  const [openChecked, setOpenChecked] = useState<boolean>(false)
+  // const collection = useCollections()
   const allFilterType = useMemo(() => {
     return (
       new BigNumber(sort).eq(0) &&
@@ -230,42 +272,42 @@ const Collaterals = ({
       !new BigNumber(searchTerms.length).eq(0)
     )
   }, [collaterals.length, collectionFilter, debtFilter, searchTerms.length, sort])
-  const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
-    if (searchTerms[0]) {
-      setSearchTerms(searchTerms.filter((currentTerm: string) => currentTerm !== searchTerms[0]))
-      setSearch(searchTerms[0])
-    } else {
-      setSearch(String(e.currentTarget.value))
-    }
-  }
-  const handleCollectionFilterChange = useCallback((event: any) => {
-    setCollectionFilter(event.target.value as number)
-    setFilterType(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
+  //   if (searchTerms[0]) {
+  //     setSearchTerms(searchTerms.filter((currentTerm: string) => currentTerm !== searchTerms[0]))
+  //     setSearch(searchTerms[0])
+  //   } else {
+  //     // setSearch(String(e.currentTarget.value))
+  //   }
+  // }
+  // const handleCollectionFilterChange = useCallback((event: any) => {
+  //   setCollectionFilter(event.target.value as number)
+  //   setFilterType(false)
+  //   eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
   // const collections = useMemo(() => collaterals.map((collateral: any) => collateral.collections).flat(), [collaterals])
   // const uniqueCollections: any = useMemo(
   //   () => [...new Set(collections.map((collection: any) => collection.name))],
   //   [collections]
   // )
-  const [collectionValue, setCollectionValue] = useState<number>(0)
-  const collectionOptions = useMemo(() => {
-    return [
-      {
-        value: 0,
-        name: 'All Collections',
-      },
-      ...collection.map((collection: any, index: number) => ({
-        value: index + 1,
-        name: (
-          <CollectionSortItem>
-            <img alt={collection.name} src={collection.icon} />
-            {collection.name}
-          </CollectionSortItem>
-        ),
-      })),
-    ]
-  }, [collection])
+  // const [collectionValue, setCollectionValue] = useState<number>(0)
+  // const collectionOptions = useMemo(() => {
+  //   return [
+  //     {
+  //       value: 0,
+  //       name: 'All Collections',
+  //     },
+  //     ...collection.map((collection: any, index: number) => ({
+  //       value: index + 1,
+  //       name: (
+  //         <CollectionSortItem>
+  //           <img alt={collection.name} src={collection.icon} />
+  //           {collection.name}
+  //         </CollectionSortItem>
+  //       ),
+  //     })),
+  //   ]
+  // }, [collection])
   // const collectionsFilterFunction = useCallback(
   //   (collateral: any) => {
   //     if (!collectionFilter) {
@@ -280,36 +322,36 @@ const Collaterals = ({
   //   [collectionFilter, uniqueCollections]
   // )
 
-  const handleDebtFilterChange = useCallback((event: SelectChangeEvent<unknown>, _child: ReactNode) => {
-    setFilterType(false)
-    setDebtFilter(event.target.value as number)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-  const [debtFiltersValue, setDebtFiltersValue] = useState<number>(0)
-  const debtFilters = useMemo(() => {
-    return [
-      {
-        value: 0,
-        name: 'All Debts',
-      },
-      {
-        value: 1,
-        name: '< 10 ETH',
-      },
-      {
-        value: 2,
-        name: '10 ETH - 30 ETH',
-      },
-      {
-        value: 3,
-        name: '30 ETH - 50 ETH',
-      },
-      {
-        value: 4,
-        name: '> 50 ETH',
-      },
-    ]
-  }, [])
+  // const handleDebtFilterChange = useCallback((event: SelectChangeEvent<unknown>, _child: ReactNode) => {
+  //   setFilterType(false)
+  //   setDebtFilter(event.target.value as number)
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
+  // const [debtFiltersValue, setDebtFiltersValue] = useState<number>(0)
+  // const debtFilters = useMemo(() => {
+  //   return [
+  //     {
+  //       value: 0,
+  //       name: 'All Debts',
+  //     },
+  //     {
+  //       value: 1,
+  //       name: '< 10 ETH',
+  //     },
+  //     {
+  //       value: 2,
+  //       name: '10 ETH - 30 ETH',
+  //     },
+  //     {
+  //       value: 3,
+  //       name: '30 ETH - 50 ETH',
+  //     },
+  //     {
+  //       value: 4,
+  //       name: '> 50 ETH',
+  //     },
+  //   ]
+  // }, [])
   // const deptFilterFunction = useCallback(
   //   (collateral: any) => {
   //     switch (debtFilter) {
@@ -427,56 +469,19 @@ const Collaterals = ({
       return <CollateralItemSkeleton key={`collateral-${JSON.stringify(collateral)}${index}`} />
     })
   }, [])
-  const autocompleteOptions = useMemo(
-    () =>
-      collaterals
-        .map((collateral: any) => collateral.collections.map((collection: any) => collection.__typename))
-        .flat()
-        .filter((collection: string, index: number, self: any) => self.indexOf(collection) === index),
-    [collaterals]
-  )
-
-  const handleAddSearchTerm = useCallback((term: string) => {
-    setSearchTerms([term])
-    setSearch('')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const TermsContainer = styled(Box)`
-    position: absolute;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    left: 50px;
-  `
-
-  const TermItem = styled(Box)`
-    height: 40px;
-    left: 48px;
-    top: 7px;
-    background: #f7f7fc;
-    border-radius: 6px;
-    padding: 8px 14px 8px 12px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-  `
-  const TermTypography = styled(Typography)`
-    max-width: 227px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  `
-
-  const CloseTermIcon = styled('svg')`
-    cursor: pointer;
-  `
-  //---------------//
-  const PaddingBox = styled(Box)`
-    padding-left: 50px;
-    padding-right: 50px;
-    // max-height: 735px;
-    // overflow: scroll;
-  `
+  // const autocompleteOptions = useMemo(
+  //   () =>
+  //     collaterals
+  //       .map((collateral: any) => collateral.collections.map((collection: any) => collection.__typename))
+  //       .flat()
+  //       .filter((collection: string, index: number, self: any) => self.indexOf(collection) === index),
+  //   [collaterals]
+  // )
+  // const handleAddSearchTerm = useCallback((term: string) => {
+  //   setSearchTerms([term])
+  //   // setSearch('')
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [filterType, setFilterType] = React.useState<boolean>(false)
   const filter = useMemo(() => {
@@ -491,7 +496,10 @@ const Collaterals = ({
     setAnchorEl(event.currentTarget)
   }
   const collateralsType = useCollateralsType()
-  //---------------//
+  const liquidation = useMemo(() => {
+    return openChecked ? '1' : '0'
+  }, [openChecked])
+  setInLiquidation(liquidation)
   return (
     <CollateralsBox>
       <CollateralsContainer>
@@ -536,7 +544,56 @@ const Collaterals = ({
                 )}
               </>
             </FlexBox>
-            <InputContainer>
+            <FlexBox>
+              <LiquidationBox sx={{ border: openChecked ? '1px solid #262338' : '1px solid #d9dbe9' }}>
+                <FlexBox>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M6 5V4.5C5.72386 4.5 5.5 4.72386 5.5 5H6ZM17 5H17.5C17.5 4.72386 17.2761 4.5 17 4.5V5ZM7.18273 8.61281L6.77952 8.90849V8.90849L7.18273 8.61281ZM9.66667 12L10.0699 12.2957C10.1989 12.1197 10.1989 11.8803 10.0699 11.7043L9.66667 12ZM7.18273 15.3872L7.58593 15.6829H7.58593L7.18273 15.3872ZM6 19H5.5C5.5 19.2761 5.72386 19.5 6 19.5V19ZM17 19V19.5C17.2761 19.5 17.5 19.2761 17.5 19H17ZM15.8173 15.3872L16.2205 15.0915H16.2205L15.8173 15.3872ZM13.3333 12L12.9301 11.7043C12.8011 11.8803 12.8011 12.1197 12.9301 12.2957L13.3333 12ZM15.8173 8.61281L16.2205 8.90849L16.2205 8.90849L15.8173 8.61281ZM6 5.5H17V4.5H6V5.5ZM7.58593 8.31713C6.8804 7.35504 6.5 6.19306 6.5 5H5.5C5.5 6.40575 5.94821 7.77489 6.77952 8.90849L7.58593 8.31713ZM10.0699 11.7043L7.58593 8.31713L6.77952 8.90849L9.26346 12.2957L10.0699 11.7043ZM9.26346 11.7043L6.77952 15.0915L7.58593 15.6829L10.0699 12.2957L9.26346 11.7043ZM6.77952 15.0915C5.94821 16.2251 5.5 17.5942 5.5 19H6.5C6.5 17.8069 6.8804 16.645 7.58593 15.6829L6.77952 15.0915ZM6 19.5H17V18.5H6V19.5ZM17.5 19C17.5 17.5942 17.0518 16.2251 16.2205 15.0915L15.4141 15.6829C16.1196 16.645 16.5 17.8069 16.5 19H17.5ZM16.2205 15.0915L13.7365 11.7043L12.9301 12.2957L15.4141 15.6829L16.2205 15.0915ZM15.4141 8.31713L12.9301 11.7043L13.7365 12.2957L16.2205 8.90849L15.4141 8.31713ZM16.5 5C16.5 6.19306 16.1196 7.35504 15.4141 8.31713L16.2205 8.90849C17.0518 7.77489 17.5 6.40575 17.5 5H16.5Z"
+                      fill="#6E7191"
+                    />
+                  </svg>
+                  <Typography ml="6px" variant="subtitle2" fontWeight="500" color="#4e4b66">
+                    In Liquidation
+                  </Typography>
+                </FlexBox>
+                <Checkbox
+                  checked={openChecked}
+                  checkedIcon={<CheckedImg src={liquidationChecked} alt="" />}
+                  icon={<img src={liquidationNotChecked} alt="" />}
+                  sx={{ width: '24px', height: '24px' }}
+                  onChange={(el: any) => {
+                    setOpenChecked(!openChecked)
+                  }}
+                />
+              </LiquidationBox>
+              <SortContainer>
+                <CustomizedSelect
+                  valueIndex={sortValue}
+                  allFilterType={allFilterType ? 1 : 0}
+                  setValueIndex={setSortValue}
+                  value={sort}
+                  options={sortOptions}
+                  filter={filter}
+                  onChange={handleSortUpdate}
+                  startAdornment={
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M8.5 18.5V5.5L5.5 8.5" stroke="#6E7191" strokeLinecap="round" strokeLinejoin="round" />
+                      <path
+                        d="M14.5 5.5V18.5L17.5 15.5"
+                        stroke="#6E7191"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  }
+                  labelId="collateral-sort"
+                  id="collateral-sort"
+                  disabled
+                />
+              </SortContainer>
+            </FlexBox>
+            {/* <InputContainer>
               {searchTerms[0] !== '' && (
                 <TermsContainer>
                   {searchTerms.map((term: string, index: number) => (
@@ -603,11 +660,11 @@ const Collaterals = ({
                   fill="#A0A3BD"
                 />
               </SearchIcon>
-            </InputContainer>
+            </InputContainer> */}
           </CollateralsFilterHeader>
         )}
         <PaddingBox>
-          {!loading && (
+          {/* {!loading && (
             <SortFilterContainer>
               <FilterContainer>
                 <CustomizedSelect
@@ -705,7 +762,7 @@ const Collaterals = ({
                 />
               </SortContainer>
             </SortFilterContainer>
-          )}
+          )} */}
           <CollateralItems>
             {loading ? (
               CollateralSkeletonList
