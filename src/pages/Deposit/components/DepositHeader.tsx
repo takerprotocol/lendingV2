@@ -164,7 +164,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
             </FlexBox>
             <Box ml="12px" width="272px">
               <Typography component="p" variant="h1" fontWeight="700" fontSize=" 24px" lineHeight="29px">
-                {collection?.symbol}
+                {collection?.name}
               </Typography>
               <Typography mt="12px" variant="subtitle2" fontWeight="500" lineHeight="16px" color="#A0A3BD">
                 {total || 0} NFTS
