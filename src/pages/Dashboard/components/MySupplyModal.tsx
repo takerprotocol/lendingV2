@@ -1,7 +1,7 @@
 import greyShutOff from 'assets/images/svg/common/close-white.svg'
 // import prompt from 'assets/images/svg/common/prompt.svg'
 import redPrompt from 'assets/images/svg/common/redPrompt.svg'
-import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material'
+import { styled, Typography, Box, Button, Modal, TextField, Fade } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import addIcon from 'assets/images/svg/common/add.svg'
 import rightIcon from 'assets/images/svg/common/right.svg'
@@ -160,8 +160,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   // const usedCollateral = useUsedCollateral()
   const erc20ReserveData = useErc20ReserveData()
   const addTransaction = useTransactionAdder()
-  const [approval, approveCallback] = useApproveCallback(amount, contract?.address)
-  const [tokenApproval, tokenApproveCallback] = useTTokenApproveCallback(amount, contract?.address)
+  const [approval, approveCallback] = useApproveCallback(amount || '1', contract?.address)
+  const [tokenApproval, tokenApproveCallback] = useTTokenApproveCallback(amount || '1', contract?.address)
   const transactionPending = useTransactionPending()
   const transactions = useAllTransactions()
   const flag = useMemo(() => {
@@ -550,12 +550,36 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
               </Typography>
             </FlexBox>
           </Box>
-          <Box justifyContent="space-between" marginTop="24px" display="flex" alignItems="center">
-            {finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+          <Fade timeout={300} in={true}>
+            <Box justifyContent="space-between" marginTop="24px" display="flex" alignItems="center">
+              {finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+                <Button
+                  variant="contained"
+                  disabled={loading}
+                  sx={{ width: '176px', height: '54px', marginRight: '16px' }}
+                  onClick={() => {
+                    // supply
+                    if (borrowOrRepay === 1) {
+                      supplySubmit()
+                      // setAmount('')
+                    } else {
+                      withdrawSubmit()
+                      // setAmount('')
+                    }
+                  }}
+                >
+                  {depositPending.length > 0 || withdrawPending.length > 0 || loading ? <Loading></Loading> : <></>}
+                  {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
+                </Button>
+              )}
               <Button
+                disabled={buttonDisabled || finalApprove !== ApprovalState.APPROVED}
                 variant="contained"
-                disabled={loading}
-                sx={{ width: '176px', height: '54px', marginRight: '16px' }}
+                sx={{
+                  width: finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '176px' : '100%',
+                  height: '54px',
+                }}
+                color={overSupply ? 'error' : 'primary'}
                 onClick={() => {
                   // supply
                   if (borrowOrRepay === 1) {
@@ -567,42 +591,20 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
                   }
                 }}
               >
-                {depositPending.length > 0 || withdrawPending.length > 0 || loading ? <Loading></Loading> : <></>}
-                {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
+                {depositPending.length > 0 ||
+                withdrawPending.length > 0 ||
+                (loading && finalApprove === ApprovalState.APPROVED) ? (
+                  <Loading></Loading>
+                ) : (
+                  <></>
+                )}
+                {!loading && finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
+                  <StepTypography>Step2</StepTypography>
+                )}
+                {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}
               </Button>
-            )}
-            <Button
-              disabled={buttonDisabled || finalApprove !== ApprovalState.APPROVED}
-              variant="contained"
-              sx={{
-                width: finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) ? '176px' : '100%',
-                height: '54px',
-              }}
-              color={overSupply ? 'error' : 'primary'}
-              onClick={() => {
-                // supply
-                if (borrowOrRepay === 1) {
-                  supplySubmit()
-                  // setAmount('')
-                } else {
-                  withdrawSubmit()
-                  // setAmount('')
-                }
-              }}
-            >
-              {depositPending.length > 0 ||
-              withdrawPending.length > 0 ||
-              (loading && finalApprove === ApprovalState.APPROVED) ? (
-                <Loading></Loading>
-              ) : (
-                <></>
-              )}
-              {!loading && finalApprove !== ApprovalState.APPROVED && new BigNumber(amount).gt(0) && (
-                <StepTypography>Step2</StepTypography>
-              )}
-              {borrowOrRepay === 1 ? 'Supply' : 'Withdraw'}
-            </Button>
-          </Box>
+            </Box>
+          </Fade>
         </BottomBox>
       </Box>
     </Modal>

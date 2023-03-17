@@ -1,5 +1,5 @@
 import greyShutOff from 'assets/images/svg/common/greyShutOff.svg'
-import { styled, Typography, Box, Button, Modal, TextField } from '@mui/material'
+import { styled, Typography, Box, Button, Modal, TextField, Fade } from '@mui/material'
 import { useEffect, useMemo, useState } from 'react'
 import addIcon from 'assets/images/svg/common/addIcon.svg'
 import rightIcon from 'assets/images/svg/common/rightIcon.svg'
@@ -232,7 +232,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
       )
     }).length
   }, [transactions])
-  const [tokenApproval, tokenApproveCallback] = useDTokenApproveCallback(amount, contract?.address, flag)
+  const [tokenApproval, tokenApproveCallback] = useDTokenApproveCallback(amount || '1', contract?.address, flag)
 
   useEffect(() => {
     setLoading(false)
@@ -687,12 +687,32 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               </Typography>
             </LiquidatedBox>
           ) : (
-            <Box marginTop="24px" display="flex" alignItems="center" justifyContent="space-between">
-              {tokenApproval !== ApprovalState.APPROVED && (
+            <Fade timeout={300} in={true}>
+              <Box marginTop="24px" display="flex" alignItems="center" justifyContent="space-between">
+                {tokenApproval !== ApprovalState.APPROVED && (
+                  <Button
+                    variant="contained"
+                    disabled={loading}
+                    sx={{ width: '176px', height: '54px', marginRight: '16px' }}
+                    onClick={() => {
+                      if (check === 1) {
+                        borrowSubmit()
+                      } else {
+                        repaySubmit()
+                      }
+                    }}
+                  >
+                    {repayPending.length > 0 || borrowSubmit.length > 0 || loading ? <Loading></Loading> : <></>}
+                    {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
+                  </Button>
+                )}
                 <Button
+                  disabled={+amount === 0 || buttonDisabled || tokenApproval !== ApprovalState.APPROVED}
                   variant="contained"
-                  disabled={loading}
-                  sx={{ width: '176px', height: '54px', marginRight: '16px' }}
+                  sx={{
+                    width: tokenApproval !== ApprovalState.APPROVED ? '176px' : '372px',
+                    height: '54px',
+                  }}
                   onClick={() => {
                     if (check === 1) {
                       borrowSubmit()
@@ -701,36 +721,18 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                     }
                   }}
                 >
-                  {repayPending.length > 0 || borrowSubmit.length > 0 || loading ? <Loading></Loading> : <></>}
-                  {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
+                  {repayPending.length > 0 ||
+                  borrowPending.length > 0 ||
+                  (loading && tokenApproval === ApprovalState.APPROVED) ? (
+                    <Loading></Loading>
+                  ) : (
+                    <></>
+                  )}
+                  {tokenApproval !== ApprovalState.APPROVED && <StepTypography>Step2</StepTypography>}
+                  {check === 1 ? 'Borrow' : 'Repay'}
                 </Button>
-              )}
-              <Button
-                disabled={+amount === 0 || buttonDisabled || tokenApproval !== ApprovalState.APPROVED}
-                variant="contained"
-                sx={{
-                  width: tokenApproval !== ApprovalState.APPROVED ? '176px' : '372px',
-                  height: '54px',
-                }}
-                onClick={() => {
-                  if (check === 1) {
-                    borrowSubmit()
-                  } else {
-                    repaySubmit()
-                  }
-                }}
-              >
-                {repayPending.length > 0 ||
-                borrowPending.length > 0 ||
-                (loading && tokenApproval === ApprovalState.APPROVED) ? (
-                  <Loading></Loading>
-                ) : (
-                  <></>
-                )}
-                {tokenApproval !== ApprovalState.APPROVED && <StepTypography>Step2</StepTypography>}
-                {check === 1 ? 'Borrow' : 'Repay'}
-              </Button>
-            </Box>
+              </Box>
+            </Fade>
           )}
         </BottomBox>
       </Box>

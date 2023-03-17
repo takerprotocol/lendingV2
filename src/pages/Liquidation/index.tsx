@@ -206,7 +206,7 @@ export default function Liquidation() {
           if (new BigNumber(heath).gt(1000000)) {
             heath = '>1M'
           } else {
-            heath = numbro(heath).format({ spaceSeparated: true, average: true })
+            heath = numbro(heath).format({ spaceSeparated: true, average: true }).replace(' ', '')
           }
           users.push({
             address: element.id,
@@ -225,7 +225,7 @@ export default function Liquidation() {
           if (new BigNumber(heath).gt(1000000)) {
             heath = '>1M'
           } else {
-            heath = numbro(heath).format({ spaceSeparated: true, average: true })
+            heath = numbro(heath).format({ spaceSeparated: true, average: true }).replace(' ', '')
           }
           otherUsersCollateral.push({
             address: element.id,

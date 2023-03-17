@@ -44,7 +44,7 @@ export function useHeath(): string {
   if (new BigNumber(value).gt(1000000)) {
     return '>1M'
   } else {
-    return numbro(value).format({ spaceSeparated: true, average: true })
+    return numbro(value).format({ spaceSeparated: true, average: true }).replace(' ', '')
   }
 }
 export function useEthCollateral(): string {
@@ -125,7 +125,7 @@ export function useDebtRiskLevel(value?: string | number): string {
       if (new BigNumber(riskLevel).gt(10000000)) {
         setDebtRiskLevel('>1M')
       } else {
-        setDebtRiskLevel(numbro(times(riskLevel, 100)).format({ spaceSeparated: true, average: true }))
+        setDebtRiskLevel(numbro(times(riskLevel, 100)).format({ spaceSeparated: true, average: true }).replace(' ', ''))
       }
     }
   }, [ethDebt, userState.liquidationThreshold, userValue.totalCollateral, value])
@@ -142,7 +142,9 @@ export function useCollateralRiskLevel(value?: string | number): string {
     } else {
       const riskLevel = times(plus(userValue.totalCollateral, value || 0), div(userState.liquidationThreshold, ethDebt))
       if (new BigNumber(riskLevel).lt(10000000)) {
-        setCollateralRiskLevel(numbro(times(riskLevel, 100)).format({ spaceSeparated: true, average: true }))
+        setCollateralRiskLevel(
+          numbro(times(riskLevel, 100)).format({ spaceSeparated: true, average: true }).replace(' ', '')
+        )
       } else {
         setCollateralRiskLevel('>1M')
       }
