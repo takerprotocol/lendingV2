@@ -12,7 +12,8 @@ import Women from 'assets/images/png/collection/women.gif'
 import Cat from 'assets/images/png/collection/cat.png'
 import Clonex from 'assets/images/png/collection/clonex.png'
 import Doodles from 'assets/images/png/collection/doodles.png'
-import { div, fixedFormat, renderCollectionName } from 'utils'
+import { fixedFormat, renderCollectionName } from 'utils'
+import numbro from 'numbro'
 const Card = styled('div')(({ theme }) => ({
   background: '#ffffff',
   border: '1px solid #eff0f6',
@@ -209,7 +210,6 @@ const CollateralItem = ({
       return <NoCollateralText>No NFT collateral</NoCollateralText>
     }
   }, [shownCollections])
-  console.log(shownCollections)
   const navigate = useNavigate()
 
   return (
@@ -286,11 +286,11 @@ const CollateralItem = ({
       </DataItem>
       <DataItem width={'154px'}>
         <Header>Health Level</Header>
-        <Value color={+riskPercentage <= 120 ? '#E1536C' : '#4E4B66'}>{(+div(riskPercentage, 10)).toFixed(2)}%</Value>
+        <Value color={numbro.unformat(riskPercentage) <= 120 ? '#E1536C' : '#4E4B66'}>{riskPercentage}%</Value>
       </DataItem>
       <Button
         onClick={() => navigate(`/liquidate/${address}`)}
-        disabled={+riskPercentage > 120}
+        disabled={numbro.unformat(riskPercentage) > 120}
         variant="contained"
         color="primary"
       >

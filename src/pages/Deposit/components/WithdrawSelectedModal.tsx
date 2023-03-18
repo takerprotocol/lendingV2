@@ -26,6 +26,7 @@ import { isTransactionRecent, useAllTransactions, useTransactionAdder } from 'st
 import { TransactionType } from 'state/transactions/types'
 import { Nft } from '@alch/alchemy-sdk'
 import { Loading } from 'components/Loading'
+import numbro from 'numbro'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -80,7 +81,6 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
   const userValue = useUserValue()
   const heath = useHeath()
   const erc20ReserveData = useErc20ReserveData()
-  const collateralRiskLevel = useCollateralRiskLevel()
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
   const ercContract = useContract(id, MockERC721Abi)
@@ -90,6 +90,8 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
   const upBorrowLimit = useBorrowLimit(times(amount, -1)) //操作后的borrowLimit
   const transactions = useAllTransactions()
+  const collateralRiskLevel = useCollateralRiskLevel(times(amount, -1))
+
   const flag = useMemo(() => {
     return (
       transactions &&
@@ -135,8 +137,9 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
       setLoading(false)
     }
   }
+
   const riskLevelWarning = useMemo(() => {
-    return new BigNumber(collateralRiskLevel).lt(150) && type === 'withdraw'
+    return new BigNumber(numbro.unformat(collateralRiskLevel)).lt(150) && type === 'withdraw'
   }, [collateralRiskLevel, type])
 
   return (
@@ -306,6 +309,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
         <Button
           variant="contained"
           sx={{ width: '372px', height: '54px' }}
+          disabled={riskLevelWarning}
           color={riskLevelWarning ? 'error' : 'primary'}
           onClick={() => {
             withdraw()

@@ -166,7 +166,6 @@ export default function Deposit() {
       )
     }).length
   }, [transactions])
-  console.log(showChangeNetWork)
   useEffect(() => {
     if (mobileFlag) {
       setMobileWithdrawCheckedIndex([])

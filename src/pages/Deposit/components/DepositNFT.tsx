@@ -200,14 +200,16 @@ export default function DepositNFT({
           <Pager TypeKey={Deposit} list={list}></Pager>
         </AvailableNFTsBox>
       )}
-      <NFTsSelectedModal
-        type={Deposit}
-        floorPrice={floorPrice}
-        checkedIndex={checkedIndex}
-        data={list.filter((el) => checkedIndex.includes(el.tokenId))}
-        openSelectedModal={openSelectedModal}
-        setOpenSelectedModal={setOpenSelectedModal}
-      ></NFTsSelectedModal>
+      {openSelectedModal && (
+        <NFTsSelectedModal
+          type={Deposit}
+          floorPrice={floorPrice}
+          checkedIndex={checkedIndex}
+          data={list.filter((el) => checkedIndex.includes(el.tokenId))}
+          openSelectedModal={openSelectedModal}
+          setOpenSelectedModal={setOpenSelectedModal}
+        ></NFTsSelectedModal>
+      )}
       <SureModal
         openSureModal={openSureModal}
         handle={(type: string) => {

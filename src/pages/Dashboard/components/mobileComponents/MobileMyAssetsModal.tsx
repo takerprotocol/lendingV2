@@ -291,7 +291,6 @@ export default function MobileMyAssetsModal({
       ? !amount || new BigNumber(amount).gt(supplyLimit)
       : !amount || new BigNumber(amount).gt(ethCollateral)
   }, [amount, borrowOrRepay, ethCollateral, supplyLimit])
-  console.log(showChangeNetWork)
   return (
     <Modal open={openMySupplyModal} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>

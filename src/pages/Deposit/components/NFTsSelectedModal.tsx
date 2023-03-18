@@ -157,9 +157,6 @@ export default function NFTsSelectedModal({
       })
     }
   }, [contract, address, ercContract, flag])
-  const withdraw = () => {
-    // console.log('withdraw')
-  }
   const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, type === 'Deposit' ? 1 : -1))
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
   const upBorrowLimit = useBorrowLimit(times(amount, type === 'Deposit' ? 1 : -1)) //操作后的borrowLimit
@@ -387,11 +384,7 @@ export default function NFTsSelectedModal({
               sx={{ width: '176px', height: '54px', marginRight: '16px' }}
               color={riskLevelWarning ? 'error' : 'primary'}
               onClick={() => {
-                if (type === 'Withdraw') {
-                  withdraw()
-                } else {
-                  deposit()
-                }
+                deposit()
               }}
             >
               {approvePending.length > 0 || withdrawPending.length > 0 || depositPending.length > 0 || loading ? (
