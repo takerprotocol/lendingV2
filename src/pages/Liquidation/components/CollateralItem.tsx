@@ -8,7 +8,11 @@ import ERC721 from 'assets/images/png/collection/721.png'
 import Azuki from 'assets/images/png/collection/azuki.png'
 import Bayc from 'assets/images/png/collection/bayc.png'
 import Mayc from 'assets/images/png/collection/mayc.png'
-import { fixedFormat } from 'utils'
+import Women from 'assets/images/png/collection/women.gif'
+import Cat from 'assets/images/png/collection/cat.png'
+import Clonex from 'assets/images/png/collection/clonex.png'
+import Doodles from 'assets/images/png/collection/doodles.png'
+import { fixedFormat, renderCollectionName } from 'utils'
 const Card = styled('div')(({ theme }) => ({
   background: '#ffffff',
   border: '1px solid #eff0f6',
@@ -147,6 +151,7 @@ type CollateralItemType = {
   collateral: string
   collections: any
   debt: string
+  type: string
   riskPercentage: string
   riskLevel: string
   riskLevelTag?: string
@@ -158,6 +163,7 @@ const CollateralItem = ({
   collateral,
   collections,
   debt,
+  type,
   riskPercentage = '0',
   riskLevelTag,
   riskLevel,
@@ -175,6 +181,14 @@ const CollateralItem = ({
         return Azuki
       } else if (symbol.toLocaleLowerCase().indexOf('bayc') > -1) {
         return Bayc
+      } else if (symbol.toLocaleLowerCase().indexOf('world_of_women') > -1) {
+        return Women
+      } else if (symbol.toLocaleLowerCase().indexOf('doodles') > -1) {
+        return Doodles
+      } else if (symbol.toLocaleLowerCase().indexOf('cool_cats') > -1) {
+        return Cat
+      } else if (symbol.toLocaleLowerCase().indexOf('clonex') > -1) {
+        return Clonex
       }
     }
     return ERC721
@@ -187,7 +201,7 @@ const CollateralItem = ({
         <CollectionImage
           key={`collection-${collection.id}${index}`}
           alt="collection"
-          text={collection.collection.symbol}
+          text={renderCollectionName(collection.collection.symbol)}
           src={renderImg(collection.collection.symbol)}
         />
       ))
@@ -195,7 +209,7 @@ const CollateralItem = ({
       return <NoCollateralText>No NFT collateral</NoCollateralText>
     }
   }, [shownCollections])
-
+  console.log(shownCollections)
   const navigate = useNavigate()
 
   return (
@@ -211,7 +225,7 @@ const CollateralItem = ({
         <Header>
           {/* {collections?.length || 0} Collections / {nfts} NFTs
            */}
-          {collections?.length || 0} Blue Chip NFTs
+          {collections?.length || 0} {type} NFTs
         </Header>
         <Value>
           <CollectionImageContainer style={{ marginLeft: overflow ? 10 : 0 }}>

@@ -271,3 +271,24 @@ export const decimalPlacesLength = (value: number | string) => {
   const arr = new BigNumber(value).toFixed().split('.')
   return new BigNumber(value).gt(1) ? true : arr.length > 1 ? new BigNumber('0.' + arr[1]).gt(0.00009) : false
 }
+
+export const renderCollectionName = (symbol?: string) => {
+  if (symbol) {
+    if (symbol.toLocaleLowerCase().indexOf('mayc') > -1) {
+      return 'Mutant Ape Yacht Club'
+    } else if (symbol.toLocaleLowerCase().indexOf('azuki') > -1) {
+      return 'Azuki'
+    } else if (symbol.toLocaleLowerCase().indexOf('bayc') > -1) {
+      return 'Bored Ape Yacht Club'
+    } else if (symbol.toLocaleLowerCase().indexOf('world_of_women') > -1) {
+      return 'World of Women'
+    } else if (symbol.toLocaleLowerCase().indexOf('doodles') > -1) {
+      return 'Doodles'
+    } else if (symbol.toLocaleLowerCase().indexOf('cool_cats') > -1) {
+      return 'Cool Cats NFT'
+    } else if (symbol.toLocaleLowerCase().indexOf('clonex') > -1) {
+      return 'CLONE X - X TAKASHI MURAKAMI'
+    }
+  }
+  return 'ERC721'
+}

@@ -29,6 +29,7 @@ export interface CollateralModel {
   collateral: string
   collections: Array<CollectionsModel>
   debt: string
+  type: string
   riskPercentage: string
   riskLevel: string
   riskLevelTag?: string

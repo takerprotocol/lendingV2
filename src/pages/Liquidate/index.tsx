@@ -79,6 +79,7 @@ const Liquidate = () => {
         collections: user.data.user.collections,
         debt: fromWei(user.data.user.totalDebt),
         riskPercentage: _heath,
+        type: '',
         riskLevel: getRiskLevel(_heath),
         riskLevelTag: getRiskLevelTag(_heath),
       })

@@ -214,6 +214,7 @@ export default function Liquidation() {
             collections: element.collections,
             debt: fromWei(element.totalDebt),
             riskPercentage: heath,
+            type: 'Blue Chip',
             riskLevel: getRiskLevel(heath),
             riskLevelTag: getRiskLevelTag(heath),
           })
@@ -232,6 +233,7 @@ export default function Liquidation() {
             collateral: fromWei(element.totalCollateral),
             collections: element.collections,
             debt: fromWei(element.totalDebt),
+            type: 'Growth',
             riskPercentage: heath,
             riskLevel: getRiskLevel(heath),
             riskLevelTag: getRiskLevelTag(heath),
@@ -277,7 +279,6 @@ export default function Liquidation() {
       ? collaterals
       : otherCollaterals
   }, [collaterals, collateralsType, otherCollaterals])
-  console.log(finalCollaterals, 'finalCollaterals')
   return (
     <>
       {mobile ? (
