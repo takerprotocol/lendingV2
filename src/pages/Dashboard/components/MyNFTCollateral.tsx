@@ -109,7 +109,6 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const [client, setClient] = useState<any>(null)
   const dashboardType = useDashboardType()
   const collections = useCollections()
-  console.log(collections)
   useEffect(() => {
     if (chainId) {
       setClient(getClient(dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])

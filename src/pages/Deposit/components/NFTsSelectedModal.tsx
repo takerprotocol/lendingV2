@@ -301,14 +301,14 @@ export default function NFTsSelectedModal({
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             <BodyTypography>
-              {new BigNumber(heath).toFixed(2, 1)}% {'>'}
+              {heath}% {'>'}
             </BodyTypography>
             <BodyTypography
               ml="6px"
               fontWeight="700 !important"
               color={riskLevelWarning ? '#E1536C !important' : '#14142A !important'}
             >
-              {new BigNumber(collateralRiskLevel).toFixed(2, 1)}%
+              {collateralRiskLevel}%
             </BodyTypography>
           </Box>
         </SpaceBetweenBox>

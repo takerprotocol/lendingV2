@@ -3,6 +3,8 @@ import CollateralStat from './CollateralStat'
 import { styled } from '@mui/system'
 import { Box, Typography } from '@mui/material'
 import { liquidateAbbrevAddress } from 'utils/abbrevAddres'
+import { useMemo } from 'react'
+import { getRiskLevelTag } from 'utils'
 
 const CollateralStatsContainer = styled('div')`
   display: flex;
@@ -43,9 +45,22 @@ const CollateralAddress = styled(Box)`
 
 const RiskLevelContainer = styled('div')`
   padding: 3px 11px;
-  border: 1px solid rgba(225, 83, 108, 0.5);
+  border: 1px solid transparent;
+  /* border: 1px solid rgba(225, 83, 108, 0.5); */
   filter: drop-shadow(0px 4px 8px rgba(221, 140, 140, 0.1));
   border-radius: 35px;
+  &.Healthy {
+    border-color: #4bc8b1;
+  }
+  &.In-liquidation {
+    border-color: #e1536c;
+  }
+  &.High-Risk {
+    border-color: #e1536c;
+  }
+  &.Risky {
+    border-color: #ef884f;
+  }
 `
 
 const RiskLevel = styled(Typography)`
@@ -55,11 +70,21 @@ const RiskLevel = styled(Typography)`
   font-size: 14px;
   line-height: 160%;
   /* or 22px */
-
   text-align: center;
   text-transform: uppercase;
-
-  color: #e1536c;
+  &.Healthy {
+    color: #4bc8b1;
+  }
+  &.In-liquidation {
+    color: #e1536c;
+  }
+  &.High-Risk {
+    color: #e1536c;
+  }
+  &.Risky {
+    color: #ef884f;
+  }
+  /* color: #e1536c; */
 
   /* Inside auto layout */
 `
@@ -91,6 +116,10 @@ const LiquidateHeader = ({
   ethDebt,
   borrowings,
 }: LiquidateHeaderType) => {
+  const myLoanRiskLevelTag = useMemo(() => {
+    return getRiskLevelTag(riskPercentage)
+  }, [riskPercentage])
+
   return (
     <Stats>
       <InfoContainer>
@@ -98,8 +127,8 @@ const LiquidateHeader = ({
           {liquidateAbbrevAddress(address)}
           <Copy text={address} />
         </CollateralAddress>
-        <RiskLevelContainer>
-          <RiskLevel>Heath Level{riskPercentage}%</RiskLevel>
+        <RiskLevelContainer className={myLoanRiskLevelTag}>
+          <RiskLevel>Heath Level {riskPercentage}%</RiskLevel>
         </RiskLevelContainer>
       </InfoContainer>
       <CollateralStatsContainer>
@@ -108,8 +137,8 @@ const LiquidateHeader = ({
           total={totalCollateral}
           split1Title="NFT Collateral"
           split1={nftCollateral}
-          split2Title="ETH Collateral"
-          split2={ethCollateral}
+          split2Title=""
+          split2={''}
         />
         <CollateralStat
           title="Total Debt"

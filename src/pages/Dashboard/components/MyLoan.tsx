@@ -273,10 +273,10 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
             <SpaceBetweenBox mr="24px" mt="16px">
               <Box pt="1px">
                 <Typography variant="subtitle2" fontWeight="700" color="#262338">
-                  {decimalFormat(minus(borrowLimit, ethDebt), 0, false, 4)} ETH
+                  {decimalFormat(BigNumber.max(minus(borrowLimit, ethDebt), 0).toString(), 0, false, 4)} ETH
                 </Typography>
                 <Typography mt="2px" variant="body2" fontWeight="600" color="#A0A3BD">
-                  Remaining loanable
+                  Available Loan
                 </Typography>
               </Box>
               <Button

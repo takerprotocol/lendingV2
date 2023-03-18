@@ -82,7 +82,7 @@ export default function MyAccount({ type, loading }: MyAccountProps) {
           </SpaceBox>
           <MyAssetsBox>
             <Typography variant="subtitle2" fontWeight="500" component="p" color="#A0A3BD">
-              My assets
+              My Assets
             </Typography>
             <SpaceBetweenBox mt="4px">
               <CenterBox>

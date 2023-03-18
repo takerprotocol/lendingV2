@@ -14,7 +14,7 @@ import { CollateralModel, TokenModel } from 'services/type/nft'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { desensitization, plus } from 'utils'
-import { gasLimit, getWETH } from 'config'
+import { getWETH } from 'config'
 import { toast } from 'react-toastify'
 import { TransactionType } from 'state/transactions/types'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -449,9 +449,7 @@ const LiquidateBody = ({
           amounts.push(el.amount)
         })
       contract
-        .liquidate(collections, tokenIds, amounts, getWETH(chainId), address, true, {
-          gasLimit,
-        })
+        .liquidate(collections, tokenIds, getWETH(chainId), address, true)
         .then((res: any) => {
           addTransaction(res, {
             type: TransactionType.LIQUIDATE,

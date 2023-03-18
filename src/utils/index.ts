@@ -234,7 +234,7 @@ export function stringFormat(value: string, thousandSeparated = true): string {
 export const getRiskLevel = (value: string | number) => {
   switch (true) {
     case new BigNumber(value).eq(0):
-      return 'HEALTHY'
+      return 'In liquidation...'
     case new BigNumber(value).lt(100):
       return 'In liquidation...'
     case new BigNumber(value).lte(110) && new BigNumber(value).gte(100):
@@ -248,7 +248,7 @@ export const getRiskLevel = (value: string | number) => {
 export const getRiskLevelTag = (value: string | number) => {
   switch (true) {
     case new BigNumber(value).eq(0):
-      return 'Healthy'
+      return 'In-liquidation'
     case new BigNumber(value).lt(100):
       return 'In-liquidation'
     case new BigNumber(value).lte(110) && new BigNumber(value).gte(100):

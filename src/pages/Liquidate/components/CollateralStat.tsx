@@ -171,26 +171,28 @@ const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2
               {split1}
             </SplitValue>
           </Split>
-          <Split>
-            <SplitTitleContainer>
-              <IndicatorColor color="#72AAFF" />
-              <Split1Title>{split2Title}</Split1Title>
-            </SplitTitleContainer>
-            <SplitValue>
-              <svg width="17" height="23" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g opacity="0.5">
-                  <path
-                    d="M4 11.7121L8.5 4.5L13 11.7121L8.5 18.5L4 11.7121Z"
-                    stroke="white"
-                    strokeWidth="1.5"
-                    strokeLinejoin="round"
-                  />
-                  <path d="M4 11.5L8.5 14L13 11.5" stroke="white" strokeLinejoin="round" />
-                </g>
-              </svg>
-              {split2}
-            </SplitValue>
-          </Split>
+          {split2Title && (
+            <Split>
+              <SplitTitleContainer>
+                <IndicatorColor color="#72AAFF" />
+                <Split1Title>{split2Title}</Split1Title>
+              </SplitTitleContainer>
+              <SplitValue>
+                <svg width="17" height="23" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g opacity="0.5">
+                    <path
+                      d="M4 11.7121L8.5 4.5L13 11.7121L8.5 18.5L4 11.7121Z"
+                      stroke="white"
+                      strokeWidth="1.5"
+                      strokeLinejoin="round"
+                    />
+                    <path d="M4 11.5L8.5 14L13 11.5" stroke="white" strokeLinejoin="round" />
+                  </g>
+                </svg>
+                {split2}
+              </SplitValue>
+            </Split>
+          )}
         </SplitContainer>
         <LineIndicatorContainer>
           <LineIndicator width={split1LineLength} color="#BB77FF" />
