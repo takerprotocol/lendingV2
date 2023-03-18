@@ -122,7 +122,7 @@ export const AllUser = (
 ) => {
   const queryString = `
     query users ($skip: Int, $limit: Int) {
-    users(skip: 0, limit: 10, where: {${healthFactor}${[...allUserWhere]},${searchValue},totalDebt_gt: 0},orderBy: ${
+    users(skip: 0, limit: 10, where: {${healthFactor}${[...allUserWhere]},${searchValue}},orderBy: ${
     conditionSort[0]
   }, orderDirection: ${conditionSort[1]}) {
         id
