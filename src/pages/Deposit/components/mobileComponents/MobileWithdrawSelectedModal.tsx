@@ -371,7 +371,7 @@ export default function MobileWithdrawSelectedModal({
           <SpaceBetweenBox height="1.1875rem" mt="1rem">
             <Box>
               <Typography variant="body2" color="#A0A3BD" sx={{ display: 'inline-block' }}>
-                Risk level
+                Heath Level
               </Typography>
               <Typography className={riskLevelTag} ml="0.5rem" variant="body2" component="span" fontWeight="700">
                 {TypographyRiskLevel}

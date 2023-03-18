@@ -205,7 +205,7 @@ export default function MobileMySupplySwitchModal({
                   <SpaceBetweenBox>
                     <FlexBox>
                       <Typography variant="body2" color="#A0A3BD">
-                        Risk level
+                        Heath Level
                       </Typography>
                       <Typography className={ColorClass} ml="0.5rem" variant="body2" fontWeight="700">
                         {TypographyRiskLevel}

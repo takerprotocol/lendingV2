@@ -487,7 +487,7 @@ export default function MobileMyAssetsModal({
                 <SpaceBetweenBox mt="1rem">
                   <FlexBox>
                     <Typography variant="body2" color="#A0A3BD">
-                      Risk Level
+                      Heath Level
                     </Typography>
                     <Typography className={riskLevelTag} ml="0.5rem" variant="body2" fontWeight="700">
                       {TypographyRiskLevel}

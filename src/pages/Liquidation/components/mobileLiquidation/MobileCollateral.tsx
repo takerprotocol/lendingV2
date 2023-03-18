@@ -144,9 +144,9 @@ export default function MobileCollateral({
       case 4:
         return 'Total Debt ↑'
       case 5:
-        return 'Risk Level: Low to High'
+        return 'Heath Level: Low to High'
       case 6:
-        return 'Risk Level: High to Low'
+        return 'Heath Level: High to Low'
       default:
         return 'Default Sort'
     }

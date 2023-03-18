@@ -427,11 +427,11 @@ const LiquidateBody = ({
       },
       {
         value: 5,
-        name: 'Risk Level: Low to High',
+        name: 'Heath Level: Low to High',
       },
       {
         value: 6,
-        name: 'Risk Level: High to Low',
+        name: 'Heath Level: High to Low',
       },
     ]
   }, [])

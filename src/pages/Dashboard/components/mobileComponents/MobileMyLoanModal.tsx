@@ -548,7 +548,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
           <SpaceBetweenBox mt="0.5rem" mb="1rem">
             <FlexBox>
               <Typography variant="body1" color="#A0A3BD">
-                Risk level
+                Heath Level
               </Typography>
               <Typography className={riskLevelTag} ml="0.5rem" variant="body1" fontWeight="700">
                 {TypographyRiskLevel}

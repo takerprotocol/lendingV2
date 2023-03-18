@@ -558,7 +558,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
           <SpaceBetweenBox mb="16.5px">
             <FlexBox>
               <Typography variant="body1" color="#A0A3BD">
-                Risk level
+                Heath Level
               </Typography>
               <Typography className={riskLevelTag} ml="8px" variant="body1" fontWeight="700">
                 {TypographyRiskLevel}

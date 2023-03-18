@@ -12,6 +12,7 @@ import { getClient } from 'apollo/client'
 import { User } from 'apollo/queries'
 import { decimalFormat } from 'utils'
 import { useNavigate } from 'react-router-dom'
+// import { toWei } from 'web3-utils'
 
 // import ILendingPoolAddressesProviderAbi from 'abis/MockERC721.json'
 // import { useContract } from 'hooks/useContract'
@@ -107,6 +108,8 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const address = useAddress()
   const [client, setClient] = useState<any>(null)
   const dashboardType = useDashboardType()
+  const collections = useCollections()
+  console.log(collections)
   useEffect(() => {
     if (chainId) {
       setClient(getClient(dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
@@ -115,7 +118,14 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const [nftCount, setNftCount] = useState(0)
   const [dataType] = useState<boolean>(true)
   const userValue = useUserValue()
-  const collections = useCollections()
+  // const qqq = useMemo(() => {
+  //   let count = 0
+  //   collections.forEach((el: any) => {
+  //     count = count + toWei(el.floorPrice,)
+  //   })
+  //   return count
+  // }, [collections])
+  // console.log(qqq)
   const accountNfts = useAccountNfts()
   const navigate = useNavigate()
   const depositedCollection = useDepositedCollection()

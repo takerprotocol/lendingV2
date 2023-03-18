@@ -117,9 +117,9 @@ export default function MobileNFTCollaterals({ loading }: MobileNFTCollateralsPr
   const sortValue = useMemo(() => {
     switch (sort) {
       case 1:
-        return 'Risk Level: Low to High'
+        return 'Heath Level: Low to High'
       case 2:
-        return 'Risk Level: High to Low'
+        return 'Heath Level: High to Low'
       default:
         return 'Default Sort'
     }

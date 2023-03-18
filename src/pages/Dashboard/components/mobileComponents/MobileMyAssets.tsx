@@ -24,7 +24,7 @@ import MobileMyETHCollateral from './MobileMyETHCollateral'
 import MobileMyNFTCollateral from './MobileMyNFTCollateral'
 import MobileMyLoan from './MobileMyLoan'
 import { decimalFormat, fixedFormat, plus } from 'utils'
-import { useLoading, usePoolValues } from 'state/application/hooks'
+import { useLoading, usePoolValues, useShowChangeNetWork } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { setLoginWalletType, setMobileMenuType } from 'state/user/reducer'
 import MobileMyAssetsModal from './MobileMyAssetsModal'
@@ -108,6 +108,7 @@ export default function MobileMyAssets() {
   const decimal = useDecimal()
   const ethLiquidity = useEthLiquidity()
   const userValue = useUserValue()
+  const showChangeNetWork = useShowChangeNetWork()
   const ethCollateral = useEthCollateral()
   const [openMySupplyModal, setOpenMySupplyModal] = useState<boolean>(false)
   const type = useDashboardType()
@@ -268,8 +269,10 @@ export default function MobileMyAssets() {
                           <Typography
                             variant="body2"
                             onClick={() => {
-                              setTypeModal(1)
-                              setOpenMySupplyModal(true)
+                              if (!showChangeNetWork) {
+                                setTypeModal(1)
+                                setOpenMySupplyModal(true)
+                              }
                             }}
                             fontWeight="700"
                             color="rgba(255, 255, 255)"

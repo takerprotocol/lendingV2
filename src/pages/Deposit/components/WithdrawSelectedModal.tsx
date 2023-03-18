@@ -80,7 +80,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
   const userValue = useUserValue()
   const heath = useHeath()
   const erc20ReserveData = useErc20ReserveData()
-  const collateralRiskLevel = useCollateralRiskLevel(times(amount, -1))
+  const collateralRiskLevel = useCollateralRiskLevel()
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
   const ercContract = useContract(id, MockERC721Abi)
@@ -218,7 +218,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
         </SpaceBetweenBox>
         <SpaceBetweenBox mt="16px">
           <Box>
-            <BodyTypography sx={{ display: 'inline-block' }}>Risk level</BodyTypography>
+            <BodyTypography sx={{ display: 'inline-block' }}>Heath Level</BodyTypography>
             <Typography className={riskLevelTag} ml="8px" variant="body1" component="span" fontWeight="700">
               {TypographyRiskLevel}
             </Typography>
@@ -258,7 +258,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
             </Box>
             <Box width={'66px'}>
               <Typography component="p" variant="subtitle2" color="#6E7191">
-                {erc20ReserveData.borrowRate}%
+                -10%
               </Typography>
             </Box>
             <Box width="50px">
@@ -305,7 +305,6 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
         </Box>
         <Button
           variant="contained"
-          disabled={riskLevelWarning}
           sx={{ width: '372px', height: '54px' }}
           color={riskLevelWarning ? 'error' : 'primary'}
           onClick={() => {

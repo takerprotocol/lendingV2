@@ -115,7 +115,7 @@ export default function MobileCollateralsSort({ sort, setSort, open, anchorEl, s
             setSort(5)
           }}
         >
-          Risk Level: Low to High
+          Heath Level: Low to High
         </StyledMenuItem>
         <StyledMenuItem
           className={sort === 6 ? 'selected' : ''}
@@ -124,7 +124,7 @@ export default function MobileCollateralsSort({ sort, setSort, open, anchorEl, s
             setSort(6)
           }}
         >
-          Risk Level: High to Low
+          Heath Level: High to Low
         </StyledMenuItem>
       </CollateralsMenu>
     </div>

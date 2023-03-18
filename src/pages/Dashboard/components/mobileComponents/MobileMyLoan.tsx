@@ -9,7 +9,7 @@ import { useMemo, useState } from 'react'
 import { useBorrowLimit, useDebtBorrowLimitUsed, useErc20ReserveData, useEthDebt, useHeath } from 'state/user/hooks'
 import { fixedFormat, getRiskLevel, getRiskLevelTag, times } from 'utils'
 import MobileMyLoanModal from './MobileMyLoanModal'
-import { useLoading } from 'state/application/hooks'
+import { useLoading, useShowChangeNetWork } from 'state/application/hooks'
 import MobileMyLoanSkeleton from '../mobileDashboardSkeleton/MobileMyLoanSkeleton '
 import BigNumber from 'bignumber.js'
 import TipsTooltip from '../TipsTooltip'
@@ -93,6 +93,7 @@ interface MobileMyLoanProps {
 export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanProps) {
   const ethDebt = useEthDebt()
   const heath = useHeath()
+  const showChangeNetWork = useShowChangeNetWork()
   const erc20ReserveData = useErc20ReserveData()
   const [open, setOpen] = useState<boolean>(false)
   const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
@@ -189,6 +190,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                         setRepayRoBorrow(2)
                         setOpen(true)
                       }}
+                      disabled={showChangeNetWork}
                       className="loanButton"
                       variant="contained"
                       color="secondary"
@@ -199,7 +201,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                     </Button>
                   </Box>
                   <BorrowButton
-                    disabled={+borrowLimit === 0}
+                    disabled={+borrowLimit === 0 || showChangeNetWork}
                     onClick={() => {
                       setRepayRoBorrow(1)
                       setOpen(true)
@@ -252,7 +254,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                   </Box>
                   <FlexBox>
                     <Button
-                      disabled={+ethDebt === 0}
+                      disabled={+ethDebt === 0 || showChangeNetWork}
                       onClick={() => {
                         setOpen(true)
                         setRepayRoBorrow(2)
@@ -305,7 +307,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                     <RiskFlexBox>
                       <Box pt="1.1875rem">
                         <Typography variant="body2" lineHeight="0.75rem" fontWeight="600">
-                          Risk Level
+                          Heath Level
                         </Typography>
                         <Typography
                           mt="0.5rem"

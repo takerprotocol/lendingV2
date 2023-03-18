@@ -13,6 +13,7 @@ import { minus, fixedFormat, getRiskLevel, getRiskLevelTag, times, decimalFormat
 import MyLoanSkeleton from './DashboardSkeleton/MyLoanSkeleton'
 import { useBorrowLimit, useDebtBorrowLimitUsed, useErc20ReserveData, useEthDebt, useHeath } from 'state/user/hooks'
 import TipsTooltip from './TipsTooltip'
+import { useShowChangeNetWork } from 'state/application/hooks'
 // import { useContract } from 'hooks/useContract'
 // import ILendingPoolAddressesProviderAbi from 'abis/ILendingPoolAddressesProvider.json'
 // import { useAddress } from 'state/application/hooks'
@@ -99,6 +100,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
   const [repayRoBorrow, setRepayRoBorrow] = useState<number>(1)
   const erc20ReserveData = useErc20ReserveData()
   const ethDebt = useEthDebt()
+  const showChangeNetWork = useShowChangeNetWork()
   const borrowLimit = useBorrowLimit()
   const borrowLimitUsed = useDebtBorrowLimitUsed()
   const heath = useHeath()
@@ -137,8 +139,8 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
               </Box>
               <Box mt="26px">
                 <Button
-                  disabled={+ethDebt === 0}
-                  className={+ethDebt !== 0 ? 'Padding-button' : ''}
+                  disabled={showChangeNetWork || +ethDebt === 0}
+                  className={showChangeNetWork || +ethDebt !== 0 ? 'Padding-button' : ''}
                   variant="contained"
                   onClick={() => {
                     if (+ethDebt !== 0) {
@@ -168,7 +170,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                 <FlexStartBox ml="10px">
                   <Box width="220px" mt="12px">
                     <Typography mb="12px" lineHeight="14px" fontWeight="600" variant="body1">
-                      Risk Level
+                      Heath Level
                     </Typography>
                     <Typography fontSize="22px" className={myLoanRiskLevelTag} lineHeight="24px" fontWeight="700">
                       {myLoanRiskLevel}
@@ -278,7 +280,7 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                 </Typography>
               </Box>
               <Button
-                disabled={Number(minus(borrowLimit, ethDebt)) === 0}
+                disabled={Number(minus(borrowLimit, ethDebt)) === 0 || showChangeNetWork}
                 sx={{ width: '125px', height: '48px' }}
                 variant="contained"
                 onClick={() => {

@@ -218,7 +218,7 @@ export default function MySupplySwitchModal({
                   <SpaceBetweenBox>
                     <Box>
                       <Typography mr="8px" variant="body1" component="span" color="#A0A3BD">
-                        Risk level
+                        Heath Level
                       </Typography>
                       <Typography className={ColorClass} ml="8px" variant="body1" component="span" fontWeight="700">
                         {TypographyRiskLevel}

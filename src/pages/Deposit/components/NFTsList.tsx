@@ -141,10 +141,10 @@ export default function NFTsList({ list, loading, onChange, TypeKey, checked, se
                     sx={{ display: `${depositType === 'open' ? '' : 'none'}` }}
                     color="default"
                   /> */}
-                  <Box ml="10px">
+                  <Box>
                     <Box sx={{ display: ' flex', alignItems: 'flex-start' }}>
                       <Image src={el.media[0]?.gateway || ''} alt={`nft-${el.title}`} />
-                      <Typography ml={'10px'} variant="subtitle2" component="span" fontWeight="700" color="#14142A">
+                      <Typography ml={'12px'} variant="subtitle2" component="span" fontWeight="700" color="#14142A">
                         {el.title}
                       </Typography>
                     </Box>

@@ -1,4 +1,4 @@
-import { Box, Button, Fade, Modal, styled, Typography } from '@mui/material'
+import { Box, Button, Modal, styled, Typography } from '@mui/material'
 import addIcon from 'assets/images/svg/common/add.svg'
 import redPrompt from 'assets/images/svg/common/redPrompt.svg'
 import rightIcon from 'assets/images/svg/common/rightIcon.svg'
@@ -294,7 +294,7 @@ export default function NFTsSelectedModal({
         </SpaceBetweenBox>
         <SpaceBetweenBox mt="16px">
           <Box>
-            <BodyTypography sx={{ display: 'inline-block' }}>Risk level</BodyTypography>
+            <BodyTypography sx={{ display: 'inline-block' }}>Heath Level</BodyTypography>
             <Typography className={riskLevelTag} ml="8px" variant="body1" component="span" fontWeight="700">
               {TypographyRiskLevel}
             </Typography>
@@ -379,49 +379,47 @@ export default function NFTsSelectedModal({
             </Typography>
           </FlexBox>
         </Box>
-        <Fade timeout={300} in={true}>
-          <FlexBox justifyContent="space-between">
-            {isApproved !== 2 && (
-              <Button
-                variant="contained"
-                disabled={loading}
-                sx={{ width: '176px', height: '54px', marginRight: '16px' }}
-                color={riskLevelWarning ? 'error' : 'primary'}
-                onClick={() => {
-                  if (type === 'Withdraw') {
-                    withdraw()
-                  } else {
-                    deposit()
-                  }
-                }}
-              >
-                {approvePending.length > 0 || withdrawPending.length > 0 || depositPending.length > 0 || loading ? (
-                  <Loading></Loading>
-                ) : (
-                  <></>
-                )}
-                {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
-              </Button>
-            )}
+        <FlexBox justifyContent="space-between">
+          {isApproved !== 2 && (
             <Button
               variant="contained"
-              disabled={isApproved !== 2}
-              sx={{ width: isApproved !== 2 ? '176px' : '100%', height: '54px' }}
+              disabled={loading}
+              sx={{ width: '176px', height: '54px', marginRight: '16px' }}
               color={riskLevelWarning ? 'error' : 'primary'}
               onClick={() => {
-                deposit()
+                if (type === 'Withdraw') {
+                  withdraw()
+                } else {
+                  deposit()
+                }
               }}
             >
-              {withdrawPending.length > 0 || depositPending.length > 0 || (loading && isApproved === 2) ? (
+              {approvePending.length > 0 || withdrawPending.length > 0 || depositPending.length > 0 || loading ? (
                 <Loading></Loading>
               ) : (
                 <></>
               )}
-              {!loading && isApproved !== 2 && <StepTypography>Step2</StepTypography>}
-              {isApproved === 0 ? 'Deposit' : `Deposit ${data.length} NFTs`}
+              {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
             </Button>
-          </FlexBox>
-        </Fade>
+          )}
+          <Button
+            variant="contained"
+            disabled={isApproved !== 2}
+            sx={{ width: isApproved !== 2 ? '176px' : '100%', height: '54px' }}
+            color={riskLevelWarning ? 'error' : 'primary'}
+            onClick={() => {
+              deposit()
+            }}
+          >
+            {withdrawPending.length > 0 || depositPending.length > 0 || (loading && isApproved === 2) ? (
+              <Loading></Loading>
+            ) : (
+              <></>
+            )}
+            {!loading && isApproved !== 2 && <StepTypography>Step2</StepTypography>}
+            {isApproved === 0 ? 'Deposit' : `Deposit ${data.length} NFTs`}
+          </Button>
+        </FlexBox>
       </Box>
     </Modal>
   )

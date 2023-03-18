@@ -99,7 +99,7 @@ const LiquidateHeader = ({
           <Copy text={address} />
         </CollateralAddress>
         <RiskLevelContainer>
-          <RiskLevel>Risk level {riskPercentage}%</RiskLevel>
+          <RiskLevel>Heath Level{riskPercentage}%</RiskLevel>
         </RiskLevelContainer>
       </InfoContainer>
       <CollateralStatsContainer>
