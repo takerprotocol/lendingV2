@@ -1,11 +1,10 @@
 import { Nft } from '@alch/alchemy-sdk'
-import { Box, Checkbox, styled, Typography } from '@mui/material'
+import { Box, styled, Typography } from '@mui/material'
 import { useAlchemy } from 'hooks/useAlchemy'
 import { useCallback, useEffect, useState } from 'react'
 import { getAlchemyNftMetadata } from 'services/module/deposit'
 
 const Container = styled(Box)`
-  padding: 12px;
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.5);
   border-radius: 10px;
   display: flex;
@@ -16,12 +15,12 @@ const Container = styled(Box)`
   user-select: none;
 `
 
-const StyledCheckbox = styled(Checkbox)(() => ({
-  width: 20,
-  height: 20,
-  boxShadow: '0px 4px 8px rgba(75, 75, 122, 0.1)',
-  color: 'trasnparent !important',
-}))
+// const StyledCheckbox = styled(Checkbox)(() => ({
+//   width: 20,
+//   height: 20,
+//   boxShadow: '0px 4px 8px rgba(75, 75, 122, 0.1)',
+//   color: 'trasnparent !important',
+// }))
 
 const NFTInfoContainer = styled('div')`
   display: flex;
@@ -172,17 +171,19 @@ const ActionInfoContainer = styled('div')`
 type NFTItemProps = {
   token: string
   handle: Function
+  setTokenChecked: Function
+  tokenChecked: string
 }
 
-const NFTItem = ({ token, handle }: NFTItemProps) => {
+const NFTItem = ({ token, handle, tokenChecked, setTokenChecked }: NFTItemProps) => {
   // const [max] = useState('')
   const [metadata, setMetadata] = useState<Nft | null>(null)
-  const [checked, setChecked] = useState<boolean>(false)
+  // const [checked, setChecked] = useState<boolean>(false)
   const alchemy = useAlchemy()
-  const handleCheck = useCallback(() => {
-    handle(!checked)
-    setChecked(!checked)
-  }, [checked, handle])
+  // const handleCheck = useCallback(() => {
+  //   handle(!checked)
+  //   setChecked(!checked)
+  // }, [checked, handle])
   // const [floorPrice, setFloorPrice] = useState<string | number>('')
   const [errorNftImage, setErrorNftImage] = useState(false)
   const handleNftImageError = useCallback(() => setErrorNftImage(true), [])
@@ -198,8 +199,27 @@ const NFTItem = ({ token, handle }: NFTItemProps) => {
     }
   }, [token, alchemy])
   return (
-    <Container sx={{ border: `${checked ? '1px solid #a0a3bd' : ''}` }} onClick={handleCheck}>
-      <StyledCheckbox checked={checked} onChange={handleCheck} />
+    <Container
+      sx={{ border: `${tokenChecked === token ? '1px solid #a0a3bd' : ''}` }}
+      p={tokenChecked === token ? '11px' : '12px'}
+      onClick={() => {
+        if (tokenChecked === token) {
+          setTokenChecked('')
+        } else {
+          setTokenChecked(token)
+        }
+      }}
+    >
+      {/* <StyledCheckbox
+        checked={tokenChecked === token}
+        onChange={() => {
+          if (tokenChecked === token) {
+            setTokenChecked('')
+          } else {
+            setTokenChecked(token)
+          }
+        }}
+      /> */}
       {metadata && (
         <ActionInfoContainer>
           <NFTInfoContainer>

@@ -10,7 +10,6 @@ import { FlexBox, SpaceBetweenBox } from 'styleds'
 import CollateralsType from './CollateralsType'
 import { useCollateralsType } from 'state/user/hooks'
 import { CollateralModel, CollectionsModel } from 'services/type/nft'
-import { plus, minus, times } from 'utils'
 // import { useCollections } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { setCollateralsType } from 'state/user/reducer'
@@ -437,15 +436,7 @@ const Collaterals = ({
 
   //------------//
 
-  const [currentPage, setCurrentPage] = React.useState<number>(1)
-  const currentPageIndex = useMemo(
-    () =>
-      Math.ceil(collaterals.length / 16) === currentPage
-        ? plus(plus(collaterals.length, currentPage % 16), times(minus(currentPage, 1), 16))
-        : times(currentPage, 16),
-    [collaterals.length, currentPage]
-  )
-  console.log(currentPageIndex)
+  const [, setCurrentPage] = React.useState<number>(1)
   //------------//
   const CollateralList = useMemo(() => {
     return (
@@ -496,10 +487,12 @@ const Collaterals = ({
     setAnchorEl(event.currentTarget)
   }
   const collateralsType = useCollateralsType()
-  const liquidation = useMemo(() => {
-    return openChecked ? '1' : '0'
-  }, [openChecked])
-  setInLiquidation(liquidation)
+  // const liquidation = useMemo(() => {
+  //   return openChecked ? '1' : '0'
+  // }, [openChecked])
+  // useEffect(() => {
+  //   setInLiquidation(liquidation)
+  // }, [liquidation, setInLiquidation])
   return (
     <CollateralsBox>
       <CollateralsContainer>
@@ -564,6 +557,7 @@ const Collaterals = ({
                   sx={{ width: '24px', height: '24px' }}
                   onChange={(el: any) => {
                     setOpenChecked(!openChecked)
+                    setInLiquidation(!openChecked ? '1' : '0')
                   }}
                 />
               </LiquidationBox>

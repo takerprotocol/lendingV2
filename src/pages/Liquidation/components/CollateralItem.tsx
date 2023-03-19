@@ -2,18 +2,10 @@ import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
 import Copy from 'components/Copy'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CollectionsModel } from 'services/type/nft'
 import { abbrevAddress } from 'utils/abbrevAddres'
-import ERC721 from 'assets/images/png/collection/721.png'
-import Azuki from 'assets/images/png/collection/azuki.png'
-import Bayc from 'assets/images/png/collection/bayc.png'
-import Mayc from 'assets/images/png/collection/mayc.png'
-import Women from 'assets/images/png/collection/women.gif'
-import Cat from 'assets/images/png/collection/cat.png'
-import Clonex from 'assets/images/png/collection/clonex.png'
-import Doodles from 'assets/images/png/collection/doodles.png'
-import { fixedFormat, renderCollectionName } from 'utils'
+import { fixedFormat } from 'utils'
 import numbro from 'numbro'
+import { Nft } from '@alch/alchemy-sdk'
 const Card = styled('div')(({ theme }) => ({
   background: '#ffffff',
   border: '1px solid #eff0f6',
@@ -153,6 +145,7 @@ type CollateralItemType = {
   collections: any
   debt: string
   type: string
+  tokens: Nft[]
   riskPercentage: string
   riskLevel: string
   riskLevelTag?: string
@@ -163,6 +156,7 @@ const CollateralItem = ({
   address,
   collateral,
   collections,
+  tokens,
   debt,
   type,
   riskPercentage = '0',
@@ -171,45 +165,24 @@ const CollateralItem = ({
   nfts = 0,
 }: CollateralItemType) => {
   const overflow = useMemo(() => {
-    return collections ? collections.length > 9 : undefined
-  }, [collections])
+    return tokens ? tokens.length > 9 : undefined
+  }, [tokens])
 
-  const renderImg = (symbol?: string) => {
-    if (symbol) {
-      if (symbol.toLocaleLowerCase().indexOf('mayc') > -1) {
-        return Mayc
-      } else if (symbol.toLocaleLowerCase().indexOf('azuki') > -1) {
-        return Azuki
-      } else if (symbol.toLocaleLowerCase().indexOf('bayc') > -1) {
-        return Bayc
-      } else if (symbol.toLocaleLowerCase().indexOf('world_of_women') > -1) {
-        return Women
-      } else if (symbol.toLocaleLowerCase().indexOf('doodles') > -1) {
-        return Doodles
-      } else if (symbol.toLocaleLowerCase().indexOf('cool_cats') > -1) {
-        return Cat
-      } else if (symbol.toLocaleLowerCase().indexOf('clonex') > -1) {
-        return Clonex
-      }
-    }
-    return ERC721
-  }
-  const [shownCollections, setShowCollections] = useState(collections.slice(0, 8))
-  const showAllCollections = useCallback(() => setShowCollections(collections), [collections])
+  const showAllCollections = useCallback(() => tokens, [tokens])
   const Collections = useMemo(() => {
-    if (shownCollections.length) {
-      return shownCollections?.map((collection: CollectionsModel, index: number) => (
+    if (tokens.length) {
+      return tokens.map((nft: Nft, index: number) => (
         <CollectionImage
-          key={`collection-${collection.id}${index}`}
+          key={`collection-${nft.tokenId}${index}`}
           alt="collection"
-          text={renderCollectionName(collection.collection.symbol)}
-          src={renderImg(collection.collection.symbol)}
+          text={nft.tokenId}
+          src={nft.media[0]?.gateway}
         />
       ))
     } else {
       return <NoCollateralText>No NFT collateral</NoCollateralText>
     }
-  }, [shownCollections])
+  }, [tokens])
   const navigate = useNavigate()
 
   return (
@@ -230,7 +203,7 @@ const CollateralItem = ({
         <Value>
           <CollectionImageContainer style={{ marginLeft: overflow ? 10 : 0 }}>
             {Collections}
-            {overflow && collections?.length !== shownCollections?.length && (
+            {overflow && collections?.length !== tokens?.length && (
               <ShowMoreCollectionsButton onClick={showAllCollections}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle opacity="0.5" cx="12" cy="12" r="12" fill="#D9DBE9" />

@@ -28,8 +28,8 @@ const MyLoanBox = styled(Box)`
   border-radius: 12px;
   .Padding-button {
     min-width: 104px;
-    width: 124px;
-    height: 46px;
+    width: 125px;
+    height: 48px;
     padding: 5px 16px;
     background: #f7f7fc !important;
     border: none;
@@ -91,6 +91,37 @@ const RiskLevelBox = styled(Box)`
     border-bottom-right-radius: 0px !important;
   }
 `
+const RiskBox = styled(Box)`
+  margin-top: 6px;
+  margin-right: 32px;
+  padding: 3px 11px;
+  border-radius: 20px;
+`
+const RepayButton = styled(Button)`
+  width: 125px;
+  height: 48px;
+  &.Mui-disabled {
+    background: #f7f7fc;
+    mix-blend-mode: normal;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 160%;
+    text-align: center;
+    color: rgba(55, 55, 55, 0.3) !important;
+  }
+`
+const BorrowButton = styled(Button)`
+  &.error {
+    background: #f9e7ea;
+    border-radius: 6px;
+    color: #e1536c;
+    box-shadow: none;
+    :hover {
+      box-shadow: none;
+    }
+  }
+`
 interface MyLoanProps {
   loading: boolean
   type: number
@@ -133,12 +164,12 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                 <CenterBox mt="4px">
                   <img src={blackEthLogo} alt="" />
                   <Typography ml="8px" variant="h3" fontSize="32px" lineHeight="51px">
-                    {fixedFormat(ethDebt)}
+                    {new BigNumber(ethDebt).gt(0) && new BigNumber(ethDebt).lt(0.01) ? '<0.01' : fixedFormat(ethDebt)}
                   </Typography>
                 </CenterBox>
               </Box>
               <Box mt="26px">
-                <Button
+                <RepayButton
                   disabled={showChangeNetWork || +ethDebt === 0}
                   className={showChangeNetWork || +ethDebt !== 0 ? 'Padding-button' : ''}
                   variant="contained"
@@ -149,8 +180,8 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                     }
                   }}
                 >
-                  Repay
-                </Button>
+                  Repay {showChangeNetWork || +ethDebt === 0 ? '' : '>'}
+                </RepayButton>
               </Box>
             </RepayBox>
           </Box>
@@ -168,12 +199,12 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
             {+borrowLimit !== 0 ? (
               <>
                 <FlexStartBox ml="10px">
-                  <Box width="220px" mt="12px">
+                  <Box mt="12px">
                     <Typography mb="12px" lineHeight="14px" fontWeight="600" variant="body1">
                       Heath Level
                     </Typography>
                     <Typography fontSize="22px" className={myLoanRiskLevelTag} lineHeight="24px" fontWeight="700">
-                      {myLoanRiskLevel}
+                      {heath}%
                     </Typography>
                   </Box>
                   <Box>
@@ -187,14 +218,14 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                           }
                         ></TipsTooltip>
                       </FlexEndBox>
-                      <Box mr="24px">
-                        <Typography component="p" variant="subtitle2" color="#6E7191">
-                          {heath}%
+                      <RiskBox className={myLoanRiskLevelTag} sx={{ border: '1px solid' }}>
+                        <Typography className={myLoanRiskLevelTag} variant="subtitle2">
+                          {myLoanRiskLevel}
                         </Typography>
-                        <Typography component="p" variant="body2" color="#A0A3BD">
+                        {/* <Typography component="p" variant="body2" color="#A0A3BD">
                           Collateralization
-                        </Typography>
-                      </Box>
+                        </Typography> */}
+                      </RiskBox>
                     </Box>
                   </Box>
                   <BeforeImg src={riskLevelBefore}></BeforeImg>
@@ -279,18 +310,24 @@ export default function MyLoan({ loading, type }: MyLoanProps) {
                   Available Loan
                 </Typography>
               </Box>
-              <Button
-                disabled={Number(minus(borrowLimit, ethDebt)) === 0 || showChangeNetWork}
+              <BorrowButton
+                disabled={
+                  Number(minus(borrowLimit, ethDebt)) === 0 || new BigNumber(heath).lt(100) || showChangeNetWork
+                }
                 sx={{ width: '125px', height: '48px' }}
                 variant="contained"
+                className={new BigNumber(heath).lt(100) ? 'error' : ''}
                 onClick={() => {
                   setOpen(true)
                   setRepayRoBorrow(1)
                 }}
               >
-                Borrow
+                Borrow{' '}
+                {new BigNumber(heath).lt(100) || Number(minus(borrowLimit, ethDebt)) === 0 || showChangeNetWork
+                  ? ''
+                  : '>'}
                 {/* {Number(minus(borrowLimit, ethDebt)) !== 0 && <img className="left" src={ButtonSupply} alt="" />} */}
-              </Button>
+              </BorrowButton>
             </SpaceBetweenBox>
           </BottomBox>
         </>

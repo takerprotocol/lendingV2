@@ -540,7 +540,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Typography mt="8px" variant="body1" fontWeight="600" color="#14142A">
-                      {fixedFormat(ethDebt)} ETH
+                      {new BigNumber(ethDebt).lt(0.01) && new BigNumber(ethDebt).gt(0) ? '<0.01' : fixedFormat(ethDebt)}{' '}
+                      ETH
                     </Typography>
                   </Box>
                 </Box>

@@ -178,7 +178,7 @@ export default function Collection({ type, loading }: CollectionType) {
                   <TitleTypography> Loan to Value </TitleTypography>
                 </Box>
                 <Box sx={{ width: '222px' }}>
-                  <TitleTypography>Total Value Locked</TitleTypography>
+                  <TitleTypography>Deposit</TitleTypography>
                 </Box>
                 <Box>
                   <TitleTypography>Token reward</TitleTypography>

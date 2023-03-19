@@ -532,7 +532,7 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Typography mt="0.5rem" variant="body2" color="#14142A">
-                      {fixedFormat(ethDebt)} ETH
+                      {new BigNumber(ethDebt).gt(0) && new BigNumber(ethDebt).lt(0.01) ? '<0.01' : fixedFormat(ethDebt)}
                     </Typography>
                   </Box>
                 </Box>
@@ -556,10 +556,10 @@ export default function MobileMyLoanModal({ open, repayRoBorrow, onClose }: MyLo
             </FlexBox>
             <FlexBox>
               <Typography variant="body1" fontWeight="600" color="#A0A3BD">
-                {new BigNumber(heath).toFormat(0)}% {'>'}
+                {heath}% {'>'}
               </Typography>
               <Typography ml="6px" variant="body1" fontWeight="700" color="#14142A">
-                {new BigNumber(amount ? debtRiskLevel : heath).toFormat(0)}%
+                {amount ? debtRiskLevel : heath}%
               </Typography>
             </FlexBox>
           </SpaceBetweenBox>

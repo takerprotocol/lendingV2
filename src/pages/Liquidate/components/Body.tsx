@@ -1,7 +1,7 @@
 import { Box, styled, Typography } from '@mui/material'
 import Pager from 'components/Pages/Pager'
 import CustomizedSelect from 'components/Select'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { FlexBox } from 'styleds'
 import Collection1 from 'assets/images/png/liquidation/example/1.png'
 import Collection2 from 'assets/images/png/liquidation/example/2.png'
@@ -9,17 +9,9 @@ import Collection3 from 'assets/images/png/liquidation/example/3.png'
 // import EthCollateral from './EthCollateral'
 import LiquidationBar from './LiquidationBar'
 import NFTItem from './NFTItem'
+import { CollateralModel } from 'services/type/nft'
 import NFTItemSkeleton from './NftItemSkeleton'
-import { CollateralModel, TokenModel } from 'services/type/nft'
-import BigNumber from 'bignumber.js'
-import { useLendingPool } from 'hooks/useLendingPool'
-import { desensitization, plus } from 'utils'
-import { getWETH } from 'config'
-import { toast } from 'react-toastify'
-import { TransactionType } from 'state/transactions/types'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { useParams } from 'react-router-dom'
-import { useActiveWeb3React } from 'hooks/web3'
+// import EthCollateral from './EthCollateral'
 
 const Container = styled('div')`
   width: 1012px;
@@ -132,30 +124,28 @@ const LiquidateBody = ({
   collaterals,
   loading,
   totalDebt,
+  barTotal,
+  nfts,
+  setTokenChecked,
+  tokenChecked,
+  nftsValue,
+  ethValue,
+  submit,
 }: {
   total: string
   collaterals: CollateralModel | null
   loading: boolean
+  setTokenChecked: Function
+  tokenChecked: string
   totalDebt: string
+  barTotal: string
+  nfts: number
+  nftsValue: string
+  ethValue: string
+  submit: Function
 }) => {
-  const { address } = useParams()
-  const contract = useLendingPool()
   const [filter] = useState<number>(1)
-  const [tokenChecked, setTokenChecked] = useState<Array<string>>([])
-  const [ethValue, setEthValue] = useState('0')
-  const addTransaction = useTransactionAdder()
-  const { chainId } = useActiveWeb3React()
   const [value, setValue] = useState<number>(0)
-  useEffect(() => {
-    if (contract) {
-      // contract.getUserState(address).then((res: Array<BigNumber>) => {
-      //   console.log('1111', res)
-      // })
-      // contract.getUserValues(address).then((res: Array<BigNumber>) => {
-      //   console.log('11122', res)
-      // })
-    }
-  }, [contract])
   const Collaterals = useMemo(() => {
     if (collaterals) {
       const items: Array<JSX.Element> = []
@@ -165,11 +155,13 @@ const LiquidateBody = ({
             <NFTItem
               handle={(checked: boolean) => {
                 if (checked) {
-                  setTokenChecked([...tokenChecked, token.id])
+                  setTokenChecked(token.id)
                 } else {
-                  setTokenChecked(tokenChecked.filter((tc: string) => tc !== token.id))
+                  setTokenChecked('')
                 }
               }}
+              tokenChecked={tokenChecked}
+              setTokenChecked={setTokenChecked}
               token={token.id}
               key={`collateral-${collection.id}-${token.id}`}
             />
@@ -179,36 +171,7 @@ const LiquidateBody = ({
       return items
     }
     return []
-  }, [collaterals, tokenChecked])
-
-  const nfts = useMemo(() => {
-    const _nfts: Array<TokenModel> = []
-    if (collaterals) {
-      collaterals.collections.forEach((collection) => {
-        collection.tokens.forEach((token) => {
-          _nfts.push(token)
-        })
-      })
-    }
-    return _nfts
-  }, [collaterals])
-
-  const nftAmount = useMemo(() => {
-    let amount = '0'
-    nfts
-      .filter((nft) => tokenChecked.includes(nft.id))
-      .forEach((el) => {
-        amount = new BigNumber(el.amount).plus(amount).toString()
-      })
-    return amount
-  }, [nfts, tokenChecked])
-  const LoadingCollaterals = useMemo(
-    () =>
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        .slice(0, 9)
-        .map((_collateral, index) => <NFTItemSkeleton key={`collateral-${index}`} />),
-    []
-  )
+  }, [collaterals, setTokenChecked, tokenChecked])
   //--------js--------//
   const testCollaterals = useMemo(
     () => [
@@ -435,35 +398,13 @@ const LiquidateBody = ({
       },
     ]
   }, [])
-
-  const submit = () => {
-    if (contract) {
-      const collections: Array<string> = []
-      const tokenIds: Array<string> = []
-      const amounts: Array<string> = []
-      nfts
-        .filter((nft) => tokenChecked.includes(nft.id))
-        .forEach((el) => {
-          collections.push(el.id.split('-')[1])
-          tokenIds.push(el.id.split('-')[2])
-          amounts.push(el.amount)
-        })
-      contract
-        .liquidate(collections, tokenIds, getWETH(chainId), address, true)
-        .then((res: any) => {
-          addTransaction(res, {
-            type: TransactionType.LIQUIDATE,
-            amount: plus(nftAmount, ethValue || '0'),
-          })
-          toast.success(desensitization(res.hash))
-          setEthValue('')
-        })
-        .catch((error: any) => {
-          toast.error(error.message)
-        })
-    }
-  }
-  //-------js---------//
+  const LoadingCollaterals = useMemo(
+    () =>
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        .slice(0, 9)
+        .map((_collateral, index) => <NFTItemSkeleton key={`collateral-${index}`} />),
+    []
+  )
   return (
     <Container>
       <PaddingBox>
@@ -545,9 +486,9 @@ const LiquidateBody = ({
         /> */}
       </PaddingBox>
       <LiquidationBar
-        total={plus(nftAmount, ethValue || '0')}
+        total={barTotal}
         nfts={tokenChecked.length}
-        nftsValue={nftAmount}
+        nftsValue={nftsValue}
         ethValue={ethValue}
         submit={() => {
           submit()

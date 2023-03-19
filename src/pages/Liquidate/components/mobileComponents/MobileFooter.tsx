@@ -1,10 +1,9 @@
-import { Box, Button, Checkbox, styled, Typography } from '@mui/material'
+import { Box, Button, styled, Typography } from '@mui/material'
 import { SpaceBetweenBox, FlexBox, FlexEndBox, SpaceBox, CenterBox } from 'styleds'
-import mobileNFT from 'assets/images/svg/liquidate/mobile-NFT.svg'
-import { div } from 'utils'
+// import mobileNFT from 'assets/images/svg/liquidate/mobile-NFT.svg'
+// import { div } from 'utils'
 import { useState } from 'react'
-import liquidateNotChecked_Icon from 'assets/images/svg/liquidate/liquidateNotChecked_Icon.svg'
-import liquidateChecked_Icon from 'assets/images/svg/liquidate/liquidateChecked_Icon.svg'
+import BigNumber from 'bignumber.js'
 
 const MobileFooterBox = styled(Box)`
   position: fixed;
@@ -38,21 +37,24 @@ const MobileFooterBox = styled(Box)`
     }
   }
 `
+const StartBox = styled(Box)`
+  display: flex;
+  align-items: flex-start;
+`
 const RadiusImg = styled(`img`)`
   width: 1rem;
   height: 1rem;
   margin-right: 0.375;
   border-radius: 100%;
 `
-const StyleCheckbox = styled(Checkbox)`
-  width: 1.25rem;
-  height: 1.25rem;
-`
+// const StyleCheckbox = styled(Checkbox)`
+//   width: 1.25rem;
+//   height: 1.25rem;
+// `
 const ImgBox = styled(`img`)`
   width: 3rem;
   height: 3rem;
   margin-right: 0.5rem;
-  background: #a31;
   border-radius: 0.25rem;
 `
 export const EllipsisTypography = styled(Typography)`
@@ -105,6 +107,16 @@ const ListBox = styled(Box)`
   margin-bottom: 1.5rem;
   padding: 1rem;
 `
+const TokenTypography = styled(Typography)`
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 160%;
+  color: rgb(160, 163, 189);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 11rem;
+`
 const PriceBox = styled(SpaceBetweenBox)`
   padding: 0 1rem 1rem 1rem;
 `
@@ -113,9 +125,17 @@ const LiquidateButton = styled(Button)`
   box-shadow: none !important;
   border-radius: 6px !important;
 `
-export default function MobileFooter() {
-  const list: Array<number> = []
-  const [checkboxType, setCheckboxType] = useState<Array<string>>([])
+interface MobileFooterProps {
+  total: string
+  nfts: number
+  nftsValue: string
+  ethValue: string
+  value: any
+  submit: Function
+}
+export default function MobileFooter({ value, total, nfts, nftsValue, ethValue, submit }: MobileFooterProps) {
+  // const list: Array<number> = []
+  // const [checkboxType, setCheckboxType] = useState<Array<string>>([])
   const [details, setDetails] = useState<boolean>(false)
   return (
     <MobileFooterBox>
@@ -141,16 +161,17 @@ export default function MobileFooter() {
           </SpaceBetweenBox>
           <SpaceBetweenBox my="1rem">
             <Typography variant="subtitle2" color="#EFF0F6">
-              18 NFT Collaterals
+              {nfts ? '1' : '0'} NFT Collaterals
             </Typography>
             <Typography mr="-0.0625rem" mt="0.125rem" variant="body1" fontWeight="600" color="#6E7191">
-              4 Collections
+              {nfts ? '1' : '0'} Collections
             </Typography>
           </SpaceBetweenBox>
           <ListBox>
-            {list.map((el: any) => (
-              <FlexBox mb={list.length === +div(el, 1) ? '0rem' : '1.5rem'} key={el}>
-                <StyleCheckbox
+            {/* {list.map((el: any) => ( */}
+            {/* <FlexBox mb={list.length === +div(el, 1) ? '0rem' : '1.5rem'} key={el}> */}
+            <FlexBox>
+              {/* <StyleCheckbox
                   sx={{ marginTop: '0.375rem' }}
                   checked={checkboxType.includes(el)}
                   checkedIcon={<img style={{ transform: 'translateY(4px)' }} src={liquidateChecked_Icon} alt="" />}
@@ -162,49 +183,47 @@ export default function MobileFooter() {
                       setCheckboxType(checkboxType.filter((cel) => cel !== el))
                     }
                   }}
-                ></StyleCheckbox>
-                <SpaceBetweenBox ml="1rem" width="100%">
-                  <FlexBox>
-                    <ImgBox></ImgBox>
-                    <Box>
-                      <FlexBox>
-                        <RadiusImg src={mobileNFT} alt="" />
-                        <Typography ml="0.375rem" color="#A0A3BD" fontWeight="500" variant="body2">
-                          Cryptopunks
-                        </Typography>
-                      </FlexBox>
-                      <EllipsisTypography mt="0.25rem" color="#D9DBE9" fontWeight="500" variant="body1">
-                        CRYPTOPUNK #4728 1
-                      </EllipsisTypography>
-                    </Box>
-                  </FlexBox>
-                  <Box>
-                    <FlexEndBox>
-                      <Typography color="#A0A3BD" fontWeight="500" variant="body2">
-                        x 1
-                      </Typography>
-                    </FlexEndBox>
-                    <FlexBox>
-                      <svg width="17" height="23" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g opacity="0.5">
-                          <path
-                            d="M4 11.7121L8.5 4.5L13 11.7121L8.5 18.5L4 11.7121Z"
-                            stroke="#D9DBE9"
-                            strokeWidth="1.5"
-                            strokeLinejoin="round"
-                          />
-                          <path d="M4 11.5L8.5 14L13 11.5" stroke="#D9DBE9" strokeLinejoin="round" />
-                        </g>
-                      </svg>
+                ></StyleCheckbox> */}
 
-                      <Typography ml="0.125rem" mt="0.0313rem" color="#D9DBE9" fontWeight="500" variant="body1">
-                        7.2176
-                      </Typography>
-                    </FlexBox>
+              <SpaceBetweenBox width="100%">
+                <StartBox>
+                  <ImgBox src={value.icon} />
+                  <Box>
+                    <StartBox>
+                      <RadiusImg src={value.icon} alt="" />
+                      <TokenTypography ml="0.375rem">{value.token}</TokenTypography>
+                    </StartBox>
+                    <EllipsisTypography mt="0.25rem" color="#D9DBE9" fontWeight="500" variant="body1">
+                      {value.title}
+                    </EllipsisTypography>
                   </Box>
-                </SpaceBetweenBox>
-              </FlexBox>
-            ))}
+                </StartBox>
+                <Box>
+                  <FlexEndBox>
+                    <Typography color="#A0A3BD" fontWeight="500" variant="body2">
+                      x 1
+                    </Typography>
+                  </FlexEndBox>
+                  <FlexBox>
+                    <svg width="17" height="23" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g opacity="0.5">
+                        <path
+                          d="M4 11.7121L8.5 4.5L13 11.7121L8.5 18.5L4 11.7121Z"
+                          stroke="#D9DBE9"
+                          strokeWidth="1.5"
+                          strokeLinejoin="round"
+                        />
+                        <path d="M4 11.5L8.5 14L13 11.5" stroke="#D9DBE9" strokeLinejoin="round" />
+                      </g>
+                    </svg>
+                    <Typography ml="0.125rem" mt="0.0313rem" color="#D9DBE9" fontWeight="500" variant="body1">
+                      1
+                    </Typography>
+                  </FlexBox>
+                </Box>
+              </SpaceBetweenBox>
+            </FlexBox>
+            {/* // ))} */}
           </ListBox>
           <PriceBox>
             <PriceTypography>NFT Price</PriceTypography>
@@ -220,13 +239,13 @@ export default function MobileFooter() {
                   <path d="M4 12L8.5 14.5L13 12" stroke="#D9DBE9" strokeLinejoin="round" />
                 </g>
               </svg>
-              <PriceValueTypography>36.2176</PriceValueTypography>
+              <PriceValueTypography>{nftsValue || 0}</PriceValueTypography>
             </FlexBox>
           </PriceBox>
           <PriceBox>
             <PriceTypography>ETH Price</PriceTypography>
             <FlexBox>
-              <ThroughTypography>16.27</ThroughTypography>
+              <ThroughTypography>{nftsValue || 0}</ThroughTypography>
               <svg width="17" height="24" viewBox="0 0 17 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g opacity="0.5">
                   <path
@@ -238,7 +257,7 @@ export default function MobileFooter() {
                   <path d="M4 12L8.5 14.5L13 12" stroke="#D9DBE9" strokeLinejoin="round" />
                 </g>
               </svg>
-              <PriceValueTypography>36.2176</PriceValueTypography>
+              <PriceValueTypography>{ethValue}</PriceValueTypography>
             </FlexBox>
           </PriceBox>
           <PriceBox>
@@ -255,7 +274,7 @@ export default function MobileFooter() {
                   <path d="M4 12L8.5 14.5L13 12" stroke="#D9DBE9" strokeLinejoin="round" />
                 </g>
               </svg>
-              <PriceValueTypography>36.2176</PriceValueTypography>
+              <PriceValueTypography>{nftsValue || 0}</PriceValueTypography>
             </FlexBox>
           </PriceBox>
         </>
@@ -277,10 +296,14 @@ export default function MobileFooter() {
             </svg>
 
             <Typography ml="0.125rem" color="#FFFFFF" fontWeight="700" lineHeight="1.375rem" variant="subtitle1">
-              48.6176
+              {new BigNumber(ethValue).plus(nftsValue).toString()}
             </Typography>
             <Typography
-              onClick={() => setDetails(!details)}
+              onClick={() => {
+                if (nfts !== 0) {
+                  setDetails(!details)
+                }
+              }}
               ml="0.5rem"
               mr="0.3125rem"
               color="#A87EFF"
@@ -303,7 +326,15 @@ export default function MobileFooter() {
           </CenterBox>
         </Box>
         <Box>
-          <LiquidateButton variant="contained" color="primary">
+          <LiquidateButton
+            onClick={() => {
+              if (nfts !== 0) {
+                submit()
+              }
+            }}
+            variant="contained"
+            color="primary"
+          >
             LIQUIDATE
           </LiquidateButton>
         </Box>

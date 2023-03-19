@@ -110,6 +110,14 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
                 </Typography>
               </Box>
             </Box>
+            <Box ml="87px">
+              <Typography variant="h5" color="#6E7191" lineHeight="32px" fontWeight="500">
+                68%
+              </Typography>
+              <Typography mt="2px" color="#6E7191" variant="subtitle2" fontWeight="500">
+                Utilization Rate
+              </Typography>
+            </Box>
           </FlexStartBox>
         </FlexStartBox>
       )}

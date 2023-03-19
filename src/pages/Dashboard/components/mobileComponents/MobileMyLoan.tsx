@@ -7,7 +7,7 @@ import CustomizedSlider from 'components/Slider'
 import { FlexBox, SpaceBetweenBox, FlexEndBox } from 'styleds'
 import { useMemo, useState } from 'react'
 import { useBorrowLimit, useDebtBorrowLimitUsed, useErc20ReserveData, useEthDebt, useHeath } from 'state/user/hooks'
-import { fixedFormat, getRiskLevel, getRiskLevelTag, times } from 'utils'
+import { fixedFormat, getRiskLevel, getRiskLevelTag, minus, times } from 'utils'
 import MobileMyLoanModal from './MobileMyLoanModal'
 import { useLoading, useShowChangeNetWork } from 'state/application/hooks'
 import MobileMyLoanSkeleton from '../mobileDashboardSkeleton/MobileMyLoanSkeleton '
@@ -28,6 +28,17 @@ const MyAssetsBox = styled(Box)`
     width: 5.75rem;
     height: 2.25rem;
     min-width: 5.75rem;
+  }
+  .error {
+    background: #f9e7ea;
+    width: 5.75rem;
+    height: 2.25rem;
+    min-width: 5.75rem;
+    color: #e1536c;
+    box-shadow: none;
+    :hover {
+      box-shadow: none;
+    }
   }
   .MuiSlider-root {
     padding: 0;
@@ -86,6 +97,13 @@ const FooterBox = styled(Box)`
     border-color: transparent transparent #eff0f6 transparent;
   }
 `
+const RiskBox = styled(Box)`
+  border: 1px solid;
+  padding: 0.1875rem 0.75rem;
+  margin-top: 0.1875rem;
+  margin-right: 1.5rem;
+  border-radius: 1.25rem;
+`
 interface MobileMyLoanProps {
   myLoanType: boolean
   setLoanType: Function
@@ -120,7 +138,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
       content: '';
       display: block;
       position: absolute;
-      top: 99%;
+      top: 97%;
       left: ${`${times(borrowLimitUsed, 0.185)}rem`};
       border-width: 10.5px 7.5px;
       border-style: dashed solid dashed dashed;
@@ -179,7 +197,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                       variant="subtitle1"
                       fontWeight="700"
                     >
-                      {fixedFormat(ethDebt)}
+                      {new BigNumber(ethDebt).gt(0) && new BigNumber(ethDebt).lt(0.01) ? '<0.01' : fixedFormat(ethDebt)}
                     </Typography>
                   </FlexBox>
                 </Box>
@@ -247,7 +265,9 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                           ml="0.5rem"
                           variant="h5"
                         >
-                          {fixedFormat(ethDebt)}
+                          {new BigNumber(ethDebt).gt(0) && new BigNumber(ethDebt).lt(0.01)
+                            ? '<0.01'
+                            : fixedFormat(ethDebt)}
                         </Typography>
                       </FlexBox>
                     </FlexBox>
@@ -297,9 +317,9 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                 ) : (
                   <RiskLevelBox
                     className={
-                      new BigNumber(borrowLimitUsed).gt(99)
+                      new BigNumber(borrowLimitUsed).gt(99.5)
                         ? 'right'
-                        : new BigNumber(borrowLimitUsed).lt(1)
+                        : new BigNumber(borrowLimitUsed).lt(0.5)
                         ? 'left'
                         : ''
                     }
@@ -316,7 +336,7 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                           fontSize="1.25rem"
                           fontWeight="700"
                         >
-                          {myLoanRiskLevel}
+                          {heath}%
                         </Typography>
                       </Box>
                       <Box m="0.5rem 0.5rem 0 0">
@@ -327,12 +347,14 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                             value="The risk level reflects the user's current loan risk situation. When the utilization rate reaches the weighted average liquidation threshold, the rish level will reach the liquidation level, and the liquidator can start to liquidate the user's nft assets one by one."
                           ></TipsTooltip>
                         </FlexEndBox>
-                        <Typography mt="-0.25rem" variant="body1" color="#6E7191" fontWeight="600">
-                          {heath}%
-                        </Typography>
-                        <Typography mr="0.4375rem" variant="body2" color=" #A0A3BD" fontWeight="600">
+                        <RiskBox className={myLoanRiskLevelTag} mt="0.1875rem">
+                          <Typography variant="body2" className={myLoanRiskLevelTag} fontWeight="700">
+                            {myLoanRiskLevel}
+                          </Typography>
+                        </RiskBox>
+                        {/* <Typography mr="0.4375rem" variant="body2" color=" #A0A3BD" fontWeight="600">
                           Collateralization
-                        </Typography>
+                        </Typography> */}
                       </Box>
                     </RiskFlexBox>
                   </RiskLevelBox>
@@ -364,12 +386,14 @@ export default function MobileMyLoan({ myLoanType, setLoanType }: MobileMyLoanPr
                       </FlexBox>
                     </Box>
                     <Button
-                      disabled={+borrowLimit === 0}
+                      disabled={
+                        Number(minus(borrowLimit, ethDebt)) === 0 || new BigNumber(heath).lt(100) || showChangeNetWork
+                      }
                       onClick={() => {
                         setRepayRoBorrow(1)
                         setOpen(true)
                       }}
-                      className="openButton"
+                      className={new BigNumber(heath).lt(100) ? 'error' : 'openButton'}
                       variant="contained"
                     >
                       <Typography variant="body2" fontWeight="700" color="#ffffff">

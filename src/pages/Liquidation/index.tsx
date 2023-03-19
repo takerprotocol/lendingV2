@@ -35,6 +35,9 @@ import BigNumber from 'bignumber.js'
 import orderBy from 'lodash/orderBy'
 import { toWei } from 'web3-utils'
 import numbro from 'numbro'
+import { getAlchemyNftMetadata } from 'services/module/deposit'
+import { useAlchemy } from 'hooks/useAlchemy'
+import { Nft } from '@alch/alchemy-sdk'
 
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 const Body = styled(Box)`
@@ -100,6 +103,7 @@ export default function Liquidation() {
   const [collectionFilter, setCollectionFilter] = useState(0)
   const dispatch = useAppDispatch()
   const collateralsType = useCollateralsType()
+  const alchemy = useAlchemy()
 
   function ConnectWallet() {
     return (
@@ -190,7 +194,7 @@ export default function Liquidation() {
     }
   }, [chainId, dashboardType])
   const getCollaterals = useCallback(async () => {
-    if (client && otherClient) {
+    if (client && otherClient && alchemy && collaterals.length === 0 && otherCollaterals.length === 0 && loading) {
       const user = await client.query({
         query: AllUser(healthFactor, searchValue, conditionSort, allUserWhere),
       })
@@ -198,72 +202,133 @@ export default function Liquidation() {
         query: AllUser(healthFactor, searchValue, conditionSort, allUserWhere),
       })
       setLoading(false)
-      const users: Array<CollateralModel> = []
-      const otherUsersCollateral: Array<CollateralModel> = []
+      // const _users: Array<CollateralModel> = []
+      // const _otherUsersCollateral: Array<CollateralModel> = []
       if (user.data.users) {
-        user.data.users.forEach((element: any) => {
+        user.data.users.forEach(async (element: any) => {
           let heath = times(fromWei(element.healthFactor), 100)
           if (new BigNumber(heath).gt(1000000)) {
             heath = '>1M'
           } else {
             heath = numbro(heath).format({ spaceSeparated: true, average: true }).replace(' ', '')
           }
-          users.push({
-            address: element.id,
-            collateral: fromWei(element.totalCollateral),
-            collections: element.collections,
-            debt: fromWei(element.totalDebt),
-            riskPercentage: heath,
-            type: 'Blue Chip',
-            riskLevel: getRiskLevel(heath),
-            riskLevelTag: getRiskLevelTag(heath),
+          const tokens: Nft[] = []
+          if (alchemy) {
+            for (let i = 0, length = element.collections.length; i < length; i++) {
+              for (let ii = 0, length1 = element.collections[i].tokens.length; ii < length1; ii++) {
+                const nft = await getAlchemyNftMetadata(
+                  element.collections[i].tokens[ii].id.split('-')[1],
+                  element.collections[i].tokens[ii].id.split('-')[2],
+                  alchemy
+                )
+                tokens.push(nft)
+              }
+            }
+          }
+          setCollaterals((collaterals) => {
+            return [
+              ...collaterals,
+              {
+                address: element.id,
+                collateral: fromWei(element.totalCollateral),
+                collections: element.collections,
+                debt: fromWei(element.totalDebt),
+                riskPercentage: heath,
+                tokens,
+                type: 'Blue Chip',
+                riskLevel: getRiskLevel(heath),
+                riskLevelTag: getRiskLevelTag(heath),
+              },
+            ]
           })
+          // _users.push({
+          //   address: element.id,
+          //   collateral: fromWei(element.totalCollateral),
+          //   collections: element.collections,
+          //   debt: fromWei(element.totalDebt),
+          //   riskPercentage: heath,
+          //   tokens,
+          //   type: 'Blue Chip',
+          //   riskLevel: getRiskLevel(heath),
+          //   riskLevelTag: getRiskLevelTag(heath),
+          // })
         })
       }
       if (otherUser.data.users) {
-        otherUser.data.users.forEach((element: any) => {
+        otherUser.data.users.forEach(async (element: any) => {
           let heath = times(fromWei(element.healthFactor), 100)
           if (new BigNumber(heath).gt(1000000)) {
             heath = '>1M'
           } else {
             heath = numbro(heath).format({ spaceSeparated: true, average: true }).replace(' ', '')
           }
-          otherUsersCollateral.push({
-            address: element.id,
-            collateral: fromWei(element.totalCollateral),
-            collections: element.collections,
-            debt: fromWei(element.totalDebt),
-            type: 'Growth',
-            riskPercentage: heath,
-            riskLevel: getRiskLevel(heath),
-            riskLevelTag: getRiskLevelTag(heath),
+          const otherTokens: Nft[] = []
+          if (alchemy) {
+            for (let i = 0, length = element.collections.length; i < length; i++) {
+              for (let ii = 0, length1 = element.collections[i].tokens.length; ii < length1; ii++) {
+                const nft = await getAlchemyNftMetadata(
+                  element.collections[i].tokens[ii].id.split('-')[1],
+                  element.collections[i].tokens[ii].id.split('-')[2],
+                  alchemy
+                )
+                otherTokens.push(nft)
+              }
+            }
+          }
+          setOtherCollaterals((otherCollaterals) => {
+            return [
+              ...collaterals,
+              {
+                address: element.id,
+                collateral: fromWei(element.totalCollateral),
+                collections: element.collections,
+                debt: fromWei(element.totalDebt),
+                riskPercentage: heath,
+                tokens: otherTokens,
+                type: 'Growth',
+                riskLevel: getRiskLevel(heath),
+                riskLevelTag: getRiskLevelTag(heath),
+              },
+            ]
           })
         })
       }
-      setCollaterals(
-        orderBy(
-          users,
-          function (o) {
-            return Number(o.collateral)
-          },
-          ['desc']
-        )
-      )
-      setOtherCollaterals(
-        orderBy(
-          otherUsersCollateral,
-          function (o) {
-            return Number(o.collateral)
-          },
-          ['desc']
-        )
-      )
+      // console.log(_users.length, '_users')
+      // setCollaterals(
+      //   orderBy(
+      //     _users,
+      //     function (o) {
+      //       return Number(o.collateral)
+      //     },
+      //     ['desc']
+      //   )
+      // )
+      // setOtherCollaterals(
+      //   orderBy(
+      //     _otherUsersCollateral,
+      //     function (o) {
+      //       return Number(o.collateral)
+      //     },
+      //     ['desc']
+      //   )
+      // )
     }
-  }, [client, otherClient, healthFactor, searchValue, conditionSort, allUserWhere])
+  }, [
+    client,
+    otherClient,
+    alchemy,
+    collaterals,
+    otherCollaterals.length,
+    loading,
+    healthFactor,
+    searchValue,
+    conditionSort,
+    allUserWhere,
+  ])
 
   useEffect(() => {
     getCollaterals()
-  }, [getCollaterals, dashboardType])
+  }, [getCollaterals])
   const mobile = useMobileType()
 
   const finalCollaterals = useMemo(() => {
@@ -279,6 +344,7 @@ export default function Liquidation() {
       ? collaterals
       : otherCollaterals
   }, [collaterals, collateralsType, otherCollaterals])
+
   return (
     <>
       {mobile ? (

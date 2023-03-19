@@ -529,15 +529,19 @@ export const theme = createTheme({
         }
         .Healthy {
           color: #4BC8B1;
+          border-color: #4BC8B1;
         }
         .Risky {
           color: #EF884F;
+          border-color: #EF884F;
         }
         .High-Risk{
           color: #E1536C;
+          border-color: #E1536C;
         }
         .In-liquidation{
           color: #E1536C;
+          border-color: #E1536C;
         }
         .Slider-Healthy {
           background: #EFF0F6;

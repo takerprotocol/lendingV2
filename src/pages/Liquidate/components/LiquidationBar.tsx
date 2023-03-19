@@ -123,7 +123,7 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit }: Liquidatio
       </LabelValueContainer>
       <StatsContainer>
         <LabelValueContainer>
-          <TotalLiqudiationTitle width="119px">{nfts} NFT</TotalLiqudiationTitle>
+          <TotalLiqudiationTitle width="119px">{nfts ? '1' : '0'} NFT</TotalLiqudiationTitle>
           <TotalLiquidationAmountWrapper>
             <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -171,7 +171,9 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit }: Liquidatio
           variant="contained"
           color="primary"
           onClick={() => {
-            submit()
+            if (nfts !== 0) {
+              submit()
+            }
           }}
         >
           LIQUIDATE

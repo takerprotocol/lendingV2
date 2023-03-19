@@ -4,7 +4,6 @@ export const FlexBox = styled(Box)`
   display: flex;
   align-items: center;
 `
-
 export const SpaceBetweenBox = styled(Box)`
   display: flex;
   align-items: center;

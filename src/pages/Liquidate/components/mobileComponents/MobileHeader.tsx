@@ -4,10 +4,12 @@ import Copy from 'components/Copy'
 import mobilePurpleETH from 'assets/images/svg/dashboard/mobilePurpleETH-iocn.svg'
 import { liquidateAbbrevAddress } from 'utils/abbrevAddres'
 import MobileLiquidateHeaderSkeleton from '../mobileLiquidateSkeleton/MobileLiquidateHeaderSkeleton'
+import { fixedFormat, getRiskLevelTag } from 'utils'
+import { useMemo } from 'react'
 const MobileHeaderBox = styled(Box)`
   background: #262338;
   width: 100%;
-  padding-top: 5.125rem;
+  padding-top: 2rem;
   padding-bottom: 1.8125rem;
 `
 const HealthBox = styled(Box)`
@@ -18,35 +20,22 @@ const HealthBox = styled(Box)`
   margin-right: 1rem;
 `
 const CollateralAndTotalDebtBox = styled(FlexBox)`
-  margin: 1.4375rem 0 0 0;
-  width: 23.4375rem;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  overflow: scroll;
+  margin: 1.4375rem 1rem 0 1rem;
+  padding: 1rem;
+  border-radius: 0.625rem;
+  background: #322f46;
 `
 const CollateralBox = styled(Box)`
-  margin-left: 1rem;
-  min-width: 13.1875rem;
-  padding: 1rem 1.0625rem 1rem 1rem;
-  background: #322f46;
-  border-radius: 0.625rem;
+  width: 10rem;
 `
-const TotalDebtBox = styled(Box)`
-  margin-left: 0.5rem;
-  min-width: 13.1875rem;
-  margin-right: 1rem;
-  padding: 1rem 2.125rem 1rem 1rem;
-  background: #322f46;
-  border-radius: 0.625rem;
-`
-const EthTypography = styled(Typography)`
-  padding-right: 0.125rem;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 160%;
-  color: #a0a3bd;
-`
+const TotalDebtBox = styled(Box)``
+// const EthTypography = styled(Typography)`
+//   padding-right: 0.125rem;
+//   font-weight: 600;
+//   font-size: 12px;
+//   line-height: 160%;
+//   color: #a0a3bd;
+// `
 interface MobileHeaderProps {
   address: string
   riskPercentage: string
@@ -69,6 +58,9 @@ export default function MobileHeader({
   borrowings,
   loading,
 }: MobileHeaderProps) {
+  const myLoanRiskLevelTag = useMemo(() => {
+    return getRiskLevelTag(riskPercentage)
+  }, [riskPercentage])
   return (
     <MobileHeaderBox>
       {loading ? (
@@ -82,8 +74,8 @@ export default function MobileHeader({
               </Typography>
               <Copy text={address} />
             </FlexBox>
-            <HealthBox>
-              <Typography fontWeight="600" variant="body2" color="#E1536C">
+            <HealthBox className={myLoanRiskLevelTag} sx={{ border: '1px solid' }}>
+              <Typography fontWeight="600" className={myLoanRiskLevelTag} variant="body2">
                 IN LIQUIDATION... {riskPercentage}%
               </Typography>
             </HealthBox>
@@ -95,11 +87,11 @@ export default function MobileHeader({
               </Typography>
               <FlexBox mt="0.5rem">
                 <img src={mobilePurpleETH} alt="" />
-                <Typography ml="0.5rem" fontWeight="600" variant="h5" color="#FFFFFF">
-                  {totalCollateral}
+                <Typography ml="0.5rem" variant="subtitle1" color="#FFFFFF">
+                  {fixedFormat(totalCollateral)}
                 </Typography>
               </FlexBox>
-              <SpaceBetweenBox mt="1rem">
+              {/* <SpaceBetweenBox mt="1rem">
                 <Box>
                   <FlexBox>
                     <EthTypography>{nftCollateral} </EthTypography>
@@ -118,7 +110,7 @@ export default function MobileHeader({
                     ETH Collateral
                   </Typography>
                 </Box>
-              </SpaceBetweenBox>
+              </SpaceBetweenBox> */}
             </CollateralBox>
             <TotalDebtBox>
               <Typography lineHeight="0.75rem" fontWeight="600" variant="body2" color="#FFFFFF">
@@ -126,11 +118,11 @@ export default function MobileHeader({
               </Typography>
               <FlexBox mt="0.5rem">
                 <img src={mobilePurpleETH} alt="" />
-                <Typography ml="0.5rem" fontWeight="600" variant="h5" color="#FFFFFF">
-                  {totalDebt}
+                <Typography ml="0.5rem" variant="subtitle1" color="#FFFFFF">
+                  {fixedFormat(totalDebt)}
                 </Typography>
               </FlexBox>
-              <SpaceBetweenBox mt="1rem">
+              {/* <SpaceBetweenBox mt="1rem">
                 <Box>
                   <FlexBox>
                     <EthTypography>{ethDebt} </EthTypography>
@@ -149,7 +141,7 @@ export default function MobileHeader({
                     Borrowings
                   </Typography>
                 </Box>
-              </SpaceBetweenBox>
+              </SpaceBetweenBox> */}
             </TotalDebtBox>
           </CollateralAndTotalDebtBox>
         </>
