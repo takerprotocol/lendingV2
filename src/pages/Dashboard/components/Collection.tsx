@@ -227,7 +227,10 @@ export default function Collection({ type, loading }: CollectionType) {
                             {div(el.ltv, 100)}%
                           </Typography>
                           <TitleTypography>
-                            {fixedFormat(fromWei(times(el?.floorPrice || 0, div(el.ltv, 10000))))} ETH/NFT
+                            {times(el?.floorPrice || 0, div(el.ltv, 10000)).includes('.')
+                              ? 0
+                              : fixedFormat(fromWei(times(el?.floorPrice || 0, div(el.ltv, 10000))))}{' '}
+                            ETH/NFT
                           </TitleTypography>
                         </Box>
                       </CollectionFlexBox>

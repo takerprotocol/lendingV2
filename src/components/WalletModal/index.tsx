@@ -128,6 +128,7 @@ export default function WalletModal() {
             !option.mobileOnly && (
               <Option
                 onClickEvt={() => {
+                  tryActivation(option.connector)
                   option.connector !== connector && !option.href && tryActivation(option.connector)
                 }}
                 key={key}

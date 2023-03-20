@@ -4,6 +4,8 @@ import CustomizedSelect from 'components/Select'
 import { useContract } from 'hooks/useContract'
 import Aggregator_ABI from 'abis/Aggregator.json'
 import { useMemo, useState } from 'react'
+import { toWei } from 'web3-utils'
+
 const TestBox = styled(Box)`
   padding-top: 100px;
   display: flex;
@@ -81,7 +83,7 @@ export default function Price() {
       },
     ]
   }, [])
-  const Aggregator = useContract(collections[valueIndex - 1]?.id, Aggregator_ABI)
+  const Aggregator = useContract('0xC38aEbC20feD1571E2eab066C06ACe699a428510', Aggregator_ABI)
   const collectionOptions = useMemo(() => {
     return [
       {
@@ -153,7 +155,7 @@ export default function Price() {
         variant="contained"
         sx={{ marginTop: '16px' }}
         onClick={() => {
-          Aggregator?.setPrice(value)
+          Aggregator?.setNFTPrice(collections[valueIndex - 1]?.id, toWei(value))
         }}
       >
         update
