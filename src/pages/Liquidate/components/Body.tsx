@@ -94,8 +94,9 @@ const NFTRowTitle = styled(Typography)`
 const NFTCollaterals = styled('div')`
   display: grid;
   position: relative;
-  grid-template-columns: repeat(auto-fit, minmax(305px, 1fr));
+  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 24px;
+  margin-bottom: 48px;
 `
 //------css--------//
 

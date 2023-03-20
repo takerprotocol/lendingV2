@@ -5,10 +5,10 @@ import TotalLeft from 'assets/images/svg/dashboard/totalLeft.svg'
 import TotalRight from 'assets/images/svg/dashboard/totalRight.svg'
 import BottomLiquidity from 'assets/images/svg/dashboard/bottom-liquidity.svg'
 import { useLendingPool } from 'hooks/useLendingPool'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { decimalFormat, plus } from 'utils'
-import { useDecimal } from 'state/user/hooks'
+import { useDashboardType, useDecimal } from 'state/user/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { setPoolValues } from 'state/application/reducer'
 import { usePoolValues } from 'state/application/hooks'
@@ -28,23 +28,31 @@ interface DashboardTotalType {
 }
 export default function DashboardTotal({ type }: DashboardTotalType) {
   const dispatch = useAppDispatch()
-  const [loading, setLoading] = useState(true)
+  // const [loading, setLoading] = useState(true)
   const poolValues = usePoolValues()
   const decimal = useDecimal()
   const contract = useLendingPool()
+  const dashboardType = useDashboardType()
+  const [blueChipLoading, setBlueChipLoading] = useState(true)
+  const [growthLoading, setGrowthLoading] = useState(true)
+  const loading = useMemo(() => {
+    return dashboardType === 1 ? blueChipLoading : growthLoading
+  }, [blueChipLoading, dashboardType, growthLoading])
   useEffect(() => {
     if (contract) {
       contract
         .getPoolValues()
         .then((res: Array<BigNumber>) => {
-          setLoading(false)
+          // setLoading(false)
+          dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
           dispatch(setPoolValues([res[0].toString(), res[1].toString(), res[2].toString()]))
         })
         .catch(() => {
-          setLoading(false)
+          // setLoading(false)
+          dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
         })
     }
-  }, [contract, dispatch, contract?.address])
+  }, [contract, dispatch, contract?.address, dashboardType])
   return (
     <Box>
       {loading ? (

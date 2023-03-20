@@ -44,15 +44,21 @@ const Liquidate = () => {
   const [totalCollateral, setTotalCollateral] = useState('0')
   const [nftCollateral, setNftCollateral] = useState('0')
   const [heath, setHeath] = useState('0')
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
   const { address } = useParams()
   const [value, setValue] = useState<any>()
   const [ethValue, setEthValue] = useState('0')
   const [client, setClient] = useState<any>(null)
-  const dashboardType = useDashboardType()
+  // const dashboardType = useDashboardType()
   const [tokenChecked, setTokenChecked] = useState<string>('')
   const addTransaction = useTransactionAdder()
   const contract = useLendingPool()
+  const dashboardType = useDashboardType()
+  const [blueChipLoading, setBlueChipLoading] = useState(false)
+  const [growthLoading, setGrowthLoading] = useState(false)
+  const loading = useMemo(() => {
+    return dashboardType === 1 ? blueChipLoading : growthLoading
+  }, [blueChipLoading, dashboardType, growthLoading])
   useEffect(() => {
     if (contract) {
       // contract.getUserState(address).then((res: Array<BigNumber>) => {
@@ -64,7 +70,6 @@ const Liquidate = () => {
     }
   }, [contract])
   //
-  console.log(value)
   const nfts = useMemo(() => {
     const _nfts: Array<TokenModel> = []
     if (collaterals) {
@@ -123,7 +128,8 @@ const Liquidate = () => {
       const user = await client.query({
         query: User(`${address}`),
       })
-      setLoading(false)
+      // setLoading(false)
+      dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
       // let _totalCollateral = '0'
       // let _totalDebt = '0'
       // let _nftCollateral = '0'
@@ -158,7 +164,7 @@ const Liquidate = () => {
       setTotalDebt(fromWei(user.data.user.totalDebt))
       setTotalCollateral(fromWei(user.data.user.totalCollateral))
     }
-  }, [address, client])
+  }, [address, client, dashboardType])
   useEffect(() => {
     getCollaterals()
   }, [getCollaterals, dashboardType])

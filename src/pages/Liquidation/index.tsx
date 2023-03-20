@@ -89,7 +89,7 @@ export default function Liquidation() {
   const loginWalletType = useLoginWalletType()
   const { chainId } = useActiveWeb3React()
   const showChangeNetWork = useShowChangeNetWork()
-  const [loading, setLoading] = useState(true)
+  // const [loading, setLoading] = useState(true)
   const [collaterals, setCollaterals] = useState<Array<CollateralModel>>([])
   const [otherCollaterals, setOtherCollaterals] = useState<Array<CollateralModel>>([])
   const [inLiquidation, setInLiquidation] = useState<string>('')
@@ -104,7 +104,12 @@ export default function Liquidation() {
   const dispatch = useAppDispatch()
   const collateralsType = useCollateralsType()
   const alchemy = useAlchemy()
-
+  const dashboardType = useDashboardType()
+  const [blueChipLoading, setBlueChipLoading] = useState(true)
+  const [growthLoading, setGrowthLoading] = useState(true)
+  const loading = useMemo(() => {
+    return dashboardType === 1 ? blueChipLoading : growthLoading
+  }, [blueChipLoading, dashboardType, growthLoading])
   function ConnectWallet() {
     return (
       <ConnectWalletBox
@@ -147,7 +152,7 @@ export default function Liquidation() {
       case 6:
         return ['healthFactor', 'asc']
       default:
-        return ['totalCollateral', 'desc']
+        return ['healthFactor', 'desc']
     }
   }, [sort])
   const searchValue = useMemo(() => {
@@ -185,7 +190,6 @@ export default function Liquidation() {
       ]
     }
   }, [collection, collectionFilter, conditionDebtFilter, debtFilter])
-  const dashboardType = useDashboardType()
 
   useEffect(() => {
     if (chainId) {
@@ -201,7 +205,8 @@ export default function Liquidation() {
       const otherUser = await otherClient.query({
         query: AllUser(healthFactor, searchValue, conditionSort, allUserWhere),
       })
-      setLoading(false)
+      // setLoading(false)
+      dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
       // const _users: Array<CollateralModel> = []
       // const _otherUsersCollateral: Array<CollateralModel> = []
       if (user.data.users) {
@@ -277,7 +282,7 @@ export default function Liquidation() {
           }
           setOtherCollaterals((otherCollaterals) => {
             return [
-              ...collaterals,
+              ...otherCollaterals,
               {
                 address: element.id,
                 collateral: fromWei(element.totalCollateral),
@@ -324,6 +329,7 @@ export default function Liquidation() {
     searchValue,
     conditionSort,
     allUserWhere,
+    dashboardType,
   ])
 
   useEffect(() => {
@@ -335,10 +341,15 @@ export default function Liquidation() {
     return collateralsType === 'All Borrowers'
       ? orderBy(
           [...collaterals, ...otherCollaterals],
-          function (o) {
-            return Number(o.collateral)
-          },
-          ['desc']
+          [
+            function (o) {
+              return numbro.unformat(o.riskPercentage.replaceAll('>', '').toLocaleLowerCase())
+            },
+            function (o) {
+              return o.collateral
+            },
+          ],
+          ['asc', 'desc']
         )
       : collateralsType === 'blueChip'
       ? collaterals

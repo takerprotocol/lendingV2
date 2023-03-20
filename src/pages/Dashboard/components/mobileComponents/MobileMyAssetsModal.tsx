@@ -12,6 +12,7 @@ import {
   // useBorrowLimit,
   // useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
+  useDashboardType,
   useDecimal,
   useEthCollateral,
   // useHeath,
@@ -154,7 +155,7 @@ export default function MobileMyAssetsModal({
   const [borrowOrRepay, setBorrowOrRepay] = useState<number>(type)
   // const [supplyLimit, setSupplyLimit] = useState('')
   const supplyLimit = useWalletBalance()
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
   const [amount, setAmount] = useState('')
   const contract = useGateway()
   const poolContract = useLendingPool()
@@ -178,6 +179,12 @@ export default function MobileMyAssetsModal({
   // const erc20Contract = useContract(ERC20_ADDRESS, erc20Abi)
   const decimal = useDecimal()
   const transactions = useAllTransactions()
+  const dashboardType = useDashboardType()
+  const [blueChipLoading, setBlueChipLoading] = useState(false)
+  const [growthLoading, setGrowthLoading] = useState(false)
+  const loading = useMemo(() => {
+    return dashboardType === 1 ? blueChipLoading : growthLoading
+  }, [blueChipLoading, dashboardType, growthLoading])
   const flag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
@@ -192,8 +199,9 @@ export default function MobileMyAssetsModal({
     }).length
   }, [transactions])
   useEffect(() => {
-    setLoading(false)
-  }, [flag])
+    //setLoading(false)
+    dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+  }, [dashboardType, flag])
   // useEffect(() => {
   //   if (erc20Contract && address) {
   //     erc20Contract.balanceOf(address).then((res: BigNumber) => {
@@ -217,9 +225,13 @@ export default function MobileMyAssetsModal({
       return
     }
     if (contract && address) {
-      setLoading(true)
+      // setLoading(true)
+      dashboardType === 1 ? setBlueChipLoading(true) : setGrowthLoading(true)
       if (approval !== ApprovalState.APPROVED) {
-        await approveCallback().catch(() => setLoading(false))
+        await approveCallback().catch(() => {
+          // setLoading(false)
+          dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+        })
       } else {
         contract
           .deposit(poolContract?.address, address, {
@@ -227,7 +239,8 @@ export default function MobileMyAssetsModal({
             // gasLimit,
           })
           .then((res: any) => {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             addTransaction(res, {
               type: TransactionType.DEPOSIT,
               recipient: address,
@@ -238,7 +251,8 @@ export default function MobileMyAssetsModal({
             setOpenMySupplyModal(false)
           })
           .catch((error: any) => {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             toast.error(error.message)
           })
       }
@@ -250,14 +264,19 @@ export default function MobileMyAssetsModal({
       return
     }
     if (contract && address) {
-      setLoading(true)
+      // setLoading(true)
+      dashboardType === 1 ? setBlueChipLoading(true) : setGrowthLoading(true)
       if (tokenApproval !== ApprovalState.APPROVED) {
-        await tokenApproveCallback().catch(() => setLoading(false))
+        await tokenApproveCallback().catch(() => {
+          // setLoading(false)
+          dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+        })
       } else {
         contract
           .withdraw(poolContract?.address, amountDecimal(amount, decimal), address)
           .then((res: any) => {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             toast.success(desensitization(res.hash))
             addTransaction(res, {
               type: TransactionType.WITHDRAW,
@@ -268,7 +287,8 @@ export default function MobileMyAssetsModal({
             setOpenMySupplyModal(false)
           })
           .catch((error: any) => {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             toast.error(error.message)
           })
       }

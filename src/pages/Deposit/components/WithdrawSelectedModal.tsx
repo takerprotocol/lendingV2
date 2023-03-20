@@ -13,6 +13,7 @@ import {
   useBorrowLimit,
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
+  useDashboardType,
   useErc20ReserveData,
   useHeath,
   useUserValue,
@@ -76,7 +77,7 @@ interface NFTsSelectedType {
 export default function WithdrawSelectedModal({ open, close, data, type, amount, amountList }: NFTsSelectedType) {
   const { id } = useParams()
   const contract = useLendingPool()
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
   const address = useAddress()
   const userValue = useUserValue()
   const heath = useHeath()
@@ -91,7 +92,12 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
   const upBorrowLimit = useBorrowLimit(times(amount, -1)) //操作后的borrowLimit
   const transactions = useAllTransactions()
   const collateralRiskLevel = useCollateralRiskLevel(times(amount, -1))
-
+  const dashboardType = useDashboardType()
+  const [blueChipLoading, setBlueChipLoading] = useState(false)
+  const [growthLoading, setGrowthLoading] = useState(false)
+  const loading = useMemo(() => {
+    return dashboardType === 1 ? blueChipLoading : growthLoading
+  }, [blueChipLoading, dashboardType, growthLoading])
   const flag = useMemo(() => {
     return (
       transactions &&
@@ -104,11 +110,13 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
 
   useEffect(() => {
     if (flag) {
-      setLoading(false)
+      //setLoading(false)
+      dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
     }
-  }, [flag])
+  }, [dashboardType, flag])
   const withdraw = async () => {
-    setLoading(true)
+    // setLoading(true)
+    dashboardType === 1 ? setBlueChipLoading(true) : setGrowthLoading(true)
     if (contract && address && ercContract) {
       contract
         .withdrawNFTs(
@@ -120,7 +128,8 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
         )
         .then((res: any) => {
           if (res && res.hash) {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             close(false)
             addTransaction(res, {
               type: TransactionType.WITHDRAW_NFT,
@@ -131,10 +140,12 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
           }
         })
         .catch(() => {
-          setLoading(false)
+          // setLoading(false)
+          dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
         })
     } else {
-      setLoading(false)
+      // setLoading(false)
+      dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
     }
   }
 

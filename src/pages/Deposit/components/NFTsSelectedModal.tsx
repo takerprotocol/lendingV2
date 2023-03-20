@@ -14,6 +14,7 @@ import {
   useBorrowLimit,
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
+  useDashboardType,
   useErc20ReserveData,
   useHeath,
   useUserValue,
@@ -93,7 +94,7 @@ export default function NFTsSelectedModal({
 }: NFTsSelectedType) {
   const { id } = useParams()
   const contract = useLendingPool()
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
   const address = useAddress()
   const userValue = useUserValue()
   const erc20ReserveData = useErc20ReserveData()
@@ -106,6 +107,12 @@ export default function NFTsSelectedModal({
   const transactions = useAllTransactions()
   const borrowLimitUsed = useCollateralBorrowLimitUsed()
   const transactionPending = useTransactionPending()
+  const dashboardType = useDashboardType()
+  const [blueChipLoading, setBlueChipLoading] = useState(false)
+  const [growthLoading, setGrowthLoading] = useState(false)
+  const loading = useMemo(() => {
+    return dashboardType === 1 ? blueChipLoading : growthLoading
+  }, [blueChipLoading, dashboardType, growthLoading])
   const depositTransaction = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
@@ -120,8 +127,9 @@ export default function NFTsSelectedModal({
     }).length
   }, [transactions])
   useEffect(() => {
-    setLoading(false)
-  }, [depositTransaction])
+    //setLoading(false)
+    dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+  }, [dashboardType, depositTransaction])
   const approvePending = useMemo(() => {
     return transactionPending.filter((el) => el.info.type === TransactionType.APPROVAL_NFT)
   }, [transactionPending])
@@ -161,7 +169,8 @@ export default function NFTsSelectedModal({
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
   const upBorrowLimit = useBorrowLimit(times(amount, type === 'Deposit' ? 1 : -1)) //操作后的borrowLimit
   const deposit = async () => {
-    setLoading(true)
+    // setLoading(true)
+    dashboardType === 1 ? setBlueChipLoading(true) : setGrowthLoading(true)
     if (contract && address && ercContract) {
       if (isApproved) {
         contract
@@ -173,7 +182,8 @@ export default function NFTsSelectedModal({
             // { gasLimit }
           )
           .then((res: any) => {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             if (res && res.hash) {
               setOpenSelectedModal(false)
               addTransaction(res, {
@@ -186,13 +196,15 @@ export default function NFTsSelectedModal({
             }
           })
           .catch(() => {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
           })
       } else {
         ercContract
           .setApprovalForAll(contract.address, true)
           .then((res: any) => {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             setIsApproved(1)
             addTransaction(res, {
               type: TransactionType.APPROVAL_NFT,
@@ -202,11 +214,13 @@ export default function NFTsSelectedModal({
             })
           })
           .catch(() => {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
           })
       }
     } else {
-      setLoading(false)
+      // setLoading(false)
+      dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
     }
   }
   const riskLevelWarning = useMemo(() => {

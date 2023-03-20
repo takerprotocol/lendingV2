@@ -28,6 +28,7 @@ export default function MobileHeader() {
   return (
     <HeaderCenterBox pt={showChangeNetWork ? '9.4375rem' : '5.375rem'}>
       <FoundTypography>found some treasure !</FoundTypography>
+      {/* Help the borrower repay their debt, instantly liquidate, and get the NFT you desire! */}
       <LiquidateTypography mt="1.5rem">Liquidate with a floor price to </LiquidateTypography>
       <LiquidateTypography mb="1.5rem">get some NFTs you like </LiquidateTypography>
       <CenterBox>

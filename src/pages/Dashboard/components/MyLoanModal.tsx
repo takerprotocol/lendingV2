@@ -10,6 +10,7 @@ import { fixedFormat, getRiskLevel, getRiskLevelTag, plus, amountDecimal, minus,
 import {
   useAddress,
   useBorrowLimit,
+  useDashboardType,
   useDebtBorrowLimitUsed,
   useDebtRiskLevel,
   useDecimal,
@@ -202,7 +203,6 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const [check, setCheck] = useState<number>(repayRoBorrow)
   const [amount, setAmount] = useState('')
   const heath = useHeath()
-  const [loading, setLoading] = useState(false)
   const debtRiskLevel = useDebtRiskLevel(times(amount, check === 1 ? 1 : -1))
   const upBorrowLimitUsed = useDebtBorrowLimitUsed(times(amount, check === 1 ? 1 : -1))
   const borrowLimitUsed = useDebtBorrowLimitUsed()
@@ -219,6 +219,12 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const addTransaction = useTransactionAdder()
   const transactionPending = useTransactionPending()
   const transactions = useAllTransactions()
+  const dashboardType = useDashboardType()
+  const [blueChipLoading, setBlueChipLoading] = useState(false)
+  const [growthLoading, setGrowthLoading] = useState(false)
+  const loading = useMemo(() => {
+    return dashboardType === 1 ? blueChipLoading : growthLoading
+  }, [blueChipLoading, dashboardType, growthLoading])
   const flag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
@@ -235,8 +241,9 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   const [tokenApproval, tokenApproveCallback] = useDTokenApproveCallback(amount || '1', contract?.address, flag)
 
   useEffect(() => {
-    setLoading(false)
-  }, [flag])
+    //setLoading(false)
+    dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+  }, [dashboardType, flag])
   const repayPending = useMemo(() => {
     return transactionPending.filter((el) => el.info.type === TransactionType.REPAY)
   }, [transactionPending])
@@ -277,15 +284,20 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
   // }, [amount, ethDebt])
   const borrowSubmit = async () => {
     if (contract) {
-      setLoading(true)
+      // setLoading(true)
+      dashboardType === 1 ? setBlueChipLoading(true) : setGrowthLoading(true)
       if (check === 1) {
         if (tokenApproval !== ApprovalState.APPROVED) {
-          await tokenApproveCallback().catch(() => setLoading(false))
+          await tokenApproveCallback().catch(() => {
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+          })
         } else {
           contract
             .borrow(poolContract?.address, amountDecimal(amount, decimal))
             .then((res: any) => {
-              setLoading(false)
+              // setLoading(false)
+              dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
               addTransaction(res, {
                 type: TransactionType.BORROW,
                 recipient: address,
@@ -295,12 +307,16 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             })
             .catch((error: any) => {
               toast.error(error.message)
-              setLoading(false)
+              // setLoading(false)
+              dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             })
         }
       } else {
         if (tokenApproval !== ApprovalState.APPROVED) {
-          await tokenApproveCallback().catch(() => setLoading(false))
+          await tokenApproveCallback().catch(() => {
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+          })
         } else {
           contract
             .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
@@ -308,7 +324,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               // gasLimit,
             })
             .then((res: any) => {
-              setLoading(false)
+              // setLoading(false)
+              dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
               addTransaction(res, {
                 type: TransactionType.REPAY,
                 recipient: address,
@@ -317,25 +334,29 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               onClose(false)
             })
             .catch((error: any) => {
-              setLoading(false)
+              // setLoading(false)
+              dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
               toast.error(error.message)
             })
         }
       }
     } else {
-      setLoading(false)
+      // setLoading(false)
+      dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
     }
   }
   const repaySubmit = () => {
     if (contract) {
-      setLoading(true)
+      // setLoading(true)
+      dashboardType === 1 ? setBlueChipLoading(true) : setGrowthLoading(true)
       contract
         .repay(poolContract?.address, amountDecimal(amount, decimal), address, {
           value: amountDecimal(amount, decimal),
           // gasLimit,
         })
         .then((res: any) => {
-          setLoading(false)
+          // setLoading(false)
+          dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
           addTransaction(res, {
             type: TransactionType.REPAY,
             recipient: address,
@@ -344,7 +365,8 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
           onClose(false)
         })
         .catch((error: any) => {
-          setLoading(false)
+          // setLoading(false)
+          dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
           toast.error(error.message)
         })
     }

@@ -15,6 +15,7 @@ import {
   useBorrowLimit,
   useCollateralBorrowLimitUsed,
   useCollateralRiskLevel,
+  useDashboardType,
   useDecimal,
   useErc20ReserveData,
   useEthLiquidity,
@@ -143,7 +144,6 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   // const [supplyLimit, setSupplyLimit] = useState('')
   const supplyLimit = useWalletBalance()
   const ethLiquidity = useEthLiquidity()
-  const [loading, setLoading] = useState(false)
   const [amount, setAmount] = useState('')
   const contract = useGateway()
   const poolContract = useLendingPool()
@@ -164,6 +164,12 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
   const [tokenApproval, tokenApproveCallback] = useTTokenApproveCallback(amount || '1', contract?.address)
   const transactionPending = useTransactionPending()
   const transactions = useAllTransactions()
+  const dashboardType = useDashboardType()
+  const [blueChipLoading, setBlueChipLoading] = useState(false)
+  const [growthLoading, setGrowthLoading] = useState(false)
+  const loading = useMemo(() => {
+    return dashboardType === 1 ? blueChipLoading : growthLoading
+  }, [blueChipLoading, dashboardType, growthLoading])
   const flag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
@@ -178,8 +184,9 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
     }).length
   }, [transactions])
   useEffect(() => {
-    setLoading(false)
-  }, [flag])
+    //setLoading(false)
+    dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+  }, [dashboardType, flag])
   const depositPending = useMemo(() => {
     return transactionPending.filter((el) => el.info.type === TransactionType.DEPOSIT)
   }, [transactionPending])
@@ -205,9 +212,13 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
       return
     }
     if (contract && address) {
-      setLoading(true)
+      // setLoading(true)
+      dashboardType === 1 ? setBlueChipLoading(true) : setGrowthLoading(true)
       if (approval !== ApprovalState.APPROVED) {
-        await approveCallback().catch(() => setLoading(false))
+        await approveCallback().catch(() => {
+          // setLoading(false)
+          dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+        })
       } else {
         contract
           .deposit(poolContract?.address, address, {
@@ -215,7 +226,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             // gasLimit,
           })
           .then((res: any) => {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             addTransaction(res, {
               type: TransactionType.DEPOSIT,
               recipient: address,
@@ -226,7 +238,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             setOpenMySupplyModal(false)
           })
           .catch((error: any) => {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             toast.error(error.message)
           })
       }
@@ -238,14 +251,19 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
       return
     }
     if (contract && address) {
-      setLoading(true)
+      // setLoading(true)
+      dashboardType === 1 ? setBlueChipLoading(true) : setGrowthLoading(true)
       if (tokenApproval !== ApprovalState.APPROVED) {
-        await tokenApproveCallback().catch(() => setLoading(false))
+        await tokenApproveCallback().catch(() => {
+          dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+          // setLoading(false)
+        })
       } else {
         contract
           .withdraw(poolContract?.address, amountDecimal(amount, decimal), address)
           .then((res: any) => {
-            setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+            // setLoading(false)
             toast.success(desensitization(res.hash))
             addTransaction(res, {
               type: TransactionType.WITHDRAW,
@@ -256,7 +274,8 @@ export default function MySupplyModal({ openMySupplyModal, setOpenMySupplyModal,
             setOpenMySupplyModal(false)
           })
           .catch((error: any) => {
-            setLoading(false)
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             toast.error(error.message)
           })
       }

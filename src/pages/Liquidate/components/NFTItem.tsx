@@ -7,11 +7,12 @@ import { getAlchemyNftMetadata } from 'services/module/deposit'
 const Container = styled(Box)`
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.5);
   border-radius: 10px;
+  width: 305px;
   display: flex;
   gap: 14px;
   align-items: center;
   cursor: pointer;
-  margin-bottom: 48px;
+  /* margin-bottom: 48px; */
   user-select: none;
 `
 
@@ -101,7 +102,6 @@ const ActionInfoContainer = styled('div')`
   flex-direction: column;
   gap: 16px;
 `
-
 // const NFTActionContainer = styled('div')`
 //   display: flex;
 //   gap: 10px;
@@ -128,10 +128,6 @@ const ActionInfoContainer = styled('div')`
 //   font-weight: 500;
 //   font-size: 14px;
 //   line-height: 160%;
-//   /* or 22px */
-
-//   /* Cool Gray 400 */
-
 //   color: #a0a3bd;
 // `
 
@@ -157,14 +153,9 @@ const ActionInfoContainer = styled('div')`
 //   font-weight: 700;
 //   font-size: 16px;
 //   line-height: 160%;
-//   /* identical to box height, or 26px */
-
 //   display: flex;
 //   align-items: center;
 //   text-align: right;
-
-//   /* Main color 2 */
-
 //   color: #7646ff;
 // `
 

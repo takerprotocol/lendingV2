@@ -66,12 +66,12 @@ const CollectionUpBox = styled(Box)`
 const LiquidationBox = styled(Box)`
   display: flex;
   align-items: center;
-  width: 313px;
+  width: 346px;
   height: 50px;
   background: #f7f7fc;
   opacity: 0.7;
   border-radius: 6px;
-  margin-right: 108px;
+  margin-right: 148px;
 `
 const TokenUpBox = styled(Box)`
   width: 35px;
@@ -266,7 +266,7 @@ export default function Collection({ type, loading }: CollectionType) {
                               {div(el.liqThreshold, 100)}%
                             </Typography>
                           </LiquidationBox>
-                          <Box className={address ? '' : 'none'} width="164px">
+                          <Box className={address ? '' : 'none'} width="222px">
                             <AlignEndBox>
                               <Typography
                                 variant="subtitle1"
