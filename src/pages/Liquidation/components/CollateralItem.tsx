@@ -263,7 +263,7 @@ const CollateralItem = ({
       </DataItem>
       <Button
         onClick={() => navigate(`/liquidate/${address}`)}
-        disabled={numbro.unformat(riskPercentage) > 120}
+        disabled={numbro.unformat(riskPercentage.replaceAll('>', '').toLocaleLowerCase()) > 120}
         variant="contained"
         color="primary"
       >
