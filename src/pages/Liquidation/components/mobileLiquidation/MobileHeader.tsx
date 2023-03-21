@@ -29,8 +29,10 @@ export default function MobileHeader() {
     <HeaderCenterBox pt={showChangeNetWork ? '9.4375rem' : '5.375rem'}>
       <FoundTypography>found some treasure !</FoundTypography>
       {/* Help the borrower repay their debt, instantly liquidate, and get the NFT you desire! */}
-      <LiquidateTypography mt="1.5rem">Liquidate with a floor price to </LiquidateTypography>
-      <LiquidateTypography mb="1.5rem">get some NFTs you like </LiquidateTypography>
+      <LiquidateTypography mb="1.5rem" mt="1.5rem">
+        Help the borrower repay their debt, instantly liquidate, and get the NFT you desire!
+      </LiquidateTypography>
+      {/* <LiquidateTypography >get some NFTs you like </LiquidateTypography> */}
       <CenterBox>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 22L12 2" stroke="white" strokeWidth="1.5" strokeLinecap="round" />

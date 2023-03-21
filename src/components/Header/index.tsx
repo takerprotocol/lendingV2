@@ -18,6 +18,8 @@ import { ChangeNetWork } from 'components/ChangeNetWork'
 import { useTransactionPending } from 'state/transactions/hooks'
 import { Loading } from 'components/Loading'
 import { useCallback, useEffect, useState } from 'react'
+import { setDashboardType } from 'state/user/reducer'
+import { useAppDispatch } from 'state'
 
 const HeaderBox = styled(Box, {
   shouldForwardProp: (prop) => true,
@@ -109,6 +111,7 @@ export const Header = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const mobile = useMobileType()
+  const dispatch = useAppDispatch()
   const lightBackground = location.pathname.includes('/deposit') || location.pathname.includes('/liquidate')
   const [scrollTop, setScrollTop] = useState(0)
   const bindHandleScroll = useCallback(() => {
@@ -148,7 +151,7 @@ export const Header = () => {
             Home
           </StyledLinkText>
         </Link> */}
-              <Link to="/dashboard">
+              <Link to="/dashboard" onClick={() => dispatch(setDashboardType(1))}>
                 <StyledLinkText
                   color={String(location.pathname === '/dashboard' ? theme.palette.primary.main : theme.palette.text)}
                   variant="button"
@@ -159,7 +162,7 @@ export const Header = () => {
                   Dashboard
                 </StyledLinkText>
               </Link>
-              <Link to="/liquidation">
+              <Link onClick={() => dispatch(setDashboardType(1))} to="/liquidation">
                 <StyledLinkText
                   color={String(location.pathname === '/liquidation' ? theme.palette.primary.main : theme.palette.text)}
                   variant="button"

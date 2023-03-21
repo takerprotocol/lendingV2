@@ -2,6 +2,7 @@ import { Box, styled, Typography } from '@mui/material'
 import { SpaceBetweenBox, CenterBox, FlexBox } from 'styleds'
 import mobileMore from 'assets/images/svg/liquidation/mobileMore-icon.svg'
 import { useMemo } from 'react'
+import numbro from 'numbro'
 import { useNavigate } from 'react-router-dom'
 import ERC721 from 'assets/images/png/collection/721.png'
 import Azuki from 'assets/images/png/collection/azuki.png'
@@ -10,6 +11,8 @@ import Mayc from 'assets/images/png/collection/mayc.png'
 import { abbrevAddress } from 'utils/abbrevAddres'
 import Copy from 'components/Copy'
 import { fixedFormat } from 'utils'
+import { useAppDispatch } from 'state'
+import { setDashboardType } from 'state/user/reducer'
 
 const CardBox = styled(Box)`
   background: #ffffff;
@@ -49,6 +52,7 @@ interface MobileCollateralListProps {
   debt: string
   riskPercentage: string
   riskLevel: string
+  type: string
   riskLevelTag?: string
   nfts: number
 }
@@ -57,11 +61,13 @@ export default function MobileCollateralList({
   collateral,
   collections,
   debt,
+  type,
   riskPercentage,
   riskLevelTag,
   riskLevel,
   nfts = 0,
 }: MobileCollateralListProps) {
+  const dispatch = useAppDispatch()
   const renderImg = (symbol?: string) => {
     if (symbol) {
       if (symbol.toLocaleLowerCase().indexOf('mayc') > -1) {
@@ -129,20 +135,25 @@ export default function MobileCollateralList({
         </CenterBox>
         <Typography
           onClick={() => {
-            if (!(+riskPercentage > 120)) {
+            if (!(numbro.unformat(riskPercentage.replaceAll('>', '').toLocaleLowerCase()) > 120)) {
+              dispatch(setDashboardType(type === 'Blue Chip' ? '1' : '2'))
               navigate(`/liquidate/${address}`)
             }
           }}
-          fontWeight={+riskPercentage > 120 ? '600' : '700'}
+          fontWeight={numbro.unformat(riskPercentage.replaceAll('>', '').toLocaleLowerCase()) > 120 ? '600' : '700'}
           variant="body1"
-          color={+riskPercentage > 120 ? 'rgba(160, 163, 189, 0.8)' : '#7646FF'}
+          color={
+            numbro.unformat(riskPercentage.replaceAll('>', '').toLocaleLowerCase()) > 120
+              ? 'rgba(160, 163, 189, 0.8)'
+              : '#7646FF'
+          }
         >
           LIQUIDATE {'>'}
         </Typography>
       </SpaceBetweenBox>
       <SpaceBetweenBox mt="1.5rem">
         <Typography variant="body2" fontWeight="600" lineHeight="0.75rem" color="#A0A3BD">
-          {collections?.length || 0} Collections {`${collections?.length === 0 ? '' : `/ ${nfts} NFTs`}`}
+          {collections?.length || 0} {type} NFTs
         </Typography>
         <Typography variant="body2" fontWeight="600" lineHeight="0.75rem" color="#A0A3BD">
           Total Debt

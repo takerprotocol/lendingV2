@@ -11,6 +11,7 @@ import LiquidationBar from './LiquidationBar'
 import NFTItem from './NFTItem'
 import { CollateralModel } from 'services/type/nft'
 import NFTItemSkeleton from './NftItemSkeleton'
+import { fixedFormat } from 'utils'
 // import EthCollateral from './EthCollateral'
 
 const Container = styled('div')`
@@ -424,7 +425,7 @@ const LiquidateBody = ({
                 />
                 <path d="M4 11.5L8.5 14L13 11.5" stroke="#14142A" strokeLinejoin="round" />
               </svg>
-              <TotalLiquidation>{total}</TotalLiquidation>
+              <TotalLiquidation>{fixedFormat(total)}</TotalLiquidation>
             </TotalLiqudationContainer>
           </div>
         </TitleRow>

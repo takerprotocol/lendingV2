@@ -5,7 +5,7 @@ import X from 'assets/images/svg/common/X-icon.svg'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state'
 import { useMobileMenuType, useMobileSecondHeaderName } from 'state/user/hooks'
-import { setLoginWalletType, setMobileMenuType } from 'state/user/reducer'
+import { setDashboardType, setLoginWalletType, setMobileMenuType } from 'state/user/reducer'
 import { FlexBox } from 'styleds'
 import { ChangeNetWork } from 'components/ChangeNetWork'
 import { useShowChangeNetWork } from 'state/application/hooks'
@@ -62,7 +62,9 @@ export default function MobileHeader() {
               onClick={() => {
                 if (deposit) {
                   navigate('/')
+                  dispatch(setDashboardType(1))
                 } else {
+                  dispatch(setDashboardType(1))
                   navigate('/liquidation')
                 }
               }}
@@ -96,8 +98,10 @@ export default function MobileHeader() {
             onClick={() => {
               if (location.pathname === '/') {
                 window.location.reload()
+                dispatch(setDashboardType(1))
               } else {
                 navigate('/')
+                dispatch(setDashboardType(1))
               }
             }}
           >

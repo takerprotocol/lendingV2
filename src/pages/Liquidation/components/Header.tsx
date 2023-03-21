@@ -15,7 +15,6 @@ const Title = styled(Typography)`
 
 const Subtitle = styled(Typography)`
   width: 482px;
-  height: 70px;
   font-family: 'Quicksand';
   font-style: normal;
   position: relative;

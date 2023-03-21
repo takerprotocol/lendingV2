@@ -2,10 +2,12 @@ import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
 import Copy from 'components/Copy'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAppDispatch } from 'state'
 import { abbrevAddress } from 'utils/abbrevAddres'
 import { fixedFormat } from 'utils'
 import numbro from 'numbro'
 import { Nft } from '@alch/alchemy-sdk'
+import { setDashboardType } from 'state/user/reducer'
 const Card = styled('div')(({ theme }) => ({
   background: '#ffffff',
   border: '1px solid #eff0f6',
@@ -169,6 +171,7 @@ const CollateralItem = ({
   }, [tokens])
 
   const showAllCollections = useCallback(() => tokens, [tokens])
+  const dispatch = useAppDispatch()
   const Collections = useMemo(() => {
     if (tokens.length) {
       return tokens.map((nft: Nft, index: number) => (
@@ -262,7 +265,10 @@ const CollateralItem = ({
         <Value color={numbro.unformat(riskPercentage) <= 120 ? '#E1536C' : '#4E4B66'}>{riskPercentage}%</Value>
       </DataItem>
       <Button
-        onClick={() => navigate(`/liquidate/${address}`)}
+        onClick={() => {
+          navigate(`/liquidate/${address}`)
+          dispatch(setDashboardType(type === 'Blue Chip' ? '1' : '2'))
+        }}
         disabled={numbro.unformat(riskPercentage.replaceAll('>', '').toLocaleLowerCase()) > 120}
         variant="contained"
         color="primary"

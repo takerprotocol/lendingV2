@@ -69,7 +69,6 @@ const Liquidate = () => {
       // })
     }
   }, [contract])
-  //
   const nfts = useMemo(() => {
     const _nfts: Array<TokenModel> = []
     if (collaterals) {

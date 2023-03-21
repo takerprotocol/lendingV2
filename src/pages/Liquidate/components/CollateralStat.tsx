@@ -1,6 +1,6 @@
 import { styled, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { div, times } from 'utils'
+import { div, fixedFormat, times } from 'utils'
 
 const CollateralStatContainer = styled('div')`
   flex: 1;
@@ -146,7 +146,7 @@ const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2
             />
             <path d="M3 19.5L8.5 23L14 19.5" stroke="#A0A3BD" strokeWidth="1.5" strokeLinejoin="round" />
           </svg>
-          <CollateralStatValue>{total}</CollateralStatValue>
+          <CollateralStatValue>{fixedFormat(total)}</CollateralStatValue>
         </CollateralStatValueContainer>
       </CollateralInfoContainer>
       <SplitStatContainer>
@@ -168,7 +168,7 @@ const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2
                   <path d="M4 11.5L8.5 14L13 11.5" stroke="white" strokeLinejoin="round" />
                 </g>
               </svg>
-              {split1}
+              {fixedFormat(split1)}
             </SplitValue>
           </Split>
           {split2Title && (
@@ -189,7 +189,7 @@ const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2
                     <path d="M4 11.5L8.5 14L13 11.5" stroke="white" strokeLinejoin="round" />
                   </g>
                 </svg>
-                {split2}
+                {fixedFormat(split2)}
               </SplitValue>
             </Split>
           )}

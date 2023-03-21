@@ -1,4 +1,4 @@
-import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
+import { Box, Button, PopperPlacementType, styled, Tooltip, Typography } from '@mui/material'
 import MyNFTCollateralBg from 'assets/images/svg/dashboard/MyNFTCollateralBg.svg'
 import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
 import more from 'assets/images/svg/dashboard/more-icon.svg'
@@ -12,6 +12,7 @@ import { getClient } from 'apollo/client'
 import { User } from 'apollo/queries'
 import { decimalFormat } from 'utils'
 import { useNavigate } from 'react-router-dom'
+import NFTListPopper from './NFTListPopper'
 // import { toWei } from 'web3-utils'
 
 // import ILendingPoolAddressesProviderAbi from 'abis/MockERC721.json'
@@ -171,6 +172,14 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const count = useMemo(() => {
     return depositedCollection.length >= 4
   }, [depositedCollection.length])
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+  const [open, setOpen] = useState(false)
+  const [placement, setPlacement] = useState<PopperPlacementType>()
+  const handleClick = (newPlacement: PopperPlacementType) => (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+    setOpen((prev) => placement !== newPlacement || !prev)
+    setPlacement(newPlacement)
+  }
   return (
     <MyNFTCollateralBox>
       <BottomBox>
@@ -231,7 +240,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
             >
               <FlexBox>
                 {supportNfts &&
-                  supportNfts.slice(0, 13).map((el: any, index: number) => {
+                  supportNfts.slice(0, 12).map((el: any, index: number) => {
                     return (
                       <Tooltip
                         key={`support_collections_${el.contract.address}_${el.tokenId}`}
@@ -247,7 +256,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                             height: `${supportNfts.length > 10 ? '28px' : '24px'}`,
                             width: `${supportNfts.length > 10 ? '26px' : '24px'}`,
                             marginRight: `${supportNfts.length > 10 ? '0px' : '4px'}`,
-                            marginLeft: `${supportNfts.length > 10 && index > 0 ? '-8px' : '0'}`,
+                            marginLeft: `${supportNfts.length > 10 && index > 0 ? '-6px' : '0'}`,
                             borderLeft: `${supportNfts.length > 10 ? '2px solid #ffffff' : '0'}`,
                             borderTop: `${supportNfts.length > 10 ? '2px solid #ffffff' : '0'}`,
                             borderBottom: `${supportNfts.length > 10 ? '2px solid #ffffff' : '0'}`,
@@ -261,7 +270,14 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                   })}
               </FlexBox>
               {supportNfts.length > 10 && (
-                <Box width="24px" sx={{ cursor: 'pointer' }} height="24px">
+                <Box
+                  width="24px"
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    handleClick('top')
+                  }}
+                  height="24px"
+                >
                   <img width="24px" height="24px" src={more} alt="" />
                 </Box>
               )}
@@ -341,6 +357,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
           )}
         </SpaceBox>
       </TopBox>
+      <NFTListPopper placement={placement} open={open} anchorEl={anchorEl}></NFTListPopper>
     </MyNFTCollateralBox>
   )
 }

@@ -118,6 +118,9 @@ export default function Collection({ type, loading }: CollectionType) {
   // const nftBalance = (id: string) => {
 
   // }
+  // useEffect(() => {
+  //   //
+  // }, [collection])
   const nftBalance = useCallback(
     (id: string) => {
       if (list) {

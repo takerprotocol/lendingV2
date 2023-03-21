@@ -31,6 +31,7 @@ export default function MobileMenu() {
       <SpaceBetweenBox
         onClick={() => {
           navigate('/')
+          dispatch(setDashboardType(1))
           dispatch(setMobileMenuType(!menuType))
         }}
       >
@@ -73,6 +74,7 @@ export default function MobileMenu() {
       <SpaceBetweenBox
         onClick={() => {
           navigate('/liquidation')
+          dispatch(setDashboardType(1))
           dispatch(setMobileMenuType(!menuType))
         }}
       >
@@ -86,7 +88,7 @@ export default function MobileMenu() {
         </Typography>
         <img src={mobileMenu} alt="" />
       </SpaceBetweenBox>
-      <SpaceBetweenBox mt="2.25rem">
+      {/* <SpaceBetweenBox mt="2.25rem">
         <Typography
           variant="subtitle2"
           lineHeight="150%"
@@ -96,7 +98,7 @@ export default function MobileMenu() {
           FAQs
         </Typography>
         <img src={mobileMenu} alt="" />
-      </SpaceBetweenBox>
+      </SpaceBetweenBox> */}
     </MobileMenuBox>
   )
 }
