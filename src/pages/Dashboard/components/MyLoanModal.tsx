@@ -394,6 +394,9 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
       setAmount(sun)
     }
   }, [borrowLimit, check, ethDebt, slider])
+  const borrowMax = useMemo(() => {
+    return BigNumber.max(minus(borrowLimit, ethDebt), 0).toString()
+  }, [borrowLimit, ethDebt])
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -528,7 +531,11 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                           setAmount(event.target.value)
                         }
                       } else {
-                        setAmount(event.target.value)
+                        if (new BigNumber(event.target.value).gt(borrowMax)) {
+                          setAmount(borrowMax)
+                        } else {
+                          setAmount(event.target.value)
+                        }
                       }
                     }}
                   />
@@ -543,7 +550,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Typography mt="4px" variant="body1" fontWeight="600" color="#A0A3BD">
-                      {fixedFormat(borrowLimit)} ETH
+                      {fixedFormat(borrowMax)} ETH
                     </Typography>
                   </Box>
                 </Box>
@@ -674,7 +681,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
             </FlexBox>
           </RightFlexBox>
           {/* <FlexBox display={+debtRiskLevel < 110 ? '' : 'none'}> */}
-          {new BigNumber(amount).gt(borrowLimit) && check === 1 && (
+          {new BigNumber(amount).gt(borrowMax) && check === 1 && (
             <FlexBox m="24px 0 16px 0">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_741_8707)">
@@ -695,7 +702,7 @@ export default function MyLoanModal({ open, repayRoBorrow, onClose }: MyLoanModa
               </Typography>
             </FlexBox>
           )}
-          {check === 1 && new BigNumber(amount).gt(borrowLimit) ? (
+          {check === 1 && new BigNumber(amount).gt(borrowMax) ? (
             // {check === 1 && +debtRiskLevel < 110 ? (
             <LiquidatedBox>
               <Typography
