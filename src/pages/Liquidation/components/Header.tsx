@@ -31,7 +31,7 @@ const LiquidationHeader = () => {
   return (
     <Box m="157px 0  74px 140px">
       <Title variant="h3">found some treasure !</Title>
-      <Subtitle>Help the borrower repay their debt, instantly liquidate, and get the NFT you desire</Subtitle>
+      <Subtitle>Help the borrower repay their debt, instantly liquidate, and get the NFT you desire!</Subtitle>
     </Box>
   )
 }
