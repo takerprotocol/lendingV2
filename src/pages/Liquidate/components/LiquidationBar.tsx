@@ -99,11 +99,12 @@ type LiquidationBarType = {
   total: string
   nfts: number
   nftsValue: string
+  floorPrice: string
   ethValue: string
   submit: Function
 }
 
-const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit }: LiquidationBarType) => {
+const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit, floorPrice }: LiquidationBarType) => {
   return (
     <TotalLiquidationAmountContainer>
       <LabelValueContainer>
@@ -118,7 +119,7 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit }: Liquidatio
             />
             <path d="M4 10.5L8.5 13L13 10.5" stroke="#A0A3BD" strokeLinejoin="round" />
           </svg>
-          <TotalLiquidationAmount>{total}</TotalLiquidationAmount>
+          <TotalLiquidationAmount>{floorPrice}</TotalLiquidationAmount>
         </TotalLiquidationAmountWrapper>
       </LabelValueContainer>
       <StatsContainer>
@@ -134,7 +135,7 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit }: Liquidatio
               />
               <path d="M4 10.5L8.5 13L13 10.5" stroke="#A0A3BD" strokeLinejoin="round" />
             </svg>
-            <TotalLiquidationAmount>{nftsValue || 0}</TotalLiquidationAmount>
+            <TotalLiquidationAmount>{floorPrice || 0}</TotalLiquidationAmount>
           </TotalLiquidationAmountWrapper>
         </LabelValueContainer>
         <LabelValueContainer>
@@ -164,7 +165,7 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit }: Liquidatio
               />
               <path d="M4 10.5L8.5 13L13 10.5" stroke="#A0A3BD" strokeLinejoin="round" />
             </svg>
-            <TotalPriceValue>{new BigNumber(ethValue).plus(nftsValue).toString()}</TotalPriceValue>
+            <TotalPriceValue>{new BigNumber(ethValue).plus(floorPrice).toString()}</TotalPriceValue>
           </TotalLiquidationAmountWrapper>
         </LabelValueContainerPrice>
         <LiquidateButton

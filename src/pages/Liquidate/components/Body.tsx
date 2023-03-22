@@ -13,6 +13,7 @@ import { CollateralModel } from 'services/type/nft'
 import NFTItemSkeleton from './NftItemSkeleton'
 import { fixedFormat } from 'utils'
 // import EthCollateral from './EthCollateral'
+import { fromWei } from 'web3-utils'
 
 const Container = styled('div')`
   width: 1012px;
@@ -147,6 +148,7 @@ const LiquidateBody = ({
   submit: Function
 }) => {
   const [filter] = useState<number>(1)
+  const [floorPrice, setFloorPrice] = useState<string>('')
   const [value, setValue] = useState<number>(0)
   const Collaterals = useMemo(() => {
     if (collaterals) {
@@ -163,7 +165,10 @@ const LiquidateBody = ({
                 }
               }}
               tokenChecked={tokenChecked}
-              setTokenChecked={setTokenChecked}
+              setTokenChecked={(type: string) => {
+                setFloorPrice(collection.collection.floorPrice)
+                setTokenChecked(type)
+              }}
               token={token.id}
               key={`collateral-${collection.id}-${token.id}`}
             />
@@ -489,6 +494,7 @@ const LiquidateBody = ({
       </PaddingBox>
       <LiquidationBar
         total={barTotal}
+        floorPrice={fromWei(tokenChecked.length === 0 ? '0' : floorPrice || '0')}
         nfts={tokenChecked.length}
         nftsValue={nftsValue}
         ethValue={ethValue}

@@ -5,11 +5,10 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state'
 import { abbrevAddress } from 'utils/abbrevAddres'
-import { fixedFormat } from 'utils'
+import { fixedFormat, renderCollectionName } from 'utils'
 import numbro from 'numbro'
 import { setDashboardType } from 'state/user/reducer'
 import { LiquidationNftModel } from 'services/type/nft'
-import { Nft } from '@alch/alchemy-sdk'
 import NFTListPopover from 'pages/Dashboard/components/NFTListPopper'
 const Card = styled('div')(({ theme }) => ({
   background: '#ffffff',
@@ -172,12 +171,12 @@ const CollateralItem = ({
     if (tokens.length) {
       return tokens
         .slice(0, 8)
-        .map((nft: Nft, index: number) => (
+        .map((nft: LiquidationNftModel, index: number) => (
           <CollectionImage
             key={`collection-${nft.tokenId}${index}`}
             alt="collection"
             overflow={overflow}
-            text={nft.tokenId}
+            text={`${renderCollectionName(nft.symbol)} #${nft.tokenId}`}
             index={index}
             src={nft.media[0]?.gateway}
           />
