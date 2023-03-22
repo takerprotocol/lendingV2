@@ -17,7 +17,7 @@ import {
   useMobileType,
 } from 'state/user/hooks'
 import { useCollections, useShowChangeNetWork } from 'state/application/hooks'
-import { CollateralModel } from 'services/type/nft'
+import { CollateralModel, LiquidationNftModel } from 'services/type/nft'
 import { getRiskLevel, getRiskLevelTag, times } from 'utils'
 import MobileHeader from './components/mobileLiquidation/MobileHeader'
 import MobileCollateral from './components/mobileLiquidation/MobileCollateral'
@@ -37,8 +37,7 @@ import { toWei } from 'web3-utils'
 import numbro from 'numbro'
 import { getAlchemyNftMetadata } from 'services/module/deposit'
 import { useAlchemy } from 'hooks/useAlchemy'
-import { Nft } from '@alch/alchemy-sdk'
-
+let graphLoading = false
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 const Body = styled(Box)`
   background-color: #f7f7fc;
@@ -196,9 +195,18 @@ export default function Liquidation() {
       setClient(getClient(1)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
       setOtherClient(getClient(2)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
-  }, [chainId, dashboardType])
+  }, [chainId])
+
   const getCollaterals = useCallback(async () => {
-    if (client && otherClient && alchemy && collaterals.length === 0 && otherCollaterals.length === 0 && loading) {
+    if (
+      client &&
+      otherClient &&
+      alchemy &&
+      collaterals.length === 0 &&
+      otherCollaterals.length === 0 &&
+      !graphLoading
+    ) {
+      graphLoading = true
       const user = await client.query({
         query: AllUser(healthFactor, searchValue, conditionSort, allUserWhere),
       })
@@ -217,7 +225,7 @@ export default function Liquidation() {
           } else {
             heath = numbro(heath).format({ spaceSeparated: true, average: true }).replace(' ', '')
           }
-          const tokens: Nft[] = []
+          const tokens: LiquidationNftModel[] = []
           if (alchemy) {
             for (let i = 0, length = element.collections.length; i < length; i++) {
               for (let ii = 0, length1 = element.collections[i].tokens.length; ii < length1; ii++) {
@@ -226,7 +234,7 @@ export default function Liquidation() {
                   element.collections[i].tokens[ii].id.split('-')[2],
                   alchemy
                 )
-                tokens.push(nft)
+                tokens.push({ ...nft, symbol: element.collections[i].collection.symbol })
               }
             }
           }
@@ -267,7 +275,7 @@ export default function Liquidation() {
           } else {
             heath = numbro(heath).format({ spaceSeparated: true, average: true }).replace(' ', '')
           }
-          const otherTokens: Nft[] = []
+          const otherTokens: LiquidationNftModel[] = []
           if (alchemy) {
             for (let i = 0, length = element.collections.length; i < length; i++) {
               for (let ii = 0, length1 = element.collections[i].tokens.length; ii < length1; ii++) {
@@ -276,7 +284,7 @@ export default function Liquidation() {
                   element.collections[i].tokens[ii].id.split('-')[2],
                   alchemy
                 )
-                otherTokens.push(nft)
+                otherTokens.push({ ...nft, symbol: element.collections[i].collection.symbol })
               }
             }
           }
@@ -324,7 +332,6 @@ export default function Liquidation() {
     alchemy,
     collaterals,
     otherCollaterals.length,
-    loading,
     healthFactor,
     searchValue,
     conditionSort,

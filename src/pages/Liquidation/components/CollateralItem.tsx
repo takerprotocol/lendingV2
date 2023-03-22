@@ -4,10 +4,10 @@ import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state'
 import { abbrevAddress } from 'utils/abbrevAddres'
-import { fixedFormat } from 'utils'
+import { fixedFormat, renderCollectionName } from 'utils'
 import numbro from 'numbro'
-import { Nft } from '@alch/alchemy-sdk'
 import { setDashboardType } from 'state/user/reducer'
+import { LiquidationNftModel } from 'services/type/nft'
 const Card = styled('div')(({ theme }) => ({
   background: '#ffffff',
   border: '1px solid #eff0f6',
@@ -147,7 +147,7 @@ type CollateralItemType = {
   collections: any
   debt: string
   type: string
-  tokens: Nft[]
+  tokens: LiquidationNftModel[]
   riskPercentage: string
   riskLevel: string
   riskLevelTag?: string
@@ -174,11 +174,11 @@ const CollateralItem = ({
   const dispatch = useAppDispatch()
   const Collections = useMemo(() => {
     if (tokens.length) {
-      return tokens.map((nft: Nft, index: number) => (
+      return tokens.map((nft: LiquidationNftModel, index: number) => (
         <CollectionImage
           key={`collection-${nft.tokenId}${index}`}
           alt="collection"
-          text={nft.tokenId}
+          text={`${renderCollectionName(nft.symbol)} #${nft.tokenId}`}
           src={nft.media[0]?.gateway}
         />
       ))

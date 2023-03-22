@@ -271,7 +271,6 @@ const Collaterals = ({
       !new BigNumber(searchTerms.length).eq(0)
     )
   }, [collaterals.length, collectionFilter, debtFilter, searchTerms.length, sort])
-  console.log(collaterals)
   // const handleSearch = (e: React.FormEvent<HTMLInputElement>) => {
   //   if (searchTerms[0]) {
   //     setSearchTerms(searchTerms.filter((currentTerm: string) => currentTerm !== searchTerms[0]))

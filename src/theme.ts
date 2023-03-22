@@ -319,6 +319,18 @@ export const theme = createTheme({
       `,
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: `
+          &.MuiPopover-paper{
+            box-shadow: none;
+            background: transparent;
+            overflow: visible !important;
+            transform: translateY(-18px) !important;
+          }
+        `,
+      },
+    },
     MuiSwitch: {
       styleOverrides: {
         root: `

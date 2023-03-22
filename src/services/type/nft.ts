@@ -1,4 +1,4 @@
-import { Nft } from "@alch/alchemy-sdk"
+import { Nft } from '@alch/alchemy-sdk'
 
 export interface NftTokenModel {
   [x: string]: any
@@ -32,7 +32,7 @@ export interface CollateralModel {
   collections: Array<CollectionsModel>
   debt: string
   type: string
-  tokens: Nft[]
+  tokens: LiquidationNftModel[]
   riskPercentage: string
   riskLevel: string
   riskLevelTag?: string
@@ -58,4 +58,8 @@ export interface CollectionModel {
 export interface TokenModel {
   id: string
   amount: string
+}
+
+export interface LiquidationNftModel extends Nft {
+  symbol: string
 }

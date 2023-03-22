@@ -1,8 +1,9 @@
-import { Box, Button, PopperPlacementType, styled, Tooltip, Typography } from '@mui/material'
+import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
 import MyNFTCollateralBg from 'assets/images/svg/dashboard/MyNFTCollateralBg.svg'
 import ButtonDeposit from 'assets/images/svg/dashboard/Buttom-Deposit.svg'
 import more from 'assets/images/svg/dashboard/more-icon.svg'
 import { SpaceBetweenBox, FlexBox, SpaceBox } from 'styleds'
+import * as React from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAccountNfts, useAddress, useDashboardType, useUserValue } from 'state/user/hooks'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
@@ -12,7 +13,8 @@ import { getClient } from 'apollo/client'
 import { User } from 'apollo/queries'
 import { decimalFormat } from 'utils'
 import { useNavigate } from 'react-router-dom'
-import NFTListPopper from './NFTListPopper'
+// import NFTListPopper from './NFTListPopper'
+import BasicPopover from './NFTListPopper'
 // import { toWei } from 'web3-utils'
 
 // import ILendingPoolAddressesProviderAbi from 'abis/MockERC721.json'
@@ -172,14 +174,20 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const count = useMemo(() => {
     return depositedCollection.length >= 4
   }, [depositedCollection.length])
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
-  const [open, setOpen] = useState(false)
-  const [placement, setPlacement] = useState<PopperPlacementType>()
-  const handleClick = (newPlacement: PopperPlacementType) => (event: React.MouseEvent<HTMLButtonElement>) => {
+  // const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+  // const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorEl(event.currentTarget)
+  // }
+  // const handlePopoverClose = () => {
+  //   setAnchorEl(null)
+  // }
+  // const open = Boolean(anchorEl)
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
-    setOpen((prev) => placement !== newPlacement || !prev)
-    setPlacement(newPlacement)
   }
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
   return (
     <MyNFTCollateralBox>
       <BottomBox>
@@ -253,13 +261,13 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                           alt=""
                           sx={{
                             zIndex: index,
-                            height: `${supportNfts.length > 10 ? '28px' : '24px'}`,
-                            width: `${supportNfts.length > 10 ? '26px' : '24px'}`,
-                            marginRight: `${supportNfts.length > 10 ? '0px' : '4px'}`,
-                            marginLeft: `${supportNfts.length > 10 && index > 0 ? '-6px' : '0'}`,
-                            borderLeft: `${supportNfts.length > 10 ? '2px solid #ffffff' : '0'}`,
-                            borderTop: `${supportNfts.length > 10 ? '2px solid #ffffff' : '0'}`,
-                            borderBottom: `${supportNfts.length > 10 ? '2px solid #ffffff' : '0'}`,
+                            height: `${supportNfts.length > 12 ? '28px' : '24px'}`,
+                            width: `${supportNfts.length > 12 ? '26px' : '24px'}`,
+                            marginRight: `${supportNfts.length > 12 ? '0px' : '4px'}`,
+                            marginLeft: `${supportNfts.length > 12 && index > 0 ? '-6px' : '0'}`,
+                            borderLeft: `${supportNfts.length > 12 ? '2px solid #ffffff' : '0'}`,
+                            borderTop: `${supportNfts.length > 12 ? '2px solid #ffffff' : '0'}`,
+                            borderBottom: `${supportNfts.length > 12 ? '2px solid #ffffff' : '0'}`,
                           }}
                           onClick={() => {
                             navigate(`/deposit/${el.contract.address}`)
@@ -269,17 +277,16 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                     )
                   })}
               </FlexBox>
-              {supportNfts.length > 10 && (
-                <Box
+              {supportNfts.length > 12 && (
+                <img
+                  aria-describedby={id}
+                  onClick={handleClick}
                   width="24px"
-                  sx={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    handleClick('top')
-                  }}
+                  style={{ cursor: 'pointer' }}
                   height="24px"
-                >
-                  <img width="24px" height="24px" src={more} alt="" />
-                </Box>
+                  src={more}
+                  alt=""
+                />
               )}
             </SpaceBetweenBox>
           ) : (
@@ -289,7 +296,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
             >
               <FlexBox>
                 {collections &&
-                  collections.map((el: any, index: number) => {
+                  collections.slice(0, 12).map((el: any, index: number) => {
                     return (
                       <Tooltip key={`collections_${el.id}`} title={el.name || ''} arrow placement="top">
                         <RightImgBox
@@ -297,13 +304,13 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                           alt=""
                           sx={{
                             zIndex: index,
-                            height: `${collections.length > 10 ? '28px' : '24px'}`,
-                            width: `${collections.length > 10 ? '26px' : '24px'}`,
-                            marginRight: `${collections.length > 10 ? '0px' : '4px'}`,
-                            marginLeft: `${collections.length > 10 && index > 0 ? '-8px' : '0'}`,
-                            borderLeft: `${collections.length > 10 ? '2px solid #ffffff' : '0'}`,
-                            borderTop: `${collections.length > 10 ? '2px solid #ffffff' : '0'}`,
-                            borderBottom: `${collections.length > 10 ? '2px solid #ffffff' : '0'}`,
+                            height: `${collections.length > 12 ? '28px' : '24px'}`,
+                            width: `${collections.length > 12 ? '26px' : '24px'}`,
+                            marginRight: `${collections.length > 12 ? '0px' : '4px'}`,
+                            marginLeft: `${collections.length > 12 && index > 0 ? '-8px' : '0'}`,
+                            borderLeft: `${collections.length > 12 ? '2px solid #ffffff' : '0'}`,
+                            borderTop: `${collections.length > 12 ? '2px solid #ffffff' : '0'}`,
+                            borderBottom: `${collections.length > 12 ? '2px solid #ffffff' : '0'}`,
                           }}
                           onClick={() => {
                             navigate(`/deposit/${el.id}`)
@@ -313,8 +320,8 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                     )
                   })}
               </FlexBox>
-              {collections.length > 10 && (
-                <Box width="24px" sx={{ cursor: 'pointer' }} height="24px">
+              {collections.length > 12 && (
+                <Box width="24px" height="24px" sx={{ cursor: 'pointer' }}>
                   <img width="24px" height="24px" src={more} alt="" />
                 </Box>
               )}
@@ -357,7 +364,13 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
           )}
         </SpaceBox>
       </TopBox>
-      <NFTListPopper placement={placement} open={open} anchorEl={anchorEl}></NFTListPopper>
+      {/* <NFTListPopper
+        handleClose={handlePopoverClose}
+        list={supportNfts}
+        open={open}
+        anchorEl={anchorEl}
+      ></NFTListPopper> */}
+      <BasicPopover id={id} setAnchorEl={setAnchorEl} list={supportNfts} open={open} anchorEl={anchorEl}></BasicPopover>
     </MyNFTCollateralBox>
   )
 }

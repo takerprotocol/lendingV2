@@ -313,7 +313,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
               <img src={redPrompt} alt="" />
             </Box>
             <Typography color="#E1536C" fontWeight="600" variant="body2">
-              Exceeding the maximum withdrawal limit, please repay the debt first.
+              If you withdraw the maximum amount of collateral ETH, your collateral will be easily liquidated
             </Typography>
           </FlexBox>
         </Box>

@@ -33,7 +33,7 @@ const HeaderBox = styled(Box, {
   width: '100vw',
   background: lightBackground ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(50px)',
-  zIndex: 10,
+  zIndex: 100,
 }))
 
 const AddressBox = styled(Box)`
