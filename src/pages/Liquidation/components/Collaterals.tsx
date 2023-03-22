@@ -3,21 +3,19 @@ import CustomizedSelect from 'components/Select'
 import BigNumber from 'bignumber.js'
 import { useCallback, useMemo, useState } from 'react'
 import CollateralItem from './CollateralItem'
-import EmptyState from './EmptyState'
 import CollateralPagination from './CollateralPagination'
 import React from 'react'
 import { FlexBox, SpaceBetweenBox } from 'styleds'
 import CollateralsType from './CollateralsType'
 import { useCollateralsType } from 'state/user/hooks'
 import { CollateralModel, CollectionsModel } from 'services/type/nft'
-// import { useCollections } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { setCollateralsType } from 'state/user/reducer'
 import CollateralItemSkeleton from './LiquidationSkeleton/CollateralItemSkeleton'
 import CollateralSkeleton from './LiquidationSkeleton/CollateralSkeleton'
 import liquidationChecked from 'assets/images/svg/liquidation/liquidationChecked-Icon.svg'
 import liquidationNotChecked from 'assets/images/svg/liquidation/liquidationNotChecked-Icon.svg'
-// import { setUserValues } from 'state/user/reducer'
+import EmptyState from './EmptyState'
 
 const CollateralsBox = styled(Box)`
   width: calc(100% - 280px);
@@ -258,10 +256,8 @@ const Collaterals = ({
   collectionFilter,
   setInLiquidation,
 }: CollateralsProps) => {
-  // const [search, setSearch] = useState('')
   const dispatch = useAppDispatch()
   const [openChecked, setOpenChecked] = useState<boolean>(false)
-  // const collection = useCollections()
   const allFilterType = useMemo(() => {
     return (
       new BigNumber(sort).eq(0) &&
@@ -434,10 +430,7 @@ const Collaterals = ({
   //   [sort]
   // )
 
-  //------------//
-
   const [, setCurrentPage] = React.useState<number>(1)
-  //------------//
   const CollateralList = useMemo(() => {
     return (
       collaterals
@@ -555,9 +548,9 @@ const Collaterals = ({
                   checkedIcon={<CheckedImg src={liquidationChecked} alt="" />}
                   icon={<img src={liquidationNotChecked} alt="" />}
                   sx={{ width: '24px', height: '24px' }}
-                  onChange={(el: any) => {
+                  onChange={() => {
                     setOpenChecked(!openChecked)
-                    setInLiquidation(!openChecked ? '1' : '0')
+                    setInLiquidation(!openChecked ? 1 : 0)
                   }}
                 />
               </LiquidationBox>
@@ -761,7 +754,12 @@ const Collaterals = ({
             {loading ? (
               CollateralSkeletonList
             ) : CollateralList.length === 0 ? (
-              <EmptyState searchTerm={searchTerms} />
+              <EmptyState
+                searchTerm={searchTerms}
+                setOpenChecked={setOpenChecked}
+                setInLiquidation={setInLiquidation}
+                setSortValue={setSortValue}
+              />
             ) : (
               CollateralList
             )}

@@ -33,6 +33,7 @@ import { Nft } from '@alch/alchemy-sdk'
 import { NftTokenModel } from 'services/type/nft'
 import TipsTooltip from 'pages/Dashboard/components/TipsTooltip'
 import { Loading } from 'components/Loading'
+import { fromWei } from 'web3-utils'
 
 const style = {
   width: '100%',
@@ -486,7 +487,7 @@ export default function MobileWithdrawSelectedModal({
                 <img src={redPrompt} alt="" />
               </Box>
               <Typography color="#E1536C" variant="body2">
-                If you withdraw the maximum amount of collateral ETH, your collateral will be easily liquidated
+                Exceeding the maximum withdrawal limit, please repay the debt first.
               </Typography>
             </FlexBox>
           </Box>
@@ -494,7 +495,4 @@ export default function MobileWithdrawSelectedModal({
       </Box>
     </Modal>
   )
-}
-function fromWei(arg0: any): BigNumber.Value {
-  throw new Error('Function not implemented.')
 }

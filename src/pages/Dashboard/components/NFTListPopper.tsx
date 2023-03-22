@@ -1,7 +1,6 @@
 import { Box, styled, Popover, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { FlexBox } from 'styleds/index'
-// import { useState } from 'react'
 const PopperBox = styled(Box)`
   align-items: flex-end;
   width: 200px;
@@ -72,7 +71,6 @@ export default function NFTListPopover({ list, open, anchorEl, id, setAnchorEl }
   const handleClose = () => {
     setAnchorEl(null)
   }
-  console.log(list)
   return (
     <ListPopover
       id={id}
@@ -90,7 +88,7 @@ export default function NFTListPopover({ list, open, anchorEl, id, setAnchorEl }
     >
       <BeforeBox>
         <PopperBox>
-          {list.slice(0, list.length).map((el: any, index: number) => (
+          {list.map((el: any, index: number) => (
             <RFlexBox
               onClick={() => {
                 navigate(`/deposit/${el.contract.address}`)

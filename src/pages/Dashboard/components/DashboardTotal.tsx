@@ -7,7 +7,7 @@ import BottomLiquidity from 'assets/images/svg/dashboard/bottom-liquidity.svg'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useEffect, useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
-import { decimalFormat, plus } from 'utils'
+import { decimalFormat, div, fixedFormat, plus, times } from 'utils'
 import { useDashboardType, useDecimal } from 'state/user/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { setPoolValues } from 'state/application/reducer'
@@ -120,7 +120,7 @@ export default function DashboardTotal({ type }: DashboardTotalType) {
             </Box>
             <Box ml="87px">
               <Typography variant="h5" color="#6E7191" lineHeight="32px" fontWeight="500">
-                68%
+                {fixedFormat(times(div(poolValues[2], poolValues[0]), 100))}%
               </Typography>
               <Typography mt="2px" color="#6E7191" variant="subtitle2" fontWeight="500">
                 Utilization Rate

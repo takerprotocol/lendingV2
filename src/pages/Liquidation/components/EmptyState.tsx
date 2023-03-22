@@ -60,12 +60,14 @@ const ClearButton = styled(Button)`
 
 const EmptyState = ({
   searchTerm = [],
-  onClear = () => {
-    return null
-  },
+  setInLiquidation,
+  setOpenChecked,
+  setSortValue,
 }: {
   searchTerm?: Array<string>
-  onClear?: () => null
+  setInLiquidation: Function
+  setOpenChecked: Function
+  setSortValue: Function
 }) => {
   return (
     <Container>
@@ -87,7 +89,14 @@ const EmptyState = ({
           <Explainer> search or clear your search criteria.</Explainer>
         </>
       )}
-      <ClearButton variant="contained" onClick={() => onClear()}>
+      <ClearButton
+        variant="contained"
+        onClick={() => {
+          setInLiquidation(0)
+          setOpenChecked(false)
+          setSortValue(0)
+        }}
+      >
         Clear Search
       </ClearButton>
     </Container>

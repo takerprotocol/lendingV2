@@ -174,14 +174,6 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const count = useMemo(() => {
     return depositedCollection.length >= 4
   }, [depositedCollection.length])
-  // const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
-  // const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
-  //   setAnchorEl(event.currentTarget)
-  // }
-  // const handlePopoverClose = () => {
-  //   setAnchorEl(null)
-  // }
-  // const open = Boolean(anchorEl)
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -370,7 +362,13 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
         open={open}
         anchorEl={anchorEl}
       ></NFTListPopper> */}
-      <BasicPopover id={id} setAnchorEl={setAnchorEl} list={supportNfts} open={open} anchorEl={anchorEl}></BasicPopover>
+      <BasicPopover
+        id={id}
+        setAnchorEl={setAnchorEl}
+        list={supportNfts.slice(12, supportNfts.length)}
+        open={open}
+        anchorEl={anchorEl}
+      ></BasicPopover>
     </MyNFTCollateralBox>
   )
 }

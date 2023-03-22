@@ -91,7 +91,7 @@ export default function Liquidation() {
   // const [loading, setLoading] = useState(true)
   const [collaterals, setCollaterals] = useState<Array<CollateralModel>>([])
   const [otherCollaterals, setOtherCollaterals] = useState<Array<CollateralModel>>([])
-  const [inLiquidation, setInLiquidation] = useState<string>('')
+  const [inLiquidation, setInLiquidation] = useState<number>(0)
   const address = useAddress()
   const collection = useCollections()
   const [client, setClient] = useState<any>(null)
@@ -137,6 +137,9 @@ export default function Liquidation() {
     }
   }, [debtFilter])
   const conditionSort = useMemo(() => {
+    setCollaterals([])
+    setOtherCollaterals([])
+    graphLoading = false
     switch (sort) {
       case 1:
         return ['nftCollateral', 'desc']
@@ -161,20 +164,17 @@ export default function Liquidation() {
       return ''
     }
   }, [searchTerms])
-  // const healthFactor = useMemo(() => {
-  //   if (inLiquidation === '1') {
-  //     return `healthFactor_lt:1000000000000000000`
-  //   } else {
-  //     return ''
-  //   }
-  // }, [inLiquidation])
   const healthFactor = useMemo(() => {
-    if (inLiquidation === '1') {
+    setCollaterals([])
+    setOtherCollaterals([])
+    graphLoading = false
+    if (inLiquidation === 1) {
       return `healthFactor_lt: ${toWei('1')},`
     } else {
       return ` `
     }
   }, [inLiquidation])
+  console.log(inLiquidation)
   const allUserWhere = useMemo(() => {
     if (collectionFilter === 0 && debtFilter === 0) {
       return ['']
@@ -306,7 +306,6 @@ export default function Liquidation() {
           })
         })
       }
-      // console.log(_users.length, '_users')
       // setCollaterals(
       //   orderBy(
       //     _users,
@@ -362,7 +361,6 @@ export default function Liquidation() {
       ? collaterals
       : otherCollaterals
   }, [collaterals, collateralsType, otherCollaterals])
-
   return (
     <>
       {mobile ? (

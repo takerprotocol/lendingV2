@@ -1,13 +1,16 @@
 import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
 import Copy from 'components/Copy'
-import { useCallback, useMemo, useState } from 'react'
+import * as React from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state'
 import { abbrevAddress } from 'utils/abbrevAddres'
-import { fixedFormat, renderCollectionName } from 'utils'
+import { fixedFormat } from 'utils'
 import numbro from 'numbro'
 import { setDashboardType } from 'state/user/reducer'
 import { LiquidationNftModel } from 'services/type/nft'
+import { Nft } from '@alch/alchemy-sdk'
+import NFTListPopover from 'pages/Dashboard/components/NFTListPopper'
 const Card = styled('div')(({ theme }) => ({
   background: '#ffffff',
   border: '1px solid #eff0f6',
@@ -62,20 +65,14 @@ const CollectionDataItem = styled(DataItem)`
 
 const StyledCollectionImage = styled('img', {
   shouldForwardProp: (props) => true,
-})<{ overflow?: boolean }>(({ theme, overflow }) => ({
-  width: 26,
+})<{ overflow?: boolean; index: number }>(({ theme, overflow, index }) => ({
+  width: 28,
   height: 28,
   borderRadius: 4,
   backgroundColor: theme.palette.primary.main,
-  borderLeft: overflow ? '2px white solid' : 'none',
-  borderTop: '2px white solid',
-  borderBottom: overflow ? '2px white solid' : 'none',
-  marginLeft: overflow ? -10 : 0,
+  marginLeft: overflow && index !== 0 ? -6 : 0,
+  border: '2px white solid',
   objectFit: 'cover',
-  ':first-of-type': {
-    borderLeft: 'none',
-    marginLeft: 'none',
-  },
 }))
 
 const StyledCollectionPlaceholder = styled('div')(({ theme }) => ({
@@ -100,8 +97,8 @@ const CollectionImage = (props: any & { src?: string; overflow?: boolean }) => {
 
 const CollectionImageContainer = styled('div')`
   display: flex;
-  gap: 5px;
   flex-wrap: wrap;
+  margin-left: -2px;
 `
 
 const ShowMoreCollectionsButton = styled('div')`
@@ -114,7 +111,7 @@ const ShowMoreCollectionsButton = styled('div')`
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-
+  margin: 2px;
   > div {
     width: 3px;
     height: 3px;
@@ -166,28 +163,36 @@ const CollateralItem = ({
   riskLevel,
   nfts = 0,
 }: CollateralItemType) => {
-  const overflow = useMemo(() => {
-    return tokens ? tokens.length > 9 : undefined
-  }, [tokens])
-
-  const showAllCollections = useCallback(() => tokens, [tokens])
+  // const showAllCollections = useCallback(() => tokens, [tokens])
   const dispatch = useAppDispatch()
+  const overflow = useMemo(() => {
+    return tokens ? tokens.length > 8 : undefined
+  }, [tokens])
   const Collections = useMemo(() => {
     if (tokens.length) {
-      return tokens.map((nft: LiquidationNftModel, index: number) => (
-        <CollectionImage
-          key={`collection-${nft.tokenId}${index}`}
-          alt="collection"
-          text={`${renderCollectionName(nft.symbol)} #${nft.tokenId}`}
-          src={nft.media[0]?.gateway}
-        />
-      ))
+      return tokens
+        .slice(0, 8)
+        .map((nft: Nft, index: number) => (
+          <CollectionImage
+            key={`collection-${nft.tokenId}${index}`}
+            alt="collection"
+            overflow={overflow}
+            text={nft.tokenId}
+            index={index}
+            src={nft.media[0]?.gateway}
+          />
+        ))
     } else {
       return <NoCollateralText>No NFT collateral</NoCollateralText>
     }
-  }, [tokens])
+  }, [overflow, tokens])
   const navigate = useNavigate()
-
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
   return (
     <Card>
       <DataItem width={'222px'}>
@@ -204,10 +209,10 @@ const CollateralItem = ({
           {collections?.length || 0} {type} NFTs
         </Header>
         <Value>
-          <CollectionImageContainer style={{ marginLeft: overflow ? 10 : 0 }}>
+          <CollectionImageContainer>
             {Collections}
             {overflow && collections?.length !== tokens?.length && (
-              <ShowMoreCollectionsButton onClick={showAllCollections}>
+              <ShowMoreCollectionsButton onClick={handleClick}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle opacity="0.5" cx="12" cy="12" r="12" fill="#D9DBE9" />
                   <path
@@ -240,7 +245,7 @@ const CollateralItem = ({
             />
             <path d="M4 10.5L8.5 13L13 10.5" stroke="#14142A" strokeLinejoin="round" />
           </svg>
-          {collateral}
+          {fixedFormat(collateral)}
         </Value>
       </DataItem>
       <DataItem width={'148px'}>
@@ -275,6 +280,13 @@ const CollateralItem = ({
       >
         LIQUIDATE
       </Button>
+      <NFTListPopover
+        id={id}
+        setAnchorEl={setAnchorEl}
+        list={tokens.slice(8, tokens.length)}
+        open={open}
+        anchorEl={anchorEl}
+      ></NFTListPopover>
     </Card>
   )
 }
