@@ -50,6 +50,9 @@ export default function CustomizeRoutes() {
   const location = useLocation()
   useLayoutEffect(() => {
     document.documentElement.scrollTo(0, 0)
+    if (location.pathname === '/') {
+      window.location.href = '/dashboard'
+    }
   }, [location.pathname])
   const { chainId, library } = useActiveWeb3React()
   const dispatch = useAppDispatch()
@@ -257,6 +260,7 @@ export default function CustomizeRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/deposit/:id" element={<Deposit />} />
       <Route path="/mint" element={<Mint />} />
       <Route path="/price" element={<Price />} />
