@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import Dashboard from 'pages/Dashboard'
 import Liquidation from 'pages/Liquidation'
 import Deposit from 'pages/Deposit'
@@ -256,7 +256,8 @@ export default function CustomizeRoutes() {
   }, [getCollection, flag, dashboardType])
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/deposit/:id" element={<Deposit />} />
       <Route path="/mint" element={<Mint />} />
       <Route path="/price" element={<Price />} />
@@ -264,7 +265,7 @@ export default function CustomizeRoutes() {
       <Route path="/liquidate/:address" element={<Liquidate />} />
       <Route path="/liquidation" element={<Liquidation />} />
       <Route path="/liquidation/:page" element={<Liquidation />} />
-      <Route path="*" element={<Dashboard />} />
+      {/* <Route path="*" element={<Dashboard />} /> */}
     </Routes>
   )
 }

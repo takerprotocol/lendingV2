@@ -47,11 +47,16 @@ export default function WalletModal() {
   const address = useAddress()
   const previousWalletView = usePrevious(walletView)
   useEffect(() => {
-    injected.isAuthorized().then((isAuthorized) => {
-      if (isAuthorized) {
-        activate(injected, undefined, true)
-      }
-    })
+    // window.location.reload()
+    injected
+      .isAuthorized()
+      .then((isAuthorized) => {
+        // console.log(isAuthorized, 'CustomizeRoutesCustomizeRoutesCustomizeRoutesCustomizeRoutes')
+        if (isAuthorized) {
+          activate(injected, undefined, true)
+        }
+      })
+      .catch((err) => console.log(err, 'err'))
   }, [activate])
 
   useEffect(() => {
