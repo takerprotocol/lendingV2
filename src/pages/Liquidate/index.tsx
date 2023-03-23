@@ -7,7 +7,7 @@ import LiquidateHeader from './components/Header'
 import { getClient } from 'apollo/client'
 import { User } from 'apollo/queries'
 import { fromWei } from 'web3-utils'
-import { desensitization, getRiskLevel, getRiskLevelTag, minus, plus } from 'utils'
+import { desensitization, getRiskLevel, getRiskLevelTag, minus, plus, times } from 'utils'
 import BigNumber from 'bignumber.js'
 import { CollateralModel, TokenModel } from 'services/type/nft'
 import { useParams } from 'react-router-dom'
@@ -24,6 +24,7 @@ import { useLendingPool } from 'hooks/useLendingPool'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { toast } from 'react-toastify'
 import { TransactionType } from 'state/transactions/types'
+import numbro from 'numbro'
 
 const Body = styled(Box)`
   width: 100%;
@@ -149,7 +150,12 @@ const Liquidate = () => {
       }
       let _heath = '0'
       if (user.data.user.healthFactor) {
-        _heath = new BigNumber(fromWei(user.data.user.healthFactor)).toFixed(2, 1)
+        _heath = times(fromWei(user.data.user.healthFactor), 100)
+        if (new BigNumber(heath).gt(1000000)) {
+          _heath = '>1M'
+        } else {
+          _heath = numbro(_heath).format({ spaceSeparated: true, average: true }).replace(' ', '')
+        }
       }
       setCollaterals({
         address,
@@ -167,7 +173,7 @@ const Liquidate = () => {
       setTotalDebt(fromWei(user.data.user.totalDebt))
       setTotalCollateral(fromWei(user.data.user.totalCollateral))
     }
-  }, [address, client, dashboardType])
+  }, [address, client, dashboardType, heath])
   useEffect(() => {
     getCollaterals()
   }, [getCollaterals, dashboardType])

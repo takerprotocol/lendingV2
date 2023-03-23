@@ -1,5 +1,5 @@
 import { Button, styled, Typography } from '@mui/material'
-import BigNumber from 'bignumber.js'
+// import BigNumber from 'bignumber.js'
 
 const TotalLiquidationAmountContainer = styled('div')`
   background: #262338;
@@ -138,7 +138,7 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit, floorPrice }
             <TotalLiquidationAmount>{floorPrice || 0}</TotalLiquidationAmount>
           </TotalLiquidationAmountWrapper>
         </LabelValueContainer>
-        <LabelValueContainer>
+        {/* <LabelValueContainer>
           <TotalLiqudiationTitle width="86px">ETH</TotalLiqudiationTitle>
           <TotalLiquidationAmountWrapper>
             <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -152,7 +152,7 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit, floorPrice }
             </svg>
             <TotalLiquidationAmount>{ethValue}</TotalLiquidationAmount>
           </TotalLiquidationAmountWrapper>
-        </LabelValueContainer>
+        </LabelValueContainer> */}
         <LabelValueContainerPrice>
           <TotalPrice>Total price</TotalPrice>
           <TotalLiquidationAmountWrapper>
@@ -165,7 +165,7 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit, floorPrice }
               />
               <path d="M4 10.5L8.5 13L13 10.5" stroke="#A0A3BD" strokeLinejoin="round" />
             </svg>
-            <TotalPriceValue>{new BigNumber(ethValue).plus(floorPrice).toString()}</TotalPriceValue>
+            <TotalPriceValue>{floorPrice}</TotalPriceValue>
           </TotalLiquidationAmountWrapper>
         </LabelValueContainerPrice>
         <LiquidateButton

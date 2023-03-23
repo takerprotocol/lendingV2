@@ -44,77 +44,77 @@ const CollateralStatValueContainer = styled('div')`
   margin-top: 8px;
 `
 
-const SplitStatContainer = styled('div')`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex: 1.5;
-`
+// const SplitStatContainer = styled('div')`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 10px;
+//   flex: 1.5;
+// `
 
-const SplitContainer = styled('div')`
-  display: flex;
-  gap: 24px;
-`
+// const SplitContainer = styled('div')`
+//   display: flex;
+//   gap: 24px;
+// `
 
-const SplitTitleContainer = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-direction: row;
-`
+// const SplitTitleContainer = styled('div')`
+//   display: flex;
+//   align-items: center;
+//   gap: 4px;
+//   flex-direction: row;
+// `
 
-const Split1Title = styled(Typography)`
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 160%;
-  color: #ffffff;
-  opacity: 0.5;
-`
+// const Split1Title = styled(Typography)`
+//   font-family: 'Quicksand';
+//   font-style: normal;
+//   font-weight: 500;
+//   font-size: 12px;
+//   line-height: 160%;
+//   color: #ffffff;
+//   opacity: 0.5;
+// `
 
-const Split = styled('div')`
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-`
+// const Split = styled('div')`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 2px;
+// `
 
-const SplitValue = styled('div')`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 2px;
-  margin-left: 8px;
-  flex-direction: row;
-  color: white;
-`
+// const SplitValue = styled('div')`
+//   display: flex;
+//   align-items: center;
+//   justify-content: flex-start;
+//   gap: 2px;
+//   margin-left: 8px;
+//   flex-direction: row;
+//   color: white;
+// `
 
 const CollateralInfoContainer = styled('div')`
   flex: 1;
 `
 
-const LineIndicatorContainer = styled('div')`
-  display: flex;
-  width: 100%;
-`
+// const LineIndicatorContainer = styled('div')`
+//   display: flex;
+//   width: 100%;
+// `
 
-const LineIndicator = styled('div', { shouldForwardProp: (prop) => true })<{ width: string | number }>(
-  ({ theme, color, width }) => ({
-    backgroundColor: color,
-    height: 2,
-    borderRadius: 2,
-    width,
-    transition: 'width 1s;',
-    transitionDelay: '0.5s',
-  })
-)
+// const LineIndicator = styled('div', { shouldForwardProp: (prop) => true })<{ width: string | number }>(
+//   ({ theme, color, width }) => ({
+//     backgroundColor: color,
+//     height: 2,
+//     borderRadius: 2,
+//     width,
+//     transition: 'width 1s;',
+//     transitionDelay: '0.5s',
+//   })
+// )
 
-const IndicatorColor = styled('div', { shouldForwardProp: (prop) => true })(({ theme, color }) => ({
-  width: 4,
-  height: 4,
-  borderRadius: '50%',
-  backgroundColor: color,
-}))
+// const IndicatorColor = styled('div', { shouldForwardProp: (prop) => true })(({ theme, color }) => ({
+//   width: 4,
+//   height: 4,
+//   borderRadius: '50%',
+//   backgroundColor: color,
+// }))
 
 type CollateralStatType = {
   title: string
@@ -126,8 +126,10 @@ type CollateralStatType = {
 }
 
 const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2 }: CollateralStatType) => {
-  const [split1LineLength, setSplit1LineLength] = useState('0%')
-  const [split2LineLength, setSplit2LineLength] = useState('0%')
+  const [, setSplit1LineLength] = useState('0%')
+  // const [split1LineLength, setSplit1LineLength] = useState('0%')
+  // const [split2LineLength, setSplit2LineLength] = useState('0%')
+  const [, setSplit2LineLength] = useState('0%')
   useEffect(() => {
     setSplit1LineLength(`${div(times(100, split1), total)}%`)
     setSplit2LineLength(`${div(times(100, split2), total)}%`)
@@ -149,7 +151,7 @@ const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2
           <CollateralStatValue>{fixedFormat(total)}</CollateralStatValue>
         </CollateralStatValueContainer>
       </CollateralInfoContainer>
-      <SplitStatContainer>
+      {/* <SplitStatContainer>
         <SplitContainer>
           <Split>
             <SplitTitleContainer>
@@ -198,7 +200,7 @@ const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2
           <LineIndicator width={split1LineLength} color="#BB77FF" />
           <LineIndicator margin-left="1px" width={split2LineLength} color="#72AAFF" />
         </LineIndicatorContainer>
-      </SplitStatContainer>
+      </SplitStatContainer> */}
     </CollateralStatContainer>
   )
 }
