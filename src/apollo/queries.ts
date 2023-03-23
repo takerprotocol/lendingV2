@@ -122,9 +122,9 @@ export const AllUser = (
 ) => {
   const queryString = `
     query users ($skip: Int, $limit: Int) {
-    users(skip: 0, limit: 10, where: {${healthFactor}${[...allUserWhere]},${searchValue}, totalDebt_gt: 0},orderBy: ${
-    conditionSort[0]
-  }, orderDirection: ${conditionSort[1]}) {
+    users(skip: 0, limit: 10, where: {${healthFactor}${[
+    ...allUserWhere,
+  ]},${searchValue}, totalCollateral_gt: "0"},orderBy: ${conditionSort[0]}, orderDirection: ${conditionSort[1]}) {
         id
         nftCollateral
         reserveSupply
@@ -224,6 +224,7 @@ export const User = (id: string) => {
   const queryString = `
     query user {
       user(id: "${id.toLocaleLowerCase()}") {
+        id
         nftCollateral
         reserveSupply
         totalDebt

@@ -2,12 +2,9 @@ import { Box, Button, styled, Tooltip, Typography } from '@mui/material'
 import Copy from 'components/Copy'
 import * as React from 'react'
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from 'state'
 import { abbrevAddress } from 'utils/abbrevAddres'
 import { fixedFormat, renderCollectionName } from 'utils'
 import numbro from 'numbro'
-import { setDashboardType } from 'state/user/reducer'
 import { LiquidationNftModel } from 'services/type/nft'
 import NFTListPopover from 'pages/Dashboard/components/NFTListPopper'
 const Card = styled('div')(({ theme }) => ({
@@ -163,7 +160,6 @@ const CollateralItem = ({
   nfts = 0,
 }: CollateralItemType) => {
   // const showAllCollections = useCallback(() => tokens, [tokens])
-  const dispatch = useAppDispatch()
   const overflow = useMemo(() => {
     return tokens ? tokens.length > 8 : undefined
   }, [tokens])
@@ -185,7 +181,6 @@ const CollateralItem = ({
       return <NoCollateralText>No NFT collateral</NoCollateralText>
     }
   }, [overflow, tokens])
-  const navigate = useNavigate()
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -270,10 +265,10 @@ const CollateralItem = ({
       </DataItem>
       <Button
         onClick={() => {
-          navigate(`/liquidate/${address}`)
-          dispatch(setDashboardType(type === 'Blue Chip' ? '1' : '2'))
+          sessionStorage.setItem('dashboardType', type === 'Blue Chip' ? '1' : '2')
+          window.location.href = `/liquidate/${address}`
         }}
-        disabled={numbro.unformat(riskPercentage.replaceAll('>', '').toLocaleLowerCase()) > 120}
+        // disabled={numbro.unformat(riskPercentage.replaceAll('>', '').toLocaleLowerCase()) > 120}
         variant="contained"
         color="primary"
       >

@@ -60,7 +60,7 @@ const initialState: ApplicationState = {
   erc721Ltv: '0',
   collateralsType: 'All Borrowers',
   decimal: 18,
-  dashboardType: 1,
+  dashboardType: sessionStorage.getItem('dashboardType') ? Number(sessionStorage.getItem('dashboardType')) : 1,
   userValues: {
     borrowLiquidity: '0',
     NFTLiquidity: '0',

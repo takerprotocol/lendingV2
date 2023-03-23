@@ -174,7 +174,6 @@ export default function Liquidation() {
       return ` `
     }
   }, [inLiquidation])
-  console.log(inLiquidation)
   const allUserWhere = useMemo(() => {
     if (collectionFilter === 0 && debtFilter === 0) {
       return ['']

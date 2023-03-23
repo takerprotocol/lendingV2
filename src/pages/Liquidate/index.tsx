@@ -93,7 +93,9 @@ const Liquidate = () => {
           amounts.push(el.amount)
         })
       contract
-        .liquidate(collections, tokenIds, getWETH(chainId), address, true)
+        .liquidate(collections.toString(), tokenIds.toString(), getWETH(chainId), address, true, {
+          gasLimit: 210000,
+        })
         .then((res: any) => {
           addTransaction(res, {
             type: TransactionType.LIQUIDATE,
@@ -103,8 +105,10 @@ const Liquidate = () => {
           setEthValue('')
         })
         .catch((error: any) => {
+          console.log(error.message)
           toast.error(error.message)
         })
+      // console.log('collections', ...collections, 'tokenIds', ...tokenIds, 'chainId', chainId, 'address', address)
     }
   }
   const nftAmount = useMemo(() => {
