@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import pageRight from 'assets/images/svg/common/pageRight.svg'
 import hoverPageRight from 'assets/images/svg/common/hoverPageRight.svg'
 const PageBox = styled(Box)`
@@ -30,10 +30,11 @@ const PagerBox = styled(Box)`
 interface NFTsListType {
   list: any[]
   TypeKey?: string
+  pageType: number
+  setPageType: Function
 }
-export default function Pager({ list, TypeKey }: NFTsListType) {
+export default function Pager({ pageType, setPageType, list, TypeKey }: NFTsListType) {
   const totalPage = useMemo(() => Math.ceil(list.length / 9), [list])
-  const [pageType, setPageType] = useState<number>(1) //page
   return (
     <Box display={list.length > 9 ? '' : 'none'}>
       <PagerBox>

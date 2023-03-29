@@ -1,4 +1,5 @@
 import { Button, styled, Typography } from '@mui/material'
+import numbro from 'numbro'
 // import BigNumber from 'bignumber.js'
 
 const TotalLiquidationAmountContainer = styled('div')`
@@ -47,7 +48,9 @@ const TotalLiquidationAmountWrapper = styled('div')`
 
 const LiquidateButton = styled(Button)`
   margin-top: 24px;
-  background: linear-gradient(82.51deg, #884bff 0%, #6865ff 42.39%, #4785ff 74.2%, #2fc1ff 100%) !important;
+  &.disabled {
+    background: linear-gradient(82.51deg, #884bff 0%, #6865ff 42.39%, #4785ff 74.2%, #2fc1ff 100%) !important;
+  }
 `
 
 const LabelValueContainer = styled('div')`
@@ -97,6 +100,7 @@ const TotalPriceValue = styled(Typography)`
 
 type LiquidationBarType = {
   total: string
+  heath: string
   nfts: number
   nftsValue: string
   floorPrice: string
@@ -104,7 +108,7 @@ type LiquidationBarType = {
   submit: Function
 }
 
-const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit, floorPrice }: LiquidationBarType) => {
+const LiquidationBar = ({ heath, total, nfts, nftsValue, ethValue, submit, floorPrice }: LiquidationBarType) => {
   return (
     <TotalLiquidationAmountContainer>
       <LabelValueContainer>
@@ -171,6 +175,8 @@ const LiquidationBar = ({ total, nfts, nftsValue, ethValue, submit, floorPrice }
         <LiquidateButton
           variant="contained"
           color="primary"
+          className={numbro.unformat(heath.replaceAll('>', '').toLocaleLowerCase()) > 120 ? '' : 'disabled'}
+          disabled={numbro.unformat(heath.replaceAll('>', '').toLocaleLowerCase()) > 120}
           onClick={() => {
             if (nfts !== 0) {
               submit()

@@ -200,7 +200,7 @@ const CollateralItem = ({
         <Header>
           {/* {collections?.length || 0} Collections / {nfts} NFTs
            */}
-          {collections?.length || 0} {type} NFTs
+          {tokens?.length || 0} {type} NFTs
         </Header>
         <Value>
           <CollectionImageContainer>

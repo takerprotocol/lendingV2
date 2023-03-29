@@ -19,6 +19,7 @@ import { isTransactionRecent, useAllTransactions } from 'state/transactions/hook
 import { TransactionType } from 'state/transactions/types'
 import { CenterBox } from 'styleds'
 import { fromWei } from 'web3-utils'
+import { fixedFormat } from 'utils'
 
 const DepositedNFTsStyleBox = styled(Box)`
   margin-bottom: 200px;
@@ -91,6 +92,7 @@ export default function WithdrawNFT({
 }: WithdrawNFTProps) {
   const [withdrawList, setWithdrawList] = useState<Array<Nft>>([])
   const [openSelect, setOpenSelect] = useState<boolean>(false)
+  const [pageType, setPageType] = useState<number>(1) //page
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
 
   const transactions = useAllTransactions()
@@ -178,7 +180,7 @@ export default function WithdrawNFT({
                     You can withdraw
                   </Typography>
                   <Typography mt="12px" ml="16px" variant="subtitle1" lineHeight="18px" color="#A0A3BD">
-                    {list.length} NFTs / {amount} ETH
+                    {list.length} NFTs / {fixedFormat(amount)} ETH
                   </Typography>
                 </FlexStartBox>
                 {/* {withdrawType === 'shut' ? (
@@ -258,7 +260,7 @@ export default function WithdrawNFT({
                 setCheckedIndex(data)
               }}
             ></NFTsList>
-            <Pager TypeKey={withdraw} list={list}></Pager>
+            <Pager pageType={pageType} setPageType={setPageType} TypeKey={withdraw} list={list}></Pager>
           </DepositedNFTsBox>
           <WithdrawSelectedModal
             type={withdraw}

@@ -197,6 +197,7 @@ const Liquidate = () => {
             total={new BigNumber(totalDebt).gt(totalCollateral) ? minus(totalDebt, totalCollateral) : '0'}
             collaterals={collaterals}
             loading={loading}
+            heath={heath}
             setTokenChecked={setTokenChecked}
             tokenChecked={tokenChecked}
             barTotal={plus(nftAmount, ethValue || '0')}

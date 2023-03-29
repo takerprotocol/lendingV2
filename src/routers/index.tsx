@@ -249,7 +249,6 @@ export default function CustomizeRoutes() {
       }
     }
   }, [client, contract, library, address, chainId, dispatch])
-
   useEffect(() => {
     dispatch(setMobileType(!isMobile))
   }, [dispatch])

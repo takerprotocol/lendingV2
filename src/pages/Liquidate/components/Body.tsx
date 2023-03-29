@@ -124,6 +124,7 @@ const PaddingBox = styled(Box)`
 //-------css-------//
 const LiquidateBody = ({
   total,
+  heath,
   collaterals,
   loading,
   totalDebt,
@@ -136,6 +137,7 @@ const LiquidateBody = ({
   submit,
 }: {
   total: string
+  heath: string
   collaterals: CollateralModel | null
   loading: boolean
   setTokenChecked: Function
@@ -149,6 +151,7 @@ const LiquidateBody = ({
 }) => {
   const [filter] = useState<number>(1)
   const [floorPrice, setFloorPrice] = useState<string>('')
+  const [pageType, setPageType] = useState<number>(1) //page
   const [value, setValue] = useState<number>(0)
   const Collaterals = useMemo(() => {
     if (collaterals) {
@@ -480,7 +483,12 @@ const LiquidateBody = ({
         </NFTRow>
         <NFTCollaterals>
           {loading ? LoadingCollaterals : Collaterals}
-          <Pager TypeKey={'liquidate'} list={loading ? [] : Collaterals}></Pager>
+          <Pager
+            pageType={pageType}
+            setPageType={setPageType}
+            TypeKey={'liquidate'}
+            list={loading ? [] : Collaterals}
+          ></Pager>
         </NFTCollaterals>
         {/* <EthCollateral
           handleAmount={(value: string) => {
@@ -493,6 +501,7 @@ const LiquidateBody = ({
         /> */}
       </PaddingBox>
       <LiquidationBar
+        heath={heath}
         total={barTotal}
         floorPrice={fromWei(tokenChecked.length === 0 ? '0' : floorPrice || '0')}
         nfts={tokenChecked.length}
