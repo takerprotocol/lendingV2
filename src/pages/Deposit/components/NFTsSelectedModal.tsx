@@ -33,6 +33,8 @@ import {
 import { TransactionType } from 'state/transactions/types'
 import { Loading } from 'components/Loading'
 import { fromWei } from 'web3-utils'
+import { getClient } from 'apollo/client'
+import useActiveWeb3React from 'hooks/useActiveWeb3React'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -110,6 +112,14 @@ export default function NFTsSelectedModal({
   const dashboardType = useDashboardType()
   const [blueChipLoading, setBlueChipLoading] = useState(false)
   const [growthLoading, setGrowthLoading] = useState(false)
+  const [client, setClient] = useState<any>(null)
+  const { chainId } = useActiveWeb3React()
+
+  useEffect(() => {
+    if (chainId) {
+      setClient(getClient(dashboardType)[chainId === 1 ? 42 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
+    }
+  }, [chainId, dashboardType])
   const loading = useMemo(() => {
     return dashboardType === 1 ? blueChipLoading : growthLoading
   }, [blueChipLoading, dashboardType, growthLoading])
@@ -183,6 +193,7 @@ export default function NFTsSelectedModal({
           )
           .then((res: any) => {
             // setLoading(false)
+            client.clearStore()
             dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
             if (res && res.hash) {
               setOpenSelectedModal(false)
