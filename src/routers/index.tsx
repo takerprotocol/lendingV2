@@ -192,6 +192,7 @@ export default function CustomizeRoutes() {
 
   const getCollection = useCallback(async () => {
     if (client && contract) {
+      await client.clearStore()
       const lendingPoolRes = await client.query({
         query: LendingPool(
           contract
@@ -208,6 +209,7 @@ export default function CustomizeRoutes() {
           const item: any = {}
           const ercContract = new Contract(element.id, erc721abi, library)
           if (address) {
+            await client.clearStore()
             const res = await client.query({
               query: UserNftCollection(`${address.toLocaleLowerCase()}-${element.id}`),
             })
