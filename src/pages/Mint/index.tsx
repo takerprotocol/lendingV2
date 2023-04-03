@@ -76,7 +76,7 @@ export default function Mint() {
         name: 'Azuki',
       },
       {
-        id: '0x81dbc3bc6bfa0640cffb9b6b667987c97f35a588',
+        id: '0x07875841846abb8FbA50dBC64Ab4b77CBb6B5cA1',
         name: 'World of Women',
       },
       {
