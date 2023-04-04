@@ -1,5 +1,6 @@
 import { Button, styled, Typography } from '@mui/material'
 import numbro from 'numbro'
+import { fixedFormat } from 'utils'
 // import BigNumber from 'bignumber.js'
 
 const TotalLiquidationAmountContainer = styled('div')`
@@ -61,43 +62,43 @@ const LabelValueContainer = styled('div')`
   gap: 8.5px;
 `
 
-const LabelValueContainerPrice = styled('div')`
-  display: flex;
-  width: 144px;
-  flex-direction: column;
-  margin: 25px 0px 17px 0px;
-  gap: 4px;
-`
+// const LabelValueContainerPrice = styled('div')`
+//   display: flex;
+//   width: 144px;
+//   flex-direction: column;
+//   margin: 25px 0px 17px 0px;
+//   gap: 4px;
+// `
 
 const StatsContainer = styled('div')`
   display: flex;
 `
 
-const TotalPrice = styled(Typography)`
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 100%;
-  /* identical to box height, or 12px */
+// const TotalPrice = styled(Typography)`
+//   font-family: 'Quicksand';
+//   font-style: normal;
+//   font-weight: 600;
+//   font-size: 12px;
+//   line-height: 100%;
+//   /* identical to box height, or 12px */
 
-  /* Cool Gray 200 */
+//   /* Cool Gray 200 */
 
-  color: #eff0f6;
-`
+//   color: #eff0f6;
+// `
 
-const TotalPriceValue = styled(Typography)`
-  font-family: 'Quicksand';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 160%;
-  /* or 38px */
+// const TotalPriceValue = styled(Typography)`
+//   font-family: 'Quicksand';
+//   font-style: normal;
+//   font-weight: 700;
+//   font-size: 24px;
+//   line-height: 160%;
+//   /* or 38px */
 
-  text-align: right;
+//   text-align: right;
 
-  color: #ffffff;
-`
+//   color: #ffffff;
+// `
 
 type LiquidationBarType = {
   total: string
@@ -124,11 +125,11 @@ const LiquidationBar = ({ heath, total, nfts, nftsValue, ethValue, submit, floor
             />
             <path d="M4 10.5L8.5 13L13 10.5" stroke="#A0A3BD" strokeLinejoin="round" />
           </svg>
-          <TotalLiquidationAmount>{floorPrice}</TotalLiquidationAmount>
+          <TotalLiquidationAmount>{fixedFormat(floorPrice)}</TotalLiquidationAmount>
         </TotalLiquidationAmountWrapper>
       </LabelValueContainer>
       <StatsContainer>
-        <LabelValueContainer>
+        {/* <LabelValueContainer>
           <TotalLiqudiationTitle width="119px">{nfts ? '1' : '0'} NFT</TotalLiqudiationTitle>
           <TotalLiquidationAmountWrapper>
             <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -142,7 +143,7 @@ const LiquidationBar = ({ heath, total, nfts, nftsValue, ethValue, submit, floor
             </svg>
             <TotalLiquidationAmount>{floorPrice || 0}</TotalLiquidationAmount>
           </TotalLiquidationAmountWrapper>
-        </LabelValueContainer>
+        </LabelValueContainer> */}
         {/* <LabelValueContainer>
           <TotalLiqudiationTitle width="86px">ETH</TotalLiqudiationTitle>
           <TotalLiquidationAmountWrapper>
@@ -158,7 +159,7 @@ const LiquidationBar = ({ heath, total, nfts, nftsValue, ethValue, submit, floor
             <TotalLiquidationAmount>{ethValue}</TotalLiquidationAmount>
           </TotalLiquidationAmountWrapper>
         </LabelValueContainer> */}
-        <LabelValueContainerPrice>
+        {/* <LabelValueContainerPrice>
           <TotalPrice>Total price</TotalPrice>
           <TotalLiquidationAmountWrapper>
             <svg width="17" height="22" viewBox="0 0 17 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -172,7 +173,7 @@ const LiquidationBar = ({ heath, total, nfts, nftsValue, ethValue, submit, floor
             </svg>
             <TotalPriceValue>{floorPrice}</TotalPriceValue>
           </TotalLiquidationAmountWrapper>
-        </LabelValueContainerPrice>
+        </LabelValueContainerPrice> */}
         <LiquidateButton
           variant="contained"
           color="primary"

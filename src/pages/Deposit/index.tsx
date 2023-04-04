@@ -123,6 +123,7 @@ export default function Deposit() {
   const [mobileDepositCheckedIndex, setMobileDepositCheckedIndex] = useState<Array<string>>([])
   const collections = useCollections()
   const depositedCollection = useDepositedCollection()
+  console.log('🚀 ~ file: index.tsx:126 ~ Deposit ~ depositedCollection:', depositedCollection)
   const transactions = useAllTransactions()
   const depositFlag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {

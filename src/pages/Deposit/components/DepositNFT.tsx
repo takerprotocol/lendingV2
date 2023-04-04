@@ -14,7 +14,7 @@ import { isTransactionRecent, useAllTransactions } from 'state/transactions/hook
 import { TransactionType } from 'state/transactions/types'
 import { CenterBox } from 'styleds'
 import { fromWei } from 'web3-utils'
-import { fixedFormat } from 'utils'
+import { fixedFormat, minus, times } from 'utils'
 
 const AvailableNFTsBox = styled(Box)`
   width: 1012px;
@@ -89,7 +89,13 @@ export default function DepositNFT({
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
   const [pageType, setPageType] = useState<number>(1) //page
   const transactions = useAllTransactions()
-
+  const NftList = useMemo(() => {
+    if (pageType === 1) {
+      return list.slice(0, 9)
+    } else {
+      return list.slice(+times(minus(pageType, 1), 9), +times(pageType, 9))
+    }
+  }, [list, pageType])
   const flag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
@@ -193,7 +199,7 @@ export default function DepositNFT({
             TypeKey={Deposit}
             loading={loading}
             setCheckedIndex={setWithdrawCheckedIndex}
-            list={list}
+            list={NftList}
             checked={checkedIndex}
             onChange={(data: Array<string>) => {
               setCheckedIndex(data)

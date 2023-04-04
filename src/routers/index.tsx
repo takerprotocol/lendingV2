@@ -68,6 +68,7 @@ export default function CustomizeRoutes() {
       setClient(getClient(dashboardType)[chainId === 1 ? 42 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
     }
   }, [chainId, dashboardType])
+  console.log('🚀 ~ file: index.tsx:63 ~ CustomizeRoutes ~ client:', client)
   const flag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]

@@ -109,7 +109,7 @@ export default function NFTsList({ list, loading, onChange, TypeKey, checked, se
           LoadingNftListSkeleton
         ) : (
           <>
-            {list.slice(0, 9).map((el: NftTokenModel | Nft) => (
+            {list.map((el: NftTokenModel | Nft) => (
               <NftBox
                 className={checkboxType.includes(el.tokenId) ? 'isCheck' : ' '}
                 key={`nft${TypeKey}-${el.tokenId}`}

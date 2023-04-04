@@ -3,18 +3,7 @@ import { useEffect, useState } from 'react'
 import { div, fixedFormat, times } from 'utils'
 
 const CollateralStatContainer = styled('div')`
-  flex: 1;
-  background: #322f46;
-  border-radius: 10px;
-  padding-top: 26px;
-  padding-bottom: 20px;
-  padding-left: 16px;
-  padding-right: 24px;
-  margin-top: 24px;
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-  width: 100%;
+  width: 222px;
 `
 
 const StatTitle = styled(Typography)`
@@ -23,13 +12,13 @@ const StatTitle = styled(Typography)`
   font-weight: 600;
   font-size: 14px;
   line-height: 100%;
-  /* identical to box height, or 14px */
   color: #ffffff;
 `
 
 const CollateralStatValue = styled(Typography)`
   font-family: 'Quicksand';
   font-style: normal;
+  margin-left: 8px;
   font-weight: 500;
   font-size: 24px;
   line-height: 160%;
@@ -38,7 +27,6 @@ const CollateralStatValue = styled(Typography)`
 
 const CollateralStatValueContainer = styled('div')`
   display: flex;
-  gap: 4px;
   width: 172px;
   align-items: center;
   margin-top: 8px;
@@ -139,14 +127,17 @@ const CollateralStat = ({ title, total, split1Title, split1, split2Title, split2
       <CollateralInfoContainer>
         <StatTitle>{title}</StatTitle>
         <CollateralStatValueContainer>
-          <svg width="17" height="38" viewBox="0 0 17 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
-              d="M3 19.7576L8.5 11L14 19.7576L8.5 28L3 19.7576Z"
-              stroke="#A0A3BD"
-              strokeWidth="2"
-              strokeLinejoin="round"
+              d="M9 18C13.9706 18 18 13.9706 18 9C18 4.02944 13.9706 0 9 0C4.02944 0 0 4.02944 0 9C0 13.9706 4.02944 18 9 18Z"
+              fill="#7646FF"
             />
-            <path d="M3 19.5L8.5 23L14 19.5" stroke="#A0A3BD" strokeWidth="1.5" strokeLinejoin="round" />
+            <path d="M9.2804 2.25V7.23938L13.4975 9.12375L9.2804 2.25Z" fill="white" fillOpacity="0.602" />
+            <path d="M9.28012 2.25L5.0625 9.12375L9.28012 7.23938V2.25Z" fill="white" />
+            <path d="M9.28027 12.3562V15.7464L13.5001 9.9082L9.28027 12.3562Z" fill="white" fillOpacity="0.602" />
+            <path d="M9.28012 15.7464V12.3556L5.0625 9.9082L9.28012 15.7464Z" fill="white" />
+            <path d="M9.28027 11.572L13.4973 9.12348L9.28027 7.24023V11.572Z" fill="white" fillOpacity="0.2" />
+            <path d="M5.0625 9.12348L9.28012 11.572V7.24023L5.0625 9.12348Z" fill="white" fillOpacity="0.602" />
           </svg>
           <CollateralStatValue>{fixedFormat(total)}</CollateralStatValue>
         </CollateralStatValueContainer>

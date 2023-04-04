@@ -2,6 +2,7 @@ import { Box, styled } from '@mui/material'
 import { useMemo } from 'react'
 import pageRight from 'assets/images/svg/common/pageRight.svg'
 import hoverPageRight from 'assets/images/svg/common/hoverPageRight.svg'
+import { minus } from 'utils'
 const PageBox = styled(Box)`
   position: absolute;
   width: 3rem;
@@ -34,6 +35,7 @@ interface NFTsListType {
   setPageType: Function
 }
 export default function Pager({ pageType, setPageType, list, TypeKey }: NFTsListType) {
+  console.log('🚀 ~ file: Pager.tsx:37 ~ Pager ~ pageType:', pageType)
   const totalPage = useMemo(() => Math.ceil(list.length / 9), [list])
   return (
     <Box display={list.length > 9 ? '' : 'none'}>
@@ -52,7 +54,7 @@ export default function Pager({ pageType, setPageType, list, TypeKey }: NFTsList
         <PageBox
           sx={{ right: `${TypeKey === 'Liquidate' ? '-48px' : '-72px'}` }}
           onClick={() => {
-            if (pageType < 4) {
+            if (pageType < totalPage) {
               setPageType(() => pageType + 1)
             }
           }}
@@ -60,7 +62,7 @@ export default function Pager({ pageType, setPageType, list, TypeKey }: NFTsList
         {list.slice(0, totalPage).map((el: any, index: number) => (
           <Box
             key={`pager${TypeKey}-${index}`}
-            width={pageType === index ? '1.5rem' : '.375rem'}
+            width={+minus(pageType, 1) === index ? '1.5rem' : '.375rem'}
             sx={{ height: '.375rem', background: '#D9DBE9', opacity: '0.7', borderRadius: '.1875rem', ml: '.5rem' }}
           ></Box>
         ))}

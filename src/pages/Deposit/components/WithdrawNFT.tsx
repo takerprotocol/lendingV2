@@ -19,7 +19,7 @@ import { isTransactionRecent, useAllTransactions } from 'state/transactions/hook
 import { TransactionType } from 'state/transactions/types'
 import { CenterBox } from 'styleds'
 import { fromWei } from 'web3-utils'
-import { fixedFormat } from 'utils'
+import { fixedFormat, minus, times } from 'utils'
 
 const DepositedNFTsStyleBox = styled(Box)`
   margin-bottom: 200px;
@@ -96,7 +96,13 @@ export default function WithdrawNFT({
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
 
   const transactions = useAllTransactions()
-
+  const NftList = useMemo(() => {
+    if (pageType === 1) {
+      return withdrawList.slice(0, 9)
+    } else {
+      return withdrawList.slice(+times(minus(pageType, 1), 9), +times(pageType, 9))
+    }
+  }, [withdrawList, pageType])
   const flag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
@@ -252,7 +258,7 @@ export default function WithdrawNFT({
             <NFTsList
               loading={loading}
               TypeKey={withdraw}
-              list={withdrawList}
+              list={NftList}
               setCheckedIndex={setDepositCheckedIndex}
               // depositType={withdrawType}
               checked={checkedIndex}
