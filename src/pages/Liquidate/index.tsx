@@ -1,6 +1,5 @@
 import { Box } from '@mui/material'
 import { styled } from '@mui/system'
-import { getWETH } from 'config'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import LiquidateBody from './components/Body'
 import LiquidateHeader from './components/Header'
@@ -20,11 +19,12 @@ import MobileNFTCollaterals from './components/mobileComponents/MobileNFTCollate
 import MobileFooter from './components/mobileComponents/MobileFooter'
 import MobileLiquidateTitleSkeleton from './components/mobileLiquidateSkeleton/MobileLiquidateTitleSkeleton'
 import { useShowChangeNetWork } from 'state/application/hooks'
-import { useLendingPool } from 'hooks/useLendingPool'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { toast } from 'react-toastify'
 import { TransactionType } from 'state/transactions/types'
 import numbro from 'numbro'
+import { useGateway } from 'hooks/useGateway'
+import { useLendingPool } from 'hooks/useLendingPool'
 
 const Body = styled(Box)`
   width: 100%;
@@ -53,7 +53,8 @@ const Liquidate = () => {
   // const dashboardType = useDashboardType()
   const [tokenChecked, setTokenChecked] = useState<string>('')
   const addTransaction = useTransactionAdder()
-  const contract = useLendingPool()
+  const contract = useGateway()
+  const lpContract = useLendingPool()
   const dashboardType = useDashboardType()
   const [blueChipLoading, setBlueChipLoading] = useState(false)
   const [growthLoading, setGrowthLoading] = useState(false)
@@ -94,7 +95,7 @@ const Liquidate = () => {
           amounts.push(el.amount)
         })
       contract
-        .liquidate(collections.toString(), tokenIds.toString(), getWETH(chainId), address, true, {
+        .liquidate(lpContract?.address, collections.toString(), tokenIds.toString(), address, true, {
           gasLimit: 210000,
         })
         .then((res: any) => {
@@ -194,7 +195,7 @@ const Liquidate = () => {
           />
           <LiquidateBody
             totalDebt={new BigNumber(totalDebt).gt(0) && new BigNumber(totalDebt).lt(0.01) ? '<0.01' : totalDebt}
-            total={new BigNumber(totalDebt).gt(totalCollateral) ? minus(totalDebt, totalCollateral) : '0'}
+            total={totalCollateral}
             collaterals={collaterals}
             loading={loading}
             heath={heath}

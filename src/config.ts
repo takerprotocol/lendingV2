@@ -23,9 +23,18 @@ export const getGatewayAddresses = (chainId?: number) => {
     return '0x027a729ac4bf61a74fc2d18b117641b2e39b326f'
   }
   if (chainId === 5) {
-    return '0x391Fd73c7f26fab366d40810B724d05EE5c2158A'
+    return '0x200f84e649A90918CD0f3e803f6EAA9a3269aB97'
   }
-  return '0x391Fd73c7f26fab366d40810B724d05EE5c2158A'
+  return '0x200f84e649A90918CD0f3e803f6EAA9a3269aB97'
+}
+export const getPunkGatewayAddresses = (chainId?: number) => {
+  if (chainId === 42) {
+    return '0x763E362359e7Ab5102ad917B3DBB8d51b2635a59'
+  }
+  if (chainId === 5) {
+    return '0x763E362359e7Ab5102ad917B3DBB8d51b2635a59'
+  }
+  return '0x763E362359e7Ab5102ad917B3DBB8d51b2635a59'
 }
 export const getERC20Address = (chainId?: number) => {
   if (chainId === 42) {

@@ -48,8 +48,9 @@ const TotalLiquidationAmountWrapper = styled('div')`
 
 const LiquidateButton = styled(Button)`
   margin-top: 24px;
-  &.disabled {
-    background: linear-gradient(82.51deg, #884bff 0%, #6865ff 42.39%, #4785ff 74.2%, #2fc1ff 100%) !important;
+  background: linear-gradient(82.51deg, #884bff 0%, #6865ff 42.39%, #4785ff 74.2%, #2fc1ff 100%) !important;
+  &.Mui-disabled {
+    background: #d9dbe9 !important;
   }
 `
 

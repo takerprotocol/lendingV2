@@ -84,6 +84,7 @@ const MenuBg = styled(Box)`
   width: 100%;
 `
 export default function Liquidation() {
+  const [apiLoading, setApiLoading] = useState(true)
   const mobileMenuType = useMobileMenuType()
   const loginWalletType = useLoginWalletType()
   const { chainId } = useActiveWeb3React()
@@ -303,6 +304,7 @@ export default function Liquidation() {
               },
             ]
           })
+          setApiLoading(false)
         })
       }
       // setCollaterals(
@@ -375,7 +377,7 @@ export default function Liquidation() {
             sort={sort}
             setInLiquidation={setInLiquidation}
             setSort={setSort}
-            loading={loading}
+            loading={apiLoading}
             collaterals={finalCollaterals}
             setSearchTerms={setSearchTerms}
             searchTerms={searchTerms}

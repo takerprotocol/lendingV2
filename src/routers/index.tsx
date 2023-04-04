@@ -40,6 +40,7 @@ import Women from 'assets/images/png/collection/women.gif'
 import Cat from 'assets/images/png/collection/cat.png'
 import Clonex from 'assets/images/png/collection/clonex.png'
 import Doodles from 'assets/images/png/collection/doodles.png'
+import WrappedCryptoPunks from 'assets/images/png/collection/wrapped-cryptopunks.png'
 import { Contract } from '@ethersproject/contracts'
 import { setMobileType } from 'state/user/reducer'
 import { isMobile } from 'utils/userAgent'
@@ -164,6 +165,8 @@ export default function CustomizeRoutes() {
         return Cat
       } else if (symbol.toLocaleLowerCase().indexOf('clonex') > -1) {
         return Clonex
+      } else if (symbol.toLocaleLowerCase().indexOf('wpunks') > -1) {
+        return WrappedCryptoPunks
       }
     }
     return ERC721
@@ -185,9 +188,11 @@ export default function CustomizeRoutes() {
         return 'Cool Cats NFT'
       } else if (symbol.toLocaleLowerCase().indexOf('clonex') > -1) {
         return 'CLONE X - X TAKASHI MURAKAMI'
+      } else if (symbol.toLocaleLowerCase().indexOf('wpunks') > -1) {
+        return 'Wrapped Cryptopunks'
       }
     }
-    return 'ERC721'
+    return symbol
   }
 
   const getCollection = useCallback(async () => {

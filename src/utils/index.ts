@@ -288,6 +288,8 @@ export const renderCollectionName = (symbol?: string) => {
       return 'Cool Cats NFT'
     } else if (symbol.toLocaleLowerCase().indexOf('clonex') > -1) {
       return 'CLONE X - X TAKASHI MURAKAMI'
+    } else if (symbol.toLocaleLowerCase().indexOf('wpunks') > -1) {
+      return 'Wrapped Cryptopunks'
     }
   }
   return 'ERC721'
