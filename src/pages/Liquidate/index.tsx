@@ -18,12 +18,12 @@ import MobileMain from './components/mobileComponents/MobileMain'
 import MobileNFTCollaterals from './components/mobileComponents/MobileNFTCollaterals'
 import MobileFooter from './components/mobileComponents/MobileFooter'
 import MobileLiquidateTitleSkeleton from './components/mobileLiquidateSkeleton/MobileLiquidateTitleSkeleton'
-import { useShowChangeNetWork } from 'state/application/hooks'
+import { useCollections, useShowChangeNetWork } from 'state/application/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { toast } from 'react-toastify'
 import { TransactionType } from 'state/transactions/types'
 import numbro from 'numbro'
-import { useGateway } from 'hooks/useGateway'
+import { useGateway, usePunkGateway } from 'hooks/useGateway'
 import { useLendingPool } from 'hooks/useLendingPool'
 
 const Body = styled(Box)`
@@ -54,10 +54,12 @@ const Liquidate = () => {
   const [tokenChecked, setTokenChecked] = useState<string>('')
   const addTransaction = useTransactionAdder()
   const contract = useGateway()
+  const punkGatewayContract = usePunkGateway()
   const lpContract = useLendingPool()
   const dashboardType = useDashboardType()
   const [blueChipLoading, setBlueChipLoading] = useState(false)
   const [growthLoading, setGrowthLoading] = useState(false)
+  const allCollections = useCollections()
   const loading = useMemo(() => {
     return dashboardType === 1 ? blueChipLoading : growthLoading
   }, [blueChipLoading, dashboardType, growthLoading])
@@ -94,22 +96,46 @@ const Liquidate = () => {
           tokenIds.push(el.id.split('-')[2])
           amounts.push(el.amount)
         })
-      contract
-        .liquidate(lpContract?.address, collections.toString(), tokenIds.toString(), address, true, {
-          gasLimit: 210000,
-        })
-        .then((res: any) => {
-          addTransaction(res, {
-            type: TransactionType.LIQUIDATE,
-            amount: plus(nftAmount, ethValue || '0'),
+      const _collection = allCollections.find(
+        (el) => el.id.toLocaleLowerCase() === collections.toString().toLocaleLowerCase()
+      )
+      if (_collection.name.toLocaleLowerCase().indexOf('punks') > -1) {
+        punkGatewayContract &&
+          punkGatewayContract
+            .liquidate(lpContract?.address, tokenIds.toString(), address, {
+              gasLimit: 210000,
+            })
+            .then((res: any) => {
+              addTransaction(res, {
+                type: TransactionType.LIQUIDATE,
+                amount: plus(nftAmount, ethValue || '0'),
+              })
+              toast.success(desensitization(res.hash))
+              setEthValue('')
+            })
+            .catch((error: any) => {
+              console.log(error.message)
+              toast.error(error.message)
+            })
+      } else {
+        contract
+          .liquidate(lpContract?.address, collections.toString(), tokenIds.toString(), address, true, {
+            gasLimit: 210000,
           })
-          toast.success(desensitization(res.hash))
-          setEthValue('')
-        })
-        .catch((error: any) => {
-          console.log(error.message)
-          toast.error(error.message)
-        })
+          .then((res: any) => {
+            addTransaction(res, {
+              type: TransactionType.LIQUIDATE,
+              amount: plus(nftAmount, ethValue || '0'),
+            })
+            toast.success(desensitization(res.hash))
+            setEthValue('')
+          })
+          .catch((error: any) => {
+            console.log(error.message)
+            toast.error(error.message)
+          })
+      }
+
       // console.log('collections', ...collections, 'tokenIds', ...tokenIds, 'chainId', chainId, 'address', address)
     }
   }

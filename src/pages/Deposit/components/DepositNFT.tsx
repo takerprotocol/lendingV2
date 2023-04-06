@@ -15,6 +15,8 @@ import { TransactionType } from 'state/transactions/types'
 import { CenterBox } from 'styleds'
 import { fromWei } from 'web3-utils'
 import { fixedFormat, minus, times } from 'utils'
+import { useCollections } from 'state/application/hooks'
+import { useParams } from 'react-router-dom'
 
 const AvailableNFTsBox = styled(Box)`
   width: 1012px;
@@ -89,6 +91,8 @@ export default function DepositNFT({
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
   const [pageType, setPageType] = useState<number>(1) //page
   const transactions = useAllTransactions()
+  const collections = useCollections()
+  const { id } = useParams()
   const NftList = useMemo(() => {
     if (pageType === 1) {
       return list.slice(0, 9)
@@ -102,7 +106,13 @@ export default function DepositNFT({
       return tx && tx.receipt && tx.info.type === TransactionType.DEPOSIT_NFT && isTransactionRecent(tx)
     }).length
   }, [transactions])
-
+  const collection = useMemo(() => {
+    if (collections && id) {
+      return collections.find((el) => el.id.toLocaleLowerCase() === id.toLocaleLowerCase())
+    } else {
+      return null
+    }
+  }, [collections, id])
   useEffect(() => {
     if (flag) {
       setOpenSelectedModal(false)
@@ -212,6 +222,7 @@ export default function DepositNFT({
         <NFTsSelectedModal
           type={Deposit}
           floorPrice={floorPrice}
+          getWayFlag={collection && collection.name.indexOf('punks') > -1 ? 1 : 0}
           checkedIndex={checkedIndex}
           data={list.filter((el) => checkedIndex.includes(el.tokenId))}
           openSelectedModal={openSelectedModal}

@@ -4,6 +4,7 @@ import CustomizedSelect from 'components/Select'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useContract } from 'hooks/useContract'
 import MockMAYC_ABI from 'abis/MockMAYC.json'
+import cryptoPunks_ABI from 'abis/cryptoPunks.json'
 import { useMemo, useState } from 'react'
 // import { useCollections } from 'state/application/hooks'
 import { hexToNumberString } from 'web3-utils'
@@ -91,9 +92,14 @@ export default function Mint() {
         id: '0x9a79bccd419c9604ce02645950e994b708553165',
         name: 'Cool Cats NFT',
       },
+      {
+        id: '0xc7c916fe699317f5e16975d6d88b55b17a2a733a',
+        name: 'Cryptopunks',
+      },
     ]
   }, [])
   const useMockMAYCContract = useContract(collections[valueIndex - 1]?.id, MockMAYC_ABI)
+  const PunkContract = useContract(collections[valueIndex - 1]?.id, cryptoPunks_ABI)
   const collectionOptions = useMemo(() => {
     return [
       {
@@ -158,7 +164,13 @@ export default function Mint() {
         variant="contained"
         sx={{ marginTop: '16px' }}
         onClick={() => {
-          useMockMAYCContract?.mint().then((res: any) => {
+          ;(collections[valueIndex - 1]?.id === '0xc7c916fe699317f5e16975d6d88b55b17a2a733a'
+            ? PunkContract &&
+              PunkContract.getPunk(100, {
+                gasLimit: 100000,
+              })
+            : useMockMAYCContract?.mint()
+          ).then((res: any) => {
             const calculagraph = setInterval(() => {
               provider.getTransactionReceipt(res.hash).then((receipt: any) => {
                 if (receipt === null) {

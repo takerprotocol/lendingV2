@@ -22,6 +22,7 @@ export enum TransactionType {
   BORROW,
   REPAY,
   APPROVAL_NFT,
+  APPROVAL_PUNKS_NFT,
   LIQUIDATE,
   USE_COLLATERAL,
 }
@@ -65,6 +66,13 @@ export interface ApproveNFTTransactionInfo extends BaseTransactionInfo {
   message: string
 }
 
+export interface ApprovePunksNFTTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.APPROVAL_PUNKS_NFT
+  spender: string
+  amount: string
+  message: string
+}
+
 export interface LiquidateTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.LIQUIDATE
   amount: string
@@ -83,6 +91,7 @@ export type TransactionInfo =
   | ApproveNFTTransactionInfo
   | LiquidateTransactionInfo
   | UseCollateralTransactionInfo
+  | ApprovePunksNFTTransactionInfo
 
 export interface TransactionDetails {
   hash: string

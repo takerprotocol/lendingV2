@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useLendingPool } from 'hooks/useLendingPool'
 import MockERC721Abi from 'abis/MockERC721.json'
+import CryptoPunksAbi from 'abis/cryptoPunks.json'
 import {
   useAddress,
   useBorrowLimit,
@@ -35,6 +36,7 @@ import { Loading } from 'components/Loading'
 import { fromWei } from 'web3-utils'
 import { getClient } from 'apollo/client'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { usePunkGateway } from 'hooks/useGateway'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -84,6 +86,7 @@ interface NFTsSelectedType {
   data: NftTokenModel[]
   setOpenSelectedModal: Function
   type: string
+  getWayFlag: number
   checkedIndex: string[]
   floorPrice: string
 }
@@ -91,12 +94,13 @@ export default function NFTsSelectedModal({
   openSelectedModal,
   setOpenSelectedModal,
   data,
+  getWayFlag,
   type,
   floorPrice,
 }: NFTsSelectedType) {
   const { id } = useParams()
   const contract = useLendingPool()
-  // const [loading, setLoading] = useState(false)
+  const punkGateway = usePunkGateway()
   const address = useAddress()
   const userValue = useUserValue()
   const erc20ReserveData = useErc20ReserveData()
@@ -104,6 +108,7 @@ export default function NFTsSelectedModal({
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
   const ercContract = useContract(id, MockERC721Abi)
+  const punksContract = useContract(id, CryptoPunksAbi)
   const [isApproved, setIsApproved] = useState<number>(0)
   const addTransaction = useTransactionAdder()
   const transactions = useAllTransactions()
@@ -131,6 +136,7 @@ export default function NFTsSelectedModal({
         tx.receipt &&
         (tx.info.type === TransactionType.APPROVAL_NFT ||
           tx.info.type === TransactionType.DEPOSIT_NFT ||
+          tx.info.type === TransactionType.APPROVAL_PUNKS_NFT ||
           tx.info.type === TransactionType.WITHDRAW_NFT) &&
         isTransactionRecent(tx)
       )
@@ -141,7 +147,9 @@ export default function NFTsSelectedModal({
     dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
   }, [dashboardType, depositTransaction])
   const approvePending = useMemo(() => {
-    return transactionPending.filter((el) => el.info.type === TransactionType.APPROVAL_NFT)
+    return transactionPending.filter(
+      (el) => el.info.type === TransactionType.APPROVAL_NFT || el.info.type === TransactionType.APPROVAL_PUNKS_NFT
+    )
   }, [transactionPending])
 
   const depositPending = useMemo(() => {
@@ -183,51 +191,104 @@ export default function NFTsSelectedModal({
     dashboardType === 1 ? setBlueChipLoading(true) : setGrowthLoading(true)
     if (contract && address && ercContract) {
       if (isApproved) {
-        contract
-          .depositNFTs(
-            data.map((el) => el.contract.address),
-            data.map((el) => el.tokenId),
-            data.map((el) => el.balance),
-            address
-            // { gasLimit }
-          )
-          .then((res: any) => {
-            // setLoading(false)
-            client.clearStore()
-            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
-            if (res && res.hash) {
-              setOpenSelectedModal(false)
-              addTransaction(res, {
-                type: TransactionType.DEPOSIT_NFT,
-                recipient: address,
-                amount,
-                count: data.length,
-              })
-              // toast.success('success')
-            }
-          })
-          .catch(() => {
-            // setLoading(false)
-            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
-          })
-      } else {
-        ercContract
-          .setApprovalForAll(contract.address, true)
-          .then((res: any) => {
-            // setLoading(false)
-            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
-            setIsApproved(1)
-            addTransaction(res, {
-              type: TransactionType.APPROVAL_NFT,
-              spender: contract.address,
-              amount,
-              message: 'Approve all NFT',
+        if (getWayFlag === 0) {
+          contract
+            .depositNFTs(
+              data.map((el) => el.contract.address),
+              data.map((el) => el.tokenId),
+              data.map((el) => el.balance),
+              address
+              // { gasLimit }
+            )
+            .then((res: any) => {
+              // setLoading(false)
+              client.clearStore()
+              dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+              if (res && res.hash) {
+                setOpenSelectedModal(false)
+                addTransaction(res, {
+                  type: TransactionType.DEPOSIT_NFT,
+                  recipient: address,
+                  amount,
+                  count: data.length,
+                })
+                // toast.success('success')
+              }
             })
-          })
-          .catch(() => {
-            // setLoading(false)
-            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
-          })
+            .catch(() => {
+              // setLoading(false)
+              dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+            })
+        } else {
+          if (punkGateway) {
+            punkGateway
+              .deposit(
+                contract.address,
+                data.map((el) => el.tokenId),
+                address
+                // { gasLimit }
+              )
+              .then((res: any) => {
+                // setLoading(false)
+                client.clearStore()
+                dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+                if (res && res.hash) {
+                  setOpenSelectedModal(false)
+                  addTransaction(res, {
+                    type: TransactionType.DEPOSIT_NFT,
+                    recipient: address,
+                    amount,
+                    count: data.length,
+                  })
+                  // toast.success('success')
+                }
+              })
+              .catch(() => {
+                // setLoading(false)
+                dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+              })
+          }
+        }
+      } else {
+        if (getWayFlag === 0) {
+          ercContract
+            .setApprovalForAll(contract.address, true)
+            .then((res: any) => {
+              // setLoading(false)
+              dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+              setIsApproved(1)
+              addTransaction(res, {
+                type: TransactionType.APPROVAL_NFT,
+                spender: contract.address,
+                amount,
+                message: 'Approve all NFT',
+              })
+            })
+            .catch(() => {
+              // setLoading(false)
+              dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+            })
+        } else {
+          if (punksContract) {
+            punksContract
+              .offerPunkForSaleToAddress(data[0].tokenId, 0, punkGateway?.address)
+              .then((res: any) => {
+                // setLoading(false)
+                dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+                setIsApproved(1)
+                addTransaction(res, {
+                  type: TransactionType.APPROVAL_PUNKS_NFT,
+                  spender: contract.address,
+                  amount,
+                  message: `Approve ${data[0].tokenId}  NFT`,
+                })
+              })
+              .catch(() => {
+                // setLoading(false)
+                dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+              })
+          }
+        }
       }
     } else {
       // setLoading(false)
