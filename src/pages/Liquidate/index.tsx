@@ -5,8 +5,8 @@ import LiquidateBody from './components/Body'
 import LiquidateHeader from './components/Header'
 import { getClient } from 'apollo/client'
 import { User } from 'apollo/queries'
-import { fromWei } from 'web3-utils'
-import { desensitization, getRiskLevel, getRiskLevelTag, minus, plus, times } from 'utils'
+import { fromWei, toWei } from 'web3-utils'
+import { desensitization, getRiskLevel, getRiskLevelTag, minus, plus, times, div } from 'utils'
 import BigNumber from 'bignumber.js'
 import { CollateralModel, TokenModel } from 'services/type/nft'
 import { useParams } from 'react-router-dom'
@@ -19,7 +19,7 @@ import MobileNFTCollaterals from './components/mobileComponents/MobileNFTCollate
 import MobileFooter from './components/mobileComponents/MobileFooter'
 import MobileLiquidateTitleSkeleton from './components/mobileLiquidateSkeleton/MobileLiquidateTitleSkeleton'
 import { useCollections, useShowChangeNetWork } from 'state/application/hooks'
-import { useTransactionAdder } from 'state/transactions/hooks'
+import { isTransactionRecent, useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
 import { toast } from 'react-toastify'
 import { TransactionType } from 'state/transactions/types'
 import numbro from 'numbro'
@@ -60,6 +60,32 @@ const Liquidate = () => {
   const [blueChipLoading, setBlueChipLoading] = useState(false)
   const [growthLoading, setGrowthLoading] = useState(false)
   const allCollections = useCollections()
+  const transactions = useAllTransactions()
+  const flag = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return tx && tx.receipt && tx.info.type === TransactionType.LIQUIDATE && isTransactionRecent(tx)
+    }).length
+  }, [transactions])
+
+  const [userValue, setUserValue] = useState({
+    borrowLiquidity: '0',
+    NFTLiquidity: '0',
+    totalDebt: '0',
+    totalCollateral: '0',
+  })
+  useEffect(() => {
+    if (lpContract && address) {
+      lpContract.getUserState(address).then((res: Array<BigNumber>) => {
+        setUserValue({
+          borrowLiquidity: fromWei(res[0].toString()),
+          NFTLiquidity: fromWei(res[1].toString()),
+          totalDebt: fromWei(res[3].toString()),
+          totalCollateral: fromWei(res[2].toString()),
+        })
+      })
+    }
+  }, [lpContract, address, flag])
   const loading = useMemo(() => {
     return dashboardType === 1 ? blueChipLoading : growthLoading
   }, [blueChipLoading, dashboardType, growthLoading])
@@ -84,7 +110,7 @@ const Liquidate = () => {
     }
     return _nfts
   }, [collaterals])
-  const submit = () => {
+  const submit = (value: string) => {
     if (contract) {
       const collections: Array<string> = []
       const tokenIds: Array<string> = []
@@ -103,7 +129,8 @@ const Liquidate = () => {
         punkGatewayContract &&
           punkGatewayContract
             .liquidate(lpContract?.address, tokenIds.toString(), address, {
-              gasLimit: 210000,
+              gasLimit: 610000,
+              value: toWei(plus(times(div(fromWei(value), userValue.totalCollateral), userValue.totalDebt), 0.1)),
             })
             .then((res: any) => {
               addTransaction(res, {
@@ -119,8 +146,9 @@ const Liquidate = () => {
             })
       } else {
         contract
-          .liquidate(lpContract?.address, collections.toString(), tokenIds.toString(), address, true, {
-            gasLimit: 210000,
+          .liquidate(lpContract?.address, collections.toString(), tokenIds.toString(), address, false, {
+            gasLimit: 610000,
+            value: toWei(plus(times(div(fromWei(value), userValue.totalCollateral), userValue.totalDebt), 0.1)),
           })
           .then((res: any) => {
             addTransaction(res, {
@@ -204,6 +232,11 @@ const Liquidate = () => {
   useEffect(() => {
     getCollaterals()
   }, [getCollaterals, dashboardType])
+  useEffect(() => {
+    if (flag > 0) {
+      getCollaterals()
+    }
+  }, [flag, getCollaterals])
   const mobile = useMobileType()
   return (
     <>
@@ -212,16 +245,32 @@ const Liquidate = () => {
           <LiquidateHeader
             address={address || ''}
             riskPercentage={heath}
-            totalCollateral={totalCollateral}
+            totalCollateral={userValue.totalCollateral}
             nftCollateral={nftCollateral}
             ethCollateral={minus(totalCollateral, nftCollateral)}
-            totalDebt={new BigNumber(totalDebt).gt(0) && new BigNumber(totalDebt).lt(0.01) ? '<0.01' : totalDebt}
-            ethDebt={new BigNumber(totalDebt).gt(0) && new BigNumber(totalDebt).lt(0.01) ? '<0.01' : totalDebt}
-            borrowings={new BigNumber(totalDebt).gt(0) && new BigNumber(totalDebt).lt(0.01) ? '<0.01' : totalDebt}
+            totalDebt={
+              new BigNumber(userValue.totalDebt).gt(0) && new BigNumber(userValue.totalDebt).lt(0.01)
+                ? '<0.01'
+                : userValue.totalDebt
+            }
+            ethDebt={
+              new BigNumber(userValue.totalDebt).gt(0) && new BigNumber(userValue.totalDebt).lt(0.01)
+                ? '<0.01'
+                : userValue.totalDebt
+            }
+            borrowings={
+              new BigNumber(userValue.totalDebt).gt(0) && new BigNumber(userValue.totalDebt).lt(0.01)
+                ? '<0.01'
+                : userValue.totalDebt
+            }
           />
           <LiquidateBody
-            totalDebt={new BigNumber(totalDebt).gt(0) && new BigNumber(totalDebt).lt(0.01) ? '<0.01' : totalDebt}
-            total={totalCollateral}
+            totalDebt={
+              new BigNumber(userValue.totalDebt).gt(0) && new BigNumber(userValue.totalDebt).lt(0.01)
+                ? '<0.01'
+                : userValue.totalDebt
+            }
+            total={userValue.totalCollateral}
             collaterals={collaterals}
             loading={loading}
             heath={heath}
@@ -231,8 +280,8 @@ const Liquidate = () => {
             nfts={tokenChecked.length}
             nftsValue={nftAmount}
             ethValue={ethValue}
-            submit={() => {
-              submit()
+            submit={(value: string) => {
+              submit(value)
             }}
           />
         </Body>
@@ -274,8 +323,8 @@ const Liquidate = () => {
               nftsValue={nftAmount}
               value={value}
               ethValue={ethValue}
-              submit={() => {
-                submit()
+              submit={(value: string) => {
+                submit(value)
               }}
             ></MobileFooter>
           )}

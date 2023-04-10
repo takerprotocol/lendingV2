@@ -289,7 +289,9 @@ export const renderCollectionName = (symbol?: string) => {
     } else if (symbol.toLocaleLowerCase().indexOf('clonex') > -1) {
       return 'CLONE X - X TAKASHI MURAKAMI'
     } else if (symbol.toLocaleLowerCase().indexOf('wpunks') > -1) {
-      return 'Wrapped Cryptopunks'
+      return 'Cryptopunks'
+    } else if (symbol.toLocaleLowerCase().indexOf('wrapped cryptopunks') > -1) {
+      return 'Cryptopunks'
     }
   }
   return 'ERC721'

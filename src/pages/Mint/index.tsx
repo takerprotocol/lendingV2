@@ -65,35 +65,35 @@ export default function Mint() {
   const collections = useMemo(() => {
     return [
       {
-        id: '0x1326578b741311773b21b22dd22d047e8289fc1f',
-        name: 'Bored Ape Yacht Club',
+        id: '0x77a136db5131bd2a547e56aad40b4e8fbec6e3b7',
+        name: 'azuki',
       },
       {
         id: '0x7629aa9f796f230c48e126425545ebf5eb57fde6',
-        name: 'Mutant Ape Yacht Club',
+        name: 'mayc',
       },
       {
-        id: '0x77a136db5131bd2a547e56aad40b4e8fbec6e3b7',
-        name: 'Azuki',
-      },
-      {
-        id: '0x07875841846abb8FbA50dBC64Ab4b77CBb6B5cA1',
-        name: 'World of Women',
+        id: '0x1326578b741311773b21b22dd22d047e8289fc1f',
+        name: 'bayc',
       },
       {
         id: '0x8c8f9db836049a7b11c561510d5b8318cccb6e0b',
-        name: 'Doodles',
+        name: 'doodles',
       },
       {
         id: '0xdcb017b5b37cf40d4955c5df42964464b5b0ea36',
-        name: 'CLONE X - X TAKASHI MURAKAMI',
+        name: 'clonex',
       },
       {
         id: '0x9a79bccd419c9604ce02645950e994b708553165',
-        name: 'Cool Cats NFT',
+        name: 'cool_cats',
       },
       {
-        id: '0xc7c916fe699317f5e16975d6d88b55b17a2a733a',
+        id: '0x07875841846abb8fba50dbc64ab4b77cbb6b5ca1',
+        name: 'world_of_women',
+      },
+      {
+        id: '0xF6C7748857B6e2edBA7dcE548A24eD3A95A2CCd3 ',
         name: 'Cryptopunks',
       },
     ]
@@ -164,11 +164,8 @@ export default function Mint() {
         variant="contained"
         sx={{ marginTop: '16px' }}
         onClick={() => {
-          ;(collections[valueIndex - 1]?.id === '0xc7c916fe699317f5e16975d6d88b55b17a2a733a'
-            ? PunkContract &&
-              PunkContract.getPunk(100, {
-                gasLimit: 100000,
-              })
+          ;(collections[valueIndex - 1]?.id === '0x6e9583E0C3031A75532e6a915d677c9b9097be90'
+            ? PunkContract && PunkContract.getPunk()
             : useMockMAYCContract?.mint()
           ).then((res: any) => {
             const calculagraph = setInterval(() => {

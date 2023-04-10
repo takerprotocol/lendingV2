@@ -511,7 +511,7 @@ const LiquidateBody = ({
         nftsValue={nftsValue}
         ethValue={ethValue}
         submit={() => {
-          submit()
+          submit(floorPrice)
         }}
       />
     </Container>

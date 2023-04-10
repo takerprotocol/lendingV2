@@ -40,7 +40,7 @@ import Women from 'assets/images/png/collection/women.gif'
 import Cat from 'assets/images/png/collection/cat.png'
 import Clonex from 'assets/images/png/collection/clonex.png'
 import Doodles from 'assets/images/png/collection/doodles.png'
-import WrappedCryptoPunks from 'assets/images/png/collection/wrapped-cryptopunks.png'
+import CryptoPunks from 'assets/images/png/collection/cryptopunks.png'
 import { Contract } from '@ethersproject/contracts'
 import { setMobileType } from 'state/user/reducer'
 import { isMobile } from 'utils/userAgent'
@@ -166,7 +166,7 @@ export default function CustomizeRoutes() {
       } else if (symbol.toLocaleLowerCase().indexOf('clonex') > -1) {
         return Clonex
       } else if (symbol.toLocaleLowerCase().indexOf('wpunks') > -1) {
-        return WrappedCryptoPunks
+        return CryptoPunks
       }
     }
     return ERC721
@@ -189,7 +189,9 @@ export default function CustomizeRoutes() {
       } else if (symbol.toLocaleLowerCase().indexOf('clonex') > -1) {
         return 'CLONE X - X TAKASHI MURAKAMI'
       } else if (symbol.toLocaleLowerCase().indexOf('wpunks') > -1) {
-        return 'Wrapped Cryptopunks'
+        return 'Cryptopunks'
+      } else if (symbol.toLocaleLowerCase().indexOf('wrapped cryptopunks') > -1) {
+        return 'Cryptopunks'
       }
     }
     return symbol

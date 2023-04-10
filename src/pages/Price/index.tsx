@@ -54,31 +54,31 @@ export default function Price() {
   const collections = useMemo(() => {
     return [
       {
-        id: '0xe383f37741bbCBAc2eE420f24b62D48EeF494398',
+        id: '0x77a136db5131bd2a547e56aad40b4e8fbec6e3b7',
         name: 'azuki',
       },
       {
-        id: '0x3F1B63d1122b28764Ef22Aa2A9D74Efb6196A3C4',
+        id: '0x7629aa9f796f230c48e126425545ebf5eb57fde6',
         name: 'mayc',
       },
       {
-        id: '0xdB86784AAF350Df8b9BE32D920881770FAd4C951',
+        id: '0x1326578b741311773b21b22dd22d047e8289fc1f',
         name: 'bayc',
       },
       {
-        id: '0xa6942fa0Dbc52fE611048b8e35cDC21009F08547',
+        id: '0x8c8f9db836049a7b11c561510d5b8318cccb6e0b',
         name: 'doodles',
       },
       {
-        id: '0x1B001F68BaB3A4f60323A39A266860Ad4769aeD2',
+        id: '0xdcb017b5b37cf40d4955c5df42964464b5b0ea36',
         name: 'clonex',
       },
       {
-        id: '0x563CcBC82B150d8d52D8BC1C51F704Bc172b48c5',
+        id: '0x9a79bccd419c9604ce02645950e994b708553165',
         name: 'cool_cats',
       },
       {
-        id: '0x70D591b6f85F819876828BE97a04421B55Be0d42',
+        id: '0x07875841846abb8fba50dbc64ab4b77cbb6b5ca1',
         name: 'world_of_women',
       },
     ]
@@ -155,7 +155,9 @@ export default function Price() {
         variant="contained"
         sx={{ marginTop: '16px' }}
         onClick={() => {
-          Aggregator?.setNFTPrice(collections[valueIndex - 1]?.id, toWei(value))
+          Aggregator?.setNFTPrice(collections[valueIndex - 1]?.id, toWei(value), {
+            gasLimit: 210000,
+          })
         }}
       >
         update
