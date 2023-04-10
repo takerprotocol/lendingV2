@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Nft } from '@alch/alchemy-sdk'
 import WithdrawNFT from './components/WithdrawNFT'
 import { useDepositableNfts } from 'services/module/deposit'
-import { useAddress, useCollateralBorrowLimitUsed, useMobileType } from 'state/user/hooks'
+import { useAddress, useCollateralBorrowLimitUsed, useDashboardType, useMobileType } from 'state/user/hooks'
 import { useParams } from 'react-router-dom'
 import { getAlchemyNftMetadata } from 'services/module/deposit'
 import { useCollections, useDepositedCollection, useShowChangeNetWork } from 'state/application/hooks'
@@ -19,6 +19,9 @@ import { isTransactionRecent, useAllTransactions } from 'state/transactions/hook
 import { TransactionType } from 'state/transactions/types'
 import { useAppDispatch } from 'state/hooks'
 import { setDashboardType } from 'state/user/reducer'
+import { useActiveWeb3React } from 'hooks/web3'
+import { getClient } from 'apollo/client'
+import { UserPunkNft } from 'apollo/queries'
 const growths = [
   '0x81dbc3bc6bfa0640cffb9b6b667987c97f35a588',
   '0x8c8f9db836049a7b11c561510d5b8318cccb6e0b',
@@ -108,6 +111,7 @@ const MobileFilterBg = styled(Box)`
 `
 export default function Deposit() {
   const { id } = useParams()
+  const { chainId } = useActiveWeb3React()
   const alchemy = useAlchemy()
   const address = useAddress()
   const showChangeNetWork = useShowChangeNetWork()
@@ -124,6 +128,9 @@ export default function Deposit() {
   const collections = useCollections()
   const depositedCollection = useDepositedCollection()
   const transactions = useAllTransactions()
+  const [client, setClient] = useState<any>(null)
+  const dashboardType = useDashboardType()
+
   const depositFlag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
@@ -138,6 +145,12 @@ export default function Deposit() {
   // useEffect(() => {
   //   window.location.reload()
   // }, [depositFlag])
+  useEffect(() => {
+    if (chainId) {
+      setClient(getClient(dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 42])
+    }
+  }, [chainId, dashboardType])
+
   const { list, loading } = useDepositableNfts(address, id || '', id, depositFlag)
   const withdrawList = useMemo(() => {
     if (depositedCollection && id) {
@@ -212,6 +225,17 @@ export default function Deposit() {
       dispatch(setDashboardType(growths.some((el) => el.toLocaleLowerCase() === id.toLocaleLowerCase()) ? 2 : 1))
     }
   }, [dispatch, id])
+  const getPunkNft = useCallback(async () => {
+    if (collection && client && collection.name && collection.name.toLocaleLowerCase().indexOf('punks')) {
+      const punks = await client.query({
+        query: UserPunkNft(`${address}`),
+      })
+      console.log(punks)
+    }
+  }, [address, client, collection])
+  useEffect(() => {
+    getPunkNft()
+  }, [getPunkNft])
   return (
     <>
       {mobile ? (

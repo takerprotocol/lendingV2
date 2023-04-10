@@ -282,3 +282,16 @@ export const UserReserve = (id: string) => {
 `
   return gql(queryString)
 }
+
+export const UserPunkNft = (owner: string) => {
+  const queryString = `
+    query cryptoPunks {
+      cryptoPunks(id: "0x6e9583E0C3031A75532e6a915d677c9b9097be90") {
+        id
+        punkIndex
+        owner
+      }
+    }
+`
+  return gql(queryString)
+}
