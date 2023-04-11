@@ -22,6 +22,7 @@ import { setDashboardType } from 'state/user/reducer'
 import { useActiveWeb3React } from 'hooks/web3'
 import { getClient } from 'apollo/client'
 import { UserPunkNft } from 'apollo/queries'
+import { PUNKS_ADDRESS } from 'config'
 const growths = [
   '0x81dbc3bc6bfa0640cffb9b6b667987c97f35a588',
   '0x8c8f9db836049a7b11c561510d5b8318cccb6e0b',
@@ -116,6 +117,7 @@ export default function Deposit() {
   const address = useAddress()
   const showChangeNetWork = useShowChangeNetWork()
   const [TestWithdrawList, setWithdrawList] = useState<Array<Nft>>([])
+  const [punks, setPunks] = useState<Array<Nft>>([])
   // const [depositType, setDepositType] = useState<string>('shut')
   // const [withdrawType, setWithdrawType] = useState<string>('shut')
   const [depositCheckedIndex, setDepositCheckedIndex] = useState<Array<string>>([])
@@ -226,13 +228,20 @@ export default function Deposit() {
     }
   }, [dispatch, id])
   const getPunkNft = useCallback(async () => {
-    if (collection && client && collection.name && collection.name.toLocaleLowerCase().indexOf('punks')) {
-      const punks = await client.query({
+    if (collection && client && collection.name && collection.name.toLocaleLowerCase().indexOf('punks') > -1) {
+      const res = await client.query({
         query: UserPunkNft(`${address}`),
       })
-      console.log(punks)
+      const arr: Array<Nft> = []
+      if (res && res.data && res.data.cryptoPunks && alchemy) {
+        for (let i = 0, length = res.data.cryptoPunks.length; i < length; i++) {
+          const nft = await getAlchemyNftMetadata(PUNKS_ADDRESS, res.data.cryptoPunks[i].punkIndex, alchemy)
+          arr.push(nft)
+        }
+      }
+      setPunks(arr)
     }
-  }, [address, client, collection])
+  }, [address, alchemy, client, collection])
   useEffect(() => {
     getPunkNft()
   }, [getPunkNft])
@@ -256,7 +265,11 @@ export default function Deposit() {
             <DepositHeader loading={loading}></DepositHeader>
             <DepositNFT
               loading={loading}
-              list={list}
+              list={
+                collection && collection.name && collection.name.toLocaleLowerCase().indexOf('punks') > -1
+                  ? punks
+                  : list
+              }
               floorPrice={collection ? collection.floorPrice : '0'}
               checkedIndex={depositCheckedIndex}
               setCheckedIndex={setDepositCheckedIndex}

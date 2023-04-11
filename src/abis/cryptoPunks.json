@@ -403,12 +403,6 @@
     },
     {
         "constant": false,
-        "inputs": [
-            {
-                "name": "punkIndex",
-                "type": "uint256"
-            }
-        ],
         "name": "getPunk",
         "outputs": [],
         "payable": false,

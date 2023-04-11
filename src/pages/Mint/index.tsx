@@ -93,7 +93,7 @@ export default function Mint() {
         name: 'world_of_women',
       },
       {
-        id: '0xF6C7748857B6e2edBA7dcE548A24eD3A95A2CCd3 ',
+        id: '0xf6c7748857b6e2edba7dce548a24ed3a95a2ccd3',
         name: 'Cryptopunks',
       },
     ]
@@ -164,7 +164,7 @@ export default function Mint() {
         variant="contained"
         sx={{ marginTop: '16px' }}
         onClick={() => {
-          ;(collections[valueIndex - 1]?.id === '0x6e9583E0C3031A75532e6a915d677c9b9097be90'
+          ;(collections[valueIndex - 1]?.id === '0xf6c7748857b6e2edba7dce548a24ed3a95a2ccd3'
             ? PunkContract && PunkContract.getPunk()
             : useMockMAYCContract?.mint()
           ).then((res: any) => {

@@ -1,6 +1,7 @@
 import { Nft } from '@alch/alchemy-sdk'
 import styled from '@emotion/styled'
 import { Box, Skeleton, TextField, Typography } from '@mui/material'
+import { PUNKS_ADDRESS } from 'config'
 import { useEffect, useMemo, useState } from 'react'
 import { NftTokenModel } from 'services/type/nft'
 import NftListSkeleton from './depositSkeleton/NftListSkeleton'
@@ -118,11 +119,21 @@ export default function NFTsList({ list, loading, onChange, TypeKey, checked, se
                     setCheckedIndex([])
                   }
                   if (!checkboxType.includes(el.tokenId)) {
-                    onChange([...checkboxType, el.tokenId])
-                    setCheckboxType([...checkboxType, el.tokenId])
+                    if (el.contract.address === PUNKS_ADDRESS) {
+                      setCheckboxType([el.tokenId])
+                      onChange([el.tokenId])
+                    } else {
+                      onChange([...checkboxType, el.tokenId])
+                      setCheckboxType([...checkboxType, el.tokenId])
+                    }
                   } else {
-                    onChange(checkboxType.filter((cel) => cel !== el.tokenId))
-                    setCheckboxType(checkboxType.filter((cel) => cel !== el.tokenId))
+                    if (el.contract.address === PUNKS_ADDRESS) {
+                      onChange([])
+                      setCheckboxType([])
+                    } else {
+                      onChange(checkboxType.filter((cel) => cel !== el.tokenId))
+                      setCheckboxType(checkboxType.filter((cel) => cel !== el.tokenId))
+                    }
                   }
                 }}
               >

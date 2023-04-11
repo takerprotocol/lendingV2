@@ -270,8 +270,11 @@ export default function NFTsSelectedModal({
             })
         } else {
           if (punksContract) {
+            console.log(data[0].tokenId, 0, punkGateway?.address, 'punksContractpunksContract')
             punksContract
-              .offerPunkForSaleToAddress(data[0].tokenId, 0, punkGateway?.address)
+              .offerPunkForSaleToAddress(data[0].tokenId, 0, punkGateway?.address, {
+                gasLimit: 100000,
+              })
               .then((res: any) => {
                 // setLoading(false)
                 dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
