@@ -20,6 +20,7 @@ export interface ApplicationState {
   readonly nftCollateral: string
   readonly userNftConfig: string
   readonly ownedNfts: OwnedNft[]
+  readonly ownedPunkNfts: any[]
   readonly ethLiquidity: string
   readonly collateralsType: string
   readonly ethDebt: string
@@ -56,6 +57,7 @@ const initialState: ApplicationState = {
   ethDebt: '0',
   ethCollateral: '0',
   usedCollateral: false,
+  ownedPunkNfts: [],
   erc20Ltv: '0',
   erc721Ltv: '0',
   collateralsType: 'All Borrowers',
@@ -103,6 +105,9 @@ const applicationSlice = createSlice({
     },
     setAccountNfts(state, action) {
       state.ownedNfts = action.payload
+    },
+    setAccountPunksNfts(state, action) {
+      state.ownedPunkNfts = action.payload
     },
     setUserNftValues(state, action) {
       if (action.payload) {
@@ -177,6 +182,7 @@ export const {
   setAddress,
   setAccountBalance,
   setAccountNfts,
+  setAccountPunksNfts,
   setUserNftValues,
   setUserNftConfig,
   setReserveData,

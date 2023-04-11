@@ -6,7 +6,7 @@ import ButtonDown from 'assets/images/svg/dashboard/button-down.svg'
 import minMyCollateralIcon from 'assets/images/svg/dashboard/minMyCollateral-icon.svg'
 import { useCallback, useState } from 'react'
 import { SpaceBetweenBox, FlexBox } from 'styleds'
-import { useAccountNfts, useAddress, useDecimal, useUserNftConfig } from 'state/user/hooks'
+import { useAccountNfts, useAccountPunksNfts, useAddress, useDecimal, useUserNftConfig } from 'state/user/hooks'
 import { useCollections, useDepositedCollection, usePoolValues, useWalletModalToggle } from 'state/application/hooks'
 import CollectionSkeleton from './DashboardSkeleton/CollectionSkeleton'
 // import { decimalFormat, div, fixedFormat } from 'utils'
@@ -104,6 +104,7 @@ export default function Collection({ type, loading }: CollectionType) {
   const depositedCollection = useDepositedCollection()
   const nftConfig = useUserNftConfig()
   const list = useAccountNfts()
+  const punksNfts = useAccountPunksNfts()
   const navigate = useNavigate()
   const deposited = (id: string) => {
     if (depositedCollection) {
@@ -122,14 +123,18 @@ export default function Collection({ type, loading }: CollectionType) {
   //   //
   // }, [collection])
   const nftBalance = useCallback(
-    (id: string) => {
-      if (list) {
-        const item = list.filter((el: OwnedNft) => el.contract.address.toLocaleLowerCase() === id.toLocaleLowerCase())
-        return item ? item.length : '0'
+    (id: string, name: string) => {
+      if (name.toLocaleLowerCase().indexOf('punks') > -1) {
+        return punksNfts.length
+      } else {
+        if (list) {
+          const item = list.filter((el: OwnedNft) => el.contract.address.toLocaleLowerCase() === id.toLocaleLowerCase())
+          return item ? item.length : '0'
+        }
+        return '0'
       }
-      return '0'
     },
-    [list]
+    [list, punksNfts]
   )
   return (
     <Box ml="24px" width="1160px">
@@ -213,7 +218,7 @@ export default function Collection({ type, loading }: CollectionType) {
                             {el?.name}
                           </Typography>
                           <FlexBox>
-                            {nftBalance(el.id) > 0 && <LabelBox>Available</LabelBox>}
+                            {nftBalance(el.id, el.name) > 0 && <LabelBox>Available</LabelBox>}
                             {deposited(el.id) > 0 && <LabelBox>Deposited</LabelBox>}
                           </FlexBox>
                         </Box>
@@ -299,15 +304,15 @@ export default function Collection({ type, loading }: CollectionType) {
                               <Typography
                                 variant="subtitle1"
                                 fontWeight="700"
-                                color={nftBalance(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
+                                color={nftBalance(el.id, el.name) !== 0 ? '#7646FF' : '#A0A3BD'}
                               >
-                                {nftBalance(el.id)}&nbsp;
+                                {nftBalance(el.id, el.name)}&nbsp;
                               </Typography>
                               <Typography
                                 lineHeight="160%"
-                                fontSize={nftBalance(el.id) !== 0 ? '18px' : '14px'}
+                                fontSize={nftBalance(el.id, el.name) !== 0 ? '18px' : '14px'}
                                 fontWeight="700"
-                                color={nftBalance(el.id) !== 0 ? '#7646FF' : '#A0A3BD'}
+                                color={nftBalance(el.id, el.name) !== 0 ? '#7646FF' : '#A0A3BD'}
                               >
                                 NTFs
                               </Typography>

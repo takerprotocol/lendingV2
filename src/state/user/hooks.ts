@@ -16,6 +16,10 @@ export function useAccountNfts() {
   return useAppSelector((state: AppState) => state.user.ownedNfts)
 }
 
+export function useAccountPunksNfts() {
+  return useAppSelector((state: AppState) => state.user.ownedPunkNfts)
+}
+
 export function useAddress(): string {
   return useAppSelector((state: AppState) => state.user.address)
 }
