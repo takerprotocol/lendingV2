@@ -30,6 +30,7 @@ import { Loading } from 'components/Loading'
 import numbro from 'numbro'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { getClient } from 'apollo/client'
+import { usePunkGateway } from 'hooks/useGateway'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -74,9 +75,18 @@ interface NFTsSelectedType {
   close: Function
   type: string
   amount: string
+  getWayFlag: number
   checkedIndex: string[]
 }
-export default function WithdrawSelectedModal({ open, close, data, type, amount, amountList }: NFTsSelectedType) {
+export default function WithdrawSelectedModal({
+  open,
+  getWayFlag,
+  close,
+  data,
+  type,
+  amount,
+  amountList,
+}: NFTsSelectedType) {
   const { id } = useParams()
   const contract = useLendingPool()
   // const [loading, setLoading] = useState(false)
@@ -87,6 +97,7 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
   const ercContract = useContract(id, MockERC721Abi)
+  const punkGateway = usePunkGateway()
   const addTransaction = useTransactionAdder()
   const borrowLimitUsed = useCollateralBorrowLimitUsed()
   const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, -1))
@@ -128,14 +139,21 @@ export default function WithdrawSelectedModal({ open, close, data, type, amount,
     // setLoading(true)
     dashboardType === 1 ? setBlueChipLoading(true) : setGrowthLoading(true)
     if (contract && address && ercContract) {
-      contract
-        .withdrawNFTs(
-          data.map((el) => el.contract.address),
-          data.map((el) => el.tokenId),
-          amountList.map((el) => el.amount),
-          address
-          // { gasLimit }
-        )
+      ;(getWayFlag === 0
+        ? contract.withdrawNFTs(
+            data.map((el) => el.contract.address),
+            data.map((el) => el.tokenId),
+            amountList.map((el) => el.amount),
+            address
+            // { gasLimit }
+          )
+        : punkGateway &&
+          punkGateway.withdraw(
+            contract.address,
+            data.map((el) => el.tokenId),
+            address
+          )
+      )
         .then((res: any) => {
           if (res && res.hash) {
             client.clearStore()

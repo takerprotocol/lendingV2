@@ -281,6 +281,7 @@ export default function Deposit() {
             <WithdrawNFT
               loading={loading}
               list={withdrawList}
+              getWayFlag={collection && collection.name.indexOf('punks') > -1 ? 1 : 0}
               floorPrice={collection ? collection.floorPrice : '0'}
               checkedIndex={withdrawCheckedIndex}
               setDepositCheckedIndex={setDepositCheckedIndex}

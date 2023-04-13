@@ -37,6 +37,7 @@ import { fromWei } from 'web3-utils'
 import { getClient } from 'apollo/client'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { usePunkGateway } from 'hooks/useGateway'
+import { PUNKS_CONTRACT_ADDRESS } from 'config'
 
 const style = {
   transform: 'rgba(0, 0, 0, 0.5)',
@@ -108,8 +109,8 @@ export default function NFTsSelectedModal({
   const TypographyRiskLevel = getRiskLevel(heath)
   const riskLevelTag = getRiskLevelTag(heath)
   const ercContract = useContract(id, MockERC721Abi)
-  const punksContract = useContract(id, CryptoPunksAbi)
-  const [isApproved, setIsApproved] = useState<number>(0)
+  const punksContract = useContract(PUNKS_CONTRACT_ADDRESS, CryptoPunksAbi)
+  const [isApproved, setIsApproved] = useState<number>(2)
   const addTransaction = useTransactionAdder()
   const transactions = useAllTransactions()
   const borrowLimitUsed = useCollateralBorrowLimitUsed()
@@ -142,6 +143,17 @@ export default function NFTsSelectedModal({
       )
     }).length
   }, [transactions])
+  const approvalPunksNftTransaction = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return tx && tx.receipt && tx.info.type === TransactionType.APPROVAL_PUNKS_NFT && isTransactionRecent(tx)
+    }).length
+  }, [transactions])
+  useEffect(() => {
+    if (approvalPunksNftTransaction > 0) {
+      setIsApproved(2)
+    }
+  }, [approvalPunksNftTransaction])
   useEffect(() => {
     //setLoading(false)
     dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
@@ -226,7 +238,6 @@ export default function NFTsSelectedModal({
                 contract.address,
                 data.map((el) => el.tokenId),
                 address
-                // { gasLimit }
               )
               .then((res: any) => {
                 // setLoading(false)
@@ -270,11 +281,8 @@ export default function NFTsSelectedModal({
             })
         } else {
           if (punksContract) {
-            console.log(data[0].tokenId, 0, punkGateway?.address, 'punksContractpunksContract')
             punksContract
-              .offerPunkForSaleToAddress(data[0].tokenId, 0, punkGateway?.address, {
-                gasLimit: 100000,
-              })
+              .offerPunkForSaleToAddress(data[0].tokenId, 0, punkGateway?.address)
               .then((res: any) => {
                 // setLoading(false)
                 dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)

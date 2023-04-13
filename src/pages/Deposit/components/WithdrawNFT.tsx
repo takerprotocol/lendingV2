@@ -20,6 +20,7 @@ import { TransactionType } from 'state/transactions/types'
 import { CenterBox } from 'styleds'
 import { fromWei } from 'web3-utils'
 import { fixedFormat, minus, times } from 'utils'
+import { PUNKS_ADDRESS } from 'config'
 
 const DepositedNFTsStyleBox = styled(Box)`
   margin-bottom: 200px;
@@ -81,6 +82,7 @@ interface WithdrawNFTProps {
   list: any[]
   floorPrice: string
   loading: boolean
+  getWayFlag: number
 }
 export default function WithdrawNFT({
   list,
@@ -89,6 +91,7 @@ export default function WithdrawNFT({
   checkedIndex,
   setCheckedIndex,
   setDepositCheckedIndex,
+  getWayFlag,
 }: WithdrawNFTProps) {
   const [withdrawList, setWithdrawList] = useState<Array<Nft>>([])
   const [openSelect, setOpenSelect] = useState<boolean>(false)
@@ -145,16 +148,24 @@ export default function WithdrawNFT({
       const arr: Array<Nft> = []
       for (let i = 0, length = list.length; i < length; i++) {
         if (list[i].id) {
-          const nft = await getAlchemyNftMetadata(list[i].id.split('-')[1], list[i].id.split('-')[2], alchemy)
+          const nft = await getAlchemyNftMetadata(
+            getWayFlag === 1 ? PUNKS_ADDRESS : list[i].id.split('-')[1],
+            list[i].id.split('-')[2],
+            alchemy
+          )
           arr.push(nft)
         } else {
-          const nft = await getAlchemyNftMetadata(list[i].contract.address, list[i].tokenId, alchemy)
+          const nft = await getAlchemyNftMetadata(
+            getWayFlag === 1 ? PUNKS_ADDRESS : list[i].contract.address,
+            list[i].tokenId,
+            alchemy
+          )
           arr.push(nft)
         }
       }
       setWithdrawList(arr)
     }
-  }, [alchemy, list])
+  }, [alchemy, getWayFlag, list])
   useEffect(() => {
     getWithdrawList()
   }, [getWithdrawList])
@@ -272,6 +283,7 @@ export default function WithdrawNFT({
             type={withdraw}
             checkedIndex={checkedIndex}
             amount={withdrawAmount}
+            getWayFlag={getWayFlag}
             amountList={list.filter((el) => checkedIndex.includes(el.id.split('-')[2]))}
             data={withdrawList.filter((el) => checkedIndex.includes(el.tokenId))}
             open={openSelect}
