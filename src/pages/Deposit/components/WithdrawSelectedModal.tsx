@@ -406,7 +406,7 @@ export default function WithdrawSelectedModal({
           </FlexBox>
         </Box>
         <FlexBox justifyContent="space-between">
-          {isApproved !== 2 && (
+          {isApproved !== 2 && getWayFlag === 1 && (
             <Button
               variant="contained"
               disabled={loading}
@@ -422,15 +422,15 @@ export default function WithdrawSelectedModal({
           )}
           <Button
             variant="contained"
-            disabled={isApproved !== 2}
-            sx={{ width: isApproved !== 2 ? '176px' : '100%', height: '54px' }}
+            disabled={isApproved !== 2 && getWayFlag === 1}
+            sx={{ width: isApproved !== 2 && getWayFlag === 1 ? '176px' : '100%', height: '54px' }}
             color={riskLevelWarning ? 'error' : 'primary'}
             onClick={() => {
               withdraw()
             }}
           >
-            {!loading && isApproved !== 2 && <StepTypography>Step2</StepTypography>}
-            {isApproved === 0 ? 'Withdraw' : `Withdraw ${data.length} NFTs`}
+            {!loading && isApproved !== 2 && getWayFlag === 1 && <StepTypography>Step2</StepTypography>}
+            {isApproved === 0 && getWayFlag === 1 ? 'Withdraw' : `Withdraw ${data.length} NFTs`}
           </Button>
         </FlexBox>
       </Box>
