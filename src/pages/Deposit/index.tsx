@@ -243,7 +243,7 @@ export default function Deposit() {
   }, [address, alchemy, client, collection])
   useEffect(() => {
     getPunkNft()
-  }, [getPunkNft])
+  }, [getPunkNft, depositFlag])
   return (
     <>
       {mobile ? (

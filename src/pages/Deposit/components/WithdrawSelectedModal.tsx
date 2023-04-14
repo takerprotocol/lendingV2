@@ -194,7 +194,6 @@ export default function WithdrawSelectedModal({
             dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
           })
       } else {
-        console.log([contract.address, data.map((el) => el.tokenId), address])
         ;(getWayFlag === 0
           ? contract.withdrawNFTs(
               data.map((el) => el.contract.address),
@@ -207,7 +206,10 @@ export default function WithdrawSelectedModal({
             punkGateway.withdraw(
               contract.address,
               data.map((el) => el.tokenId),
-              address
+              address,
+              {
+                gasLimit: 210000,
+              }
             )
         )
           .then((res: any) => {
