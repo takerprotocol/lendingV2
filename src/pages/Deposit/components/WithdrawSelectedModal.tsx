@@ -155,7 +155,7 @@ export default function WithdrawSelectedModal({
   }, [transactions])
 
   useEffect(() => {
-    if (getWayFlag === 0) {
+    if (getWayFlag === 1) {
       if (punkGateway && erc721Contract && address) {
         erc721Contract.isApprovedForAll(address, punkGateway.address).then((res: boolean) => {
           if (res) {
@@ -195,6 +195,7 @@ export default function WithdrawSelectedModal({
             dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
           })
       } else {
+        console.log([contract.address, data.map((el) => el.tokenId), address])
         ;(getWayFlag === 0
           ? contract.withdrawNFTs(
               data.map((el) => el.contract.address),
@@ -414,7 +415,7 @@ export default function WithdrawSelectedModal({
                 withdraw()
               }}
             >
-              {loading ? <Loading></Loading> : <></>}
+              {loading || isApproved === 1 ? <Loading></Loading> : <></>}
               {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
             </Button>
           )}
@@ -428,7 +429,7 @@ export default function WithdrawSelectedModal({
             }}
           >
             {!loading && isApproved !== 2 && <StepTypography>Step2</StepTypography>}
-            {isApproved === 0 ? 'Deposit' : `Withdraw ${data.length} NFTs`}
+            {isApproved === 0 ? 'Withdraw' : `Withdraw ${data.length} NFTs`}
           </Button>
         </FlexBox>
       </Box>
