@@ -10,6 +10,14 @@
   },
   "IPriceOracleGetter": {
     "startBlock": 8549602,
-    "address": "0x2059f9D80aCCFCba1B7643E77F882cbEFE450AFb"
+    "address": "0xC38aEbC20feD1571E2eab066C06ACe699a428510"
+  },
+  "CryptoPunks": {
+    "startBlock": 8797989,
+    "address": "0xF6C7748857B6e2edBA7dcE548A24eD3A95A2CCd3"
+  },
+  "WPunk": {
+    "startBlock": 8797989,
+    "address": "0x81E4eDDf9fcb309f63954D67d40000f88Bb5D30e"
   }
 }

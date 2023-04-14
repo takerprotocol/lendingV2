@@ -26,18 +26,19 @@ type Reserve @entity {
 
 type NftCollection @entity {
   id: ID! # underlying address
-  pool: LendingPool!
+  pool: LendingPool
 
-  tNFT: Bytes! # proxy
-  ercType: BigInt!
-  liqThreshold: BigInt!
-  ltv: BigInt!
+  tNFT: Bytes # proxy
+  ercType: BigInt
+  liqThreshold: BigInt
+  ltv: BigInt
 
   name: String
   symbol: String
   floorPrice: BigInt!
+  PriceAggregator: PriceAggregator
 
-  users: [UserNftCollection!]! @derivedFrom(field: "collection")
+  users: [UserNftCollection!] @derivedFrom(field: "collection")
 }
 
 type User @entity {
@@ -48,7 +49,7 @@ type User @entity {
   totalDebt: BigInt!
   ltvAcc: BigInt!
   liqThreshAcc: BigInt!
-  healthFactor: BigDecimal!
+  healthFactor: BigInt!
 
   reserves: [UserReserve!]! @derivedFrom(field: "user")
   collections: [UserNftCollection!]! @derivedFrom(field: "user")
@@ -67,11 +68,24 @@ type UserNftCollection @entity {
   id: ID! # user - collection - tokenId
   user: User!
   collection: NftCollection!
-  tokens: [NftToken!]! @derivedFrom(field: "userCollection")
+  tokens: [NftToken!] @derivedFrom(field: "userCollection")
 }
 
 type NftToken @entity {
   id: ID! # UserNftCollection - tokenId
   userCollection: UserNftCollection!
   amount: BigInt!
+}
+
+type PriceAggregator @entity {
+  id: ID! #aggregator address
+  collection: NftCollection!
+  floorPrice: BigInt!
+  oracle: Bytes!
+}
+
+type CryptoPunk @entity {
+  id: ID!
+  punkIndex: BigInt!
+  owner: Bytes!
 }

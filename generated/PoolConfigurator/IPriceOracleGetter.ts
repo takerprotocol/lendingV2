@@ -32,24 +32,6 @@ export class NewNFTPrice__Params {
   }
 }
 
-export class SetNFTBankConsumer extends ethereum.Event {
-  get params(): SetNFTBankConsumer__Params {
-    return new SetNFTBankConsumer__Params(this);
-  }
-}
-
-export class SetNFTBankConsumer__Params {
-  _event: SetNFTBankConsumer;
-
-  constructor(event: SetNFTBankConsumer) {
-    this._event = event;
-  }
-
-  get nftBankConsumer(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-}
-
 export class SetTokenAggregator extends ethereum.Event {
   get params(): SetTokenAggregator__Params {
     return new SetTokenAggregator__Params(this);

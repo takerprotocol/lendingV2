@@ -30,7 +30,7 @@ dataSources:
           handler: handleBorrowed
         - event: Deposited(indexed address,address,indexed address,uint256)
           handler: handleDeposited
-        - event: Liquidated(address[],uint256[],uint256[],address,indexed address,uint256,indexed address,bool)
+        - event: Liquidated(address,uint256,uint256,address,address,uint256,address,address,bool)
           handler: handleLiquidated
         - event: NFTsDeposited(address[],address,indexed address,uint256[],uint256[])
           handler: handleNFTsDeposited
@@ -95,10 +95,66 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - NftCollection
+        - UserNftCollection
+        - User
+        - PriceAggregator
       abis:
         - name: IPriceOracleGetter
           file: ./abis/IPriceOracleGetter.json
+        - name: IPriceAggregator
+          file: ./abis/IPriceAggregator.json
+        - name: ILendingPool
+          file: ./abis/ILendingPool.json
       eventHandlers:
         - event: NewNFTPrice(indexed address,uint256)
           handler: handleNewNFTPrice
-      file: ./src/lending-pool.ts
+        - event: SetTokenAggregator(address,address)
+          handler: handleAggregatorSet
+      file: ./src/oracle.ts
+
+  - kind: ethereum
+    name: CryptoPunks
+    network: {{network}}
+    source:
+      address: "{{#CryptoPunks}}{{address}}{{/CryptoPunks}}"
+      startBlock: {{#CryptoPunks}}{{startBlock}}{{/CryptoPunks}}
+      abi: CryptoPunks
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - CryptoPunk
+      abis:
+        - name: CryptoPunks
+          file: ./abis/CryptoPunks.json
+      eventHandlers:
+        - event: Assign(indexed address,uint256)
+          handler: handleAssign
+        - event: PunkTransfer(indexed address,indexed address,uint256)
+          handler: handlePunkTransfer
+        - event: PunkBought(indexed uint256,uint256,indexed address,indexed address)
+          handler: handlePunkBought
+      file: ./src/punks.ts
+
+templates:
+  - kind: ethereum
+    name: IPriceAggregator
+    network: {{network}}
+    source:
+      abi: IPriceAggregator
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - PriceAggregator
+      abis:
+        - name: IPriceOracleGetter
+          file: ./abis/IPriceOracleGetter.json
+        - name: IPriceAggregator
+          file: ./abis/IPriceAggregator.json
+      eventHandlers:
+        - event: AnswerUpdated(indexed int256,indexed uint256,uint256)
+          handler: handleAnswerUpdated
+      file: ./src/oracle.ts

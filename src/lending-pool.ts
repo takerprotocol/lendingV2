@@ -12,6 +12,7 @@ import {
 } from "../generated/ILendingPool/ILendingPool";
 import {
   NftReserveInitialized,
+  PoolConfigurator,
   ReserveDropped,
   ReserveInitialized,
 } from "../generated/PoolConfigurator/PoolConfigurator";
@@ -31,11 +32,13 @@ import {
   UserNftCollection,
   NftToken,
 } from "../generated/schema";
-import * as utils from "./utils";
-
-export const POOLID = "{{#LendingPool}}{{address}}{{/LendingPool}}";
-export const ORACLE =
-  "{{#IPriceOracleGetter}}{{address}}{{/IPriceOracleGetter}}";
+import {
+  newUser,
+  newUserReserve,
+  newUserNftCollection,
+} from "./utils/initializers";
+import { updateUserState, removeNftToken, addNftToken } from "./utils/utils";
+import { POOLID, ORACLE } from "./utils/consts";
 
 export function handleNftReserveInitialized(
   event: NftReserveInitialized
@@ -133,7 +136,7 @@ export function handleDeposited(event: Deposited): void {
   let reserve = Reserve.load(reserveId);
   let userReserve = UserReserve.load(userReserveId);
   if (!user) {
-    user = utils.newUser(userId);
+    user = newUser(userId);
     log.info("New user from Deposited: {}", [user.id]);
   }
   if (!reserve) {
@@ -141,7 +144,7 @@ export function handleDeposited(event: Deposited): void {
     return;
   }
   if (!userReserve) {
-    userReserve = utils.newUserReserve(userReserveId);
+    userReserve = newUserReserve(userReserveId);
     userReserve.user = userId;
     userReserve.reserve = reserveId;
   }
@@ -149,12 +152,7 @@ export function handleDeposited(event: Deposited): void {
   user.reserveSupply = user.reserveSupply.plus(event.params.amount);
   if (userReserve.usedAsCollateral) {
     user.totalCollateral = user.totalCollateral.plus(event.params.amount);
-    user = utils.updateUserState(
-      user,
-      event.params.amount,
-      reserve.ltv,
-      reserve.liqThreshold
-    );
+    user = updateUserState(user, POOLID);
   }
   userReserve.depositedAmount = userReserve.depositedAmount.plus(
     event.params.amount
@@ -179,14 +177,14 @@ export function handleWithdrawn(event: Withdrawn): void {
   let userReserve = UserReserve.load(userReserveId);
   if (!user) {
     log.warning("Found Withdrawn event for unknown user - {}", [userId]);
-    user = utils.newUser(userId);
+    user = newUser(userId);
   }
   if (!reserve) {
     log.warning("Found Withdrawn event for unknown reserve - {}", [reserveId]);
     return;
   }
   if (!userReserve) {
-    userReserve = utils.newUserReserve(userReserveId);
+    userReserve = newUserReserve(userReserveId);
     userReserve.user = userId;
     userReserve.reserve = reserveId;
   }
@@ -194,12 +192,7 @@ export function handleWithdrawn(event: Withdrawn): void {
   user.reserveSupply = user.reserveSupply.minus(event.params.amount);
   if (userReserve.usedAsCollateral) {
     user.totalCollateral = user.totalCollateral.minus(event.params.amount);
-    user = utils.updateUserState(
-      user,
-      event.params.amount.neg(),
-      reserve.ltv,
-      reserve.liqThreshold
-    );
+    user = updateUserState(user, POOLID);
   }
   userReserve.depositedAmount = userReserve.depositedAmount.minus(
     event.params.amount
@@ -218,7 +211,7 @@ export function handleBorrowed(event: Borrowed): void {
   let reserve = Reserve.load(reserveId);
   let userReserve = UserReserve.load(userReserveId);
   if (!user) {
-    user = utils.newUser(userId);
+    user = newUser(userId);
     log.info("New user from Borrowed: {}", [userId]);
   }
   if (!reserve) {
@@ -226,13 +219,13 @@ export function handleBorrowed(event: Borrowed): void {
     return;
   }
   if (!userReserve) {
-    userReserve = utils.newUserReserve(userReserveId);
+    userReserve = newUserReserve(userReserveId);
     userReserve.user = userId;
     userReserve.reserve = reserveId;
   }
 
   user.totalDebt = user.totalDebt.plus(event.params.amount);
-  user = utils.updateHealthFactor(user);
+  user = updateUserState(user, POOLID);
   userReserve.borrowedAmount = userReserve.borrowedAmount.plus(
     event.params.amount
   );
@@ -251,20 +244,20 @@ export function handleRepaid(event: Repaid): void {
   let userReserve = UserReserve.load(userReserveId);
   if (!user) {
     log.warning("Found Repaid event for unknown user - {}", [userId]);
-    user = utils.newUser(userId);
+    user = newUser(userId);
   }
   if (!reserve) {
     log.warning("Found borrow event for unknown reserve - {}", [reserveId]);
     return;
   }
   if (!userReserve) {
-    userReserve = utils.newUserReserve(userReserveId);
+    userReserve = newUserReserve(userReserveId);
     userReserve.user = userId;
     userReserve.reserve = reserveId;
   }
 
   user.totalDebt = user.totalDebt.minus(event.params.amount);
-  user = utils.updateHealthFactor(user);
+  user = updateUserState(user, POOLID);
   userReserve.borrowedAmount = userReserve.borrowedAmount.minus(
     event.params.amount
   );
@@ -288,7 +281,7 @@ export function handleCollateralStatusUpdated(
     log.warning("Found CollateralStatusUpdated event for unknown user - {}", [
       userId,
     ]);
-    user = utils.newUser(userId);
+    user = newUser(userId);
     user.save();
   }
   if (!reserve) {
@@ -299,28 +292,13 @@ export function handleCollateralStatusUpdated(
     return;
   }
   if (!userReserve) {
-    userReserve = utils.newUserReserve(userReserveId);
+    userReserve = newUserReserve(userReserveId);
     userReserve.user = userId;
     userReserve.reserve = reserveId;
   }
 
   let newStatus = event.params.status;
-  if (!userReserve.usedAsCollateral && newStatus) {
-    user = utils.updateUserState(
-      user,
-      userReserve.depositedAmount,
-      reserve.ltv,
-      reserve.liqThreshold
-    );
-  }
-  if (userReserve.usedAsCollateral && !newStatus) {
-    user = utils.updateUserState(
-      user,
-      userReserve.depositedAmount.neg(),
-      reserve.ltv,
-      reserve.liqThreshold
-    );
-  }
+  user = updateUserState(user, POOLID);
   userReserve.usedAsCollateral = event.params.status;
 
   user.save();
@@ -330,6 +308,7 @@ export function handleCollateralStatusUpdated(
 export function handleLiquidated(event: Liquidated): void {
   let userId = event.params.user.toHex();
   let reserveId = event.params.debt.toHex();
+
   let userReserveId = userId + "-" + reserveId;
   let user = User.load(userId);
   let reserve = Reserve.load(reserveId);
@@ -343,67 +322,50 @@ export function handleLiquidated(event: Liquidated): void {
     return;
   }
 
-  for (let i = 0; i < event.params.nfts.length; i++) {
-    let collectionId = event.params.nfts[i].toHex();
-    let userNftCollectionId = userId + "-" + collectionId;
-    let collection = NftCollection.load(collectionId);
-    if (!collection) {
-      log.warning("Found Liquidated event for unknown collection - {}", [
-        collectionId,
-      ]);
-      return;
-    }
-    let userNftCollection = UserNftCollection.load(userNftCollectionId);
-    if (!userNftCollection) {
-      log.warning("Found Liquidated event for unknown userNftCollection - {}", [
-        userNftCollectionId,
-      ]);
-      return;
-    }
-
-    let oracle = IPriceOracleGetter.bind(Address.fromString(ORACLE));
-
-    utils.updateCollectionPrice(collection, oracle);
-
-    utils.removeNftToken(
-      userNftCollection,
-      event.params.tokenIds[i],
-      event.params.amounts[i]
-    );
-
-    let tokenValue = event.params.amounts[i].times(collection.floorPrice);
-    user.nftCollateral = user.nftCollateral.minus(tokenValue);
-    user.totalCollateral = user.totalCollateral.minus(tokenValue);
-    user = utils.updateUserState(
-      user,
-      tokenValue.neg(),
-      collection.ltv,
-      collection.liqThreshold
-    );
+  let collectionId = event.params.nft.toHex();
+  let userNftCollectionId = userId + "-" + collectionId;
+  let userNftCollection = UserNftCollection.load(userNftCollectionId);
+  if (!userNftCollection) {
+    log.warning("Found Liquidated event for unknown userNftCollection - {}", [
+      userNftCollectionId,
+    ]);
+    return;
   }
+
+  removeNftToken(userNftCollection, event.params.tokenId, BigInt.fromI32(1));
 
   let userReserve = UserReserve.load(userReserveId);
   if (!userReserve) {
-    userReserve = utils.newUserReserve(userReserveId);
+    userReserve = newUserReserve(userReserveId);
     userReserve.user = userId;
     userReserve.reserve = reserveId;
   }
-
-  user.totalDebt = user.totalDebt.minus(event.params.debtCovered);
-  user = utils.updateHealthFactor(user);
-  userReserve.borrowedAmount = userReserve.borrowedAmount.minus(
-    event.params.debtCovered
-  );
+  user = updateUserState(user, POOLID);
 
   user.save();
   userReserve.save();
+
+  if (event.params.receiveTNFT) {
+    let toCollectionId = event.params.to.toHex() + "-" + collectionId;
+    let toCollection = UserNftCollection.load(toCollectionId);
+    if (!toCollection) {
+      toCollection = newUserNftCollection(toCollectionId);
+    }
+    addNftToken(toCollection, event.params.tokenId, BigInt.fromI32(1));
+    let to = User.load(event.params.to.toHex());
+    if (!to) {
+      to = newUser(event.params.to.toHex());
+    }
+    to = updateUserState(to, POOLID);
+    to.save();
+  }
 }
 
 export function handleNFTsDeposited(event: NFTsDeposited): void {
-  let userId = event.params.user.toHex();
+  let userId = event.params.onBehalfOf.toHex();
   let user = User.load(userId);
   if (!user) {
-    user = utils.newUser(userId);
+    user = newUser(userId);
     log.info("New user from NFTsDeposited {}", [userId]);
   }
 
@@ -420,16 +382,13 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
     }
     let userNftCollection = UserNftCollection.load(userNftCollectionId);
     if (!userNftCollection) {
-      userNftCollection = utils.newUserNftCollection(userNftCollectionId);
+      userNftCollection = newUserNftCollection(userNftCollectionId);
       userNftCollection.user = userId;
       userNftCollection.collection = collectionId;
       userNftCollection.save();
     }
 
-    let oracle = IPriceOracleGetter.bind(Address.fromString(ORACLE));
-    utils.updateCollectionPrice(collection, oracle);
-
-    utils.addNftToken(
+    addNftToken(
       userNftCollection,
       event.params.tokenIds[i],
       event.params.amounts[i]
@@ -438,12 +397,7 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
     let tokenValue = event.params.amounts[i].times(collection.floorPrice);
     user.nftCollateral = user.nftCollateral.plus(tokenValue);
     user.totalCollateral = user.totalCollateral.plus(tokenValue);
-    user = utils.updateUserState(
-      user,
-      tokenValue,
-      collection.ltv,
-      collection.liqThreshold
-    );
+    user = updateUserState(user, POOLID);
   }
 
   user.save();
@@ -454,7 +408,7 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
   let user = User.load(userId);
   if (!user) {
     log.warning("Found withdraw event for unknown user - {}", [userId]);
-    user = utils.newUser(userId);
+    user = newUser(userId);
   }
 
   for (let i = 0; i < event.params.nfts.length; i++) {
@@ -473,42 +427,19 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
       log.warning("Found withdraw event for unknown userNftCollection - {}", [
         userNftCollectionId,
       ]);
-      userNftCollection = utils.newUserNftCollection(userNftCollectionId);
+      userNftCollection = newUserNftCollection(userNftCollectionId);
       userNftCollection.user = userId;
       userNftCollection.collection = collectionId;
       userNftCollection.save();
     }
 
-    let oracle = IPriceOracleGetter.bind(Address.fromString(ORACLE));
-    utils.updateCollectionPrice(collection, oracle);
-
-    utils.removeNftToken(
+    removeNftToken(
       userNftCollection,
       event.params.tokenIds[i],
       event.params.amounts[i]
     );
-
-    let tokenValue = event.params.amounts[i].times(collection.floorPrice);
-    user.nftCollateral = user.nftCollateral.minus(tokenValue);
-    user.totalCollateral = user.totalCollateral.minus(tokenValue);
-    user = utils.updateUserState(
-      user,
-      tokenValue.neg(),
-      collection.ltv,
-      collection.liqThreshold
-    );
   }
+  user = updateUserState(user, POOLID);
 
   user.save();
-}
-
-export function handleNewNFTPrice(event: NewNFTPrice): void {
-  let collectionId = event.params.asset.toHex();
-  let collection = NftCollection.load(collectionId);
-  if (!collection) {
-    log.warning("NewNFTPrice for unknown collection  - {}", [collectionId]);
-    return;
-  }
-  collection.floorPrice = event.params.price;
-  collection.save();
 }

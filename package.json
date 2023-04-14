@@ -10,8 +10,8 @@
     "remove-local": "graph remove --node http://localhost:8020/ lending-subgraph",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 lending-subgraph",
     "test": "graph test",
-    "prepare:goerli-bluechip": "mustache config/goerli-bluechip.json subgraph.template.yaml > subgraph.yaml && mustache config/goerli-bluechip.json src/lending-pool.templete.ts > src/lending-pool.ts",
-    "prepare:goerli-growth": "mustache config/goerli-growth.json subgraph.template.yaml > subgraph.yaml && mustache config/goerli-growth.json src/lending-pool.templete.ts > src/lending-pool.ts"
+    "prepare:goerli-bluechip": "mustache config/goerli-bluechip.json subgraph.template.yaml > subgraph.yaml && mustache config/goerli-bluechip.json src/utils/consts.template.ts > src/utils/consts.ts",
+    "prepare:goerli-growth": "mustache config/goerli-growth.json subgraph.template.yaml > subgraph.yaml && mustache config/goerli-growth.json src/utils/consts.template.ts > src/utils/consts.ts"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.30.4",

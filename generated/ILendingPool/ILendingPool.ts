@@ -100,6 +100,24 @@ export class Deposited__Params {
   }
 }
 
+export class Initialized extends ethereum.Event {
+  get params(): Initialized__Params {
+    return new Initialized__Params(this);
+  }
+}
+
+export class Initialized__Params {
+  _event: Initialized;
+
+  constructor(event: Initialized) {
+    this._event = event;
+  }
+
+  get version(): i32 {
+    return this._event.parameters[0].value.toI32();
+  }
+}
+
 export class Liquidated extends ethereum.Event {
   get params(): Liquidated__Params {
     return new Liquidated__Params(this);
@@ -113,16 +131,16 @@ export class Liquidated__Params {
     this._event = event;
   }
 
-  get nfts(): Array<Address> {
-    return this._event.parameters[0].value.toAddressArray();
+  get nft(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 
-  get tokenIds(): Array<BigInt> {
-    return this._event.parameters[1].value.toBigIntArray();
+  get tokenId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
   }
 
-  get amounts(): Array<BigInt> {
-    return this._event.parameters[2].value.toBigIntArray();
+  get amount(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 
   get debt(): Address {
@@ -141,8 +159,12 @@ export class Liquidated__Params {
     return this._event.parameters[6].value.toAddress();
   }
 
+  get to(): Address {
+    return this._event.parameters[7].value.toAddress();
+  }
+
   get receiveTNFT(): boolean {
-    return this._event.parameters[7].value.toBoolean();
+    return this._event.parameters[8].value.toBoolean();
   }
 }
 
@@ -482,22 +504,19 @@ export class ILendingPool__getUserAssetValuesResult {
   }
 }
 
-export class ILendingPool__getUserStateResult {
+export class ILendingPool__getUserConfigResult {
   value0: BigInt;
   value1: BigInt;
-  value2: BigInt;
 
-  constructor(value0: BigInt, value1: BigInt, value2: BigInt) {
+  constructor(value0: BigInt, value1: BigInt) {
     this.value0 = value0;
     this.value1 = value1;
-    this.value2 = value2;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     return map;
   }
 
@@ -507,55 +526,126 @@ export class ILendingPool__getUserStateResult {
 
   getValue1(): BigInt {
     return this.value1;
-  }
-
-  getValue2(): BigInt {
-    return this.value2;
   }
 }
 
-export class ILendingPool__getUserValuesResult {
-  value0: BigInt;
-  value1: BigInt;
-  value2: BigInt;
-  value3: BigInt;
-
-  constructor(value0: BigInt, value1: BigInt, value2: BigInt, value3: BigInt) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-    this.value3 = value3;
+export class ILendingPool__getUserStateResultValue0Struct extends ethereum.Tuple {
+  get borrowableLiq(): BigInt {
+    return this[0].toBigInt();
   }
 
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
-    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
-    return map;
+  get nftLiq(): BigInt {
+    return this[1].toBigInt();
   }
 
-  getValue0(): BigInt {
-    return this.value0;
+  get totalCollateralInEth(): BigInt {
+    return this[2].toBigInt();
   }
 
-  getValue1(): BigInt {
-    return this.value1;
+  get totalDebtInEth(): BigInt {
+    return this[3].toBigInt();
   }
 
-  getValue2(): BigInt {
-    return this.value2;
+  get ltv(): BigInt {
+    return this[4].toBigInt();
   }
 
-  getValue3(): BigInt {
-    return this.value3;
+  get liqThreshold(): BigInt {
+    return this[5].toBigInt();
+  }
+
+  get hf(): BigInt {
+    return this[6].toBigInt();
   }
 }
 
 export class ILendingPool extends ethereum.SmartContract {
   static bind(address: Address): ILendingPool {
     return new ILendingPool("ILendingPool", address);
+  }
+
+  ADDRESS_PROVIDER(): Address {
+    let result = super.call(
+      "ADDRESS_PROVIDER",
+      "ADDRESS_PROVIDER():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_ADDRESS_PROVIDER(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "ADDRESS_PROVIDER",
+      "ADDRESS_PROVIDER():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  MAX_NUMBER_NFT_RESERVES(): BigInt {
+    let result = super.call(
+      "MAX_NUMBER_NFT_RESERVES",
+      "MAX_NUMBER_NFT_RESERVES():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_MAX_NUMBER_NFT_RESERVES(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "MAX_NUMBER_NFT_RESERVES",
+      "MAX_NUMBER_NFT_RESERVES():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  MAX_NUMBER_RESERVES(): BigInt {
+    let result = super.call(
+      "MAX_NUMBER_RESERVES",
+      "MAX_NUMBER_RESERVES():(uint256)",
+      []
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_MAX_NUMBER_RESERVES(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "MAX_NUMBER_RESERVES",
+      "MAX_NUMBER_RESERVES():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  NAME(): string {
+    let result = super.call("NAME", "NAME():(string)", []);
+
+    return result[0].toString();
+  }
+
+  try_NAME(): ethereum.CallResult<string> {
+    let result = super.tryCall("NAME", "NAME():(string)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
   }
 
   getAssetValues(asset: Address): ILendingPool__getAssetValuesResult {
@@ -589,29 +679,6 @@ export class ILendingPool extends ethereum.SmartContract {
         value[1].toBigInt()
       )
     );
-  }
-
-  getNftReserveConfig(asset: Address): BigInt {
-    let result = super.call(
-      "getNftReserveConfig",
-      "getNftReserveConfig(address):(uint256)",
-      [ethereum.Value.fromAddress(asset)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getNftReserveConfig(asset: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getNftReserveConfig",
-      "getNftReserveConfig(address):(uint256)",
-      [ethereum.Value.fromAddress(asset)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   getNftReserveData(
@@ -680,21 +747,24 @@ export class ILendingPool extends ethereum.SmartContract {
     );
   }
 
-  getReserveConfig(asset: Address): BigInt {
+  getReserveConfig(asset: Address, isNft: boolean): BigInt {
     let result = super.call(
       "getReserveConfig",
-      "getReserveConfig(address):(uint256)",
-      [ethereum.Value.fromAddress(asset)]
+      "getReserveConfig(address,bool):(uint256)",
+      [ethereum.Value.fromAddress(asset), ethereum.Value.fromBoolean(isNft)]
     );
 
     return result[0].toBigInt();
   }
 
-  try_getReserveConfig(asset: Address): ethereum.CallResult<BigInt> {
+  try_getReserveConfig(
+    asset: Address,
+    isNft: boolean
+  ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getReserveConfig",
-      "getReserveConfig(address):(uint256)",
-      [ethereum.Value.fromAddress(asset)]
+      "getReserveConfig(address,bool):(uint256)",
+      [ethereum.Value.fromAddress(asset), ethereum.Value.fromBoolean(isNft)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -858,72 +928,57 @@ export class ILendingPool extends ethereum.SmartContract {
     );
   }
 
-  getUserConfig(user: Address): BigInt {
+  getUserConfig(user: Address): ILendingPool__getUserConfigResult {
     let result = super.call(
       "getUserConfig",
-      "getUserConfig(address):(uint256)",
+      "getUserConfig(address):(uint256,uint256)",
       [ethereum.Value.fromAddress(user)]
     );
 
-    return result[0].toBigInt();
+    return new ILendingPool__getUserConfigResult(
+      result[0].toBigInt(),
+      result[1].toBigInt()
+    );
   }
 
-  try_getUserConfig(user: Address): ethereum.CallResult<BigInt> {
+  try_getUserConfig(
+    user: Address
+  ): ethereum.CallResult<ILendingPool__getUserConfigResult> {
     let result = super.tryCall(
       "getUserConfig",
-      "getUserConfig(address):(uint256)",
+      "getUserConfig(address):(uint256,uint256)",
       [ethereum.Value.fromAddress(user)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getUserNftConfig(user: Address): BigInt {
-    let result = super.call(
-      "getUserNftConfig",
-      "getUserNftConfig(address):(uint256)",
-      [ethereum.Value.fromAddress(user)]
+    return ethereum.CallResult.fromValue(
+      new ILendingPool__getUserConfigResult(
+        value[0].toBigInt(),
+        value[1].toBigInt()
+      )
     );
-
-    return result[0].toBigInt();
   }
 
-  try_getUserNftConfig(user: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getUserNftConfig",
-      "getUserNftConfig(address):(uint256)",
-      [ethereum.Value.fromAddress(user)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getUserState(user: Address): ILendingPool__getUserStateResult {
+  getUserState(user: Address): ILendingPool__getUserStateResultValue0Struct {
     let result = super.call(
       "getUserState",
-      "getUserState(address):(uint256,uint256,uint256)",
+      "getUserState(address):((uint256,uint256,uint256,uint256,uint256,uint256,uint256))",
       [ethereum.Value.fromAddress(user)]
     );
 
-    return new ILendingPool__getUserStateResult(
-      result[0].toBigInt(),
-      result[1].toBigInt(),
-      result[2].toBigInt()
+    return changetype<ILendingPool__getUserStateResultValue0Struct>(
+      result[0].toTuple()
     );
   }
 
   try_getUserState(
     user: Address
-  ): ethereum.CallResult<ILendingPool__getUserStateResult> {
+  ): ethereum.CallResult<ILendingPool__getUserStateResultValue0Struct> {
     let result = super.tryCall(
       "getUserState",
-      "getUserState(address):(uint256,uint256,uint256)",
+      "getUserState(address):((uint256,uint256,uint256,uint256,uint256,uint256,uint256))",
       [ethereum.Value.fromAddress(user)]
     );
     if (result.reverted) {
@@ -931,47 +986,8 @@ export class ILendingPool extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new ILendingPool__getUserStateResult(
-        value[0].toBigInt(),
-        value[1].toBigInt(),
-        value[2].toBigInt()
-      )
-    );
-  }
-
-  getUserValues(user: Address): ILendingPool__getUserValuesResult {
-    let result = super.call(
-      "getUserValues",
-      "getUserValues(address):(uint256,uint256,uint256,uint256)",
-      [ethereum.Value.fromAddress(user)]
-    );
-
-    return new ILendingPool__getUserValuesResult(
-      result[0].toBigInt(),
-      result[1].toBigInt(),
-      result[2].toBigInt(),
-      result[3].toBigInt()
-    );
-  }
-
-  try_getUserValues(
-    user: Address
-  ): ethereum.CallResult<ILendingPool__getUserValuesResult> {
-    let result = super.tryCall(
-      "getUserValues",
-      "getUserValues(address):(uint256,uint256,uint256,uint256)",
-      [ethereum.Value.fromAddress(user)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new ILendingPool__getUserValuesResult(
-        value[0].toBigInt(),
-        value[1].toBigInt(),
-        value[2].toBigInt(),
-        value[3].toBigInt()
+      changetype<ILendingPool__getUserStateResultValue0Struct>(
+        value[0].toTuple()
       )
     );
   }
@@ -1227,7 +1243,7 @@ export class InitReserveCall__Inputs {
     return this._call.inputValues[2].value.toAddress();
   }
 
-  get debtTokenAddress(): Address {
+  get debtAddress(): Address {
     return this._call.inputValues[3].value.toAddress();
   }
 
@@ -1240,6 +1256,36 @@ export class InitReserveCall__Outputs {
   _call: InitReserveCall;
 
   constructor(call: InitReserveCall) {
+    this._call = call;
+  }
+}
+
+export class InitializeCall extends ethereum.Call {
+  get inputs(): InitializeCall__Inputs {
+    return new InitializeCall__Inputs(this);
+  }
+
+  get outputs(): InitializeCall__Outputs {
+    return new InitializeCall__Outputs(this);
+  }
+}
+
+export class InitializeCall__Inputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+
+  get provider(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class InitializeCall__Outputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
     this._call = call;
   }
 }
@@ -1261,23 +1307,23 @@ export class LiquidateCall__Inputs {
     this._call = call;
   }
 
-  get nfts(): Array<Address> {
-    return this._call.inputValues[0].value.toAddressArray();
+  get nft(): Address {
+    return this._call.inputValues[0].value.toAddress();
   }
 
-  get tokenIds(): Array<BigInt> {
-    return this._call.inputValues[1].value.toBigIntArray();
-  }
-
-  get amounts(): Array<BigInt> {
-    return this._call.inputValues[2].value.toBigIntArray();
+  get tokenId(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
   }
 
   get debt(): Address {
-    return this._call.inputValues[3].value.toAddress();
+    return this._call.inputValues[2].value.toAddress();
   }
 
   get user(): Address {
+    return this._call.inputValues[3].value.toAddress();
+  }
+
+  get to(): Address {
     return this._call.inputValues[4].value.toAddress();
   }
 
@@ -1336,40 +1382,6 @@ export class RepayCall__Outputs {
   }
 }
 
-export class SetNftReserveConfigCall extends ethereum.Call {
-  get inputs(): SetNftReserveConfigCall__Inputs {
-    return new SetNftReserveConfigCall__Inputs(this);
-  }
-
-  get outputs(): SetNftReserveConfigCall__Outputs {
-    return new SetNftReserveConfigCall__Outputs(this);
-  }
-}
-
-export class SetNftReserveConfigCall__Inputs {
-  _call: SetNftReserveConfigCall;
-
-  constructor(call: SetNftReserveConfigCall) {
-    this._call = call;
-  }
-
-  get asset(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get configuration(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class SetNftReserveConfigCall__Outputs {
-  _call: SetNftReserveConfigCall;
-
-  constructor(call: SetNftReserveConfigCall) {
-    this._call = call;
-  }
-}
-
 export class SetReserveConfigCall extends ethereum.Call {
   get inputs(): SetReserveConfigCall__Inputs {
     return new SetReserveConfigCall__Inputs(this);
@@ -1391,8 +1403,12 @@ export class SetReserveConfigCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
+  get isNft(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+
   get configuration(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+    return this._call.inputValues[2].value.toBigInt();
   }
 }
 
@@ -1468,36 +1484,6 @@ export class SetUserUsingAsCollateralCall__Outputs {
   _call: SetUserUsingAsCollateralCall;
 
   constructor(call: SetUserUsingAsCollateralCall) {
-    this._call = call;
-  }
-}
-
-export class SetWETHGatewayCall extends ethereum.Call {
-  get inputs(): SetWETHGatewayCall__Inputs {
-    return new SetWETHGatewayCall__Inputs(this);
-  }
-
-  get outputs(): SetWETHGatewayCall__Outputs {
-    return new SetWETHGatewayCall__Outputs(this);
-  }
-}
-
-export class SetWETHGatewayCall__Inputs {
-  _call: SetWETHGatewayCall;
-
-  constructor(call: SetWETHGatewayCall) {
-    this._call = call;
-  }
-
-  get WETHGateway(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class SetWETHGatewayCall__Outputs {
-  _call: SetWETHGatewayCall;
-
-  constructor(call: SetWETHGatewayCall) {
     this._call = call;
   }
 }

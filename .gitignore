@@ -5,6 +5,4 @@ build
 subgraph.yaml
 lendingpool.yaml
 
-src/lending-pool.ts
-
 .DS_Store
