@@ -20,7 +20,7 @@ export interface ApplicationState {
   readonly nftCollateral: string
   readonly userNftConfig: string
   readonly ownedNfts: OwnedNft[]
-  readonly ownedPunkNfts: any[]
+  readonly ownedPunkNfts: OwnedNft[]
   readonly ethLiquidity: string
   readonly collateralsType: string
   readonly ethDebt: string

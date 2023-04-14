@@ -126,7 +126,7 @@ export default function Dashboard() {
           arr.push(nft)
         }
       }
-      dispatch(setAccountPunksNfts(arr))
+      dispatch(setAccountPunksNfts(JSON.parse(JSON.stringify(arr))))
     }
   }, [address, alchemy, client, collection, dispatch])
   useEffect(() => {

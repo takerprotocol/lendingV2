@@ -153,7 +153,6 @@ export default function WithdrawSelectedModal({
       })
     )
   }, [transactions])
-
   useEffect(() => {
     if (getWayFlag === 1) {
       if (punkGateway && erc721Contract && address) {

@@ -131,7 +131,7 @@ export default function WithdrawNFT({
   }, [checkedIndex, floorPrice])
   const borrowLimitUsed = useCollateralBorrowLimitUsed(withdrawAmount)
   const withdrawLargeAmount = useMemo(() => {
-    return new BigNumber(borrowLimitUsed).gte(1)
+    return new BigNumber(borrowLimitUsed).gte(100)
   }, [borrowLimitUsed])
   // function ButtonWithdraw() {
   //   if (depositType === 'shut') {
