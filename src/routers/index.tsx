@@ -240,6 +240,7 @@ export default function CustomizeRoutes() {
           item.liqThreshold = element.liqThreshold
           item.ltv = element.ltv
           item.tToken = element.tToken
+          item.tNFT = element.tNFT
           nfts.push(item)
           if (nfts.length === lendingPoolRes.data.lendingPools[0].nfts.length) {
             dispatch(setLoading(false))

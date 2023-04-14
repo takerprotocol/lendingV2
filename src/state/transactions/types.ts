@@ -23,6 +23,7 @@ export enum TransactionType {
   REPAY,
   APPROVAL_NFT,
   APPROVAL_PUNKS_NFT,
+  APPROVAL_WITHDRAW_PUNK_NFT,
   LIQUIDATE,
   USE_COLLATERAL,
 }
@@ -73,6 +74,13 @@ export interface ApprovePunksNFTTransactionInfo extends BaseTransactionInfo {
   message: string
 }
 
+export interface ApproveWithdrawPunksNFTTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.APPROVAL_WITHDRAW_PUNK_NFT
+  spender: string
+  amount: string
+  message: string
+}
+
 export interface LiquidateTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.LIQUIDATE
   amount: string
@@ -92,6 +100,7 @@ export type TransactionInfo =
   | LiquidateTransactionInfo
   | UseCollateralTransactionInfo
   | ApprovePunksNFTTransactionInfo
+  | ApproveWithdrawPunksNFTTransactionInfo
 
 export interface TransactionDetails {
   hash: string

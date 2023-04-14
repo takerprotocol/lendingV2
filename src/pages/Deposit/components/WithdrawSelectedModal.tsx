@@ -40,6 +40,15 @@ const style = {
   boxShadow: '0px 15px 30px rgba(20, 20, 42, 0.2)',
   borderRadius: '12px',
 }
+
+const StepTypography = styled(Typography)`
+  font-weight: 500;
+  font-size: 12px;
+  margin-right: 8px;
+  line-height: 160%;
+  color: #ffffff;
+`
+
 export const FlexEndBox = styled(Box)`
   display: flex;
   margin: 8px 8px 0px 0px;
@@ -76,12 +85,14 @@ interface NFTsSelectedType {
   type: string
   amount: string
   getWayFlag: number
+  tNFT: string
   checkedIndex: string[]
 }
 export default function WithdrawSelectedModal({
   open,
   getWayFlag,
   close,
+  tNFT,
   data,
   type,
   amount,
@@ -110,6 +121,20 @@ export default function WithdrawSelectedModal({
   const [growthLoading, setGrowthLoading] = useState(false)
   const [client, setClient] = useState<any>(null)
   const { chainId } = useActiveWeb3React()
+  const [isApproved, setIsApproved] = useState<number>(0)
+  const erc721Contract = useContract(tNFT, MockERC721Abi)
+
+  const approvalWithdrawPunksNftTransaction = useMemo(() => {
+    return Object.keys(transactions).filter((hash) => {
+      const tx = transactions[hash]
+      return tx && tx.receipt && tx.info.type === TransactionType.APPROVAL_WITHDRAW_PUNK_NFT && isTransactionRecent(tx)
+    }).length
+  }, [transactions])
+  useEffect(() => {
+    if (approvalWithdrawPunksNftTransaction > 0) {
+      setIsApproved(2)
+    }
+  }, [approvalWithdrawPunksNftTransaction])
 
   useEffect(() => {
     if (chainId) {
@@ -130,6 +155,18 @@ export default function WithdrawSelectedModal({
   }, [transactions])
 
   useEffect(() => {
+    if (getWayFlag === 0) {
+      if (punkGateway && erc721Contract && address) {
+        erc721Contract.isApprovedForAll(address, punkGateway.address).then((res: boolean) => {
+          if (res) {
+            setIsApproved(2)
+          }
+        })
+      }
+    }
+  }, [address, punkGateway, erc721Contract, getWayFlag])
+
+  useEffect(() => {
     if (flag) {
       //setLoading(false)
       dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
@@ -139,39 +176,59 @@ export default function WithdrawSelectedModal({
     // setLoading(true)
     dashboardType === 1 ? setBlueChipLoading(true) : setGrowthLoading(true)
     if (contract && address && ercContract) {
-      ;(getWayFlag === 0
-        ? contract.withdrawNFTs(
-            data.map((el) => el.contract.address),
-            data.map((el) => el.tokenId),
-            amountList.map((el) => el.amount),
-            address
-            // { gasLimit }
-          )
-        : punkGateway &&
-          punkGateway.withdraw(
-            contract.address,
-            data.map((el) => el.tokenId),
-            address
-          )
-      )
-        .then((res: any) => {
-          if (res && res.hash) {
-            client.clearStore()
+      if (getWayFlag === 1 && isApproved === 0 && erc721Contract) {
+        erc721Contract
+          .setApprovalForAll(punkGateway && punkGateway.address, true)
+          .then((res: any) => {
             // setLoading(false)
             dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
-            close(false)
+            setIsApproved(1)
             addTransaction(res, {
-              type: TransactionType.WITHDRAW_NFT,
-              recipient: address,
+              type: TransactionType.APPROVAL_WITHDRAW_PUNK_NFT,
+              spender: contract.address,
               amount,
-              count: data.length,
+              message: 'Approve Withdraw NFT',
             })
-          }
-        })
-        .catch(() => {
-          // setLoading(false)
-          dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
-        })
+          })
+          .catch(() => {
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+          })
+      } else {
+        ;(getWayFlag === 0
+          ? contract.withdrawNFTs(
+              data.map((el) => el.contract.address),
+              data.map((el) => el.tokenId),
+              amountList.map((el) => el.amount),
+              address
+              // { gasLimit }
+            )
+          : punkGateway &&
+            punkGateway.withdraw(
+              contract.address,
+              data.map((el) => el.tokenId),
+              address
+            )
+        )
+          .then((res: any) => {
+            if (res && res.hash) {
+              client.clearStore()
+              // setLoading(false)
+              dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+              close(false)
+              addTransaction(res, {
+                type: TransactionType.WITHDRAW_NFT,
+                recipient: address,
+                amount,
+                count: data.length,
+              })
+            }
+          })
+          .catch(() => {
+            // setLoading(false)
+            dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
+          })
+      }
     } else {
       // setLoading(false)
       dashboardType === 1 ? setBlueChipLoading(false) : setGrowthLoading(false)
@@ -346,18 +403,34 @@ export default function WithdrawSelectedModal({
             </Typography>
           </FlexBox>
         </Box>
-        <Button
-          variant="contained"
-          sx={{ width: '372px', height: '54px' }}
-          disabled={riskLevelWarning}
-          color={riskLevelWarning ? 'error' : 'primary'}
-          onClick={() => {
-            withdraw()
-          }}
-        >
-          {loading && <Loading></Loading>}
-          Withdraw {data.length} NFTs
-        </Button>
+        <FlexBox justifyContent="space-between">
+          {isApproved !== 2 && (
+            <Button
+              variant="contained"
+              disabled={loading}
+              sx={{ width: '176px', height: '54px', marginRight: '16px' }}
+              color={riskLevelWarning ? 'error' : 'primary'}
+              onClick={() => {
+                withdraw()
+              }}
+            >
+              {loading ? <Loading></Loading> : <></>}
+              {!loading && <StepTypography sx={{ opacity: '0.7' }}>Step1</StepTypography>}Approve
+            </Button>
+          )}
+          <Button
+            variant="contained"
+            disabled={isApproved !== 2}
+            sx={{ width: isApproved !== 2 ? '176px' : '100%', height: '54px' }}
+            color={riskLevelWarning ? 'error' : 'primary'}
+            onClick={() => {
+              withdraw()
+            }}
+          >
+            {!loading && isApproved !== 2 && <StepTypography>Step2</StepTypography>}
+            {isApproved === 0 ? 'Deposit' : `Withdraw ${data.length} NFTs`}
+          </Button>
+        </FlexBox>
       </Box>
     </Modal>
   )

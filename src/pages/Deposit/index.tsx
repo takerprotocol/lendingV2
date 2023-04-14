@@ -132,7 +132,6 @@ export default function Deposit() {
   const transactions = useAllTransactions()
   const [client, setClient] = useState<any>(null)
   const dashboardType = useDashboardType()
-
   const depositFlag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
@@ -280,6 +279,7 @@ export default function Deposit() {
             ></DepositNFT>
             <WithdrawNFT
               loading={loading}
+              tNFT={collection ? collection.tNFT : ''}
               list={withdrawList}
               getWayFlag={collection && collection.name.indexOf('punks') > -1 ? 1 : 0}
               floorPrice={collection ? collection.floorPrice : '0'}

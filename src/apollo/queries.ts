@@ -286,7 +286,7 @@ export const UserReserve = (id: string) => {
 export const UserPunkNft = (owner: string) => {
   const queryString = `
     query cryptoPunks {
-      cryptoPunks(owner: "${owner.toLocaleLowerCase()}") {
+      cryptoPunks(where: {owner: "${owner.toLocaleLowerCase()}"}) {
         id
         punkIndex
         owner

@@ -187,14 +187,25 @@ export default function NFTsSelectedModal({
   }, [data, floorPrice])
   const collateralRiskLevel = useCollateralRiskLevel(amount)
   useEffect(() => {
-    if (contract && ercContract && address) {
-      ercContract.isApprovedForAll(address, contract.address).then((res: boolean) => {
-        if (res) {
-          setIsApproved(2)
-        }
-      })
+    if (getWayFlag === 0) {
+      if (contract && ercContract && address) {
+        ercContract.isApprovedForAll(address, contract.address).then((res: boolean) => {
+          if (res) {
+            setIsApproved(2)
+          }
+        })
+      }
+    } else {
+      punksContract &&
+        punksContract.punksOfferedForSale(data[0].tokenId).then((res: any) => {
+          if (res) {
+            if (res.onlySellTo === punkGateway?.address && res.minValue.toString() === '0') {
+              setIsApproved(2)
+            }
+          }
+        })
     }
-  }, [contract, address, ercContract, flag])
+  }, [contract, address, ercContract, flag, getWayFlag, punksContract, punkGateway?.address, data])
   const upBorrowLimitUsed = useCollateralBorrowLimitUsed(times(amount, type === 'Deposit' ? 1 : -1))
   const borrowLimit = useBorrowLimit() //操作前的borrowLimit
   const upBorrowLimit = useBorrowLimit(times(amount, type === 'Deposit' ? 1 : -1)) //操作后的borrowLimit

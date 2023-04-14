@@ -82,10 +82,12 @@ interface WithdrawNFTProps {
   list: any[]
   floorPrice: string
   loading: boolean
+  tNFT: string
   getWayFlag: number
 }
 export default function WithdrawNFT({
   list,
+  tNFT,
   loading,
   floorPrice,
   checkedIndex,
@@ -97,7 +99,6 @@ export default function WithdrawNFT({
   const [openSelect, setOpenSelect] = useState<boolean>(false)
   const [pageType, setPageType] = useState<number>(1) //page
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
-
   const transactions = useAllTransactions()
   const NftList = useMemo(() => {
     if (pageType === 1) {
@@ -281,6 +282,7 @@ export default function WithdrawNFT({
           </DepositedNFTsBox>
           <WithdrawSelectedModal
             type={withdraw}
+            tNFT={tNFT}
             checkedIndex={checkedIndex}
             amount={withdrawAmount}
             getWayFlag={getWayFlag}
