@@ -110,7 +110,7 @@ export default function NFTsSelectedModal({
   const riskLevelTag = getRiskLevelTag(heath)
   const ercContract = useContract(id, MockERC721Abi)
   const punksContract = useContract(PUNKS_CONTRACT_ADDRESS, CryptoPunksAbi)
-  const [isApproved, setIsApproved] = useState<number>(2)
+  const [isApproved, setIsApproved] = useState<number>(0)
   const addTransaction = useTransactionAdder()
   const transactions = useAllTransactions()
   const borrowLimitUsed = useCollateralBorrowLimitUsed()
