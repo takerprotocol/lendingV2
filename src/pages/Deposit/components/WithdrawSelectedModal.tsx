@@ -206,10 +206,7 @@ export default function WithdrawSelectedModal({
             punkGateway.withdraw(
               contract.address,
               data.map((el) => el.tokenId),
-              address,
-              {
-                gasLimit: 210000,
-              }
+              address
             )
         )
           .then((res: any) => {
