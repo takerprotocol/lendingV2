@@ -280,7 +280,11 @@ export default function Deposit() {
             <WithdrawNFT
               loading={loading}
               tNFT={collection ? collection.tNFT : ''}
-              list={withdrawList}
+              list={
+                collection && collection.name && collection.name.toLocaleLowerCase().indexOf('punks') > -1
+                  ? withdrawList.filter((el: any) => !punks.some((pel) => pel.tokenId === el.id.split('-')[2]))
+                  : withdrawList
+              }
               getWayFlag={collection && collection.name.indexOf('punks') > -1 ? 1 : 0}
               floorPrice={collection ? collection.floorPrice : '0'}
               checkedIndex={withdrawCheckedIndex}
