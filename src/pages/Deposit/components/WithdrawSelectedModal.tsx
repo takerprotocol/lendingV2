@@ -237,7 +237,6 @@ export default function WithdrawSelectedModal({
   const riskLevelWarning = useMemo(() => {
     return new BigNumber(numbro.unformat(collateralRiskLevel)).lt(150) && type === 'withdraw'
   }, [collateralRiskLevel, type])
-
   return (
     <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box sx={style}>
@@ -259,12 +258,12 @@ export default function WithdrawSelectedModal({
           </Typography>
         </FlexBox>
         <WithdrawList>
-          {data.map((el: Nft, index: number) => (
+          {data.map((el: any, index: number) => (
             <FlexBox mb={Number(index + 1) === data.length ? '0' : '24px'} key={`Withdraw${index}`}>
-              <img width="48px" height={'48px'} src={el.media[0]?.gateway || ''} alt="" />
+              <img width="48px" height={'48px'} src={el.gateway || ''} alt="" />
               <Box width="232px" ml="12px" mr="24px">
                 <BodyTypography color="#6E7191 !important" fontWeight="600 !important">
-                  {el.rawMetadata?.name}
+                  {el.title}
                 </BodyTypography>
               </Box>
               <BodyTypography>x 1</BodyTypography>

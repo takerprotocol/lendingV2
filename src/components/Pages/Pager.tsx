@@ -35,7 +35,6 @@ interface NFTsListType {
   setPageType: Function
 }
 export default function Pager({ pageType, setPageType, list, TypeKey }: NFTsListType) {
-  console.log('🚀 ~ file: Pager.tsx:37 ~ Pager ~ pageType:', pageType)
   const totalPage = useMemo(() => Math.ceil(list.length / 9), [list])
   return (
     <Box display={list.length > 9 ? '' : 'none'}>

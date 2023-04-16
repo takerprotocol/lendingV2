@@ -7,7 +7,7 @@ import BlueChipNFTs from './components/BlueChipNFTs'
 import DataNFTs from './components/DataNFTs'
 import { useCollections, useLoading, useShowChangeNetWork } from 'state/application/hooks'
 import { useAddress, useDashboardType, useLoginWalletType, useMobileMenuType, useMobileType } from 'state/user/hooks'
-import { getAlchemyNftMetadata, useDepositableNfts } from 'services/module/deposit'
+import { useDepositableNfts } from 'services/module/deposit'
 import { useCallback, useEffect, useState } from 'react'
 import { isMobile } from 'utils/userAgent'
 import { setAccountNfts, setAccountPunksNfts, setLoginWalletType, setMobileType } from 'state/user/reducer'
@@ -31,8 +31,9 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { useAlchemy } from 'hooks/useAlchemy'
 import { getClient } from 'apollo/client'
 import { UserPunkNft } from 'apollo/queries'
-import { Nft } from '@alch/alchemy-sdk'
+// import { Nft } from '@alch/alchemy-sdk'
 import { PUNKS_ADDRESS } from 'config'
+import { getMultipleTokenId } from 'services/module/collection'
 
 const Body = styled(Box)`
   background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(${BgIcon});
@@ -119,19 +120,26 @@ export default function Dashboard() {
       const res = await client.query({
         query: UserPunkNft(`${address}`),
       })
-      const arr: Array<Nft> = []
+      // const arr: Array<Nft> = []
+
       if (res && res.data && res.data.cryptoPunks && alchemy) {
-        for (let i = 0, length = res.data.cryptoPunks.length; i < length; i++) {
-          const nft = await getAlchemyNftMetadata(PUNKS_ADDRESS, res.data.cryptoPunks[i].punkIndex, alchemy)
-          arr.push(nft)
-        }
+        const arrTokenId = res.data.cryptoPunks.map((el: any) => el.punkIndex)
+        await getMultipleTokenId(PUNKS_ADDRESS, arrTokenId).then((req) => {
+          dispatch(setAccountPunksNfts(JSON.parse(JSON.stringify(req))))
+        })
+        // for (let i = 0, length = res.data.cryptoPunks.length; i < length; i++) {
+        //   const nft = await getAlchemyNftMetadata(PUNKS_ADDRESS, res.data.cryptoPunks[i].punkIndex, alchemy)
+        //   arr.push(nft)
+        // }
       }
-      dispatch(setAccountPunksNfts(JSON.parse(JSON.stringify(arr))))
+      // dispatch(setAccountPunksNfts(JSON.parse(JSON.stringify(arr))))
     }
   }, [address, alchemy, client, collection, dispatch])
   useEffect(() => {
-    getPunkNft()
-  }, [getPunkNft])
+    if (type === 1) {
+      getPunkNft()
+    }
+  }, [getPunkNft, type])
   const mobile = useMobileType()
   return (
     <>

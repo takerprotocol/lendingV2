@@ -7,20 +7,20 @@ import redXButton from 'assets/images/svg/deposit/redXButton.svg'
 import NFTsList from './NFTsList'
 import Pager from '../../../components/Pages/Pager'
 import AvailableAndDepositedSkeleton from './depositSkeleton/AvailableAndDepositedSkeleton'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import SureModal from './SureModal'
 import BigNumber from 'bignumber.js'
-import { getAlchemyNftMetadata } from 'services/module/deposit'
-import { Nft } from '@alch/alchemy-sdk'
+// import { Nft } from '@alch/alchemy-sdk'
 import { useCollateralBorrowLimitUsed } from 'state/user/hooks'
 import WithdrawSelectedModal from './WithdrawSelectedModal'
-import { useAlchemy } from 'hooks/useAlchemy'
+// import { useAlchemy } from 'hooks/useAlchemy'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { CenterBox } from 'styleds'
 import { fromWei } from 'web3-utils'
 import { fixedFormat, minus, times } from 'utils'
-import { PUNKS_ADDRESS } from 'config'
+// import { getMultipleTokenId } from 'services/module/collection'
+// import { PUNKS_ADDRESS } from 'config'
 
 const DepositedNFTsStyleBox = styled(Box)`
   margin-bottom: 200px;
@@ -80,6 +80,7 @@ interface WithdrawNFTProps {
   setCheckedIndex: Function
   setDepositCheckedIndex: Function
   list: any[]
+  TestWithdrawList: any
   floorPrice: string
   loading: boolean
   tNFT: string
@@ -88,6 +89,7 @@ interface WithdrawNFTProps {
 export default function WithdrawNFT({
   list,
   tNFT,
+  TestWithdrawList,
   loading,
   floorPrice,
   checkedIndex,
@@ -95,18 +97,11 @@ export default function WithdrawNFT({
   setDepositCheckedIndex,
   getWayFlag,
 }: WithdrawNFTProps) {
-  const [withdrawList, setWithdrawList] = useState<Array<Nft>>([])
+  // const [withdrawList] = useState<Array<Nft>>([])
   const [openSelect, setOpenSelect] = useState<boolean>(false)
   const [pageType, setPageType] = useState<number>(1) //page
   const [openSureModal, setOpenSureModal] = useState<boolean>(false)
   const transactions = useAllTransactions()
-  const NftList = useMemo(() => {
-    if (pageType === 1) {
-      return withdrawList.slice(0, 9)
-    } else {
-      return withdrawList.slice(+times(minus(pageType, 1), 9), +times(pageType, 9))
-    }
-  }, [withdrawList, pageType])
   const flag = useMemo(() => {
     return Object.keys(transactions).filter((hash) => {
       const tx = transactions[hash]
@@ -121,7 +116,7 @@ export default function WithdrawNFT({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flag])
-  const alchemy = useAlchemy()
+  // const alchemy = useAlchemy()
   const withdrawAmount = useMemo(() => {
     let totalAmount = '0'
     checkedIndex.forEach((el) => {
@@ -144,32 +139,39 @@ export default function WithdrawNFT({
       return new BigNumber(total).plus(fromWei(floorPrice || '0')).toString()
     }, '0')
   }, [floorPrice, list])
-  const getWithdrawList = useCallback(async () => {
-    if (alchemy) {
-      const arr: Array<Nft> = []
-      for (let i = 0, length = list.length; i < length; i++) {
-        if (list[i].id) {
-          const nft = await getAlchemyNftMetadata(
-            getWayFlag === 1 ? PUNKS_ADDRESS : list[i].id.split('-')[1],
-            list[i].id.split('-')[2],
-            alchemy
-          )
-          arr.push(nft)
-        } else {
-          const nft = await getAlchemyNftMetadata(
-            getWayFlag === 1 ? PUNKS_ADDRESS : list[i].contract.address,
-            list[i].tokenId,
-            alchemy
-          )
-          arr.push(nft)
-        }
-      }
-      setWithdrawList(arr)
+  // const getWithdrawList = useCallback(async () => {
+  //   if (alchemy) {
+  //     const arr: any = []
+  //     const idOrToken: Array<string> = []
+  //     let address = ''
+  //     for (let i = 0, length = list.length; i < length; i++) {
+  //       if (list[i].id) {
+  //         idOrToken.push(list[i].id.split('-')[2])
+  //         address = list[i].id.split('-')[1]
+  //       } else {
+  //         idOrToken.push(list[i].tokenId)
+  //         address = list[i].contract.address
+  //       }
+  //     }
+  //     // console.log(getWayFlag === 1 ? PUNKS_ADDRESS : address)
+  //     // console.log(idOrToken)
+  //     // console.log(idOrToken)
+
+  //     const nft = await getMultipleTokenId(getWayFlag === 1 ? PUNKS_ADDRESS : address, idOrToken).then((req) => {
+  //       // return setWithdrawList(req)
+  //     })
+  //   }
+  // }, [alchemy, getWayFlag, list])
+  const NftList = useMemo(() => {
+    if (pageType === 1) {
+      return TestWithdrawList && TestWithdrawList.slice(0, 9)
+    } else {
+      return TestWithdrawList && TestWithdrawList.slice(+times(minus(pageType, 1), 9), +times(pageType, 9))
     }
-  }, [alchemy, getWayFlag, list])
-  useEffect(() => {
-    getWithdrawList()
-  }, [getWithdrawList])
+  }, [TestWithdrawList, pageType])
+  // useEffect(() => {
+  //   getWithdrawList()
+  // }, [getWithdrawList])
   return (
     <DepositedNFTsStyleBox
       sx={
@@ -287,7 +289,7 @@ export default function WithdrawNFT({
             amount={withdrawAmount}
             getWayFlag={getWayFlag}
             amountList={list.filter((el) => checkedIndex.includes(el.id.split('-')[2]))}
-            data={withdrawList.filter((el) => checkedIndex.includes(el.tokenId))}
+            data={TestWithdrawList.filter((el: { tokenId: string }) => checkedIndex.includes(el.tokenId))}
             open={openSelect}
             close={setOpenSelect}
           ></WithdrawSelectedModal>

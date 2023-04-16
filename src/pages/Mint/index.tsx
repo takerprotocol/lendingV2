@@ -11,7 +11,7 @@ import { hexToNumberString } from 'web3-utils'
 // import { RetryableError } from 'utils/retry'
 // import { Box, styled } from '@mui/material'
 // import { useState } from 'react'
-const TestBox = styled(Box)`
+const MintBox = styled(Box)`
   padding-top: 100px;
   display: flex;
   flex-direction: column;
@@ -118,7 +118,8 @@ export default function Mint() {
     ]
   }, [collections])
   return (
-    <TestBox>
+    <MintBox>
+      <img src="http://127.0.0.1:3000/ImageUrl/0x77a136db5131bd2a547e56aad40b4e8fbec6e3b7/2" alt="" />
       <TitleBox mb="16px">Please switch to Ethereum Goerli Network</TitleBox>
       <CustomizedSelect
         options={collectionOptions}
@@ -189,6 +190,6 @@ export default function Mint() {
       >
         Generate
       </Button>
-    </TestBox>
+    </MintBox>
   )
 }

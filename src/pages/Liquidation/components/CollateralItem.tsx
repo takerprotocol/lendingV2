@@ -5,8 +5,12 @@ import { useMemo, useState } from 'react'
 import { abbrevAddress } from 'utils/abbrevAddres'
 import { fixedFormat, renderCollectionName } from 'utils'
 import numbro from 'numbro'
-import { LiquidationNftModel } from 'services/type/nft'
+import { useAlchemy } from 'hooks/useAlchemy'
+import { getMultipleAddress } from 'services/module/collection'
 import NFTListPopover from 'pages/Dashboard/components/NFTListPopper'
+// import { useCollections } from 'state/application/hooks'
+// import { LiquidationNftModel } from 'services/type/nft'
+// import NFTListPopover from 'pages/Dashboard/components/NFTListPopper'
 const Card = styled('div')(({ theme }) => ({
   background: '#ffffff',
   border: '1px solid #eff0f6',
@@ -56,7 +60,7 @@ const DataItem = styled(Box)`
 `
 
 const CollectionDataItem = styled(DataItem)`
-  width: 222px;
+  width: 223px;
 `
 
 const StyledCollectionImage = styled('img', {
@@ -65,7 +69,6 @@ const StyledCollectionImage = styled('img', {
   width: 28,
   height: 28,
   borderRadius: 4,
-  backgroundColor: theme.palette.primary.main,
   marginLeft: overflow && index !== 0 ? -6 : 0,
   border: '2px white solid',
   objectFit: 'cover',
@@ -140,7 +143,6 @@ type CollateralItemType = {
   collections: any
   debt: string
   type: string
-  tokens: LiquidationNftModel[]
   riskPercentage: string
   riskLevel: string
   riskLevelTag?: string
@@ -151,7 +153,6 @@ const CollateralItem = ({
   address,
   collateral,
   collections,
-  tokens,
   debt,
   type,
   riskPercentage = '0',
@@ -159,24 +160,41 @@ const CollateralItem = ({
   riskLevel,
   nfts = 0,
 }: CollateralItemType) => {
+  const alchemy = useAlchemy()
+  const [tokens, setTokens] = useState<any>([])
   // const showAllCollections = useCallback(() => tokens, [tokens])
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const img = useMemo(() => {
+    const address = []
+    const arrTokenId = []
+    if (alchemy) {
+      for (let i = 0, length = collections.length; i < length; i++) {
+        address.push(...collections[i].tokens.map((el: any) => el.id.split('-')[1]))
+        arrTokenId.push(...collections[i].tokens.map((el: any) => el.id.split('-')[2]))
+      }
+      getMultipleAddress(address, arrTokenId).then((req: any) => {
+        // setWithdrawList(req)
+        setTokens(req)
+      })
+    }
+  }, [alchemy, collections])
   const overflow = useMemo(() => {
-    return tokens ? tokens.length > 8 : undefined
+    return tokens ? tokens.length > 8 : false
   }, [tokens])
   const Collections = useMemo(() => {
-    if (tokens.length) {
-      return tokens
-        .slice(0, 8)
-        .map((nft: LiquidationNftModel, index: number) => (
-          <CollectionImage
-            key={`collection-${nft.tokenId}${index}`}
-            alt="collection"
-            overflow={overflow}
-            text={`${renderCollectionName(nft.symbol)} #${nft.tokenId}`}
-            index={index}
-            src={nft.media[0]?.gateway}
-          />
-        ))
+    if (tokens) {
+      return tokens.slice(0, 8).map((nft: any, index: number) => (
+        <CollectionImage
+          key={`collection-${nft.tokenId}${index}`}
+          alt="collection"
+          overflow={overflow}
+          text={`${renderCollectionName(nft.symbol)} #${nft.tokenId}`}
+          // text={`${nft.title.trim() || renderCollectionName(collections.symbol)}`}
+          index={index}
+          src={nft.gateway}
+          // src={nft.media[0]?.gateway}
+        />
+      ))
     } else {
       return <NoCollateralText>No NFT collateral</NoCollateralText>
     }
@@ -198,9 +216,8 @@ const CollateralItem = ({
       </DataItem>
       <CollectionDataItem>
         <Header>
-          {/* {collections?.length || 0} Collections / {nfts} NFTs
-           */}
-          {tokens?.length || 0} {type} NFTs
+          {collections?.length || 0} Collections / {nfts} NFTs
+          {/* {tokens?.length || 0} {type} NFTs */}
         </Header>
         <Value>
           <CollectionImageContainer>

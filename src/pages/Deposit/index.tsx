@@ -8,7 +8,7 @@ import WithdrawNFT from './components/WithdrawNFT'
 import { useDepositableNfts } from 'services/module/deposit'
 import { useAddress, useCollateralBorrowLimitUsed, useDashboardType, useMobileType } from 'state/user/hooks'
 import { useParams } from 'react-router-dom'
-import { getAlchemyNftMetadata } from 'services/module/deposit'
+// import { getAlchemyNftMetadata } from 'services/module/deposit'
 import { useCollections, useDepositedCollection, useShowChangeNetWork } from 'state/application/hooks'
 import MobileHeader from './components/mobileComponents/MobileHeader'
 import MobileDepositRoWithdraw from './components/mobileComponents/MobileDepositRoWithdraw'
@@ -23,13 +23,13 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { getClient } from 'apollo/client'
 import { UserPunkNft } from 'apollo/queries'
 import { PUNKS_ADDRESS } from 'config'
+import { getMultipleTokenId } from 'services/module/collection'
 const growths = [
-  '0x81dbc3bc6bfa0640cffb9b6b667987c97f35a588',
+  '0x07875841846abb8fba50dbc64ab4b77cbb6b5ca1',
   '0x8c8f9db836049a7b11c561510d5b8318cccb6e0b',
   '0xdcb017b5b37cf40d4955c5df42964464b5b0ea36',
   '0x9a79bccd419c9604ce02645950e994b708553165',
 ]
-
 const Body = styled(Box)`
   padding-top: 233px;
   width: 100%;
@@ -116,7 +116,7 @@ export default function Deposit() {
   const alchemy = useAlchemy()
   const address = useAddress()
   const showChangeNetWork = useShowChangeNetWork()
-  const [TestWithdrawList, setWithdrawList] = useState<Array<Nft>>([])
+  const [TestWithdrawList, setWithdrawList] = useState<any>([])
   const [punks, setPunks] = useState<Array<Nft>>([])
   // const [depositType, setDepositType] = useState<string>('shut')
   // const [withdrawType, setWithdrawType] = useState<string>('shut')
@@ -200,24 +200,26 @@ export default function Deposit() {
     return new BigNumber(borrowLimitUsed).gte(1)
   }, [borrowLimitUsed])
   const getWithdrawList = useCallback(async () => {
-    if (alchemy) {
-      const arr: Array<Nft> = []
-      for (let i = 0, length = withdrawList.length; i < length; i++) {
-        if (withdrawList[i].id) {
-          const nft = await getAlchemyNftMetadata(
-            withdrawList[i].id.split('-')[1],
-            withdrawList[i].id.split('-')[2],
-            alchemy
-          )
-          arr.push(nft)
-        } else {
-          const nft = await getAlchemyNftMetadata(withdrawList[i].contract.address, withdrawList[i].tokenId, alchemy)
-          arr.push(nft)
-        }
-      }
-      setWithdrawList(arr)
+    if (alchemy && id && withdrawList && withdrawList.length > 0) {
+      const arrTokenId = withdrawList.map((el: any) => (el.id ? el.id.split('-')[2] : el.tokenId))
+      await getMultipleTokenId(id, arrTokenId).then((req) => {
+        setWithdrawList(req)
+      })
+      // for (let i = 0, length = withdrawList.length; i < length; i++) {
+      //   if (withdrawList[i].id) {
+      //     const nft = await getAlchemyNftMetadata(
+      //       withdrawList[i].id.split('-')[1],
+      //       withdrawList[i].id.split('-')[2],
+      //       alchemy
+      //     )
+      //   } else {
+      //     const nft = await getAlchemyNftMetadata(withdrawList[i].contract.address, withdrawList[i].tokenId, alchemy)
+      //     arr.push(nft)
+      //   }
+      //   arr.push(nft)
+      // }
     }
-  }, [alchemy, withdrawList])
+  }, [alchemy, id, withdrawList])
   useEffect(() => {
     getWithdrawList()
   }, [getWithdrawList, mobileFlag])
@@ -231,16 +233,24 @@ export default function Deposit() {
       const res = await client.query({
         query: UserPunkNft(`${address}`),
       })
-      const arr: Array<Nft> = []
-      if (res && res.data && res.data.cryptoPunks && alchemy) {
-        for (let i = 0, length = res.data.cryptoPunks.length; i < length; i++) {
-          const nft = await getAlchemyNftMetadata(PUNKS_ADDRESS, res.data.cryptoPunks[i].punkIndex, alchemy)
-          arr.push(nft)
-        }
+      // const arr: Array<Nft> = []
+      let arr: any = []
+      const arrTokenId: Array<string> = []
+      for (let i = 0, length = res.data.cryptoPunks.length; i < length; i++) {
+        arrTokenId.push(res.data.cryptoPunks[i].punkIndex)
       }
+      await getMultipleTokenId(PUNKS_ADDRESS, arrTokenId).then((req) => {
+        arr = req
+      })
+      // if (res && res.data && res.data.cryptoPunks && alchemy) {
+      //   for (let i = 0, length = res.data.cryptoPunks.length; i < length; i++) {
+      //     const nft = await getAlchemyNftMetadata(PUNKS_ADDRESS, res.data.cryptoPunks[i].punkIndex, alchemy)
+      //     arr.push(nft)
+      //   }
+      // }
       setPunks(arr)
     }
-  }, [address, alchemy, client, collection])
+  }, [address, client, collection])
   useEffect(() => {
     getPunkNft()
   }, [getPunkNft, depositFlag])
@@ -285,6 +295,7 @@ export default function Deposit() {
                   ? withdrawList.filter((el: any) => !punks.some((pel) => pel.tokenId === el.id.split('-')[2]))
                   : withdrawList
               }
+              TestWithdrawList={TestWithdrawList}
               getWayFlag={collection && collection.name.indexOf('punks') > -1 ? 1 : 0}
               floorPrice={collection ? collection.floorPrice : '0'}
               checkedIndex={withdrawCheckedIndex}

@@ -343,10 +343,10 @@ export default function NFTsSelectedModal({
         <DepositList>
           {data.map((el: NftTokenModel, index: number) => (
             <FlexBox mb={Number(index + 1) >= data.length ? '0' : '24px'} key={`Deposit${index}`}>
-              <img width="48px" src={el.media[0]?.gateway || ''} alt="" />
+              <img width="48px" src={el.media ? el.media[0]?.gateway || '' : el.gateway || ''} alt="" />
               <Box width="232px" ml="12px" mr="24px">
                 <BodyTypography color="#6E7191 !important" fontWeight="600 !important">
-                  {el.rawMetadata.name}
+                  {el.title}
                 </BodyTypography>
               </Box>
               <BodyTypography>x 1</BodyTypography>

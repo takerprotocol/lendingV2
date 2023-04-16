@@ -17,7 +17,7 @@ import {
   useMobileType,
 } from 'state/user/hooks'
 import { useCollections, useShowChangeNetWork } from 'state/application/hooks'
-import { CollateralModel, LiquidationNftModel } from 'services/type/nft'
+import { CollateralModel } from 'services/type/nft'
 import { getRiskLevel, getRiskLevelTag, times } from 'utils'
 import MobileHeader from './components/mobileLiquidation/MobileHeader'
 import MobileCollateral from './components/mobileLiquidation/MobileCollateral'
@@ -35,8 +35,9 @@ import BigNumber from 'bignumber.js'
 import orderBy from 'lodash/orderBy'
 import { toWei } from 'web3-utils'
 import numbro from 'numbro'
-import { getAlchemyNftMetadata } from 'services/module/deposit'
+// import { getAlchemyNftMetadata } from 'services/module/deposit'
 import { useAlchemy } from 'hooks/useAlchemy'
+// import { getMultipleAddress } from 'services/module/collection'
 let graphLoading = false
 // import Collection6 from '../../assets/images/png/liquidation/example/6.png'
 const Body = styled(Box)`
@@ -225,19 +226,25 @@ export default function Liquidation() {
           } else {
             heath = numbro(heath).format({ spaceSeparated: true, average: true }).replace(' ', '')
           }
-          const tokens: LiquidationNftModel[] = []
-          if (alchemy) {
-            for (let i = 0, length = element.collections.length; i < length; i++) {
-              for (let ii = 0, length1 = element.collections[i].tokens.length; ii < length1; ii++) {
-                const nft = await getAlchemyNftMetadata(
-                  element.collections[i].tokens[ii].id.split('-')[1],
-                  element.collections[i].tokens[ii].id.split('-')[2],
-                  alchemy
-                )
-                tokens.push({ ...nft, symbol: element.collections[i].collection.symbol })
-              }
-            }
-          }
+          // const tokens: LiquidationNftModel[] = []
+          // if (alchemy) {
+          //   for (let i = 0, length = element.collections.length; i < length; i++) {
+          //     const address = element.collections[i].tokens.map((el: any) => el.id.split('-')[1])
+          //     const arrTokenId = element.collections[i].tokens.map((el: any) => el.id.split('-')[2])
+          //     await getMultipleAddress(address, arrTokenId).then((req: any) => {
+          //       // setWithdrawList(req)
+          //       tokens.push(...req)
+          //     })
+          //     // for (let ii = 0, length1 = element.collections[i].tokens.length; ii < length1; ii++) {
+          //     //   const nft = await getAlchemyNftMetadata(
+          //     //     element.collections[i].tokens[ii].id.split('-')[1],
+          //     //     element.collections[i].tokens[ii].id.split('-')[2],
+          //     //     alchemy
+          //     //   )
+          //     //   tokens.push({ ...nft, symbol: element.collections[i].collection.symbol })
+          //     // }
+          //   }
+          // }
           setCollaterals((collaterals) => {
             return [
               ...collaterals,
@@ -247,7 +254,7 @@ export default function Liquidation() {
                 collections: element.collections,
                 debt: fromWei(element.totalDebt),
                 riskPercentage: heath,
-                tokens,
+                // tokens,
                 type: 'Blue Chip',
                 riskLevel: getRiskLevel(heath),
                 riskLevelTag: getRiskLevelTag(heath),
@@ -275,19 +282,25 @@ export default function Liquidation() {
           } else {
             heath = numbro(heath).format({ spaceSeparated: true, average: true }).replace(' ', '')
           }
-          const otherTokens: LiquidationNftModel[] = []
-          if (alchemy) {
-            for (let i = 0, length = element.collections.length; i < length; i++) {
-              for (let ii = 0, length1 = element.collections[i].tokens.length; ii < length1; ii++) {
-                const nft = await getAlchemyNftMetadata(
-                  element.collections[i].tokens[ii].id.split('-')[1],
-                  element.collections[i].tokens[ii].id.split('-')[2],
-                  alchemy
-                )
-                otherTokens.push({ ...nft, symbol: element.collections[i].collection.symbol })
-              }
-            }
-          }
+          // const otherTokens: LiquidationNftModel[] = []
+          // if (alchemy) {
+          //   for (let i = 0, length = element.collections.length; i < length; i++) {
+          //     const address = element.collections[i].tokens.map((el: any) => el.id.split('-')[1])
+          //     const arrTokenId = element.collections[i].tokens.map((el: any) => el.id.split('-')[2])
+          //     await getMultipleAddress(address, arrTokenId).then((req: any) => {
+          //       // setWithdrawList(req)
+          //       otherTokens.push(...req)
+          //     })
+          //     // for (let ii = 0, length1 = element.collections[i].tokens.length; ii < length1; ii++) {
+          //     //   const nft = await getAlchemyNftMetadata(
+          //     //     element.collections[i].tokens[ii].id.split('-')[1],
+          //     //     element.collections[i].tokens[ii].id.split('-')[2],
+          //     //     alchemy
+          //     //   )
+          //     //   otherTokens.push({ ...nft, symbol: element.collections[i].collection.symbol })
+          //     // }
+          //   }
+          // }
           setOtherCollaterals((otherCollaterals) => {
             return [
               ...otherCollaterals,
@@ -297,7 +310,7 @@ export default function Liquidation() {
                 collections: element.collections,
                 debt: fromWei(element.totalDebt),
                 riskPercentage: heath,
-                tokens: otherTokens,
+                // tokens: otherTokens,
                 type: 'Growth',
                 riskLevel: getRiskLevel(heath),
                 riskLevelTag: getRiskLevelTag(heath),

@@ -32,7 +32,7 @@ export interface CollateralModel {
   collections: Array<CollectionsModel>
   debt: string
   type: string
-  tokens: LiquidationNftModel[]
+  // tokens: LiquidationNftModel[]
   riskPercentage: string
   riskLevel: string
   riskLevelTag?: string

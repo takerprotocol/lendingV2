@@ -1,8 +1,7 @@
-import { Nft } from '@alch/alchemy-sdk'
 import { Box, styled, Typography } from '@mui/material'
 import { useAlchemy } from 'hooks/useAlchemy'
 import { useCallback, useEffect, useState } from 'react'
-import { getAlchemyNftMetadata } from 'services/module/deposit'
+import { getMultipleTokenId } from 'services/module/collection'
 
 const Container = styled(Box)`
   box-shadow: 0px 10px 20px rgba(218, 218, 238, 0.5);
@@ -168,7 +167,7 @@ type NFTItemProps = {
 
 const NFTItem = ({ token, handle, tokenChecked, setTokenChecked }: NFTItemProps) => {
   // const [max] = useState('')
-  const [metadata, setMetadata] = useState<Nft | null>(null)
+  const [metadata, setMetadata] = useState<any>(null)
   // const [checked, setChecked] = useState<boolean>(false)
   const alchemy = useAlchemy()
   // const handleCheck = useCallback(() => {
@@ -182,11 +181,14 @@ const NFTItem = ({ token, handle, tokenChecked, setTokenChecked }: NFTItemProps)
   const handleCollectionImageError = useCallback(() => setErrorCollectionImage(true), [])
   useEffect(() => {
     if (token && alchemy) {
-      getAlchemyNftMetadata(token.split('-')[1], token.split('-')[2], alchemy).then((res) => {
-        if (res) {
-          setMetadata(res)
-        }
+      getMultipleTokenId(token.split('-')[1], token.split('-')[2]).then((res: any) => {
+        setMetadata(res)
       })
+      // getAlchemyNftMetadata(token.split('-')[1],token.split('-')[2] , alchemy).then((res) => {
+      //   if (res) {
+      //    setMetadata(res)
+      //   }
+      // })
     }
   }, [token, alchemy])
   return (
@@ -215,14 +217,14 @@ const NFTItem = ({ token, handle, tokenChecked, setTokenChecked }: NFTItemProps)
         <ActionInfoContainer>
           <NFTInfoContainer>
             {!errorNftImage ? (
-              <NFTImage onError={handleNftImageError} src={metadata.media[0]?.gateway} alt="" />
+              <NFTImage onError={handleNftImageError} src={metadata[0].gateway} alt="" />
             ) : (
               <NFTImagePlaceholder />
             )}
             <CollectionInfoContainer>
               <CollectionImageTitle>
                 {!errorCollectionImage ? (
-                  <CollectionImage onError={handleCollectionImageError} src={metadata.media[0]?.gateway} alt="" />
+                  <CollectionImage onError={handleCollectionImageError} src={metadata[0].gateway} alt="" />
                 ) : (
                   <CollectionImagePlaceholder />
                 )}

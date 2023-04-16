@@ -1,9 +1,7 @@
-import { Nft } from '@alch/alchemy-sdk'
 import styled from '@emotion/styled'
 import { Box, Skeleton, TextField, Typography } from '@mui/material'
 import { PUNKS_ADDRESS } from 'config'
 import { useEffect, useMemo, useState } from 'react'
-import { NftTokenModel } from 'services/type/nft'
 import NftListSkeleton from './depositSkeleton/NftListSkeleton'
 
 const ListBox = styled(Box)`
@@ -75,7 +73,7 @@ const Image = (props: any) => {
   )
 }
 interface NFTsLisProps {
-  list: NftTokenModel[] | Nft[]
+  list: any
   loading: boolean
   // depositType: string
   setCheckedIndex: Function
@@ -110,35 +108,36 @@ export default function NFTsList({ list, loading, onChange, TypeKey, checked, se
           LoadingNftListSkeleton
         ) : (
           <>
-            {list.map((el: NftTokenModel | Nft) => (
-              <NftBox
-                className={checkboxType.includes(el.tokenId) ? 'isCheck' : ' '}
-                key={`nft${TypeKey}-${el.tokenId}`}
-                onClick={() => {
-                  if (checkboxType.length === 0) {
-                    setCheckedIndex([])
-                  }
-                  if (!checkboxType.includes(el.tokenId)) {
-                    if (el.contract.address === PUNKS_ADDRESS) {
-                      setCheckboxType([el.tokenId])
-                      onChange([el.tokenId])
-                    } else {
-                      onChange([...checkboxType, el.tokenId])
-                      setCheckboxType([...checkboxType, el.tokenId])
+            {list &&
+              list.map((el: any) => (
+                <NftBox
+                  className={checkboxType.includes(el.tokenId) ? 'isCheck' : ' '}
+                  key={`nft${TypeKey}-${el.tokenId}`}
+                  onClick={() => {
+                    if (checkboxType.length === 0) {
+                      setCheckedIndex([])
                     }
-                  } else {
-                    if (el.contract.address === PUNKS_ADDRESS) {
-                      onChange([])
-                      setCheckboxType([])
+                    if (!checkboxType.includes(el.tokenId)) {
+                      if (el.contract.address === PUNKS_ADDRESS) {
+                        setCheckboxType([el.tokenId])
+                        onChange([el.tokenId])
+                      } else {
+                        onChange([...checkboxType, el.tokenId])
+                        setCheckboxType([...checkboxType, el.tokenId])
+                      }
                     } else {
-                      onChange(checkboxType.filter((cel) => cel !== el.tokenId))
-                      setCheckboxType(checkboxType.filter((cel) => cel !== el.tokenId))
+                      if (el.contract.address === PUNKS_ADDRESS) {
+                        onChange([])
+                        setCheckboxType([])
+                      } else {
+                        onChange(checkboxType.filter((cel) => cel !== el.tokenId))
+                        setCheckboxType(checkboxType.filter((cel) => cel !== el.tokenId))
+                      }
                     }
-                  }
-                }}
-              >
-                <FlexBox>
-                  {/* <StyledCheckbox
+                  }}
+                >
+                  <FlexBox>
+                    {/* <StyledCheckbox
                     checked={checkboxType.includes(el.tokenId)}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                       if (event.target.checked) {
@@ -152,40 +151,40 @@ export default function NFTsList({ list, loading, onChange, TypeKey, checked, se
                     sx={{ display: `${depositType === 'open' ? '' : 'none'}` }}
                     color="default"
                   /> */}
-                  <Box>
-                    <Box sx={{ display: ' flex', alignItems: 'flex-start' }}>
-                      <Image src={el.media[0]?.gateway || ''} alt={`nft-${el.title}`} />
-                      <Typography ml={'12px'} variant="subtitle2" component="span" fontWeight="700" color="#14142A">
-                        {el.title}
-                      </Typography>
-                    </Box>
-                    {el.tokenType === 'ERC1155' && (
-                      <Box mt={'16px'} display="flex" justifyContent="flex-start">
-                        <Box
-                          sx={{
-                            width: '127px',
-                            height: '30px',
-                            padding: '4px 8px 4px 8px',
-                            marginRight: '12px',
-                            background: '#F7F7FC',
-                          }}
-                        >
-                          <TextField variant="outlined" />
-                          <Typography ml="6px" component="span" variant="body1" color="#A0A3BD">
-                            NTFs
-                          </Typography>
-                        </Box>
-                        <MaxBox>
-                          <Typography variant="body1" component="span" fontWeight="600" color="#F7F7FC">
-                            Max 15
-                          </Typography>
-                        </MaxBox>
+                    <Box>
+                      <Box sx={{ display: ' flex', alignItems: 'flex-start' }}>
+                        <Image src={el.media ? el.media[0].gateway || '' : el.gateway || ''} alt={`nft-${el.title}`} />
+                        <Typography ml={'12px'} variant="subtitle2" component="span" fontWeight="700" color="#14142A">
+                          {el.title}
+                        </Typography>
                       </Box>
-                    )}
-                  </Box>
-                </FlexBox>
-              </NftBox>
-            ))}
+                      {el.tokenType === 'ERC1155' && (
+                        <Box mt={'16px'} display="flex" justifyContent="flex-start">
+                          <Box
+                            sx={{
+                              width: '127px',
+                              height: '30px',
+                              padding: '4px 8px 4px 8px',
+                              marginRight: '12px',
+                              background: '#F7F7FC',
+                            }}
+                          >
+                            <TextField variant="outlined" />
+                            <Typography ml="6px" component="span" variant="body1" color="#A0A3BD">
+                              NTFs
+                            </Typography>
+                          </Box>
+                          <MaxBox>
+                            <Typography variant="body1" component="span" fontWeight="600" color="#F7F7FC">
+                              Max 15
+                            </Typography>
+                          </MaxBox>
+                        </Box>
+                      )}
+                    </Box>
+                  </FlexBox>
+                </NftBox>
+              ))}
           </>
         )}
       </ListBox>

@@ -96,7 +96,7 @@ export default function NFTListPopover({ list, open, anchorEl, id, setAnchorEl }
               key={`${el.contract.address}-${index}`}
               mb="16px"
             >
-              <RImg src={el.media[0]?.gateway} alt="" />
+              <RImg src={el.media ? el.media[0]?.gateway : el.gateway} alt="" />
               <TitleTypography ml="8px" variant="body2" color="#ffffff">
                 {el.title}
               </TitleTypography>
