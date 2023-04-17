@@ -120,8 +120,7 @@ export default function DepositHeader({ loading }: DepositHeaderProps) {
       return null
     }
   }, [collections, id])
-  console.log(collections, 'collection')
-  console.log(id, 'collection')
+
   useEffect(() => {
     if (contract && id) {
       contract.getAssetValues(id).then((res: any) => {

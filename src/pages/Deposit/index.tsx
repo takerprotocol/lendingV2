@@ -202,7 +202,10 @@ export default function Deposit() {
   const getWithdrawList = useCallback(async () => {
     if (alchemy && id && withdrawList && withdrawList.length > 0) {
       const arrTokenId = withdrawList.map((el: any) => (el.id ? el.id.split('-')[2] : el.tokenId))
-      await getMultipleTokenId(id, arrTokenId).then((req) => {
+      await getMultipleTokenId(
+        collection && collection.name && collection.name.toLocaleLowerCase().indexOf('punks') > -1 ? PUNKS_ADDRESS : id,
+        arrTokenId
+      ).then((req) => {
         setWithdrawList(req)
       })
       // for (let i = 0, length = withdrawList.length; i < length; i++) {
@@ -219,7 +222,7 @@ export default function Deposit() {
       //   arr.push(nft)
       // }
     }
-  }, [alchemy, id, withdrawList])
+  }, [alchemy, collection, id, withdrawList])
   useEffect(() => {
     getWithdrawList()
   }, [getWithdrawList, mobileFlag])
@@ -290,11 +293,7 @@ export default function Deposit() {
             <WithdrawNFT
               loading={loading}
               tNFT={collection ? collection.tNFT : ''}
-              list={
-                collection && collection.name && collection.name.toLocaleLowerCase().indexOf('punks') > -1
-                  ? withdrawList.filter((el: any) => !punks.some((pel) => pel.tokenId === el.id.split('-')[2]))
-                  : withdrawList
-              }
+              list={withdrawList}
               TestWithdrawList={TestWithdrawList}
               getWayFlag={collection && collection.name.indexOf('punks') > -1 ? 1 : 0}
               floorPrice={collection ? collection.floorPrice : '0'}
