@@ -129,13 +129,14 @@ export default function Collection({ type, loading }: CollectionType) {
       } else {
         if (list) {
           const item = list.filter((el: OwnedNft) => el.contract.address.toLocaleLowerCase() === id.toLocaleLowerCase())
-          return item ? item.length : '0'
+          return item ? item.length : 0
         }
-        return '0'
+        return 0
       }
     },
     [list, punksNfts]
   )
+
   return (
     <Box ml="24px" width="1160px">
       {loading ? (

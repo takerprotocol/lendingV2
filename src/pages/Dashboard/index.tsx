@@ -83,7 +83,15 @@ export default function Dashboard() {
   const mobileMenuType = useMobileMenuType()
   const dispatch = useAppDispatch()
   const collection = useCollections()
-  const { list } = useDepositableNfts(address, collection.map(({ id }) => id).join(','), '', 1)
+  const { list } = useDepositableNfts(
+    address,
+    collection
+      .filter((el) => el.symbol.toLocaleLowerCase().indexOf('punks') === -1)
+      .map(({ id }) => id)
+      .join(','),
+    '',
+    1
+  )
   const loginWalletType = useLoginWalletType()
   const { chainId } = useActiveWeb3React()
   const alchemy = useAlchemy()

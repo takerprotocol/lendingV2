@@ -5,7 +5,7 @@ import more from 'assets/images/svg/dashboard/more-icon.svg'
 import { SpaceBetweenBox, FlexBox, SpaceBox } from 'styleds'
 import * as React from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useAccountNfts, useAddress, useDashboardType, useUserValue } from 'state/user/hooks'
+import { useAccountNfts, useAccountPunksNfts, useAddress, useDashboardType, useUserValue } from 'state/user/hooks'
 import { useCollections, useDepositedCollection } from 'state/application/hooks'
 import ERC721 from 'assets/images/png/collection/721.png'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -112,6 +112,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   const [client, setClient] = useState<any>(null)
   const dashboardType = useDashboardType()
   const collections = useCollections()
+  const accountPunksNfts = useAccountPunksNfts()
   useEffect(() => {
     if (chainId) {
       setClient(getClient(dashboardType)[chainId === 1 ? 5 : chainId === 4 ? 4 : chainId === 5 ? 5 : 5])
@@ -167,10 +168,17 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   }
 
   const supportNfts = useMemo(() => {
-    return accountNfts.filter((el) =>
-      collections.find((cel) => cel.id.toLocaleLowerCase() === el.contract.address.toLocaleLowerCase())
-    )
-  }, [accountNfts, collections])
+    return accountPunksNfts
+      ? [
+          ...accountNfts.filter((el) =>
+            collections.find((cel) => cel.id.toLocaleLowerCase() === el.contract.address.toLocaleLowerCase())
+          ),
+          ...accountPunksNfts,
+        ]
+      : accountNfts.filter((el) =>
+          collections.find((cel) => cel.id.toLocaleLowerCase() === el.contract.address.toLocaleLowerCase())
+        )
+  }, [accountNfts, accountPunksNfts, collections])
   const count = useMemo(() => {
     return depositedCollection.length >= 4
   }, [depositedCollection.length])
@@ -249,7 +257,7 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
                         placement="top"
                       >
                         <RightImgBox
-                          src={el.media[0]?.gateway || ''}
+                          src={el.gateway ? el.gateway : el.media[0]?.gateway || ''}
                           alt=""
                           sx={{
                             zIndex: index,
