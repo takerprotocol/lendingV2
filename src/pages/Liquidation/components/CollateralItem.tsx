@@ -8,6 +8,7 @@ import numbro from 'numbro'
 import { useAlchemy } from 'hooks/useAlchemy'
 import { getMultipleAddress } from 'services/module/collection'
 import NFTListPopover from 'pages/Dashboard/components/NFTListPopper'
+import { PUNKS_ADDRESS } from 'config'
 // import { useCollections } from 'state/application/hooks'
 // import { LiquidationNftModel } from 'services/type/nft'
 // import NFTListPopover from 'pages/Dashboard/components/NFTListPopper'
@@ -169,7 +170,11 @@ const CollateralItem = ({
     const arrTokenId = []
     if (alchemy) {
       for (let i = 0, length = collections.length; i < length; i++) {
-        address.push(...collections[i].tokens.map((el: any) => el.id.split('-')[1]))
+        address.push(
+          ...collections[i].tokens.map((el: any) =>
+            el.id.split('-')[1] === '0x81e4eddf9fcb309f63954d67d40000f88bb5d30e' ? PUNKS_ADDRESS : el.id.split('-')[1]
+          )
+        )
         arrTokenId.push(...collections[i].tokens.map((el: any) => el.id.split('-')[2]))
       }
       getMultipleAddress(address, arrTokenId).then((req: any) => {
