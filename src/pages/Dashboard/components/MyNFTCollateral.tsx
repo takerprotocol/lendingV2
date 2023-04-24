@@ -168,16 +168,22 @@ export default function MyNFTCollateral({ type, loading }: MyNFTCollateralProps)
   }
 
   const supportNfts = useMemo(() => {
-    return accountPunksNfts
-      ? [
-          ...accountNfts.filter((el) =>
+    if (accountPunksNfts && accountPunksNfts instanceof Array) {
+      return accountPunksNfts
+        ? [
+            ...accountNfts.filter((el) =>
+              collections.find((cel) => cel.id.toLocaleLowerCase() === el.contract.address.toLocaleLowerCase())
+            ),
+            ...accountPunksNfts,
+          ]
+        : accountNfts.filter((el) =>
             collections.find((cel) => cel.id.toLocaleLowerCase() === el.contract.address.toLocaleLowerCase())
-          ),
-          ...accountPunksNfts,
-        ]
-      : accountNfts.filter((el) =>
-          collections.find((cel) => cel.id.toLocaleLowerCase() === el.contract.address.toLocaleLowerCase())
-        )
+          )
+    } else {
+      return accountNfts.filter((el) =>
+        collections.find((cel) => cel.id.toLocaleLowerCase() === el.contract.address.toLocaleLowerCase())
+      )
+    }
   }, [accountNfts, accountPunksNfts, collections])
   const count = useMemo(() => {
     return depositedCollection.length >= 4

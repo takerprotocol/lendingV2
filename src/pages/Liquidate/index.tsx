@@ -73,19 +73,27 @@ const Liquidate = () => {
     NFTLiquidity: '0',
     totalDebt: '0',
     totalCollateral: '0',
+    heathFactor: '0',
   })
   useEffect(() => {
     if (lpContract && address) {
       lpContract.getUserState(address).then((res: Array<BigNumber>) => {
+        let _heath = times(fromWei(res[6].toString()), 100)
+        if (new BigNumber(heath).gt(1000000)) {
+          _heath = '>1M'
+        } else {
+          _heath = numbro(_heath).format({ spaceSeparated: true, average: true }).replace(' ', '')
+        }
         setUserValue({
           borrowLiquidity: fromWei(res[0].toString()),
           NFTLiquidity: fromWei(res[1].toString()),
           totalDebt: fromWei(res[3].toString()),
           totalCollateral: fromWei(res[2].toString()),
+          heathFactor: _heath,
         })
       })
     }
-  }, [lpContract, address, flag])
+  }, [lpContract, address, flag, heath])
   const loading = useMemo(() => {
     return dashboardType === 1 ? blueChipLoading : growthLoading
   }, [blueChipLoading, dashboardType, growthLoading])
@@ -244,7 +252,7 @@ const Liquidate = () => {
         <Body pt={showChangeNetWork ? '130px' : '82px'}>
           <LiquidateHeader
             address={address || ''}
-            riskPercentage={heath}
+            riskPercentage={userValue.heathFactor}
             totalCollateral={userValue.totalCollateral}
             nftCollateral={nftCollateral}
             ethCollateral={minus(totalCollateral, nftCollateral)}
