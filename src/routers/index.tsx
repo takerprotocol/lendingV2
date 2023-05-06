@@ -46,6 +46,7 @@ import { setMobileType } from 'state/user/reducer'
 import { isMobile } from 'utils/userAgent'
 import Mint from 'pages/Mint'
 import Price from 'pages/Price'
+import Withdraw from 'pages/Withdraw'
 
 export default function CustomizeRoutes() {
   const location = useLocation()
@@ -268,6 +269,7 @@ export default function CustomizeRoutes() {
       <Route path="/" element={<Dashboard />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/deposit/:id" element={<Deposit />} />
+      <Route path="/withdraw" element={<Withdraw />} />
       <Route path="/mint" element={<Mint />} />
       <Route path="/price" element={<Price />} />
       <Route path="/liquidate" element={<Liquidate />} />
