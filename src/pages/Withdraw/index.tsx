@@ -10,6 +10,8 @@ import { useState } from 'react'
 // import { useState } from 'react'
 import { amountDecimal } from 'utils'
 import { useDecimal } from 'state/user/hooks'
+import { ApprovalState } from 'hooks/transactions/useApproval'
+import { useTTokenApproveCallback } from 'hooks/transactions/useApproveCallback'
 
 const MintBox = styled(Box)`
   padding-top: 100px;
@@ -26,7 +28,11 @@ export default function Withdraw() {
   const [value, setValue] = useState<string>('')
   const decimal = useDecimal()
   const useMockMAYCContract = useContract('0x898b4faa08fdd29726793cbd06a3da553d8bb638', MockMAYC_ABI)
-
+  const [tokenApproval, tokenApproveCallback] = useTTokenApproveCallback(
+    value || '1',
+    '0x898b4faa08fdd29726793cbd06a3da553d8bb638'
+  )
+  console.log(tokenApproval)
   return (
     <MintBox>
       <TextField
@@ -39,14 +45,17 @@ export default function Withdraw() {
       <Button
         variant="contained"
         sx={{ marginTop: '16px' }}
-        onClick={() => {
+        onClick={async () => {
           if (useMockMAYCContract) {
-            console.log(['0xA58Dd872770dD6b1107a8f4A039Cd6Bb63F9db56', amountDecimal(value, decimal), account])
-            useMockMAYCContract.withdraw(
-              '0xA58Dd872770dD6b1107a8f4A039Cd6Bb63F9db56',
-              amountDecimal(value, decimal),
-              account
-            )
+            if (tokenApproval !== ApprovalState.APPROVED) {
+              await tokenApproveCallback()
+            } else {
+              useMockMAYCContract.withdraw(
+                '0xA58Dd872770dD6b1107a8f4A039Cd6Bb63F9db56',
+                amountDecimal(value, decimal),
+                account
+              )
+            }
           }
         }}
       >
