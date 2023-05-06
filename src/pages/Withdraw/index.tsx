@@ -50,6 +50,7 @@ export default function Withdraw() {
             if (tokenApproval !== ApprovalState.APPROVED) {
               await tokenApproveCallback()
             } else {
+              console.log(['0xA58Dd872770dD6b1107a8f4A039Cd6Bb63F9db56', amountDecimal(value, decimal), account])
               useMockMAYCContract.withdraw(
                 '0xA58Dd872770dD6b1107a8f4A039Cd6Bb63F9db56',
                 amountDecimal(value, decimal),
