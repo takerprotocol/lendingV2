@@ -290,7 +290,7 @@ const CollateralItem = ({
           sessionStorage.setItem('dashboardType', type === 'Blue Chip' ? '1' : '2')
           window.location.href = `/liquidate/${address}`
         }}
-        disabled={numbro.unformat(riskPercentage.replaceAll('>', '').toLocaleLowerCase()) > 1200}
+        // disabled={numbro.unformat(riskPercentage.replaceAll('>', '').toLocaleLowerCase()) > 1200}
         variant="contained"
         color="primary"
       >
