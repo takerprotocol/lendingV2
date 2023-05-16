@@ -178,7 +178,7 @@ const LiquidationBar = ({ heath, total, nfts, nftsValue, ethValue, submit, floor
           variant="contained"
           color="primary"
           className={numbro.unformat(heath.replaceAll('>', '').toLocaleLowerCase()) > 120 ? '' : 'disabled'}
-          disabled={numbro.unformat(heath.replaceAll('>', '').toLocaleLowerCase()) > 120}
+          // disabled={numbro.unformat(heath.replaceAll('>', '').toLocaleLowerCase()) > 120}
           onClick={() => {
             if (nfts !== 0) {
               submit()
