@@ -46,14 +46,6 @@ const Value = styled(Box)`
   display: flex;
   flex-wrap: wrap;
 `
-// const ValueText = styled(Typography)`
-//   font-weight: 500;
-//   font-size: 12px;
-//   line-height: 120%;
-//   color: #a0a3bd;
-//   display: flex;
-//   flex-wrap: wrap;
-// `
 
 const DataItem = styled(Box)`
   display: flex;
