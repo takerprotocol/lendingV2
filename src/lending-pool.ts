@@ -391,7 +391,8 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
     addNftToken(
       userNftCollection,
       event.params.tokenIds[i],
-      event.params.amounts[i]
+      // event.params.amounts[i]
+      BigInt.fromI32(1)
     );
 
     let tokenValue = event.params.amounts[i].times(collection.floorPrice);
@@ -436,7 +437,8 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
     removeNftToken(
       userNftCollection,
       event.params.tokenIds[i],
-      event.params.amounts[i]
+      // event.params.amounts[i]
+      BigInt.fromI32(1)
     );
   }
   user = updateUserState(user, POOLID);
