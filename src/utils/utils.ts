@@ -1,4 +1,4 @@
-import { NftToken, User, UserNftCollection } from "../../generated/schema";
+import { NftToken, User, UserNftCollection, NftCollection } from "../../generated/schema";
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { log, store } from "@graphprotocol/graph-ts";
 import { ILendingPool } from "../../generated/ILendingPool/ILendingPool";
@@ -61,4 +61,26 @@ export function removeNftToken(
     nftToken.amount = amount.neg();
   }
   nftToken.save();
+}
+
+export function addUserNftCollection(
+  userNftCollection: UserNftCollection,
+  collectionId: string
+): void {
+  let collection = NftCollection.load(collectionId);
+  if (!collection) {
+    log.error("[addUserNftCollection]Collection {} does not exist.", [collectionId]);
+    return;
+  }
+  if (!collection.users) {
+    log.warning("[addUserNftCollection]Collection {} users is null.", [collectionId]);
+    collection.users = [];
+  }
+
+  let users = collection.users;
+  if (!users.includes(userNftCollection.id)) {
+    users.push(userNftCollection.id);
+    collection.users = users;
+    collection.save();
+  }
 }

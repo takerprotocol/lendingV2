@@ -61,6 +61,7 @@ export function handleAggregatorSet(event: SetTokenAggregator): void {
   if (!collection) {
     log.info("Collection {} does not exist", [asset.toHex()]);
     collection = new NftCollection(asset.toHex());
+    collection.users = [];
     collection.PriceAggregator = aggregator.id;
   }
   collection.floorPrice = price;
@@ -87,19 +88,11 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
     Address.fromString(aggregator.collection)
   );
   let users = collection.users;
-  if (!users) {
-    log.error("meiyou user {}", ["1"]);
-  } else {
-    log.error("you user {}", ["2"]);
-  }
-  if (users) {
-    log.error("mingming you {}", ["3"]);
-  } else {
-    log.error("que shuo meiyou {}", ["4"]);
-  }
+
   if (users) {
     updateAllUserStates(users);
-  }
+  } 
+
   collection.save();
 }
 
@@ -114,7 +107,6 @@ export function getAssetPrice(oracleAddr: Address, asset: Address): BigInt {
 }
 
 export function updateAllUserStates(users: string[]): void {
-  log.error("update for all users {}", users);
   users.forEach((userNftCollectionId: string) => {
     let userNftCollection = UserNftCollection.load(userNftCollectionId);
     if (userNftCollection) {

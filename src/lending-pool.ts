@@ -37,7 +37,7 @@ import {
   newUserReserve,
   newUserNftCollection,
 } from "./utils/initializers";
-import { updateUserState, removeNftToken, addNftToken } from "./utils/utils";
+import { updateUserState, removeNftToken, addNftToken, addUserNftCollection } from "./utils/utils";
 import { POOLID, ORACLE } from "./utils/consts";
 
 export function handleNftReserveInitialized(
@@ -50,6 +50,7 @@ export function handleNftReserveInitialized(
     pool.save();
   }
   let collection = new NftCollection(event.params.asset.toHex());
+  collection.users = [];
   collection.pool = poolId;
   collection.tNFT = event.params.tNft;
   collection.ercType = BigInt.fromI32(event.params.tokenType);
@@ -350,6 +351,7 @@ export function handleLiquidated(event: Liquidated): void {
     let toCollection = UserNftCollection.load(toCollectionId);
     if (!toCollection) {
       toCollection = newUserNftCollection(toCollectionId);
+      addUserNftCollection(toCollection, collectionId);
     }
     addNftToken(toCollection, event.params.tokenId, BigInt.fromI32(1));
     let to = User.load(event.params.to.toHex());
@@ -383,6 +385,7 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
     let userNftCollection = UserNftCollection.load(userNftCollectionId);
     if (!userNftCollection) {
       userNftCollection = newUserNftCollection(userNftCollectionId);
+      addUserNftCollection(userNftCollection, collectionId);
       userNftCollection.user = userId;
       userNftCollection.collection = collectionId;
       userNftCollection.save();
@@ -429,6 +432,7 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
         userNftCollectionId,
       ]);
       userNftCollection = newUserNftCollection(userNftCollectionId);
+      addUserNftCollection(userNftCollection, collectionId);
       userNftCollection.user = userId;
       userNftCollection.collection = collectionId;
       userNftCollection.save();

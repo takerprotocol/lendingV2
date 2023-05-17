@@ -38,7 +38,7 @@ type NftCollection @entity {
   floorPrice: BigInt!
   PriceAggregator: PriceAggregator
 
-  users: [UserNftCollection!] @derivedFrom(field: "collection")
+  users: [UserNftCollection!]!
 }
 
 type User @entity {
@@ -65,7 +65,7 @@ type UserReserve @entity {
 }
 
 type UserNftCollection @entity {
-  id: ID! # user - collection - tokenId
+  id: ID! # user - collection
   user: User!
   collection: NftCollection!
   tokens: [NftToken!] @derivedFrom(field: "userCollection")
