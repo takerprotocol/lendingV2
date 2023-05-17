@@ -22,7 +22,7 @@ import { POOLID } from "./utils/consts";
 export function handleNewNFTPrice(event: NewNFTPrice): void {
   let collection = NftCollection.load(event.params.asset.toHex());
   if (!collection) {
-    log.error("Collection {} does not exist.", [event.params.asset.toHex()]);
+    log.error("[handleNewNFTPrice]Collection {} does not exist.", [event.params.asset.toHex()]);
     return;
   }
   collection.floorPrice = event.params.price;
@@ -42,7 +42,7 @@ export function handleAggregatorSet(event: SetTokenAggregator): void {
   }
 
   // init aggregator entity
-  store.remove("PriceAggregator", realAggregatorAddress.value.toHex());
+  store.remove("[handleAggregatorSet]PriceAggregator", realAggregatorAddress.value.toHex());
   let aggregator = newPriceAggregator(
     event.address,
     event.params.asset,
@@ -59,7 +59,7 @@ export function handleAggregatorSet(event: SetTokenAggregator): void {
   // update collection
   let collection = NftCollection.load(asset.toHex());
   if (!collection) {
-    log.info("Collection {} does not exist", [asset.toHex()]);
+    log.info("[handleAggregatorSet]Collection {} does not exist", [asset.toHex()]);
     collection = new NftCollection(asset.toHex());
     collection.users = [];
     collection.PriceAggregator = aggregator.id;
@@ -72,7 +72,7 @@ export function handleAggregatorSet(event: SetTokenAggregator): void {
 export function handleAnswerUpdated(event: AnswerUpdated): void {
   let aggregator = PriceAggregator.load(event.address.toHex());
   if (!aggregator) {
-    log.info("Aggregator {} no longer valid.", [event.address.toHex()]);
+    log.info("[handleAnswerUpdated]Aggregator {} no longer valid.", [event.address.toHex()]);
     return;
   }
   aggregator.floorPrice = event.params.current;
@@ -80,7 +80,7 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
 
   let collection = NftCollection.load(aggregator.collection);
   if (!collection) {
-    log.error("Collection {} does not exist.", [aggregator.collection]);
+    log.error("[handleAnswerUpdated]Collection {} does not exist.", [aggregator.collection]);
     return;
   }
   collection.floorPrice = getAssetPrice(
@@ -100,7 +100,7 @@ export function getAssetPrice(oracleAddr: Address, asset: Address): BigInt {
   let oracle = IPriceOracleGetter.bind(oracleAddr);
   let price = oracle.try_getReserveAssetPrice(asset);
   if (price.reverted) {
-    log.error("Aggregator for {} does not exist", [asset.toHex()]);
+    log.error("[getAssetPrice]Aggregator for {} does not exist", [asset.toHex()]);
     return BigInt.zero();
   }
   return price.value;

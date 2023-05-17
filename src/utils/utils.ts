@@ -16,7 +16,7 @@ export function updateUserState(user: User, lendingPool: string): User {
     user.healthFactor = userState.hf;
     user.ltvAcc = userState.ltv;
   } else {
-    log.error("get state failed {}", [user.id]);
+    log.error("[updateUserState]get state failed {}", [user.id]);
   }
   return user;
 }
@@ -34,7 +34,7 @@ export function addNftToken(
     nftToken = new NftToken(nftTokenId);
     nftToken.userCollection = userNftCollection.id;
     nftToken.amount = amount;
-    log.info("New nftToken {}", [nftTokenId.toString()]);
+    log.info("[addNftToken]New nftToken {}", [nftTokenId.toString()]);
   }
   nftToken.save();
 }
@@ -50,12 +50,12 @@ export function removeNftToken(
     let newAmount = nftToken.amount.minus(amount);
     if (newAmount == BigInt.zero()) {
       store.remove("NftToken", nftTokenId);
-      log.info("token removed", []);
+      log.info("[removeNftToken]token removed", []);
       return;
     }
     nftToken.amount = newAmount;
   } else {
-    log.warning("Found withdraw event for unknown nftToken - {}", [nftTokenId]);
+    log.warning("[removeNftToken]Found withdraw event for unknown nftToken - {}", [nftTokenId]);
     nftToken = new NftToken(nftTokenId);
     nftToken.userCollection = userNftCollection.id;
     nftToken.amount = amount.neg();

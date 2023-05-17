@@ -15,7 +15,7 @@ export function handleAssign(event: Assign): void {
   punk.punkIndex = punkIndex;
   punk.owner = newOwner;
   punk.save();
-  log.info("New punk minted {} {}", [punkIndex.toString(), newOwner.toHex()]);
+  log.info("[handleAssign]New punk minted {} {}", [punkIndex.toString(), newOwner.toHex()]);
 }
 
 export function handlePunkTransfer(event: PunkTransfer): void {

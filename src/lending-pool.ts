@@ -86,11 +86,11 @@ export function handleNftReserveInitialized(
       ? BigInt.zero()
       : priceResult.value;
   } else {
-    log.error("Unrecognized collection ERC type", [collection.id]);
+    log.error("[handleNftReserveInitialized]Unrecognized collection ERC type", [collection.id]);
   }
 
   collection.save();
-  log.info("New collection from NftReserveInitialized: {}", [collection.id]);
+  log.info("[handleNftReserveInitialized]New collection from NftReserveInitialized: {}", [collection.id]);
 }
 
 export function handleReserveInitialized(event: ReserveInitialized): void {
@@ -113,7 +113,7 @@ export function handleReserveInitialized(event: ReserveInitialized): void {
   reserve.symbol = reserveContract.try_symbol().value;
 
   reserve.save();
-  log.info("New reserve from ReserveInitialized: {}", [reserve.id]);
+  log.info("[handleReserveInitialized]New reserve from ReserveInitialized: {}", [reserve.id]);
 }
 
 export function handleReserveDropped(event: ReserveDropped): void {
@@ -138,10 +138,10 @@ export function handleDeposited(event: Deposited): void {
   let userReserve = UserReserve.load(userReserveId);
   if (!user) {
     user = newUser(userId);
-    log.info("New user from Deposited: {}", [user.id]);
+    log.info("[handleDeposited]New user from Deposited: {}", [user.id]);
   }
   if (!reserve) {
-    log.warning("Found Deposited event from unknown reserve - {}", [reserveId]);
+    log.warning("[handleDeposited]Found Deposited event from unknown reserve - {}", [reserveId]);
     return;
   }
   if (!userReserve) {
@@ -177,11 +177,11 @@ export function handleWithdrawn(event: Withdrawn): void {
   let reserve = Reserve.load(reserveId);
   let userReserve = UserReserve.load(userReserveId);
   if (!user) {
-    log.warning("Found Withdrawn event for unknown user - {}", [userId]);
+    log.warning("[handleWithdrawn]Found Withdrawn event for unknown user - {}", [userId]);
     user = newUser(userId);
   }
   if (!reserve) {
-    log.warning("Found Withdrawn event for unknown reserve - {}", [reserveId]);
+    log.warning("[handleWithdrawn]Found Withdrawn event for unknown reserve - {}", [reserveId]);
     return;
   }
   if (!userReserve) {
@@ -213,10 +213,10 @@ export function handleBorrowed(event: Borrowed): void {
   let userReserve = UserReserve.load(userReserveId);
   if (!user) {
     user = newUser(userId);
-    log.info("New user from Borrowed: {}", [userId]);
+    log.info("[handleBorrowed]New user from Borrowed: {}", [userId]);
   }
   if (!reserve) {
-    log.warning("Found borrow event for unknown reserve - {}", [reserveId]);
+    log.warning("[handleBorrowed]Found borrow event for unknown reserve - {}", [reserveId]);
     return;
   }
   if (!userReserve) {
@@ -244,11 +244,11 @@ export function handleRepaid(event: Repaid): void {
   let reserve = Reserve.load(reserveId);
   let userReserve = UserReserve.load(userReserveId);
   if (!user) {
-    log.warning("Found Repaid event for unknown user - {}", [userId]);
+    log.warning("[handleRepaid]Found Repaid event for unknown user - {}", [userId]);
     user = newUser(userId);
   }
   if (!reserve) {
-    log.warning("Found borrow event for unknown reserve - {}", [reserveId]);
+    log.warning("[handleRepaid]Found borrow event for unknown reserve - {}", [reserveId]);
     return;
   }
   if (!userReserve) {
@@ -279,7 +279,7 @@ export function handleCollateralStatusUpdated(
   let userReserve = UserReserve.load(userReserveId);
 
   if (!user) {
-    log.warning("Found CollateralStatusUpdated event for unknown user - {}", [
+    log.warning("[handleCollateralStatusUpdated]Found CollateralStatusUpdated event for unknown user - {}", [
       userId,
     ]);
     user = newUser(userId);
@@ -287,7 +287,7 @@ export function handleCollateralStatusUpdated(
   }
   if (!reserve) {
     log.warning(
-      "Found CollateralStatusUpdated event for unknown reserve - {}",
+      "[handleCollateralStatusUpdated]Found CollateralStatusUpdated event for unknown reserve - {}",
       [reserveId]
     );
     return;
@@ -315,11 +315,11 @@ export function handleLiquidated(event: Liquidated): void {
   let reserve = Reserve.load(reserveId);
 
   if (!user) {
-    log.warning("Found Liquidated event for unknown user - {}", [userId]);
+    log.warning("[handleLiquidated]Found Liquidated event for unknown user - {}", [userId]);
     return;
   }
   if (!reserve) {
-    log.warning("Found Liquidated event for unknown reserve - {}", [reserveId]);
+    log.warning("[handleLiquidated]Found Liquidated event for unknown reserve - {}", [reserveId]);
     return;
   }
 
@@ -327,7 +327,7 @@ export function handleLiquidated(event: Liquidated): void {
   let userNftCollectionId = userId + "-" + collectionId;
   let userNftCollection = UserNftCollection.load(userNftCollectionId);
   if (!userNftCollection) {
-    log.warning("Found Liquidated event for unknown userNftCollection - {}", [
+    log.warning("[handleLiquidated]Found Liquidated event for unknown userNftCollection - {}", [
       userNftCollectionId,
     ]);
     return;
@@ -368,7 +368,7 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
   let user = User.load(userId);
   if (!user) {
     user = newUser(userId);
-    log.info("New user from NFTsDeposited {}", [userId]);
+    log.info("[handleNFTsDeposited]New user from NFTsDeposited {}", [userId]);
   }
 
   for (let i = 0; i < event.params.nfts.length; i++) {
@@ -377,7 +377,7 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
 
     let collection = NftCollection.load(collectionId);
     if (!collection) {
-      log.warning("Found deposit event for unknown collection - {}", [
+      log.warning("[handleNFTsDeposited]Found deposit event for unknown collection - {}", [
         collectionId,
       ]);
       return;
@@ -411,7 +411,7 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
   let userId = event.params.user.toHex();
   let user = User.load(userId);
   if (!user) {
-    log.warning("Found withdraw event for unknown user - {}", [userId]);
+    log.warning("[handleNFTsWithdrawn]Found withdraw event for unknown user - {}", [userId]);
     user = newUser(userId);
   }
 
@@ -421,14 +421,14 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
 
     let collection = NftCollection.load(collectionId);
     if (!collection) {
-      log.warning("Found withdraw event for unknown collection - {}", [
+      log.warning("[handleNFTsWithdrawn]Found withdraw event for unknown collection - {}", [
         collectionId,
       ]);
       return;
     }
     let userNftCollection = UserNftCollection.load(userNftCollectionId);
     if (!userNftCollection) {
-      log.warning("Found withdraw event for unknown userNftCollection - {}", [
+      log.warning("[handleNFTsWithdrawn]Found withdraw event for unknown userNftCollection - {}", [
         userNftCollectionId,
       ]);
       userNftCollection = newUserNftCollection(userNftCollectionId);
