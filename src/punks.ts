@@ -28,7 +28,8 @@ export function handlePunkTransfer(event: PunkTransfer): void {
   punk.save();
   store.remove("CryptoPunk", oldOwner.toHex() + "-" + punkIndex.toString());
 
-  let wPunkId = newOwner.toHex() + "-" + WPUNK + "-" + punkIndex.toString();
+  // let wPunkId = newOwner.toHex() + "-" + WPUNK + "-" + punkIndex.toString();
+  let wPunkId = WPUNK + "-" + punkIndex.toString();
   let wPunk = NftToken.load(wPunkId);
   if (wPunk) store.remove("NftToken", wPunkId);
 }

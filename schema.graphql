@@ -72,7 +72,7 @@ type UserNftCollection @entity {
 }
 
 type NftToken @entity {
-  id: ID! # UserNftCollection - tokenId
+  id: ID! # collection - tokenId
   userCollection: UserNftCollection!
   amount: BigInt!
 }

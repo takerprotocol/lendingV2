@@ -409,23 +409,20 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
 
 export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
   let userId = event.params.user.toHex();
-  let user = User.load(userId);
-  if (!user) {
-    log.warning("[handleNFTsWithdrawn]Found withdraw event for unknown user - {}", [userId]);
-    user = newUser(userId);
-  }
-
   for (let i = 0; i < event.params.nfts.length; i++) {
     let collectionId = event.params.nfts[i].toHex();
-    let userNftCollectionId = userId + "-" + collectionId;
-
-    let collection = NftCollection.load(collectionId);
-    if (!collection) {
-      log.warning("[handleNFTsWithdrawn]Found withdraw event for unknown collection - {}", [
-        collectionId,
+    // let userNftCollectionId = userId + "-" + collectionId;
+    let nftTokenId = collectionId + "-" + event.params.tokenIds[i].toString();
+    let nftToken = NftToken.load(nftTokenId);
+    if (!nftToken) {
+      log.warning("[handleNFTsWithdrawn]Found withdraw event for unknown nftToken - {}", [
+        nftTokenId,
       ]);
-      return;
+      continue;
     }
+    let userNftCollectionId = nftToken.userCollection;
+    userId = userNftCollectionId.split("-")[0];
+
     let userNftCollection = UserNftCollection.load(userNftCollectionId);
     if (!userNftCollection) {
       log.warning("[handleNFTsWithdrawn]Found withdraw event for unknown userNftCollection - {}", [
@@ -444,6 +441,12 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
       // event.params.amounts[i]
       BigInt.fromI32(1)
     );
+  }
+
+  let user = User.load(userId);
+  if (!user) {
+    log.warning("[handleNFTsWithdrawn]Found withdraw event for unknown user - {}", [userId]);
+    user = newUser(userId);
   }
   user = updateUserState(user, POOLID);
 

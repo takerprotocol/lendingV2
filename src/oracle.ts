@@ -42,7 +42,7 @@ export function handleAggregatorSet(event: SetTokenAggregator): void {
   }
 
   // init aggregator entity
-  store.remove("[handleAggregatorSet]PriceAggregator", realAggregatorAddress.value.toHex());
+  store.remove("PriceAggregator", realAggregatorAddress.value.toHex());
   let aggregator = newPriceAggregator(
     event.address,
     event.params.asset,

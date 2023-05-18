@@ -26,7 +26,7 @@ export function addNftToken(
   tokenId: BigInt,
   amount: BigInt
 ): void {
-  let nftTokenId = userNftCollection.id + "-" + tokenId.toString();
+  let nftTokenId = userNftCollection.collection + "-" + tokenId.toString();
   let nftToken = NftToken.load(nftTokenId);
   if (nftToken) {
     nftToken.amount = nftToken.amount.plus(amount);
@@ -44,7 +44,7 @@ export function removeNftToken(
   tokenId: BigInt,
   amount: BigInt
 ): void {
-  let nftTokenId = userNftCollection.id + "-" + tokenId.toString();
+  let nftTokenId = userNftCollection.collection + "-" + tokenId.toString();
   let nftToken = NftToken.load(nftTokenId);
   if (nftToken) {
     let newAmount = nftToken.amount.minus(amount);
