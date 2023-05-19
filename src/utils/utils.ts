@@ -63,7 +63,7 @@ export function removeNftToken(
   nftToken.save();
 }
 
-export function addUserNftCollection(
+export function addUserNftCollection2NftCollection(
   userNftCollection: UserNftCollection,
   collectionId: string
 ): void {
@@ -83,4 +83,12 @@ export function addUserNftCollection(
     collection.users = users;
     collection.save();
   }
+}
+
+export function removeUserNftCollection(Id: string): void {
+  let userNftCollection = UserNftCollection.load(Id);
+  if (userNftCollection) {
+    store.remove("UserNftCollection", Id);
+  }
+  return;
 }

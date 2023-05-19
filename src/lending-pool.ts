@@ -37,7 +37,7 @@ import {
   newUserReserve,
   newUserNftCollection,
 } from "./utils/initializers";
-import { updateUserState, removeNftToken, addNftToken, addUserNftCollection } from "./utils/utils";
+import { updateUserState, removeNftToken, addNftToken, addUserNftCollection2NftCollection, removeUserNftCollection } from "./utils/utils";
 import { POOLID, ORACLE } from "./utils/consts";
 
 export function handleNftReserveInitialized(
@@ -124,6 +124,12 @@ export function handleReserveDropped(event: ReserveDropped): void {
   }
   let collection = NftCollection.load(id);
   if (collection) {
+    let users = collection.users;
+    if (users) {
+      users.forEach((userNftCollectionId: string) => {
+        removeUserNftCollection(userNftCollectionId);
+      });
+    }
     store.remove("NftCollection", id);
   }
 }
@@ -351,7 +357,7 @@ export function handleLiquidated(event: Liquidated): void {
     let toCollection = UserNftCollection.load(toCollectionId);
     if (!toCollection) {
       toCollection = newUserNftCollection(toCollectionId);
-      addUserNftCollection(toCollection, collectionId);
+      addUserNftCollection2NftCollection(toCollection, collectionId);
     }
     addNftToken(toCollection, event.params.tokenId, BigInt.fromI32(1));
     let to = User.load(event.params.to.toHex());
@@ -385,7 +391,7 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
     let userNftCollection = UserNftCollection.load(userNftCollectionId);
     if (!userNftCollection) {
       userNftCollection = newUserNftCollection(userNftCollectionId);
-      addUserNftCollection(userNftCollection, collectionId);
+      addUserNftCollection2NftCollection(userNftCollection, collectionId);
       userNftCollection.user = userId;
       userNftCollection.collection = collectionId;
       userNftCollection.save();
@@ -429,7 +435,7 @@ export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
         userNftCollectionId,
       ]);
       userNftCollection = newUserNftCollection(userNftCollectionId);
-      addUserNftCollection(userNftCollection, collectionId);
+      addUserNftCollection2NftCollection(userNftCollection, collectionId);
       userNftCollection.user = userId;
       userNftCollection.collection = collectionId;
       userNftCollection.save();
