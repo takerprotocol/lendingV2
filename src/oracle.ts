@@ -25,7 +25,24 @@ export function handleNewNFTPrice(event: NewNFTPrice): void {
     log.error("[handleNewNFTPrice]Collection {} does not exist.", [event.params.asset.toHex()]);
     return;
   }
-  collection.floorPrice = event.params.price;
+  
+  let oldFloorPrice = collection.floorPrice;
+  if ((event.params.price == BigInt.fromI32(0)) && (collection.PriceAggregator != null)) {
+    let aggregator = PriceAggregator.load(collection.PriceAggregator);
+    if (aggregator) {
+      collection.floorPrice = getAssetPrice(
+        Address.fromBytes(aggregator.oracle),
+        Address.fromString(aggregator.collection)
+      );
+    }
+  } else {
+    collection.floorPrice = event.params.price;
+  }
+
+  if (oldFloorPrice == collection.floorPrice) {
+    return;
+  }
+
   let users = collection.users;
   if (users) {
     updateAllUserStates(users);
@@ -80,7 +97,7 @@ export function handleAnswerUpdated(event: AnswerUpdated): void {
 
   let collection = NftCollection.load(aggregator.collection);
   if (!collection) {
-    log.error("[handleAnswerUpdated]Collection {} does not exist.", [aggregator.collection]);
+    log.error("[handleAnswerUpdated]Collection {} does not exist in aggregator {}.", [aggregator.collection, aggregator.id]);
     return;
   }
   collection.floorPrice = getAssetPrice(
