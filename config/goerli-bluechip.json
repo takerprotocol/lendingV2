@@ -1,23 +1,23 @@
 {
   "network": "goerli",
   "LendingPool": {
-    "startBlock": 8565231,
-    "address": "0x5417fDbBB607966a592b440D2f357398f537EB5e"
+    "startBlock": 9148582,
+    "address": "0x05781477b243D130a9365Be351C5fCBecBf16576"
   },
   "PoolConfigurator": {
-    "startBlock": 8565231,
-    "address": "0x49d19b2017A6B24d7416d377205a15735f1F2c06"
+    "startBlock": 9148583,
+    "address": "0x619bC373D4a2735f949B461C96bec303Fde2F3B3"
   },
   "IPriceOracleGetter": {
-    "startBlock": 8549602,
-    "address": "0xC38aEbC20feD1571E2eab066C06ACe699a428510"
+    "startBlock": 9148590,
+    "address": "0xAfa33849A3639DDd30Cdf9ef7b3Df3B2Eb99E623"
   },
   "CryptoPunks": {
-    "startBlock": 8797989,
-    "address": "0xF6C7748857B6e2edBA7dcE548A24eD3A95A2CCd3"
+    "startBlock": 9148546,
+    "address": "0x35264fF0a6eFD9ddb4E6A9907F54C049da70638C"
   },
   "WPunk": {
-    "startBlock": 8797989,
-    "address": "0x81E4eDDf9fcb309f63954D67d40000f88Bb5D30e"
+    "startBlock": 9148546,
+    "address": "0x51C8b0eEc441c91c271a415131855fB895817743"
   }
 }

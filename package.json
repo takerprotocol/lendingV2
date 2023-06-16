@@ -4,8 +4,8 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --product hosted-service takerprotocol/lending-subgraph-2",
-    "deploy-growth": "graph deploy --product hosted-service takerprotocol/taker-lending-growth",
+    "deploy": "graph deploy --product hosted-service takerprotocol/taker-lending-bluechip0610",
+    "deploy-growth": "graph deploy --product hosted-service takerprotocol/taker-lending-growth0610",
     "create-local": "graph create --node http://localhost:8020/ lending-subgraph",
     "remove-local": "graph remove --node http://localhost:8020/ lending-subgraph",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 lending-subgraph",

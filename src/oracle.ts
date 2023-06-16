@@ -28,7 +28,7 @@ export function handleNewNFTPrice(event: NewNFTPrice): void {
   
   let oldFloorPrice = collection.floorPrice;
   if ((event.params.price == BigInt.fromI32(0)) && (collection.PriceAggregator != null)) {
-    let aggregator = PriceAggregator.load(collection.PriceAggregator);
+    let aggregator = PriceAggregator.load(collection.PriceAggregator as string);
     if (aggregator) {
       collection.floorPrice = getAssetPrice(
         Address.fromBytes(aggregator.oracle),
