@@ -1,8 +1,8 @@
 import { Routes, Route, useLocation } from 'react-router-dom'
-import Dashboard from 'pages/Dashboard'
-import Liquidation from 'pages/Liquidation'
-import Deposit from 'pages/Deposit'
-import Liquidate from 'pages/Liquidate'
+// import Dashboard from 'pages/Dashboard'
+// import Liquidation from 'pages/Liquidation'
+// import Deposit from 'pages/Deposit'
+// import Liquidate from 'pages/Liquidate'
 import { useCallback, useMemo, useEffect, useLayoutEffect, useState } from 'react'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { useAddress, useDashboardType } from 'state/user/hooks'
@@ -45,16 +45,16 @@ import { Contract } from '@ethersproject/contracts'
 import { setMobileType } from 'state/user/reducer'
 import { isMobile } from 'utils/userAgent'
 import Mint from 'pages/Mint'
-import Price from 'pages/Price'
-import Withdraw from 'pages/Withdraw'
+// import Price from 'pages/Price'
+// import Withdraw from 'pages/Withdraw'
 
 export default function CustomizeRoutes() {
   const location = useLocation()
   useLayoutEffect(() => {
     document.documentElement.scrollTo(0, 0)
-    if (location.pathname === '/') {
-      window.location.href = '/dashboard'
-    }
+    // if (location.pathname === '/') {
+    //   window.location.href = '/dashboard'
+    // }
   }, [location.pathname])
   const { chainId, library } = useActiveWeb3React()
   const dispatch = useAppDispatch()
@@ -266,16 +266,16 @@ export default function CustomizeRoutes() {
   }, [getCollection, flag, dashboardType])
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
+      {/* <Route path="/" element={<Dashboard />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/deposit/:id" element={<Deposit />} />
-      <Route path="/withdraw" element={<Withdraw />} />
-      <Route path="/mint" element={<Mint />} />
-      <Route path="/price" element={<Price />} />
+      <Route path="/withdraw" element={<Withdraw />} /> */}
+      <Route path="/" element={<Mint />} />
+      {/* <Route path="/price" element={<Price />} />
       <Route path="/liquidate" element={<Liquidate />} />
       <Route path="/liquidate/:address" element={<Liquidate />} />
       <Route path="/liquidation" element={<Liquidation />} />
-      <Route path="/liquidation/:page" element={<Liquidation />} />
+      <Route path="/liquidation/:page" element={<Liquidation />} /> */}
       {/* <Route path="*" element={<Dashboard />} /> */}
     </Routes>
   )

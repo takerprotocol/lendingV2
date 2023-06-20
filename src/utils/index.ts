@@ -4,6 +4,7 @@ import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import BigNumber from 'bignumber.js'
 import { JSEncrypt } from 'jsencrypt'
+
 const SHA256 = require('crypto-js/sha256')
 
 BigNumber.config({ EXPONENTIAL_AT: [-40, 40] })

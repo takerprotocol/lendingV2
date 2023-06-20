@@ -10,7 +10,7 @@ import { getProxyAddressesRegistry } from 'config'
 import { ethers } from 'ethers'
 // import { getProxyAddressesProvider, getProxyAddressesRegistry } from 'config'
 
-export function useLendingPool() {
+export function useLendingPool(poolType?: string) {
   const [address, setAddress] = useState('')
   const [addressProvider, setAddressProvider] = useState('')
   const dashboardType = useDashboardType()
@@ -21,7 +21,7 @@ export function useLendingPool() {
   useEffect(() => {
     if (contract) {
       contract
-        .getAddressProvider(ethers.utils.formatBytes32String(dashboardType === 1 ? 'bluechip' : 'growth'))
+        .getAddressProvider(ethers.utils.formatBytes32String(poolType ? poolType : dashboardType === 1 ? 'bluechip' : 'growth'))
         .then((res: any) => {
           setAddressProvider(res)
         })

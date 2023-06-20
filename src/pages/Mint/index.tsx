@@ -1,13 +1,19 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { Box, Button, styled } from '@mui/material'
+import { Box, styled } from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton';
 import CustomizedSelect from 'components/Select'
 import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { useContract } from 'hooks/useContract'
 import MockMAYC_ABI from 'abis/MockMAYC.json'
 import cryptoPunks_ABI from 'abis/cryptoPunks.json'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 // import { useCollections } from 'state/application/hooks'
 import { hexToNumberString } from 'web3-utils'
+import { LendingPool } from 'apollo/queries'
+import { getClient } from 'apollo/client'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { renderCollectionName } from 'utils'
+// import { renderCollectionName } from 'utils'
 // import { RetryableError } from 'utils/retry'
 // import { Box, styled } from '@mui/material'
 // import { useState } from 'react'
@@ -58,65 +64,51 @@ export default function Mint() {
   const { library: provider } = useActiveWeb3React()
   const allFilterType = 0
   const [result, setResult] = useState<Array<any>>([])
-  // const res = useMemo(() => {
-  //   return [...result]
-  // }, [result])
-  // console.log(collection)
-  const collections = useMemo(() => {
-    return [
-      {
-        id: '0x77a136db5131bd2a547e56aad40b4e8fbec6e3b7',
-        name: 'azuki',
-      },
-      {
-        id: '0x7629aa9f796f230c48e126425545ebf5eb57fde6',
-        name: 'mayc',
-      },
-      {
-        id: '0x1326578b741311773b21b22dd22d047e8289fc1f',
-        name: 'bayc',
-      },
-      {
-        id: '0x8c8f9db836049a7b11c561510d5b8318cccb6e0b',
-        name: 'doodles',
-      },
-      {
-        id: '0xdcb017b5b37cf40d4955c5df42964464b5b0ea36',
-        name: 'clonex',
-      },
-      {
-        id: '0x9a79bccd419c9604ce02645950e994b708553165',
-        name: 'cool_cats',
-      },
-      {
-        id: '0x07875841846abb8fba50dbc64ab4b77cbb6b5ca1',
-        name: 'world_of_women',
-      },
-      {
-        id: '0xf6c7748857b6e2edba7dce548a24ed3a95a2ccd3',
-        name: 'Cryptopunks',
-      },
-    ]
-  }, [])
-  const useMockMAYCContract = useContract(collections[valueIndex - 1]?.id, MockMAYC_ABI)
-  const PunkContract = useContract(collections[valueIndex - 1]?.id, cryptoPunks_ABI)
+  const [minting, setMinting] = useState(false)
+
+  const blueChipClient = getClient(1)[5];
+  const growthClient = getClient(0)[5];
+  const blueChipContract = useLendingPool('bluechip');
+  const growthContract = useLendingPool('growth');
+
+  const [allCollections, setAllCollections] = useState<Array<{name: string, id: string}>>([]);
+
+  useEffect(() => {
+    if(blueChipClient && growthClient && growthContract && blueChipContract){
+      let nftList: Array<{name: string, id: string}> = [];
+      Promise.all([blueChipClient.query({
+          query: LendingPool(blueChipContract.address)
+        }),
+        growthClient.query({
+          query: LendingPool(growthContract.address)
+        }),
+      ]).then(([blueChipRes, growthRes]) => {
+        blueChipRes.data.lendingPools[0].nfts.forEach((el: any) => {
+          nftList = [...nftList, {id: el.id, name: renderCollectionName(el.name)}];
+        });
+        growthRes.data.lendingPools[0].nfts.forEach((el: any) => {
+          nftList = [...nftList, {id: el.id, name: renderCollectionName(el.name)}];
+        });
+        setAllCollections(nftList);
+      })
+    }
+  }, [blueChipClient, growthClient, growthContract, blueChipContract])
+
+  const useMockMAYCContract = useContract(allCollections[valueIndex - 1]?.id, MockMAYC_ABI);
+  const PunkContract = useContract(allCollections[valueIndex - 1]?.id, cryptoPunks_ABI);
+
   const collectionOptions = useMemo(() => {
     return [
       {
         value: 0,
-        name: 'All Collections',
-      },
-      ...collections.map((collection: any, index: number) => ({
-        value: index + 1,
-        name: (
-          <CollectionSortItem>
-            {/* <img alt={collection.name} src={collection.icon} /> */}
-            {collection.name}
-          </CollectionSortItem>
-        ),
-      })),
-    ]
-  }, [collections])
+        name: 'Select Collection',
+      }
+    , ...allCollections.map((col, index: number) => 
+    ({ 
+      value: index + 1, 
+      name:<CollectionSortItem>{col.name}</CollectionSortItem>
+    }))]
+  }, [allCollections])
   return (
     <MintBox>
       <img src="http://127.0.0.1:3000/ImageUrl/0x77a136db5131bd2a547e56aad40b4e8fbec6e3b7/2" alt="" />
@@ -137,10 +129,10 @@ export default function Mint() {
         allFilterType={allFilterType}
         setValueIndex={setValueIndex}
       />
-      {collections[valueIndex - 1]?.id && (
+      {allCollections[valueIndex - 1]?.id && (
         <TitleBox>
           id:
-          <ValueBox>{collections[valueIndex - 1]?.id}</ValueBox>{' '}
+          <ValueBox>{allCollections[valueIndex - 1]?.id}</ValueBox>{' '}
         </TitleBox>
       )}
       {result.slice(0, 5).map((el: any) => (
@@ -161,11 +153,15 @@ export default function Mint() {
           </Box>
         </Box>
       ))}
-      <Button
+      <LoadingButton
         variant="contained"
+        disabled={!valueIndex}
+        loading={minting}
         sx={{ marginTop: '16px' }}
         onClick={() => {
-          ;(collections[valueIndex - 1]?.id === '0xf6c7748857b6e2edba7dce548a24ed3a95a2ccd3'
+          if(!valueIndex) return;
+          setMinting(true);
+          (allCollections[valueIndex - 1]?.id === '0xf6c7748857b6e2edba7dce548a24ed3a95a2ccd3'
             ? PunkContract && PunkContract.getPunk()
             : useMockMAYCContract?.mint()
           ).then((res: any) => {
@@ -174,6 +170,7 @@ export default function Mint() {
                 if (receipt === null) {
                 } else {
                   clearInterval(calculagraph)
+                  setMinting(false);
                   setResult((result) => [
                     {
                       tokenId: hexToNumberString(receipt.logs[0].topics[3]),
@@ -185,11 +182,13 @@ export default function Mint() {
                 }
               })
             }, 3000)
+          }).catch((err: any) => {
+            setMinting(false);
           })
         }}
       >
         Generate
-      </Button>
+      </LoadingButton>
     </MintBox>
   )
 }

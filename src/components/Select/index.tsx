@@ -73,7 +73,7 @@ const StyledMenuItem = styled(MenuItem)`
 type CustomizedSelectProps = SelectProps & {
   options: any
   filter: number
-  valueIndex: number
+  valueIndex?: number
   setValueIndex: Function
   allFilterType?: number
 }
@@ -127,6 +127,7 @@ export default function CustomizedSelect(props: CustomizedSelectProps) {
   return (
     <div>
       <StyledSelect
+        label="Collections"
         className={open ? 'focus' : ''}
         startAdornment={props.startAdornment}
         IconComponent={open ? openArrow : Arrow}

@@ -10,13 +10,15 @@ export const clientEth = new ApolloClient({
 })
 export const blueChipClientGoerli = new ApolloClient({
   link: new HttpLink({
-    uri: 'https://api.thegraph.com/subgraphs/name/takerprotocol/lending-subgraph-2',
+    // uri: 'https://api.thegraph.com/subgraphs/name/takerprotocol/lending-subgraph-2',
+    uri: "https://api.thegraph.com/subgraphs/name/takerprotocol/taker-lending-bluechip0610"
   }),
   cache: new InMemoryCache(),
 })
 export const growthClientGoerli = new ApolloClient({
   link: new HttpLink({
-    uri: 'https://api.thegraph.com/subgraphs/name/takerprotocol/taker-lending-growth',
+    // uri: 'https://api.thegraph.com/subgraphs/name/takerprotocol/taker-lending-growth',
+    uri: "https://api.thegraph.com/subgraphs/name/takerprotocol/taker-lending-growth0610"
   }),
   cache: new InMemoryCache(),
 })
