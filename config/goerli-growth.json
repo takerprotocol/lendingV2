@@ -2,7 +2,7 @@
   "network": "goerli",
   "LendingPool": {
     "startBlock": 9148587,
-    "address": "0xc8fAD9B421c7617878341648AfB05Fd5e27086a9"
+    "address": "0x8866586d96875F5B6ed7F6D0bCeFF04e51AFd429"
   },
   "PoolConfigurator": {
     "startBlock": 9148589,
