@@ -5,9 +5,9 @@ export const getProxyAddressesRegistry = (chainId?: number) => {
     return '0xfc5595bD553e8983fdf2E71af61e32876d14fc4f'
   }
   if (chainId === 5) {
-    return '0xfc5595bD553e8983fdf2E71af61e32876d14fc4f'
+    return '0x7AdE841269a4C59b6F964C8Bd951aF8DA8D13897'
   }
-  return '0xfc5595bD553e8983fdf2E71af61e32876d14fc4f'
+  return '0x7AdE841269a4C59b6F964C8Bd951aF8DA8D13897'
 }
 export const getProxyAddressesProvider = (chainId?: number) => {
   if (chainId === 42) {

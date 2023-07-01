@@ -19,9 +19,9 @@ export function useLendingPool(poolType?: string) {
   const contract = useContract(getProxyAddressesRegistry(chainId), AddressesProviderRegistryAbi)
   const providerContract = useContract(addressProvider, ILendingPoolAddressesProviderAbi)
   useEffect(() => {
-    if (contract) {
+    if (contract && chainId === 5) {
       contract
-        .getAddressProvider(ethers.utils.formatBytes32String(poolType ? poolType : dashboardType === 1 ? 'bluechip' : 'growth'))
+        .getAddressProvider(ethers.utils.formatBytes32String(poolType ? poolType : 'bluechip' )) // : dashboardType === 1 ? 'bluechip' : 'growth'))
         .then((res: any) => {
           setAddressProvider(res)
         })

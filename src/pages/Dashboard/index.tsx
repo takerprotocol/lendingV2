@@ -93,7 +93,7 @@ export default function Dashboard() {
     1
   )
   const loginWalletType = useLoginWalletType()
-  const { chainId } = useActiveWeb3React()
+  const { chainId = 5 } = useActiveWeb3React()
   const alchemy = useAlchemy()
   const [client, setClient] = useState<any>(null)
   useEffect(() => {

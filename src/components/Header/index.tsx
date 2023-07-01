@@ -2,7 +2,7 @@ import { Box, Button, styled, Typography } from '@mui/material'
 import LogoIcon from 'assets/images/svg/logo.svg'
 import AddressIcon from 'assets/images/svg/wallet/address.svg'
 import WalletModal from 'components/WalletModal'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useShowChangeNetWork, useToggleModal } from 'state/application/hooks'
 import { useAddress, useMobileType } from 'state/user/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -11,14 +11,12 @@ import { desensitization } from 'utils'
 import * as React from 'react'
 import { PopperPlacementType } from '@mui/material/Popper'
 import HeaderPopper from './components/HeaderPopper'
-import theme from 'theme'
 import DashboardPopper from './components/DashboardPopper'
 import MobileHeader from './MobileHeader'
 import { ChangeNetWork } from 'components/ChangeNetWork'
 import { useTransactionPending } from 'state/transactions/hooks'
 import { Loading } from 'components/Loading'
 import { useCallback, useEffect, useState } from 'react'
-import { setDashboardType } from 'state/user/reducer'
 import { useAppDispatch } from 'state'
 
 const HeaderBox = styled(Box, {
@@ -151,7 +149,7 @@ export const Header = () => {
             Home
           </StyledLinkText>
         </Link> */}
-              <Link to="/dashboard" onClick={() => dispatch(setDashboardType(1))}>
+              {/* <Link to="/dashboard" onClick={() => dispatch(setDashboardType(1))}>
                 <StyledLinkText
                   color={String(location.pathname === '/dashboard' ? theme.palette.primary.main : theme.palette.text)}
                   variant="button"
@@ -170,7 +168,7 @@ export const Header = () => {
                 >
                   Liquidation
                 </StyledLinkText>
-              </Link>
+              </Link> */}
               {/* <Link to="/faqs">
                 <StyledLinkText
                   color={String(location.pathname === '/faqs' ? theme.palette.primary.main : theme.palette.text)}
