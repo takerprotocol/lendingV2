@@ -26,7 +26,7 @@ export function useLendingPool(poolType?: string) {
           setAddressProvider(res)
         })
     }
-  }, [contract, dashboardType])
+  }, [contract, dashboardType, chainId])
   const lendingPoolContract = useContract(address, lendingPoolAbi)
   useEffect(() => {
     if (providerContract) {
