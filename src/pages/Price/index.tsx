@@ -3,8 +3,13 @@ import { Box, Button, Input, styled } from '@mui/material'
 import CustomizedSelect from 'components/Select'
 import { useContract } from 'hooks/useContract'
 import Aggregator_ABI from 'abis/Aggregator.json'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { toWei } from 'web3-utils'
+import { LendingPool } from 'apollo/queries'
+import { getClient } from 'apollo/client'
+import { useLendingPool } from 'hooks/useLendingPool'
+import { renderCollectionName } from 'utils'
+import { useWeb3React } from '@web3-react/core'
 
 const TestBox = styled(Box)`
   padding-top: 100px;
@@ -51,38 +56,38 @@ export default function Price() {
   const [valueIndex, setValueIndex] = useState<number>(0)
   const allFilterType = 0
   const [value, setValue] = useState<string>('')
-  const collections = useMemo(() => {
-    return [
-      {
-        id: '0x77a136db5131bd2a547e56aad40b4e8fbec6e3b7',
-        name: 'azuki',
-      },
-      {
-        id: '0x7629aa9f796f230c48e126425545ebf5eb57fde6',
-        name: 'mayc',
-      },
-      {
-        id: '0x1326578b741311773b21b22dd22d047e8289fc1f',
-        name: 'bayc',
-      },
-      {
-        id: '0x8c8f9db836049a7b11c561510d5b8318cccb6e0b',
-        name: 'doodles',
-      },
-      {
-        id: '0xdcb017b5b37cf40d4955c5df42964464b5b0ea36',
-        name: 'clonex',
-      },
-      {
-        id: '0x9a79bccd419c9604ce02645950e994b708553165',
-        name: 'cool_cats',
-      },
-      {
-        id: '0x07875841846abb8fba50dbc64ab4b77cbb6b5ca1',
-        name: 'world_of_women',
-      },
-    ]
-  }, [])
+
+  const { account, chainId } = useWeb3React()
+
+  const blueChipClient = getClient(1)[5];
+  const growthClient = getClient(0)[5];
+  const blueChipContract = useLendingPool('bluechip');
+  const growthContract = useLendingPool('growth');
+  const [allCollections, setAllCollections] = useState<Array<{name: string, id: string}>>([]);
+
+  useEffect(() => {
+    console.log("try: ", blueChipClient, growthClient, growthContract, blueChipContract)
+    if(blueChipClient && growthClient && growthContract && blueChipContract){
+      console.log('loading...')
+      let nftList: Array<{name: string, id: string}> = [];
+      Promise.all([blueChipClient.query({
+          query: LendingPool(blueChipContract.address)
+        }),
+        growthClient.query({
+          query: LendingPool(growthContract.address)
+        }),
+      ]).then(([blueChipRes, growthRes]) => {
+        blueChipRes.data.lendingPools[0].nfts.forEach((el: any) => {
+          nftList = [...nftList, {id: el.id, name: renderCollectionName(el.name)}];
+        });
+        growthRes.data.lendingPools[0].nfts.forEach((el: any) => {
+          nftList = [...nftList, {id: el.id, name: renderCollectionName(el.name)}];
+        });
+        setAllCollections(nftList);
+      })
+    }
+  }, [blueChipClient, growthClient, growthContract, blueChipContract])
+  
   const Aggregator = useContract('0xC38aEbC20feD1571E2eab066C06ACe699a428510', Aggregator_ABI)
   const collectionOptions = useMemo(() => {
     return [
@@ -90,7 +95,7 @@ export default function Price() {
         value: 0,
         name: 'All Collections',
       },
-      ...collections.map((collection: any, index: number) => ({
+      ...allCollections.map((collection: any, index: number) => ({
         value: index + 1,
         name: (
           <CollectionSortItem>
@@ -100,10 +105,12 @@ export default function Price() {
         ),
       })),
     ]
-  }, [collections])
+  }, [allCollections])
   return (
     <TestBox>
       <TitleBox mb="16px">Please switch to Ethereum Goerli Network</TitleBox>
+      {!!!account && <TitleBox mb="16px">Please connect wallet</TitleBox>}
+
       <CustomizedSelect
         options={collectionOptions}
         startAdornment={
@@ -127,10 +134,10 @@ export default function Price() {
           setValue(el.target.value)
         }}
       />
-      {collections[valueIndex - 1]?.id && (
+      {allCollections[valueIndex - 1]?.id && (
         <TitleBox>
           id:
-          <ValueBox>{collections[valueIndex - 1]?.id}</ValueBox>{' '}
+          <ValueBox>{allCollections[valueIndex - 1]?.id}</ValueBox>{' '}
         </TitleBox>
       )}
       {/* {result.slice(0, 5).map((el: any) => (
@@ -155,7 +162,7 @@ export default function Price() {
         variant="contained"
         sx={{ marginTop: '16px' }}
         onClick={() => {
-          Aggregator?.setNFTPrice(collections[valueIndex - 1]?.id, toWei(value), {
+          Aggregator?.setNFTPrice(allCollections[valueIndex - 1]?.id, toWei(value), {
             gasLimit: 210000,
           })
         }}

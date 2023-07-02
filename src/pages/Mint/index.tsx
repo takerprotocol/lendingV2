@@ -13,6 +13,7 @@ import { LendingPool } from 'apollo/queries'
 import { getClient } from 'apollo/client'
 import { useLendingPool } from 'hooks/useLendingPool'
 import { renderCollectionName } from 'utils'
+import { PUNKS_ADDRESS, wPunksAddrUnwrap } from 'config';
 // import { renderCollectionName } from 'utils'
 // import { RetryableError } from 'utils/retry'
 // import { Box, styled } from '@mui/material'
@@ -84,7 +85,7 @@ export default function Mint() {
         }),
       ]).then(([blueChipRes, growthRes]) => {
         blueChipRes.data.lendingPools[0].nfts.forEach((el: any) => {
-          nftList = [...nftList, {id: el.id, name: renderCollectionName(el.name)}];
+          nftList = [...nftList, {id: wPunksAddrUnwrap(el.id), name: renderCollectionName(el.name)}];
         });
         growthRes.data.lendingPools[0].nfts.forEach((el: any) => {
           nftList = [...nftList, {id: el.id, name: renderCollectionName(el.name)}];
@@ -161,7 +162,7 @@ export default function Mint() {
         onClick={() => {
           if(!valueIndex) return;
           setMinting(true);
-          (allCollections[valueIndex - 1]?.id === '0xf6c7748857b6e2edba7dce548a24ed3a95a2ccd3'
+          (allCollections[valueIndex - 1]?.id === PUNKS_ADDRESS
             ? PunkContract && PunkContract.getPunk()
             : useMockMAYCContract?.mint()
           ).then((res: any) => {

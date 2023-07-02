@@ -46,6 +46,7 @@ import { Contract } from '@ethersproject/contracts'
 import { setMobileType } from 'state/user/reducer'
 import { isMobile } from 'utils/userAgent'
 import Mint from 'pages/Mint'
+import Price from 'pages/Price'
 // import Price from 'pages/Price'
 // import Withdraw from 'pages/Withdraw'
 
@@ -274,8 +275,8 @@ export default function CustomizeRoutes() {
       <Route path="/deposit/:id" element={<Deposit />} />
       <Route path="/withdraw" element={<Withdraw />} /> */}
       <Route path="/" element={<Mint />} />
-      {/* <Route path="/price" element={<Price />} />
-      <Route path="/liquidate" element={<Liquidate />} />
+      <Route path="/price" element={<Price />} />
+      {/*<Route path="/liquidate" element={<Liquidate />} />
       <Route path="/liquidate/:address" element={<Liquidate />} />
       <Route path="/liquidation" element={<Liquidation />} />
       <Route path="/liquidation/:page" element={<Liquidation />} /> */}
