@@ -85,7 +85,43 @@ type PriceAggregator @entity {
 }
 
 type CryptoPunk @entity {
-  id: ID!
+  id: ID! # user - punkIndex
   punkIndex: BigInt!
   owner: Bytes!
+}
+
+type ETHSupplyLog @entity(immutable: true) {
+  id: ID!
+  blockNumber: BigInt!
+  asset: Bytes!
+  user: Bytes!
+  amount: BigInt!
+}
+
+type ETHBorrowLog @entity(immutable: true) {
+  id: ID!
+  blockNumber: BigInt!
+  asset: Bytes!
+  user: Bytes!
+  amount: BigInt!
+  borrowRate: BigInt!
+}
+
+type NFTsSupplyLog @entity(immutable: true) {
+  id: ID!
+  blockNumber: BigInt!
+  user: Bytes!
+  nftTokens: [String!]!
+}
+
+type LiquidatedLog @entity(immutable: true) {
+  id: ID!
+  blockNumber: BigInt!
+  user: Bytes!
+  nftToken: String!
+  debtToken: Bytes!
+  debtAmount: BigInt!
+  liquidator: Bytes!
+  to: Bytes!
+  receiveTNFT: Boolean!
 }

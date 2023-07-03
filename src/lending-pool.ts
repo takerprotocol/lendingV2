@@ -31,6 +31,10 @@ import {
   UserReserve,
   UserNftCollection,
   NftToken,
+  ETHSupplyLog,
+  ETHBorrowLog,
+  LiquidatedLog,
+  NFTsSupplyLog,
 } from "../generated/schema";
 import {
   newUser,
@@ -39,6 +43,54 @@ import {
 } from "./utils/initializers";
 import { updateUserState, removeNftToken, addNftToken, addUserNftCollection2NftCollection, removeUserNftCollection } from "./utils/utils";
 import { POOLID, ORACLE } from "./utils/consts";
+
+function saveETHSupplyLog(event: Deposited): void {
+  let ethSupplyId = event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  let ethSupply = new ETHSupplyLog(ethSupplyId);
+  ethSupply.blockNumber = event.block.number;
+  ethSupply.asset = event.params.asset;
+  ethSupply.user = event.params.to;
+  ethSupply.amount = event.params.amount;
+  ethSupply.save();
+}
+
+function saveETHBorrowLog(event: Borrowed): void {
+  let ethBorrowId = event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  let ethBorrow = new ETHBorrowLog(ethBorrowId);
+  ethBorrow.blockNumber = event.block.number;
+  ethBorrow.asset = event.params.asset;
+  ethBorrow.user = event.params.from;
+  ethBorrow.amount = event.params.amount;
+  ethBorrow.borrowRate = event.params.borrowRate;
+  ethBorrow.save();
+}
+
+function saveLiquidatedLog(event: Liquidated): void {
+  let liquidatedId = event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  let liquidated = new LiquidatedLog(liquidatedId);
+  liquidated.blockNumber = event.block.number;
+  liquidated.user = event.params.user;
+  liquidated.nftToken = event.params.nft.toHex() + "-" + event.params.tokenId.toString();
+  liquidated.debtToken = event.params.debt;
+  liquidated.debtAmount = event.params.debtCovered;
+  liquidated.liquidator = event.params.liquidator;
+  liquidated.to = event.params.to;
+  liquidated.receiveTNFT = event.params.receiveTNFT;
+  liquidated.save();
+}
+
+function saveNFTsSupplyLog(event: NFTsDeposited): void {
+  let nftsSupplyId = event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  let nftsSupply = new NFTsSupplyLog(nftsSupplyId);
+  nftsSupply.blockNumber = event.block.number;
+  nftsSupply.user = event.params.user;
+  let nftTokens: string[] = [];
+  for (let i = 0; i < event.params.nfts.length; i++) {
+    nftTokens.push(event.params.nfts[i].toHex() + "-" + event.params.tokenIds[i].toString());
+  }
+  nftsSupply.nftTokens = nftTokens;
+  nftsSupply.save();
+}
 
 export function handleNftReserveInitialized(
   event: NftReserveInitialized
@@ -167,6 +219,9 @@ export function handleDeposited(event: Deposited): void {
 
   user.save();
   userReserve.save();
+
+  // add ETHSupply
+  saveETHSupplyLog(event);
 }
 
 export function handleWithdrawn(event: Withdrawn): void {
@@ -239,6 +294,9 @@ export function handleBorrowed(event: Borrowed): void {
 
   user.save();
   userReserve.save();
+
+  // add ETHBorrow
+  saveETHBorrowLog(event);
 }
 
 export function handleRepaid(event: Repaid): void {
@@ -367,6 +425,9 @@ export function handleLiquidated(event: Liquidated): void {
     to = updateUserState(to, POOLID);
     to.save();
   }
+
+  // add Liquidated
+  saveLiquidatedLog(event);
 }
 
 export function handleNFTsDeposited(event: NFTsDeposited): void {
@@ -411,6 +472,9 @@ export function handleNFTsDeposited(event: NFTsDeposited): void {
   }
 
   user.save();
+
+  // add NFTsSupply
+  saveNFTsSupplyLog(event);
 }
 
 export function handleNFTsWithdrawn(event: NFTsWithdrawn): void {
