@@ -1,0 +1,23 @@
+{
+  "network": "scrollAlpha",
+  "LendingPool": {
+    "startBlock": 3804940,
+    "address": "0x84E9C6163a7777539f7665bf46230354665d3553"
+  },
+  "PoolConfigurator": {
+    "startBlock": 3804945,
+    "address": "0x3FfDF87882C63f98dC80a347eF0A4c302396c6C0"
+  },
+  "IPriceOracleGetter": {
+    "startBlock": 3804972,
+    "address": "0xc84F573Cb3769426Be7961Fcd2FdB70a24298CF7"
+  },
+  "CryptoPunks": {
+    "startBlock": 3804794,
+    "address": "0xA459514318f84C075f22Da023B8249Ef8dF80EdC"
+  },
+  "WPunk": {
+    "startBlock": 3804799,
+    "address": "0xDc8c5dF19bf7FE71d176332D7AF85613e4E1566e"
+  }
+}

@@ -11,7 +11,9 @@
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 lending-subgraph",
     "test": "graph test",
     "prepare:goerli-bluechip": "mustache config/goerli-bluechip.json subgraph.template.yaml > subgraph.yaml && mustache config/goerli-bluechip.json src/utils/consts.template.ts > src/utils/consts.ts",
-    "prepare:goerli-growth": "mustache config/goerli-growth.json subgraph.template.yaml > subgraph.yaml && mustache config/goerli-growth.json src/utils/consts.template.ts > src/utils/consts.ts"
+    "prepare:goerli-growth": "mustache config/goerli-growth.json subgraph.template.yaml > subgraph.yaml && mustache config/goerli-growth.json src/utils/consts.template.ts > src/utils/consts.ts",
+    "prepare:scrollAlpha-bluechip": "mustache config/scrollAlpha-bluechip.json subgraph.template.yaml > subgraph.yaml && mustache config/scrollAlpha-bluechip.json src/utils/consts.template.ts > src/utils/consts.ts",
+    "prepare:scrollAlpha-growth": "mustache config/scrollAlpha-growth.json subgraph.template.yaml > subgraph.yaml && mustache config/scrollAlpha-growth.json src/utils/consts.template.ts > src/utils/consts.ts"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.30.4",
