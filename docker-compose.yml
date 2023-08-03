@@ -18,7 +18,7 @@ services:
       postgres_db: graph-node
       ipfs: 'http://44.233.152.90:5001'
       # Change next line if you want to connect to a different JSON-RPC endpoint
-      ethereum: 'scroll:http://graph.scroll.xyz:8020'
+      ethereum: 'scroll:http://archive-node.alpha.scroll.xyz:8545'
       GRAPH_LOG: info
   ipfs:
     image: ipfs/go-ipfs:v0.4.23
