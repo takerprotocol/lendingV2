@@ -1,0 +1,23 @@
+{
+  "network": "zkSync2-testnet",
+  "LendingPool": {
+    "startBlock": 10139592,
+    "address": "0xaED0a6A55087c588358bDf6c149c889409Cb95f6"
+  },
+  "PoolConfigurator": {
+    "startBlock": 10139592,
+    "address": "0x95D4440d94e70BC572fb1Ded61a097888Bd5e878"
+  },
+  "IPriceOracleGetter": {
+    "startBlock": 10139592,
+    "address": "0x11e6B7a7842c97f2cb33F93A7996aC3455DeDDCB"
+  },
+  "CryptoPunks": {
+    "startBlock": 10139592,
+    "address": "0x4158edf2AF868E6d6582e2fCa6cCdEeB46BCC37b"
+  },
+  "WPunk": {
+    "startBlock": 10139592,
+    "address": "0xCf97809A1F836f91f7b183F143cf4c9955c066f1"
+  }
+}

@@ -6,3 +6,4 @@ subgraph.yaml
 lendingpool.yaml
 
 .DS_Store
+src/utils/consts.ts
